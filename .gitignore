@@ -1,3 +1,7 @@
 readme.txt
 *.xlsm
 github.bat
+*.xlsx
+.gitignore
+*.py
+
