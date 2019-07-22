@@ -4,7 +4,7 @@ $git clone https://github.com/svn12/svn12.github.io
 git add --all
 git commit -m "Initial commit"
 git push -u origin master
-svn12 sv4348jk
+svn12 
 svn12.github.io
 
 
