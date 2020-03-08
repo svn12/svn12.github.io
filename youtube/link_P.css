@@ -10,5 +10,8 @@
         { 
         .sidenav {padding-top: 15px;} 
         .sidenav a {font-size: 18px;} }
-   
+    h1{ font-size: 35px; text-align: center;
+  color: blue;}
+  h2{ font-size: 30 px;
+  color: rgb(162, 0, 255);}
     
