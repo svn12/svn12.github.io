@@ -7,13 +7,13 @@ iframe { width : 1000px; height: 500px ; }
 .sidenav a {padding: 6px 8px 6px 16px;text-decoration: none;font-size: 20px;  color: darkblue; display: block;    }
 .sidenav a:hover {color: darkorchid; }
 .main {margin-left: 160px;font-size: 28px; padding: 0px 10px; }
-.main p1 {color: rgb(26, 196, 97);background-color:#9966FF;
+.main p1 {color: rgb(170, 211, 187);background-color:rgb(202, 138, 207);
         font-size: 25px; 
-        display: inline-block;width: 45%;padding: 6px 8px 6px 16px;}
+        display: inline-block;width: 40%;padding: 6px 8px 6px 16px;}
 .main h1{ font-size: 40px; 
         color: blue;padding: 6px 8px 6px 16px;}
     h2{ font-size: 30 px;
-        color: rgb(162, 0, 255);display: inline-block;padding: 6px 8px 6px 16px;}
+        color: blue;display: inline-block;padding: 6px 8px 6px 16px;}
 @media screen and (max-height: 450px) 
   { 
     
