@@ -15,7 +15,7 @@
  </div>
  <div class="main"> 
      
-    <h2 >離華語禮拜直播開始還有</h2>
+    <h2 id="hua0" >離華語禮拜直播開始還有</h2>
      <p1 id="hua">   </p1>
      <br />
     
@@ -24,7 +24,7 @@
  </ul>
 <iframe src="https://www.youtube.com/embed/Kzou3V521QU" frameborder="0" allow="autoplay; encrypted-media"
     allowfullscreen> </iframe>
-    <h2>離台語禮拜直播開始還有</h2>
+    <h2 id="tai0">離台語禮拜直播開始還有</h2>
     <p1 id="tai"> </p1>
 <iframe src="https://www.youtube.com/embed/1rs0SVeWLu4" frameborder="0" allow="autoplay; encrypted-media"
     allowfullscreen> </iframe>
@@ -63,8 +63,9 @@
 
         // If the count down is over, write some text 
         if (distance < 0) {
-            clearInterval(x);
+            // clearInterval(x);
             document.getElementById("hua").innerHTML = "";
+            document.getElementById("hua0").innerHTML = "";
         }
          // Find the distance between now and the count down date
         distance = countDownDate2 - now;
