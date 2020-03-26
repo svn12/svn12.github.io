@@ -1,9 +1,89 @@
-﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>南門教會直播2</title><link rel="stylesheet" href="reset.css"><link rel="stylesheet" href="link_P.css">
-</head> <body> <div class="sidenav">
-<a href="南門教會直播2_link_P.html">南門教會直播2</a>
-<a href="信仰_link_P.html">信仰ddddd</a>
-<a href="https://svn12.github.io/youtube/南門教會直播2_link_P.html"> <img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=https://svn12.github.io/youtube/南門教會直播2_link_P.html &amp;size=80x80"></a>
- </div><div class="main"> <ul>
+﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>南門教會直播</title><link rel="stylesheet" href="reset.css"><link rel="stylesheet" href="link_P.css">
+</head> <body>
+<div class="sidenav">
+<a href="Http://bit.ly/南門禮拜">南門教會直播</a>
+
+<!-- <a href="https://svn12.github.io/youtube/南門教會直播_link_P.html"> <img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=https://svn12.github.io/youtube/南門教會直播_link_P.html &amp;size=80x80"></a> -->
+<a href="Http://bit.ly/南門禮拜"> <img id="barcode"
+        src="../doc/biy_ly_南門禮拜_qr-code.png" width="90%"></a>
+        <a href="https://www.youtube.com/watch?v=Kzou3V521QU"> 3/29華語禮拜</a>
+        <a href="https://www.youtube.com/watch?v=1rs0SVeWLu4"> 3/29台語禮拜</a>
+        
+        <a href="http://www.pctnm.tw/download_weekly.php">教會週報</a>
+       
+
+ </div>
+ <div class="main"> 
+     <h1>離直播開始還有</h1>
+    <h2 >華語禮拜</h2>
+     <p1 id="hua">   AAAAA</p1>
+     <!-- <br /> -->
+    <h2>台語禮拜</h2>
+    <p1 id="tai"> BBB</p1>
+<ul>
+
  </ul>
-<iframe src="https://www.youtube.com/embed/videoseries?list=PLfo7VQMlv43Cozoyb9lCwH6Hjpe6iiyNG" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>
- </div> </body> </html>
+<iframe src="https://www.youtube.com/embed/Kzou3V521QU" frameborder="0" allow="autoplay; encrypted-media"
+    allowfullscreen> </iframe>
+<iframe src="https://www.youtube.com/embed/1rs0SVeWLu4" frameborder="0" allow="autoplay; encrypted-media"
+    allowfullscreen> </iframe>
+<iframe src="https://www.youtube.com/embed/videoseries?list=PLfo7VQMlv43C_Pfy9ln0kzeDMd9Apy8HT" frameborder="0"
+    allow="autoplay; encrypted-media" allowfullscreen> </iframe>
+   
+<iframe src="https://www.youtube.com/embed/videoseries?list=PLfo7VQMlv43Cozoyb9lCwH6Hjpe6iiyNG" frameborder="0"
+    allow="autoplay; encrypted-media" allowfullscreen> </iframe>
+<!-- <iframe src="https://www.youtube.com/embed/MyYGNjN_kW4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>
+<iframe src="https://www.youtube.com/embed/plNK5vL-e8g" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>
+<iframe src="https://www.youtube.com/embed/UcUr00jzXuA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe> -->
+ </div> 
+<script>
+    // Set the date we're counting down to
+    var countDownDate = new Date("Mar 29, 2020 08:20:00").getTime();
+    var countDownDate2 = new Date("Mar 29, 2020 10:20:00").getTime();
+    // Update the count down every 1 second
+    var x = setInterval(function () {
+
+        // Get today's date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Output the result in an element with id="demo"
+        
+         document.getElementById("hua").innerHTML = days + "天 " + hours + "時"
+            + minutes + "分" + seconds+"秒" ;
+
+        // If the count down is over, write some text 
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("hua").innerHTML = "";
+        }
+         // Find the distance between now and the count down date
+        distance = countDownDate2 - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Output the result in an element with id="demo"
+        document.getElementById("tai").innerHTML = days + "天 " + hours + "時"
+            + minutes + "分" + seconds + "秒";
+        
+        // If the count down is over, write some text 
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("tai").innerHTML = "";
+        }
+    }, 1000);
+</script>
+
+</body> </html>
