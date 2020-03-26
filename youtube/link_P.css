@@ -8,7 +8,7 @@ iframe { width : 1000px; height: 500px ; }
 .sidenav a:hover {color: darkorchid; }
 .main {margin-left: 160px;font-size: 28px; padding: 0px 10px; }
 .main p1 {color: rgb(26, 196, 97);background-color:#9966FF;
-        font-size: 30px;  text-align: center;
+        font-size: 25px;  text-align: center;
         display: inline-block;width: 45%;padding: 6px 8px 6px 16px;}
 .main h1{ font-size: 40px; 
         color: blue;padding: 6px 8px 6px 16px;}
