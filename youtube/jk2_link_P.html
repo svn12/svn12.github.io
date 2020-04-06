@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>路加10~16</title><link rel="stylesheet" href="reset.css"><link rel="stylesheet" href="link_P.css">
-</head> <body> <div class="sidenav">
+</head> <body> <div class="sidenav1">
 <!-- <a href="植物園外丹功_link_P.html">jk2 聖經Play</a> -->
 
 <a href="新聞_link_P.html">新聞</a>
- </div><div class="main"> 
+ </div><div class="main1"> 
 <ul style="list-style: none">
     <li>路加
         <ul id="list">
@@ -18,9 +18,11 @@
         </ul>
     </li>
 </ul>
+
+<br>
 <form>
     章節:
-    <select id="mySelect">
+    <select id="mySelect" onclick="Myfunction()>
         <option value="10">10</option>
         <option value="11">11</option>
         <option value="12">12</option>
@@ -43,13 +45,42 @@
     Play</button>
 <!-- <p id="test2">audio2</p> -->
 <script>
-  
+  function myFunction() {
+        var x = document.getElementById("mySelect2");
+        x.remove(x.selectedIndex);
+    }
+    function removeAll() {
+        var obj = document.getElementById("mySelect2");
+        obj.options.length = 0;
+    }
+    function addOption() {
+        //根據id查詢物件，
+        var select = document.getElementById("mySelect2");
+        var options = ["10", "11", "12", "13", "14","15","16"];
+
+        for (var i = 0; i < options.length; i++) {
+            var opt = options[i];
+            var el = document.createElement("option");
+            el.textContent = opt;
+            el.value = opt;
+            select.appendChild(el);
+
+        }
+    }
+
     function changeSrc() {
-        
-        var x = "http://www.lingshyang.com/bible/taiwan_Bible/mak/mak"+document.getElementById("mySelect").value+".htm";
-        
+        var xhead="https://www.lingshyang.com/bible/"
+        var xtail = "/mak/mak"+document.getElementById("mySelect").value+".htm";
+        var ids = ["taiwan_Bible", "bible_rome", "bible_5", "new_bible"];
+        var i = 0;
+        while (ids[i]) {
+            // text += ids[i] + "<br>";
+            document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
+            i++;
+        }
         // document.getElementById("test").innerHTML = x;
-       document.getElementById("taiwan_Bible").src = x;
+    //    var id="taiwan_Bible" 
+       
         //console.log(title);
     } 
   list.onclick = function (e) {
@@ -83,7 +114,7 @@
         // e.preventDefault();
         
         // document.getElementById("test").innerHTML = "Be"
-        var    audio_src = "http://www.lingshyang.com/bible/tw_bible_soun/" + "041/41_0" + document.getElementById("mySelect").value + ".mp3";
+        var    audio_src = "https://www.lingshyang.com/bible/tw_bible_soun/" + "041/41_0" + document.getElementById("mySelect").value + ".mp3";
         // var audio_src3 = "http://www.lingshyang.com/bible/tw_bible_soun/041/41_001.mp3"
         // document.getElementById("test").innerHTML = "Be"
         // if (audio_src3 = audio_src3) {
@@ -110,13 +141,27 @@
 
  
 <!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
-<iframe id="taiwan_Bible" src="https://www.lingshyang.com/bible/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" scrolling="no"></iframe>
+<iframe id="taiwan_Bible" src="https://www.lingshyang.com/bible/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
 
-<iframe  id="bible_rome" src="https://www.lingshyang.com/bible/bible_rome/mak/mak14.htm" width=100% height="400px" frameborder="0" scrolling="no""0"></iframe>
+<iframe  id="bible_rome" src="https://www.lingshyang.com/bible/bible_rome/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
 
 <iframe id="bible_5" src="https://www.lingshyang.com/bible/bible_5/mak/mak14.htm" frameborder="0"></iframe>
 <iframe id="new_bible" src="https://www.lingshyang.com/bible/new_bible/mak/mak14.htm" frameborder="0"></iframe>
+<form>
+    Select a fruit:
+    <br>
+    <select id="mySelect2" size="4">
+        <option>Apple</option>
+        <option>Pear</option>
+        <option>Banana</option>
+        <option>Orange</option>
+    </select>
+</form>
+<br>
 
+<button onclick="myFunction()">Remove selected fruit</button>
+<button onclick="removeAll()">Remove All</button>
+<button onclick="addOption()">AddOption</button>
 <iframe src="https://www.youtube.com/embed/TVNiTE513Sw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>
 <iframe src="https://www.youtube.com/embed/FRx1egV082U" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>
  </div> </body> </html>
