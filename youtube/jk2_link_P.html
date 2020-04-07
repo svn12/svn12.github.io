@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html><html lang="zh""><head><meta charset="UTF-8"><title>聽讀聖經</title><link rel="stylesheet" href="reset.css">
-    <style>form{margin:0px; display:inline}</style>
+    <style>form{margin:0px; display:inline }</style>
     <link rel="stylesheet" href="link_P.css">
 </head> <body onload="Iniload()" > <div class="sidenav1">
 <!-- <a href="植物園外丹功_link_P.html">jk2 聖經Play</a> -->
@@ -23,17 +23,17 @@
 </ul> -->
 <br>
 
-<audio id="audio1" controls="controls">
+<audio id="audio1" controls="controls" onended="audioend1()">
     <source id="audioSource1" src="">
     </source>
     Your browser does not support the audio format.
 </audio>
-<audio id="audio2" controls="controls">
+<audio id="audio2" controls="controls" onended="audioend2()">
     <source id="audioSource2" src="">
     </source>
     Your browser does not support the audio format.
 </audio>
-<audio id="audio3" controls="controls">
+<audio id="audio3" controls="controls" onended="audioend3()">
     <source id="audioSource3" src="">
     </source>
     Your browser does not support the audio format.
@@ -48,7 +48,7 @@
 </form>
 
 <form>
-    章節:
+    章:
     <select id="SelChap" onchange="fselChap()">
 
 
@@ -59,11 +59,42 @@
 <!-- <button onclick="fselChap()">
     Play</button> -->
 <!--  <p id="test">original</p> -->
-<!-- <p id="test1">audio</p> -->
+<p id="test1"></p>
 
 <!-- <p id="test2">audio2</p> -->
 <script>
-  
+    function audioend1() {
+        audioend(1)
+    }
+     function audioend2() {
+            audioend(2)
+        }
+     function audioend3() {
+            audioend(3)
+        }
+    function audioend(ptr){
+        
+        if (document.getElementById("SelChap").options.length== document.getElementById("SelChap").selectedIndex+1){
+                if (document.getElementById("SelTitle").options.length == document.getElementById("SelTitle").selectedIndex + 1){
+
+                }
+                else{
+                    document.getElementById("SelTitle").selectedIndex++
+                    fSelTitle();
+                    audio = document.getElementById('audio' + ptr);
+                    audio.play();
+                }
+        }
+        else {
+            
+            document.getElementById("SelChap").selectedIndex++
+            
+            fselChap();
+            audio = document.getElementById('audio'+ptr);
+            audio.play();
+
+        }
+    }
     function addOption(n,id) {
         //根據id查詢物件，
 
@@ -138,20 +169,7 @@
         return chap_cnt[document.getElementById("SelTitle").selectedIndex];
     }
     function IniChap(){
-        var chap_cnt=["50", "40", "27", "36", "34", "24",
-            "21", "4", "31", "24", "22", "25",
-            "29", "36", "10", "13", "10", "42",
-            "150", "31", "12", "8", "66", "52",
-            "5", "48", "12", "14", "3", "9",
-            "1", "4", "7", "3", "3", "3",
-            "2", "14", "4", "28", "16", "24",
-            "21", "28", "16", "16", "13", "6",
-            "6", "4", "4", "5", "3", "6",
-            "4", "3", "1", "13", "5", "5",
-            "3", "5", "1", "1", "1", "22"
-
-];
-         
+              
 
         var select = document.getElementById("SelTitle").selectedIndex;
         // alert(select);
@@ -207,15 +225,21 @@
         }
        
         // var audio_src_h = "https://www.lingshyang.com/bible/tw_bible_soun/" + "041/41_";
-        var audio_ptr= document.getElementById("SelTitle").selectedIndex+1
+        
+        var audio_ptr= document.getElementById("SelTitle").selectedIndex+1;
+        
         var audio_src_h = "https://media.fhl.net/" + audio_type[1] + "/" + audio_ptr + "/" + audio_ptr + "_"; //"41/41_";
-      // document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
+       
+    //    document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
+       
         var audio_src = audio_src_h + lead_num + num + ".mp3";
         var audio = document.getElementById('audio2');
         var source = document.getElementById('audioSource2');
+        
         source.src = audio_src;
+        
         audio.load(); //call this to just preload the audio without playing
-
+        
         audio_src_h = "https://media.fhl.net/" + audio_type[2] + "/" + audio_ptr + "/" + audio_ptr + "_"; //"41/41_";
       // document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
         audio_src = audio_src_h + lead_num + num + ".mp3";
@@ -223,7 +247,7 @@
         source = document.getElementById('audioSource3');
         source.src = audio_src;
         audio.load(); //call this to just preload the audio without playing
-
+        
         audio_src_h = "https://media.fhl.net/"+audio_type[0]+"/" + audio_ptr+"/"+audio_ptr+"_"; //"41/41_";
         // document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
         audio_src = audio_src_h + lead_num +num + ".mp3";
