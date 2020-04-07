@@ -1,69 +1,74 @@
-﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>路加10~16</title><link rel="stylesheet" href="reset.css"><link rel="stylesheet" href="link_P.css">
-</head> <body onload='addOption(17, "mySelect")' > <div class="sidenav1">
+﻿<!DOCTYPE html><html lang="zh""><head><meta charset="UTF-8"><title>聽讀聖經</title><link rel="stylesheet" href="reset.css">
+    <style>form{margin:0px; display:inline}</style>
+    <link rel="stylesheet" href="link_P.css">
+</head> <body onload="Iniload()" > <div class="sidenav1">
 <!-- <a href="植物園外丹功_link_P.html">jk2 聖經Play</a> -->
 
-<a href="新聞_link_P.html">新聞</a>
+<!-- <a href="新聞_link_P.html">新聞</a>
  </div><div class="main1"> 
 <ul style="list-style: none">
     <li>路加
         <ul id="list">
             
-            <!-- <li><a href="#"
+            <li><a href="#"
                     data-value="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3">馬可14章</a>
             </li>
             <li><a href="#" data-value="http://www.lingshyang.com/bible/tw_bible_soun/041/41_015.mp3">馬可15章</a>
-                onload='addOption(17, "mySelect2")'
+                onload='addOption(17, "SelTest")'
             </li>  -->
 
-           
+<!--            
         </ul>
     </li>
-</ul>
-
+</ul> -->
 <br>
-<form>
-    章節:
-    <select id="mySelect" onclick="Myfunction()">
-        <!-- onload="addOption(17, "mySelect")" -->
-        <!-- <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="10">10</option>
-        <option value="11">11</option>
-        <option value="12">12</option>
-        <option value="13">13</option>
-        <option value="14">14</option>
-        <option value="15">15</option>
-        <option value="16">16</option> -->
 
-    </select>
-    
-</form>
-
-<audio id="audio" controls="controls">
-    <source id="audioSource" src="">
+<audio id="audio1" controls="controls">
+    <source id="audioSource1" src="">
     </source>
     Your browser does not support the audio format.
 </audio>
-<!-- <!-- <p id="test">original</p> -->
-<p id="test1">audio</p>
-<button onclick="Myfunction()">
-    Play</button>
+<audio id="audio2" controls="controls">
+    <source id="audioSource2" src="">
+    </source>
+    Your browser does not support the audio format.
+</audio>
+<audio id="audio3" controls="controls">
+    <source id="audioSource3" src="">
+    </source>
+    Your browser does not support the audio format.
+</audio>
+<br>
+<form>
+    聖經:
+    <select id="SelTitle" onchange="fSelTitle()">
+
+    </select>
+
+</form>
+
+<form>
+    章節:
+    <select id="SelChap" onchange="fselChap()">
+
+
+    </select>
+
+</form>
+
+<!-- <button onclick="fselChap()">
+    Play</button> -->
+<!--  <p id="test">original</p> -->
+<!-- <p id="test1">audio</p> -->
+
 <!-- <p id="test2">audio2</p> -->
 <script>
-  function removeSel() {
-        var x = document.getElementById("mySelect2");
-        x.remove(x.selectedIndex);
-    }
-    function removeAll() {
-        var obj = document.getElementById("mySelect2");
-        obj.options.length = 0;
-    }
+  
     function addOption(n,id) {
         //根據id查詢物件，
 
         var select = document.getElementById(id);
-        // var options = ["10", "11", "12", "13", "14","15","16"];
-        // alert(id, select.options[1].value);
+        
 
         for (var i = 1; i <= n; i++) {
             // var opt = options[i];
@@ -71,24 +76,116 @@
             el.textContent = i;
             el.value = i;
             select.appendChild(el);
+            
+        }
+      
+    }
+    function IniTitle(){
+        var Btitle=["創世記","出埃及記","利未記","民數記","申命記","約書亞記",
+"士師記","路得記","撒母耳記上","撒母耳記下","列王紀上","列王紀下",
+"歷代志上","歷代志下","以斯拉記","尼希米記","以斯帖記","約伯記",
+"詩篇","箴言","傳道書","雅歌","以賽亞書","耶利米書",
+"耶利米哀歌","以西結書","但以理書","何西阿書","約珥書","阿摩司書",
+"俄巴底亞書","約拿書","彌迦書","那鴻書","哈巴谷書","西番雅書",
+"哈該書","撒迦利亞書","瑪拉基書","馬太福音","馬可福音","路加福音",
+"約翰福音","使徒行傳","羅馬人書","哥林多前書","哥林多後書","加拉太書",
+"以弗所書","腓立比書","歌羅西書","帖撒羅尼迦前書","帖撒羅尼迦後書","提摩太前書",
+"提摩太後書","提多書","腓利門書","希伯來書","雅各書","彼得前書",
+"彼得後書","約翰一書","約翰二書","約翰三書","猶大書","啟示錄"
+];
+        var Btitle_ptr=["gen", "exo", "lev", "num", "deu", "jos",
+            "jug", "rut", "1sa", "2sa", "1ki", "2ki",
+            "1ch", "2ch", "ezr", "neh", "est", "job",
+            "psm", "pro", "ecc", "son", "isa", "jer",
+            "lam", "eze", "dan", "hos", "joe", "amo",
+            "oba", "jon", "mic", "nah", "hab", "zep",
+            "hag", "zec", "mal", "mat", "mak", "luk",
+            "jhn", "act", "rom", "1co", "2co", "gal",
+            "eph", "phl", "col", "1ts", "2ts", "1ti",
+            "2ti", "tit", "mon", "heb", "jas", "1pe",
+            "2pe", "1jn", "2jn", "3jn", "jud", "rev"
+];
+        var select = document.getElementById("SelTitle");
+        // var options = ["10", "11", "12", "13", "14","15","16"];
+        // alert(id, select.options[1].value);
+
+        for (var i = 1; i <= Btitle.length; i++) {
+            // var opt = options[i];
+            var el = document.createElement("option");
+            el.textContent = Btitle[i-1];
+            el.value = Btitle_ptr[i-1];
+            select.appendChild(el);
             // select.options.add(el);
             // alert(select.options[i-1].value);
         }
-        // alert(id, select.options[1].value);
-    }
 
+
+    }
+    function get_Title_Chap_Cnt(){
+         var chap_cnt = ["50", "40", "27", "36", "34", "24",
+            "21", "4", "31", "24", "22", "25",
+            "29", "36", "10", "13", "10", "42",
+            "150", "31", "12", "8", "66", "52",
+            "5", "48", "12", "14", "3", "9",
+            "1", "4", "7", "3", "3", "3",
+            "2", "14", "4", "28", "16", "24",
+            "21", "28", "16", "16", "13", "6",
+            "6", "4", "4", "5", "3", "6",
+            "4", "3", "1", "13", "5", "5",
+            "3", "5", "1", "1", "1", "22"
+
+        ];
+        return chap_cnt[document.getElementById("SelTitle").selectedIndex];
+    }
+    function IniChap(){
+        var chap_cnt=["50", "40", "27", "36", "34", "24",
+            "21", "4", "31", "24", "22", "25",
+            "29", "36", "10", "13", "10", "42",
+            "150", "31", "12", "8", "66", "52",
+            "5", "48", "12", "14", "3", "9",
+            "1", "4", "7", "3", "3", "3",
+            "2", "14", "4", "28", "16", "24",
+            "21", "28", "16", "16", "13", "6",
+            "6", "4", "4", "5", "3", "6",
+            "4", "3", "1", "13", "5", "5",
+            "3", "5", "1", "1", "1", "22"
+
+];
+         
+
+        var select = document.getElementById("SelTitle").selectedIndex;
+        // alert(select);
+        document.getElementById("SelChap").options.length = 0;
+        // addOption(chap_cnt[select], "SelChap")
+        // alert(get_Title_Chap_Cnt());
+        addOption(get_Title_Chap_Cnt(), "SelChap");
+       fselChap();
+    }
+    function fSelTitle(){
+        
+        // alert(get_Title_Chap_Cnt());
+        IniChap();
+    }
+    function Iniload(){
+        IniTitle();
+        // addOption(17, "SelChap")
+        IniChap();
+    }
     function changeSrc() {
         var xhead="https://www.lingshyang.com/bible/"
-        var num= document.getElementById("mySelect").value
+        var num= document.getElementById("SelChap").value
         var lead_num=""
         if(num<10)
         {
             lead_num = ""
         }
-        var xtail = "/mak/mak"+lead_num+num+".htm";
+        var src_ptr= document.getElementById("SelTitle").options[document.getElementById("SelTitle").selectedIndex].value;
+        // alert(src_ptr);
+        // var xtail = "/mak/mak"+lead_num+num+".htm";
+        var xtail = "/"+src_ptr+"/"+src_ptr + lead_num + num + ".htm";
         var ids = ["taiwan_Bible", "bible_rome", "bible_5", "new_bible"];
         var i = 0;
-        document.getElementById("test1").innerHTML = document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
+       // document.getElementById("test1").innerHTML = document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
         while (ids[i]) {
             // text += ids[i] + "<br>";
             document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
@@ -99,32 +196,51 @@
        
         //console.log(title);
     } 
-  function Myfunction() {
+  function fselChap() {
+        var audio_type=["Taiwanese","unv1","tcv"]
         var lead_num = "";
-        var num= document.getElementById("mySelect").value ;
-        if (num < 10) {
-            lead_num = "0";
+        var num= document.getElementById("SelChap").value ;
+        if (num < 100) {
+            if(num<10) { lead_num = "00";}
+            else
+                lead_num = "0";
         }
-        var audio_src_h = "https://www.lingshyang.com/bible/tw_bible_soun/" + "041/41_0";
-        document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
-        var audio_src = audio_src_h + lead_num +num + ".mp3";
-
-        var audio = document.getElementById('audio');
-
-        var source = document.getElementById('audioSource');
-        // source.src = elm.getAttribute('data-value');
-        // source.src = audio_src
-
-        source.src = audio_src; //elm.getAttribute('data-value');
-        // document.getElementById("test").innerHTML = "Be2"
-        changeSrc();
+       
+        // var audio_src_h = "https://www.lingshyang.com/bible/tw_bible_soun/" + "041/41_";
+        var audio_ptr= document.getElementById("SelTitle").selectedIndex+1
+        var audio_src_h = "https://media.fhl.net/" + audio_type[1] + "/" + audio_ptr + "/" + audio_ptr + "_"; //"41/41_";
+      // document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
+        var audio_src = audio_src_h + lead_num + num + ".mp3";
+        var audio = document.getElementById('audio2');
+        var source = document.getElementById('audioSource2');
+        source.src = audio_src;
         audio.load(); //call this to just preload the audio without playing
-        audio.play(); //call this to play the song right away
+
+        audio_src_h = "https://media.fhl.net/" + audio_type[2] + "/" + audio_ptr + "/" + audio_ptr + "_"; //"41/41_";
+      // document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
+        audio_src = audio_src_h + lead_num + num + ".mp3";
+        audio = document.getElementById('audio3');
+        source = document.getElementById('audioSource3');
+        source.src = audio_src;
+        audio.load(); //call this to just preload the audio without playing
+
+        audio_src_h = "https://media.fhl.net/"+audio_type[0]+"/" + audio_ptr+"/"+audio_ptr+"_"; //"41/41_";
+        // document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
+        audio_src = audio_src_h + lead_num +num + ".mp3";
+        audio = document.getElementById('audio1');
+        source = document.getElementById('audioSource1');
+        source.src = audio_src; 
+        audio.load(); //call this to just preload the audio without playing
+
+
+
+        changeSrc();
+        // audio.play(); //call this to play the song right away
     };
   list.onclick = function (e) {
         e.preventDefault();
         var 
-         audio_src ="http://www.lingshyang.com/bible/tw_bible_soun/"+"041/41_0"+ document.getElementById("mySelect").value + ".mp3";
+         audio_src ="http://www.lingshyang.com/bible/tw_bible_soun/"+"041/41_0"+ document.getElementById("SelChap").value + ".mp3";
         var  audio_src3="http://www.lingshyang.com/bible/tw_bible_soun/041/41_001.mp3"
         // document.getElementById("test").innerHTML = "Be"
         // if (audio_src3 = audio_src3) {
@@ -162,7 +278,7 @@
 <form>
     Select a fruit:
     <br>
-    <select id="mySelect2" size="4">
+    <select id="SelTest" size="4">
         <option>Apple</option>
         <option>Pear</option>
         <option>Banana</option>
@@ -174,7 +290,7 @@
 <button onclick="removeSel()">Remove selected fruit</button>
 <button onclick="removeAll()">Remove All</button>
 
-<button onclick='addOption(17,"mySelect2")'>AddOption</button>
+<button onclick='addOption(17,"SelTest")'>AddOption</button>
 <iframe src="https://www.youtube.com/embed/TVNiTE513Sw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>
 <iframe src="https://www.youtube.com/embed/FRx1egV082U" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>    
 
