@@ -1,5 +1,10 @@
 ﻿<!DOCTYPE html><html lang="zh""><head><meta charset="UTF-8"><title>聽讀聖經</title><link rel="stylesheet" href="reset.css">
-    <style>form{margin:0px; display:inline }</style>
+    <style>form{margin:0px; display:inline;font-size:16px; }
+        button{margin:0px; display:inline;font-size:16px; }
+        /* label {display:inline;} */
+        /* input {display:inline;} */
+        select {font-size:18px;}
+    </style>
     <link rel="stylesheet" href="link_P.css">
 </head> <body onload="Iniload()" > <div class="sidenav1">
 <!-- <a href="植物園外丹功_link_P.html">jk2 聖經Play</a> -->
@@ -23,22 +28,23 @@
 </ul> -->
 <br>
 
-<audio id="audio1" controls="controls" onended="audioend1()">
+<audio id="audio1"  onended="audioend1()">
     <source id="audioSource1" src="">
     </source>
     Your browser does not support the audio format.
 </audio>
-<audio id="audio2" controls="controls" onended="audioend2()">
+<!-- controls="controls" -->
+<audio id="audio2"  onended="audioend2()">
     <source id="audioSource2" src="">
     </source>
     Your browser does not support the audio format.
 </audio>
-<audio id="audio3" controls="controls" onended="audioend3()">
+<audio id="audio3"  onended="audioend3()">
     <source id="audioSource3" src="">
     </source>
     Your browser does not support the audio format.
 </audio>
-<br>
+<!-- <br> -->
 <form>
     聖經:
     <select id="SelTitle" onchange="fSelTitle()">
@@ -55,14 +61,61 @@
     </select>
 
 </form>
+<button onclick="playaudio()">
+    播放</button>
+<button onclick="pauseaudio()">
+    暫停</button>
+<button onclick="audioend1()">
+    下一章</button>
 
-<!-- <button onclick="fselChap()">
-    Play</button> -->
+<form onclick="playaudio()">
+    <label class="radio-inline">
+        <input type="radio" name="optradio" checked>台語有聲聖經
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="optradio">和合本有聲聖經
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="optradio">現代中文有聲聖經
+    </label>
+</form>
+
 <!--  <p id="test">original</p> -->
 <p id="test1"></p>
 
 <!-- <p id="test2">audio2</p> -->
 <script>
+    function pauseaudio() {
+            
+            for (var i = 1; i < 4; i++) {
+                audio = document.getElementById('audio' + i);
+                audio.pause();
+            }
+            
+        }
+    function playaudio(){
+        var audios = document.getElementsByName('optradio');
+        pauseaudio();
+        var audio_value;
+        for (var i = 0; i < audios.length; i++) {
+            
+            if (audios[i].checked) {
+                audio = document.getElementById('audio' + (i+1));
+                audio.play();
+                break;
+            }
+        }
+    }
+    function nextchap() {
+            
+            for (var i = 0; i < audios.length; i++) {
+
+                if (audios[i].checked) {
+                    audioend(i)
+                    break;
+                }
+            }
+        }
     function audioend1() {
         audioend(1)
     }
@@ -81,8 +134,9 @@
                 else{
                     document.getElementById("SelTitle").selectedIndex++
                     fSelTitle();
-                    audio = document.getElementById('audio' + ptr);
-                    audio.play();
+                    // audio = document.getElementById('audio' + ptr);
+                    //  audio.play();
+                    playaudio();
                 }
         }
         else {
@@ -90,8 +144,9 @@
             document.getElementById("SelChap").selectedIndex++
             
             fselChap();
-            audio = document.getElementById('audio'+ptr);
-            audio.play();
+            // audio = document.getElementById('audio' + ptr);
+            //  audio.play();
+            playaudio();
 
         }
     }
