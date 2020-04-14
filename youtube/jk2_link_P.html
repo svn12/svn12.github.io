@@ -223,6 +223,21 @@
         ];
         return chap_cnt[document.getElementById("SelTitle").selectedIndex];
     }
+    function get_new_bible2_p() {
+            var chap_ptr = [1047, 1098, 1139, 1167, 1204, 1239,
+            1264, 1286, 1291, 1323, 1348, 1371,
+            1397, 1427, 1464, 1475, 1489, 1501,
+            1544, 1695, 1727, 1740, 1749, 1890,
+            1945, 1951, 2000, 2013, 2028, 2032,
+            2042, 2044, 2049, 2057, 2061, 2065,
+            2069, 2072, 2087, 2093, 2122, 2139,
+            2164, 2186, 2215, 2232, 2249, 2263,
+            2270, 2277, 2282, 2287, 2293, 2297,
+            2304, 2309, 2313, 2315, 2329, 2335,
+            2341, 2345, 2351, 2353, 2355, 2357
+            ];
+            return chap_ptr[document.getElementById("SelTitle").selectedIndex];
+        }
     function IniChap(){
               
 
@@ -264,7 +279,13 @@
             document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
             i++;
         }
-        // document.getElementById("test").innerHTML = x;
+        xhead="http://bible.goodjob.tw/tcv_b5/";
+
+            
+             
+        document.getElementById("new_bible2").src =
+             xhead+(num-1+get_new_bible2_p())+".htm";
+             
     //    var id="taiwan_Bible" 
        
         //console.log(title);
@@ -353,7 +374,9 @@
 <iframe  id="bible_rome" src="https://www.lingshyang.com/bible/bible_rome/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
 
 <iframe id="bible_5" src="https://www.lingshyang.com/bible/bible_5/mak/mak14.htm" frameborder="0"></iframe>
+<iframe id="new_bible2" src="http://bible.goodjob.tw/tcv_b5/2135.htm" frameborder="0"></iframe>
 <iframe id="new_bible" src="https://www.lingshyang.com/bible/new_bible/mak/mak14.htm" frameborder="0"></iframe>
+
 <iframe id="bbe_bible" src="https://www.lingshyang.com/bible/bbe_bible/mak/mak14.htm" frameborder="0"></iframe>
 
 <br>
