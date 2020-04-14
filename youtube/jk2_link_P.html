@@ -7,6 +7,8 @@
     </style>
     <link rel="stylesheet" href="link_P.css">
 </head> <body onload="Iniload()" > <div class="sidenav1">
+
+<p>現代中文聖經: <a id="new_b2" target="_blank"  href="https://mygoodfriend.net/TCV_Big5/">Link</a></p>
 <!-- <a href="植物園外丹功_link_P.html">jk2 聖經Play</a> -->
 
 <!-- <a href="新聞_link_P.html">新聞</a>
@@ -45,7 +47,9 @@
     Your browser does not support the audio format.
 </audio>
 <!-- <br> -->
+
 <form>
+    
     聖經:
     <select id="SelTitle" onchange="fSelTitle()">
 
@@ -77,11 +81,13 @@
     </label>
     <label class="radio-inline">
         <input type="radio" name="optradio">現代中文有聲聖經
+        
     </label>
+    
 </form>
 
 <!--  <p id="test">original</p> -->
-<p id="test1"></p>
+
 
 <!-- <p id="test2">audio2</p> -->
 <script>
@@ -294,9 +300,9 @@
             document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
             i++;
         }
-        // alert(2);
+        
         // xhead="http://bible.goodjob.tw/tcv_b5/";
-        xhead="https://mygoodfriend.net/TCV_Big5/B";
+        xhead="http://mygoodfriend.net/TCV_Big5/B";
         lead_num = "";
         if (num < 10) {
             lead_num = "00";
@@ -310,9 +316,17 @@
              
         // document.getElementById("new_bible2").src =
         //      xhead+(num-1+get_new_bible2_p())+".htm";
+         
+            document.getElementById("new_b2").href =
+            xhead + get_new_bible2_p() + lead_num + num + ".htm";
+        // document.getElementById("new_b2").innerText =
+        //     xhead + get_new_bible2_p() + lead_num + num + ".htm";  
+     
 
          document.getElementById("new_bible2").src =
             xhead +get_new_bible2_p()+  lead_num + num + ".htm";
+         
+
     //    var id="taiwan_Bible" 
        
         //console.log(title);
