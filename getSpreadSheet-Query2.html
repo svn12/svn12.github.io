@@ -14,17 +14,19 @@
             </style>
 </head>
 <body onload="IniTitle()">
-    <h2>&nbsp&nbsp &nbspGoogle Sheet 資料查詢</h2>
-    <div class="container">
-        <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p>
-        <form id="location-form">
-            <input type="text" id="location-input" >
+    <h2 class="text-center">&nbsp&nbsp &nbspGoogle Sheet 資料查詢</h2>
+    <div class="container ">
+        <!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> -->
+        <form id="location-form" class="form-inline">
+            <!-- <input type="text" id="location-input" > -->
+            <label for="text">查詢姓名&nbsp:&nbsp</label>
+            <input type="text" class="form-control" placeholder="姓名關鍵字" id="location-input">
+            <label for="select">&nbsp&nbsp來源&nbsp:&nbsp</label>
             
+                
+            <select id="selShurl" class="form-control" onchange="Query_Tel2()">
             
-                &nbsp&nbsp來源&nbsp&nbsp:&nbsp
-                <select id="selShurl" onchange="Query_Tel2()">
-            
-                </select>
+            </select>
             
             
 
