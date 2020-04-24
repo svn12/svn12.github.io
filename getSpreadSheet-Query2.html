@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+        integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <title>Google查資料o</title>
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <style> 
+            .container {  display: flex;}
+            </style>
+</head>
+<body>
+    <div class="container">
+        <h4 id="text-center">Enter Name: </h4>
+        <form id="location-form">
+            <input type="text" id="location-input" >
+           
+            <button type="submit" class="btn-primary ">Submit</button>
+        </form>
+       
+    </div>
+
+    <h2 id="show"></h2>
+    <script>
+        // Get location form
+            var locationForm = document.getElementById('location-form');
+
+            // Listen for submiot
+            locationForm.addEventListener('submit', Query_Tel);
+            
+        function Query_Tel(e) {
+                e.preventDefault();
+
+                var findSting = document.getElementById('location-input').value;
+
+                var $show = $('#show');
+                var a = {
+                    sheetUrl: 'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing',
+                    sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
+                    sheetTag: 'List',
+                    findSting: findSting
+                    
+                };
+                $.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
+                    // console.log(data);
+                    // var d = data.split(',');
+                    // console.log(d);
+                    data = JSON.parse(data);
+                    //  console.log(data);
+                    var heads=[];
+                    for(head in data[0]){
+                        heads.push(head);
+                    }
+                    console.log(heads.length);
+
+                    var txt='';
+                    txt += "<table border='1'> <thead><tr>";
+                    // heads.forEach(el=>console.log(el));
+                    heads.forEach(function(e){
+                        txt += "<th>" + e + "</th>";
+
+                    })
+                    
+                    txt+="</tr></thead><tbody>";
+                    // console.log(txt);
+
+                    for (x in data) {
+                        txt += "<tr>";
+                        // console.log(x);
+                        // console.log(data[x]);
+                        heads.forEach(function(e){
+                        txt += "<td>" + data[x][e] + "</td>";
+
+                        })
+                        txt += "</tr>";
+                        // txt += "<tr><td>" + data[x].Name + "</td><td>"+ data[x].手機 +"</td></tr>";
+                    }
+                    txt += "</tbody></table>"
+                    document.getElementById("show").innerHTML = txt;
+
+
+                    var arr = [];
+                    for (var i = 0; i < (a.endRow - a.row + 1); i++) {
+                        arr[i] = d.splice(0, (a.endCol - a.col + 1));
+                        $show.append(arr[i] + '<br/>');
+                    }
+
+                });
+            };
+    </script>
+</body>
+</html>
