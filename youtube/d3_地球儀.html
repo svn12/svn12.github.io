@@ -7,7 +7,7 @@
     <title>d3_地球</title>
     <!--引入google的一種字體樣式 -->
     
-    <link rel="stylesheet" href="https://raw.githubusercontent.com/luciopaiva/country-flags/master/dist/country-flag.css">
+    <!-- <link rel="stylesheet" href="https://raw.githubusercontent.com/luciopaiva/country-flags/master/dist/country-flag.css"> -->
     <style type="text/css">
         body {
   background: #fcfcfa;
@@ -48,19 +48,107 @@ h2{
 <script src="https://d3js.org/topojson.v1.min.js"></script>
 <script src="https://d3js.org/queue.v1.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-<script src="https://raw.githubusercontent.com/luciopaiva/country-flags/master/dist/country-flag.js"></script>
+<!-- <script src="https://raw.githubusercontent.com/luciopaiva/country-flags/master/dist/country-flag.js"></script> -->
     <!-- <script src="dndTree.js"></script> -->
 </head>
 <body>
     
     <p id="digita"></p>
     <h2 id="nation"></h2>
+    <form>
+    
+    
+    <select id="mySelect" onchange="selC()">
+
+    </select>
+
+</form>
    <!-- <svg width="800px" height="600px"></svg> -->
 <!-- <script type="text/javascript" src="http://d3js.org/topojson.v1.min.js"></script> -->
 <script>
+    var $mySelect = $('#mySelect'); var str = ''; var world;
+    
+
+     function selC() {
+            id= $("#mySelect").find(":selected").val();
+            console.log("#mySelect------",$("#mySelect").find(":selected").val(),$("#mySelect").find(":selected").text());
+
+            // console.log('this:', d3.select(this).attr("data-country-id"), d3.select(this).attr("name"));
+            d3.selectAll(".clicked")
+                .classed("clicked", false)
+                .attr("fill", colors.clickable);
+            // data - country - id
+            
+            queue()
+             .defer(d3.json, "https://raw.githubusercontent.com/infographicstw/example/gh-pages/352/world.json")
+             .defer(d3.tsv, "../doc/world-country-flags.tsv")
+              .await(ready);
+
+
+            function ready(error, world,flags) {
+             console.log('error:',error)   
+            
+             countries = topojson.feature(world, world.objects.countries).features;
+
+             console.log('country-11111',countries);
+             
+
+            for (j = 0; j < countries.length; j++) {
+                    console.log(j,countries[j].id, $("#mySelect").find(":selected").val());
+                    if (countries[j].id == $("#mySelect").find(":selected").val()) {
+                        console.log(j, countries[j].id, $("#mySelect").find(":selected").val() );
+                        break;
+                    }
+            }
+            // console.log(j, countries[j].id, $("#mySelect").find(":selected").val() );
+            
+
+            //  $.each(countries, function (i, item) {
+            //         // console.log('item:',item);
+            //         // IMPORTANT: no selectors inside the loop (for the best performance)
+            //         console.log('i:',i,'item:',item);
+                
+            //     });
+
+            // }
+            // ( transition() {
+                d3.selectAll("path").filter(function (data, i) {
+             console.log(d3.selectAll("path"));
+             console.log(i,data);
+             if (data.id== id) {
+                 d3.select(this)
+                     .classed("clicked", true)
+                     .attr("fill", colors.clicked);
+                title.text(data.name);
+                flag.attr("xlink:href", "");
+                 for (var f = 0; f < flags.length; ++f) {
+                     if (flags[f].id == id) {
+                         flag.attr("xlink:href", flags[f].url);
+                         break;
+                     }
+                 }
+             }
+
+         })
+                
+                d3.select(".clicked").transition()
+                    .duration(1250)
+                    .tween("rotate", function () {
+                        console.log(j,'rotate');
+                        var p = d3.geo.centroid(countries[j]),
+                            r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
+                        return function (t) {
+                            projection.rotate(r(t));
+                            map.selectAll("path").attr("d", path);
+                        }
+                    });
+            // });
+        }
+     }
+    
     var width = 950,
             height = 700;
-
+        var selC2;
         var colors = { clickable: 'darkgrey', hover: 'grey', clicked: "red", clickhover: "darkred" };
 
         var projection = d3.geo.orthographic()
@@ -96,9 +184,16 @@ h2{
             .datum(graticule)
             .attr("class", "graticule")
             .attr("d", path);
+        // var form = d3.select("svg").append("form")
+        //     .append('select')
+        //     .attr("id", "country")
+        //     .attr("onchange", 'selC2');
         var title = d3.select("svg").append("text")
             .attr("x", width / 2)
             .attr("y", height * 3 / 5);
+       
+          
+
 
         var flag = d3.select("svg").append("image")
             .attr("width", 100)
@@ -121,8 +216,8 @@ h2{
                 countries = topojson.feature(world, world.objects.countries).features,
                 borders = topojson.mesh(world, world.objects.countries, function (a, b) { return a !== b; });
             console.log('countries:',countries);
-            console.log('land:', land);
-             console.log('names:', names);
+            // console.log('land:', land);
+            //  console.log('names:', names);
             countries = countries.filter(function (d) {
                 return names.some(function (n) {
                     if (d.id == n.id) {
@@ -134,8 +229,23 @@ h2{
                 return a.name.localeCompare(b.name);
             });
             flags.sort(function (a, b) { return +a.id < +b.id ? -1 : +a.id > +b.id ? +1 : 0; });
+
+            $.each(countries, function (i, item) {
+            //     // console.log('item:',item);
+            //     // IMPORTANT: no selectors inside the loop (for the best performance)
+                str += "<option value='" + item.id + "'> " + item.name + "</option>";
+            //     // form.append('option').attr('value',item.id).html(item.name);
+            });
+            // you built a big string
+
+            $mySelect.html(str); // <-- here you add the big string with a lot of options into the selector.
+            // $mySelect.multiSelect('refresh');
+            // console.log('str:',str);
+            // form.append(str);
+            $mySelect.val(4);
+            selC();
             console.log('countries-f:', countries);
-            console.log('flags:',flags);
+            // console.log('flags:',flags);
             map.insert("path", ".graticule")
                 .datum(topojson.feature(world, world.objects.land))
                 .attr("class", "land")
@@ -152,7 +262,7 @@ h2{
                             .attr("data-country-id", j)
                             .attr("name", countries[j].name)
                             .on("click", function () {
-                                console.log('this:', d3.select(this).attr("data-country-id"), d3.select(this).attr("name"));
+                                console.log('this:',this, d3.select(this).attr("data-country-id"), d3.select(this).attr("name"));
                                 d3.selectAll(".clicked")
                                     .classed("clicked", false)
                                     .attr("fill", colors.clickable);
@@ -200,7 +310,10 @@ h2{
                             })
                             .on("mouseout", function () {
                                 var c = d3.select(this);
-                                 i = d3.select(".clicked").attr("data-country-id");
+                                
+                                if (d3.select(".clicked")[0][0]!=null){
+                                  i = d3.select(".clicked").attr("data-country-id");
+                                //   console.log('d3.select(".clicked")',d3.select(".clicked"));
                                  title.text(countries[i].name);
                                  flag.attr("xlink:href", "");
                                 for (var f = 0, id = countries[i].id; f < flags.length; ++f) {
@@ -208,6 +321,7 @@ h2{
                                         flag.attr("xlink:href", flags[f].url);
                                         break;
                                     }
+                                }
                                 }
                                 //  title.text('');
                                 // flag.attr("xlink:href", "");
@@ -227,14 +341,44 @@ h2{
                     }
                 }
             }
+             
 
             map.insert("path", ".graticule")
                 .datum(topojson.mesh(world, world.objects.countries, function (a, b) { return a !== b; }))
                 .attr("class", "boundary")
                 .attr("d", path);
-        };
 
+            
+             function selC2() {
+                console.log("#mySelect------", $("#mySelect").find(":selected").val());
+
+                // console.log('this:', d3.select(this).attr("data-country-id"), d3.select(this).attr("name"));
+                d3.selectAll(".clicked")
+                    .classed("clicked", false)
+                    .attr("fill", colors.clickable);
+                // d3.select(this)
+                //     .classed("clicked", true)
+                //     .attr("fill", colors.clicked);   $("#mySelect").find(":selected").val()
+
+                (function transition() {
+                    d3.select(".clicked").transition()
+                        .duration(1250)
+                        .tween("rotate", function () {
+                            var p = d3.geo.centroid(countries[1]),
+                                r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
+                            return function (t) {
+                                projection.rotate(r(t));
+                                map.selectAll("path").attr("d", path);
+                            }
+                        });
+                })();
+            }
+        };
+        
         d3.select(self.frameElement).style("height", height + "px");
+       
+        // Bsvg|selC2();
+
 </script>
     
     </body>
