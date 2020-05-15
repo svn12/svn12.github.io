@@ -57,7 +57,11 @@ h2{
     <h2 id="nation"></h2>
     <form>
     
-    
+    <label class="radio-inline">
+        <input type="checkbox" class="chk_auto"  >自動播放
+    </label>
+    <!-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+    <label for="vehicle1"> I have a bike</label><br> -->
     <select id="mySelect" onchange="selC()">
 
     </select>
@@ -68,11 +72,25 @@ h2{
 <script>
     var $mySelect = $('#mySelect'); var str = ''; var world;
     
+    function random_no() {
+
+            var ran = Math.round(Math.random()* $mySelect.children('option').length);
+            console.log('rand', ran, $mySelect.children('option').eq(ran).prop('selected', true));
+            $mySelect.eq(ran).prop('selected', true);
+            selC();
+        }
+
+        window.setInterval(function () {
+            /// call your function here
+            if($('.chk_auto').is(":checked"))
+            random_no();
+        }, 2000);  // Change Interval here to test. For eg: 5000 for 5 sec
 
      function selC() {
             id= $("#mySelect").find(":selected").val();
             console.log("#mySelect------",$("#mySelect").find(":selected").val(),$("#mySelect").find(":selected").text());
-
+            
+            
             // console.log('this:', d3.select(this).attr("data-country-id"), d3.select(this).attr("name"));
             d3.selectAll(".clicked")
                 .classed("clicked", false)
@@ -94,7 +112,7 @@ h2{
              
 
             for (j = 0; j < countries.length; j++) {
-                    console.log(j,countries[j].id, $("#mySelect").find(":selected").val());
+                    // console.log(j,countries[j].id, $("#mySelect").find(":selected").val());
                     if (countries[j].id == $("#mySelect").find(":selected").val()) {
                         console.log(j, countries[j].id, $("#mySelect").find(":selected").val() );
                         break;
@@ -113,17 +131,20 @@ h2{
             // }
             // ( transition() {
                 d3.selectAll("path").filter(function (data, i) {
-             console.log(d3.selectAll("path"));
-             console.log(i,data);
+            //  console.log(d3.selectAll("path"));
+            //  console.log(i,data);
              if (data.id== id) {
                  d3.select(this)
                      .classed("clicked", true)
                      .attr("fill", colors.clicked);
                 title.text(data.name);
+                // d3.select('a').attr('href', "https://countrycode.org/" + data.name);
                 flag.attr("xlink:href", "");
                  for (var f = 0; f < flags.length; ++f) {
                      if (flags[f].id == id) {
                          flag.attr("xlink:href", flags[f].url);
+                         d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
+                         console.log(id,flags[f]);
                          break;
                      }
                  }
@@ -188,18 +209,23 @@ h2{
         //     .append('select')
         //     .attr("id", "country")
         //     .attr("onchange", 'selC2');
-        var title = d3.select("svg").append("text")
-            .attr("x", width / 2)
-            .attr("y", height * 3 / 5);
+        var title = d3.select("svg")
+            .append("a")
+            .attr("id",'alnk')
+            .attr("xlink:href", "https://countrycode.org/" + 'palestine/')
+            .append("text")
+            .attr("x", width *2/ 3)
+            .attr("y", height * 1 / 9);
        
-          
+        //   .attr("x", width / 2 + 3)
+        //         .attr("y", height * 3 / 5 + 3)
 
 
         var flag = d3.select("svg").append("image")
             .attr("width", 100)
             .attr("height", 100)
-            .attr("x", width / 2 + 3)
-            .attr("y", height * 3 / 5 + 3)
+            .attr("x", width *2/ 3 + 3)
+            .attr("y", height * 1 / 9 + 3)
             .attr("preserveAspectRatio", "xMinYMin");
         queue()
             .defer(d3.json, "https://raw.githubusercontent.com/infographicstw/example/gh-pages/352/world.json")
@@ -242,7 +268,7 @@ h2{
             // $mySelect.multiSelect('refresh');
             // console.log('str:',str);
             // form.append(str);
-            $mySelect.val(4);
+            $mySelect.val(158);
             selC();
             console.log('countries-f:', countries);
             // console.log('flags:',flags);
@@ -285,20 +311,33 @@ h2{
                             })
                             .on("mousemove", function () {
                                 var c = d3.select(this);
+                                
                                 i = c.attr("data-country-id");
                                 // d3.select('#nation').text(d3.select(this).attr("name"));
                                 // d3.select('#digita').text(d3.select(this).attr("data-country-id"));
                                 // d3.select('#digita').text(countries[i].id);
-                                title.text(countries[i].name);
+                                // title.text(countries[i].name);
+                                cname=countries[i].name;
+                                // d3.select('a').attr('href', "https://countrycode.org/" + cname);
+                                title
+                                //  .attr("href", "https://countrycode.org/"+countries[i].name)
+                                // .attr("<a xlink:href \"https://countrycode.org/palestine\"></a>")
+                                .text(cname);
+                                // cname='<a href="https://countrycode.org/'+cname+'">'+cname+'</a>';
+                                console.log('cname',cname);
+                                
                                 flag.attr("xlink:href", "");
                                 for (var f = 0, id = countries[i].id; f < flags.length; ++f) {
                                     if (flags[f].id == id) {
                                         flag.attr("xlink:href", flags[f].url);
+                                        d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
+                                        console.log(id, flags[f]);
                                          break;
                                     }
                                 }
                                 if (c.classed("clicked")) {
                                     c.attr("fill", colors.clickhover);
+                                    
                                 } else {
                                     c.attr("fill", colors.hover);
                                     
@@ -314,11 +353,18 @@ h2{
                                 if (d3.select(".clicked")[0][0]!=null){
                                   i = d3.select(".clicked").attr("data-country-id");
                                 //   console.log('d3.select(".clicked")',d3.select(".clicked"));
-                                 title.text(countries[i].name);
+                                
+                                // d3.select('a').attr('href', "https://countrycode.org/" + countries[i].name);
+                                 title
+                                //  .attr("href", countries[i].name)
+                                //   .attr("<a xlink:href \"https://countrycode.org/palestine\"></a>")
+                                 .text(countries[i].name);
                                  flag.attr("xlink:href", "");
                                 for (var f = 0, id = countries[i].id; f < flags.length; ++f) {
                                     if (flags[f].id == id) {
                                         flag.attr("xlink:href", flags[f].url);
+                                        d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
+                                        console.log(id, flags[f]);
                                         break;
                                     }
                                 }
@@ -376,7 +422,7 @@ h2{
         };
         
         d3.select(self.frameElement).style("height", height + "px");
-       
+        random_no();
         // Bsvg|selC2();
 
 </script>
