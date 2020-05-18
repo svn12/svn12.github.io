@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-
+<html lang="en"></html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
-    <title>d3_地球</title>
+    <title>d3_地球儀</title>
     <!--引入google的一種字體樣式 -->
     
     <!-- <link rel="stylesheet" href="https://raw.githubusercontent.com/luciopaiva/country-flags/master/dist/country-flag.css"> -->
@@ -42,6 +42,40 @@
 h2{
     color:blueviolet;
 }
+map {
+    position: relative;
+  left: 30px;
+  border: 3px solid #73AD21;
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+    width: 160px;  position: fixed;  z-index: 2;top: ;  left: 0; 
+  /* display: inline-block; */
+  
+}
+.sidenav {  height: 100% ; width: 160px;  position: fixed;  z-index: 1;top: 0;  left: 0;  background-color: rgb(235, 235, 190);  overflow-x: hidden; padding-top: 20px;text-align:center;}
+
+thead  th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+ th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+td {
+  border: 1px solid #dddddd;
+  text-align: right;
+  padding: 8px;
+}
+
+/* tr:nth-child(even) {
+  background-color: #dddddd;
+} */
+
 
     </style>
 <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -52,9 +86,10 @@ h2{
     <!-- <script src="dndTree.js"></script> -->
 </head>
 <body>
-    
+    <!-- <script type='text/javascript' src='..\js\script_jsontable.js'></script> -->
     <p id="digita"></p>
     <h2 id="nation"></h2>
+   
     <form>
     
     <label class="radio-inline">
@@ -65,13 +100,58 @@ h2{
     <select id="mySelect" onchange="selC()">
 
     </select>
+    
 
 </form>
+<table id="detail">
+    <thead>
+    <tr style:"text-align: center;">
+        <th>Item</th>
+        <th>Data</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
    <!-- <svg width="800px" height="600px"></svg> -->
 <!-- <script type="text/javascript" src="http://d3js.org/topojson.v1.min.js"></script> -->
 <script>
-    var $mySelect = $('#mySelect'); var str = ''; var world;
-    
+    var $mySelect = $('#mySelect'); var str = '';
+    var countries, world, flags, details;
+    var io=1;
+    function tabulate(data1, columns) {
+            console.log('io',io,'data1',data1);
+            console.log('columns', columns);
+            var table = d3.select('table');
+            // var thead = table.append('thead');
+            var tbody = d3.select('tbody');
+            tbody.selectAll('tr').remove();
+            
+           
+            var cells = tbody
+                .selectAll('tr')
+                .data(columns)
+                .enter()
+                .append('tr')
+            cells.append('th')
+                
+                .text(function (d) { 
+                    // console.log('L102 d & data1 ', d, data1);
+                return d; })
+            cells.append('td')
+                .text(function (d) { 
+                    console.log('d,data1[d]',d,data1[d]);
+                    return data1[d]; });
+
+            return table;
+        }
+
+        // render the table(s)
+   
+
+
+
     function random_no() {
 
             var ran = Math.round(Math.random()* $mySelect.children('option').length);
@@ -87,8 +167,8 @@ h2{
         }, 2000);  // Change Interval here to test. For eg: 5000 for 5 sec
 
      function selC() {
-            id= $("#mySelect").find(":selected").val();
-            console.log("#mySelect------",$("#mySelect").find(":selected").val(),$("#mySelect").find(":selected").text());
+            var id= $("#mySelect").find(":selected").val();
+            // console.log("#mySelect------",$("#mySelect").find(":selected").val(),$("#mySelect").find(":selected").text());
             
             
             // console.log('this:', d3.select(this).attr("data-country-id"), d3.select(this).attr("name"));
@@ -97,39 +177,27 @@ h2{
                 .attr("fill", colors.clickable);
             // data - country - id
             
-            queue()
-             .defer(d3.json, "https://raw.githubusercontent.com/infographicstw/example/gh-pages/352/world.json")
-             .defer(d3.tsv, "../doc/world-country-flags.tsv")
-              .await(ready);
+            // queue()
+            //  .defer(d3.json, "https://raw.githubusercontent.com/infographicstw/example/gh-pages/352/world.json")
+            //  .defer(d3.tsv, "../doc/world-country-flags.tsv")
+            //  .defer(d3.csv,"../doc/countrycode.csv")
+            //   .await(ready);
 
 
-            function ready(error, world,flags) {
-             console.log('error:',error)   
-            
-             countries = topojson.feature(world, world.objects.countries).features;
-
-             console.log('country-11111',countries);
-             
+            // function ready(error, details) {
+            //  console.log('error:',error)   
+            var id = $("#mySelect").find(":selected").val();
+             console.log('details:',details);
+        
 
             for (j = 0; j < countries.length; j++) {
                     // console.log(j,countries[j].id, $("#mySelect").find(":selected").val());
                     if (countries[j].id == $("#mySelect").find(":selected").val()) {
-                        console.log(j, countries[j].id, $("#mySelect").find(":selected").val() );
+                        // console.log(j, countries[j].id, $("#mySelect").find(":selected").val() );
                         break;
                     }
             }
-            // console.log(j, countries[j].id, $("#mySelect").find(":selected").val() );
             
-
-            //  $.each(countries, function (i, item) {
-            //         // console.log('item:',item);
-            //         // IMPORTANT: no selectors inside the loop (for the best performance)
-            //         console.log('i:',i,'item:',item);
-                
-            //     });
-
-            // }
-            // ( transition() {
                 d3.selectAll("path").filter(function (data, i) {
             //  console.log(d3.selectAll("path"));
             //  console.log(i,data);
@@ -148,6 +216,15 @@ h2{
                          break;
                      }
                  }
+                 for (var f = 0; f < details.length; ++f) {
+                     if (parseInt(details[f]["ISO Numeric"]) == parseInt(id)) {
+                         console.log(id,details[f]);
+                         //  console.log(id,flags[f]);
+                          tabulate(details[f], ['Capital','Area KM2', 'GDP','Currency','Continent']); // 2 column table
+                         break;
+                     }
+                 }
+                
              }
 
          })
@@ -155,7 +232,7 @@ h2{
                 d3.select(".clicked").transition()
                     .duration(1250)
                     .tween("rotate", function () {
-                        console.log(j,'rotate');
+                        // console.log(j,'rotate');
                         var p = d3.geo.centroid(countries[j]),
                             r = d3.interpolate(projection.rotate(), [-p[0], -p[1]]);
                         return function (t) {
@@ -164,11 +241,11 @@ h2{
                         }
                     });
             // });
-        }
+        // }
      }
     
-    var width = 950,
-            height = 700;
+        var width = 650,
+        height = 600;
         var selC2;
         var colors = { clickable: 'darkgrey', hover: 'grey', clicked: "red", clickhover: "darkred" };
 
@@ -212,6 +289,7 @@ h2{
         var title = d3.select("svg")
             .append("a")
             .attr("id",'alnk')
+            .attr("display", "inline-block")
             .attr("xlink:href", "https://countrycode.org/" + 'palestine/')
             .append("text")
             .attr("x", width *2/ 3)
@@ -231,17 +309,22 @@ h2{
             .defer(d3.json, "https://raw.githubusercontent.com/infographicstw/example/gh-pages/352/world.json")
             .defer(d3.tsv, "https://raw.githubusercontent.com/KoGor/Maps.GeoInfo/master/world-country-names.tsv")
             .defer(d3.tsv, "../doc/world-country-flags.tsv")
+            .defer(d3.csv, "../doc/countrycode.csv")
             .await(ready);
 
-        function ready(error, world, names, flags) {
+        function ready(error, world, names, rflags,rdetails) {
             if (error) throw error;
             // console.log('names:',names);
             // console.log('world:', world);
+            flags=rflags;
+
+            details= rdetails;
+            countries = topojson.feature(world, world.objects.countries).features;
             var globe = { type: "Sphere" },
                 land = topojson.feature(world, world.objects.land),
-                countries = topojson.feature(world, world.objects.countries).features,
+                
                 borders = topojson.mesh(world, world.objects.countries, function (a, b) { return a !== b; });
-            console.log('countries:',countries);
+            // console.log('countries:',countries);
             // console.log('land:', land);
             //  console.log('names:', names);
             countries = countries.filter(function (d) {
@@ -268,14 +351,14 @@ h2{
             // $mySelect.multiSelect('refresh');
             // console.log('str:',str);
             // form.append(str);
-            $mySelect.val(158);
-            selC();
-            console.log('countries-f:', countries);
+            
+            // console.log('countries-f:', countries);
             // console.log('flags:',flags);
             map.insert("path", ".graticule")
                 .datum(topojson.feature(world, world.objects.land))
                 .attr("class", "land")
                 .attr("d", path);
+            
 
             for (i = 0; i < names.length; i++) {
                 for (j = 0; j < countries.length; j++) {
@@ -324,14 +407,14 @@ h2{
                                 // .attr("<a xlink:href \"https://countrycode.org/palestine\"></a>")
                                 .text(cname);
                                 // cname='<a href="https://countrycode.org/'+cname+'">'+cname+'</a>';
-                                console.log('cname',cname);
+                                // console.log('cname',cname);
                                 
                                 flag.attr("xlink:href", "");
                                 for (var f = 0, id = countries[i].id; f < flags.length; ++f) {
                                     if (flags[f].id == id) {
                                         flag.attr("xlink:href", flags[f].url);
                                         d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
-                                        console.log(id, flags[f]);
+                                        // console.log(id, flags[f]);
                                          break;
                                     }
                                 }
@@ -364,7 +447,7 @@ h2{
                                     if (flags[f].id == id) {
                                         flag.attr("xlink:href", flags[f].url);
                                         d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
-                                        console.log(id, flags[f]);
+                                        // console.log(id, flags[f]);
                                         break;
                                     }
                                 }
@@ -393,7 +476,8 @@ h2{
                 .datum(topojson.mesh(world, world.objects.countries, function (a, b) { return a !== b; }))
                 .attr("class", "boundary")
                 .attr("d", path);
-
+            $mySelect.val(158);
+            selC();
             
              function selC2() {
                 console.log("#mySelect------", $("#mySelect").find(":selected").val());
@@ -422,7 +506,7 @@ h2{
         };
         
         d3.select(self.frameElement).style("height", height + "px");
-        random_no();
+        // random_no();
         // Bsvg|selC2();
 
 </script>
