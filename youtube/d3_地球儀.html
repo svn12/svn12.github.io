@@ -151,11 +151,30 @@ td {
    
 
 
+    function display_flag_detail(id){
 
+        flag.attr("xlink:href", "");
+        for (var f = 0; f < flags.length; ++f) {
+            if (flags[f].id == id) {
+                flag.attr("xlink:href", flags[f].url);
+                d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
+                console.log(id, flags[f]);
+                break;
+            }
+        }
+        for (var f = 0; f < details.length; ++f) {
+            if (parseInt(details[f]["ISO Numeric"]) == parseInt(id)) {
+                console.log(id, details[f]);
+                //  console.log(id,flags[f]);
+                tabulate(details[f], ['Capital', 'Area KM2', 'GDP', 'Currency', 'Continent']); // 2 column table
+                break;
+            }
+        }
+    }
     function random_no() {
 
             var ran = Math.round(Math.random()* $mySelect.children('option').length);
-            console.log('rand', ran, $mySelect.children('option').eq(ran).prop('selected', true));
+            // console.log('rand', ran, $mySelect.children('option').eq(ran).prop('selected', true));
             $mySelect.eq(ran).prop('selected', true);
             selC();
         }
@@ -207,23 +226,25 @@ td {
                      .attr("fill", colors.clicked);
                 title.text(data.name);
                 // d3.select('a').attr('href', "https://countrycode.org/" + data.name);
-                flag.attr("xlink:href", "");
-                 for (var f = 0; f < flags.length; ++f) {
-                     if (flags[f].id == id) {
-                         flag.attr("xlink:href", flags[f].url);
-                         d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
-                         console.log(id,flags[f]);
-                         break;
-                     }
-                 }
-                 for (var f = 0; f < details.length; ++f) {
-                     if (parseInt(details[f]["ISO Numeric"]) == parseInt(id)) {
-                         console.log(id,details[f]);
-                         //  console.log(id,flags[f]);
-                          tabulate(details[f], ['Capital','Area KM2', 'GDP','Currency','Continent']); // 2 column table
-                         break;
-                     }
-                 }
+                display_flag_detail(id);
+
+                // flag.attr("xlink:href", "");
+                //  for (var f = 0; f < flags.length; ++f) {
+                //      if (flags[f].id == id) {
+                //          flag.attr("xlink:href", flags[f].url);
+                //          d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
+                //          console.log(id,flags[f]);
+                //          break;
+                //      }
+                //  }
+                //  for (var f = 0; f < details.length; ++f) {
+                //      if (parseInt(details[f]["ISO Numeric"]) == parseInt(id)) {
+                //          console.log(id,details[f]);
+                //          //  console.log(id,flags[f]);
+                //           tabulate(details[f], ['Capital','Area KM2', 'GDP','Currency','Continent']); // 2 column table
+                //          break;
+                //      }
+                //  }
                 
              }
 
@@ -396,6 +417,7 @@ td {
                                 var c = d3.select(this);
                                 
                                 i = c.attr("data-country-id");
+                                //******* $mySelect.eq(i).prop('selected', true);
                                 // d3.select('#nation').text(d3.select(this).attr("name"));
                                 // d3.select('#digita').text(d3.select(this).attr("data-country-id"));
                                 // d3.select('#digita').text(countries[i].id);
@@ -408,16 +430,18 @@ td {
                                 .text(cname);
                                 // cname='<a href="https://countrycode.org/'+cname+'">'+cname+'</a>';
                                 // console.log('cname',cname);
-                                
-                                flag.attr("xlink:href", "");
-                                for (var f = 0, id = countries[i].id; f < flags.length; ++f) {
-                                    if (flags[f].id == id) {
-                                        flag.attr("xlink:href", flags[f].url);
-                                        d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
-                                        // console.log(id, flags[f]);
-                                         break;
-                                    }
-                                }
+                                id = countries[i].id
+                                display_flag_detail(id);
+
+                                // flag.attr("xlink:href", "");
+                                // for (var f = 0 ; f < flags.length; ++f) {
+                                //     if (flags[f].id == id) {
+                                //         flag.attr("xlink:href", flags[f].url);
+                                //         d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
+                                //         // console.log(id, flags[f]);
+                                //          break;
+                                //     }
+                                // }
                                 if (c.classed("clicked")) {
                                     c.attr("fill", colors.clickhover);
                                     
@@ -442,15 +466,18 @@ td {
                                 //  .attr("href", countries[i].name)
                                 //   .attr("<a xlink:href \"https://countrycode.org/palestine\"></a>")
                                  .text(countries[i].name);
-                                 flag.attr("xlink:href", "");
-                                for (var f = 0, id = countries[i].id; f < flags.length; ++f) {
-                                    if (flags[f].id == id) {
-                                        flag.attr("xlink:href", flags[f].url);
-                                        d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
-                                        // console.log(id, flags[f]);
-                                        break;
-                                    }
-                                }
+                                 id = countries[i].id
+                                 display_flag_detail(id);
+
+                                //  flag.attr("xlink:href", "");
+                                // for (var f = 0, id = countries[i].id; f < flags.length; ++f) {
+                                //     if (flags[f].id == id) {
+                                //         flag.attr("xlink:href", flags[f].url);
+                                //         d3.select('a').attr('href', "https://countrycode.org/" + flags[f].link);
+                                //         // console.log(id, flags[f]);
+                                //         break;
+                                //     }
+                                // }
                                 }
                                 //  title.text('');
                                 // flag.attr("xlink:href", "");
