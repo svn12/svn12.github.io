@@ -174,8 +174,11 @@ td {
     function random_no() {
 
             var ran = Math.round(Math.random()* $mySelect.children('option').length);
-            // console.log('rand', ran, $mySelect.children('option').eq(ran).prop('selected', true));
-            $mySelect.eq(ran).prop('selected', true);
+            console.log('rand', ran, $mySelect.children('option').eq(ran).prop('selected', true));
+            $('#selectBox option:eq(3)').prop('selected', true);
+            // $mySelect.eq(ran).children('option').prop('selected', true);
+            
+            $mySelect.val($("#mySelect").children('option')[ran].value);
             selC();
         }
 
@@ -186,7 +189,7 @@ td {
         }, 2000);  // Change Interval here to test. For eg: 5000 for 5 sec
 
      function selC() {
-            var id= $("#mySelect").find(":selected").val();
+            var id= $mySelect.find(":selected").val();
             // console.log("#mySelect------",$("#mySelect").find(":selected").val(),$("#mySelect").find(":selected").text());
             
             
@@ -205,13 +208,13 @@ td {
 
             // function ready(error, details) {
             //  console.log('error:',error)   
-            var id = $("#mySelect").find(":selected").val();
-             console.log('details:',details);
+            var id = $mySelect.find(":selected").val();
+             console.log('id:',id);
         
 
             for (j = 0; j < countries.length; j++) {
                     // console.log(j,countries[j].id, $("#mySelect").find(":selected").val());
-                    if (countries[j].id == $("#mySelect").find(":selected").val()) {
+                    if (countries[j].id == id) {
                         // console.log(j, countries[j].id, $("#mySelect").find(":selected").val() );
                         break;
                     }
@@ -310,6 +313,8 @@ td {
         var title = d3.select("svg")
             .append("a")
             .attr("id",'alnk')
+            
+            .attr("text-decoration", "underline")
             .attr("display", "inline-block")
             .attr("xlink:href", "https://countrycode.org/" + 'palestine/')
             .append("text")
@@ -392,6 +397,7 @@ td {
                             .attr("data-country-id", j)
                             .attr("name", countries[j].name)
                             .on("click", function () {
+                                
                                 console.log('this:',this, d3.select(this).attr("data-country-id"), d3.select(this).attr("name"));
                                 d3.selectAll(".clicked")
                                     .classed("clicked", false)
@@ -417,20 +423,19 @@ td {
                                 var c = d3.select(this);
                                 
                                 i = c.attr("data-country-id");
+                                
                                 //******* $mySelect.eq(i).prop('selected', true);
                                 // d3.select('#nation').text(d3.select(this).attr("name"));
                                 // d3.select('#digita').text(d3.select(this).attr("data-country-id"));
                                 // d3.select('#digita').text(countries[i].id);
                                 // title.text(countries[i].name);
                                 cname=countries[i].name;
-                                // d3.select('a').attr('href', "https://countrycode.org/" + cname);
-                                title
-                                //  .attr("href", "https://countrycode.org/"+countries[i].name)
-                                // .attr("<a xlink:href \"https://countrycode.org/palestine\"></a>")
-                                .text(cname);
+                                d3.select('a').attr('href', "https://countrycode.org/" + cname);
+                                title.text(cname);
                                 // cname='<a href="https://countrycode.org/'+cname+'">'+cname+'</a>';
                                 // console.log('cname',cname);
                                 id = countries[i].id
+                                $mySelect.val(id);
                                 display_flag_detail(id);
 
                                 // flag.attr("xlink:href", "");
@@ -459,6 +464,7 @@ td {
                                 
                                 if (d3.select(".clicked")[0][0]!=null){
                                   i = d3.select(".clicked").attr("data-country-id");
+                                  
                                 //   console.log('d3.select(".clicked")',d3.select(".clicked"));
                                 
                                 // d3.select('a').attr('href', "https://countrycode.org/" + countries[i].name);
@@ -467,6 +473,7 @@ td {
                                 //   .attr("<a xlink:href \"https://countrycode.org/palestine\"></a>")
                                  .text(countries[i].name);
                                  id = countries[i].id
+                                 $mySelect.val(id);
                                  display_flag_detail(id);
 
                                 //  flag.attr("xlink:href", "");
