@@ -66,7 +66,7 @@ path1:hover {
    
     <script>
     var width = 800, height = 600;
-    var xPosition =400,yPosition =30;
+    var xPosition =250,yPosition =80;
     queue()
             .defer(d3.json, "../doc/TWN_1081121.json")
             .defer(d3.tsv, "../doc/person_by_country.tsv")
@@ -81,7 +81,7 @@ path1:hover {
         var features = topojson.feature(topodata, topodata.objects["COUNTY_MOI_1081121"]).features;
             // 這裡要注意的是 topodata.objects["county"] 中的 "county" 為原本 shp 的檔名
         var path = d3.geo.path().projection( // 路徑產生器
-            d3.geo.mercator().center([121, 24]).scale(6000) // 座標變換函式
+            d3.geo.mercator().center([122.8, 23.95]).scale(6000) // 座標變換函式
             );
         d3.select("svg")
                         .selectAll("path")
@@ -124,7 +124,10 @@ path1:hover {
                 }
              }
             }
-        var color = d3.scale.linear().domain([0, 500000]).range(["pink", "yellow"]);
+        var color = d3.scale.linear().domain([0, 2400000])
+                            // .range(["#fd0", "#0ad"]);
+                            // .range(["pink", "green"]);
+                             .range(["blue", "pink"]);
             d3.select("svg").selectAll("path")
                             .data(features)
                             .attr({
@@ -132,7 +135,10 @@ path1:hover {
                             
                             density: function (d) {return  parseInt(d.properties.density.replace(',', ''))},
                             fill: function (d) {
-                                    return color(parseInt(d.properties.density.replace(',', '')));
+
+                                    cno= parseInt(d.properties.density.replace(/,/g, ''));
+                                    console.log('cno:', d.properties.density,cno, color(cno));
+                                    return color(cno);
                                      }
                             })
                              .on("mouseover", function () {
@@ -164,7 +170,7 @@ path1:hover {
                                 console.log(this.__data__, this.__data__.properties.density);
                                  d3.select("#tooltip").classed("hidden", true);
                                 d3.select(this)
-                                    .attr("fill", color(parseInt(this.__data__.properties.density.replace(',', ''))));
+                                    .attr("fill", color(parseInt(this.__data__.properties.density.replace(/,/g, ''))));
                             });
                             
         }
