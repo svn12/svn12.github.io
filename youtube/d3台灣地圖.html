@@ -67,6 +67,23 @@ path1:hover {
     <script>
     var width = 800, height = 600;
     var xPosition =250,yPosition =80;
+    var x,y,s;
+    var container=d3.select('svg');
+var zoom = d3.behavior.zoom()
+    .translate([0, 0])
+    .scaleExtent([1, 3])
+    .scale(1)
+    .on("zoom", zoomed);
+
+function zoomed() {
+  x=d3.event.translate[0]/6;
+  y=d3.event.translate[1]/6;
+  s=d3.event.scale;
+  container.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+    // container.attr("transform", "scale(" + d3.event.scale + ")");
+}
+
+    d3.select('svg').call(zoom);
     queue()
             .defer(d3.json, "../doc/TWN_1081121.json")
             .defer(d3.tsv, "../doc/person_by_country.tsv")
