@@ -1,0 +1,532 @@
+﻿<!DOCTYPE h<html lang="zh"">
+    <head><meta charset="UTF-8"><title>聽讀聖經</title><link rel="stylesheet" href="reset.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>form{margin:0px; display:inline;font-size:16px; }
+        button{margin:0px; display:inline;font-size:16px; }
+        /* label {display:inline;} */
+        /* input {display:inline;} */
+        select {font-size:18px;}
+    </style>
+    <link rel="stylesheet" href="link_P.css">
+</head>tml>
+<body onload="Iniload()" > <div class="sidenav1">
+
+
+<br>
+
+<audio id="audio1"  onended="audioend1()">
+    <source id="audioSource1" src="">
+    </source>
+    Your browser does not support the audio format.
+</audio>
+<!-- controls="controls" -->
+<audio id="audio2"  onended="audioend2()">
+    <source id="audioSource2" src="">
+    </source>
+    Your browser does not support the audio format.
+</audio>
+<audio id="audio3"  onended="audioend3()">
+    <source id="audioSource3" src="">
+    </source>
+    Your browser does not support the audio format.
+</audio>
+<!-- <br> -->
+
+<form>
+    
+    聖經:
+    <select id="SelTitle" onchange="fSelTitle_a()">
+
+    </select>
+
+</form>
+
+<form>
+    章:
+    <select id="SelChap" onchange="fselChap_a()">
+
+
+    </select>
+
+</form>
+<button onclick="playaudio()">
+    播放</button>
+<button onclick="pauseaudio()">
+    暫停</button>
+<button onclick="audioend1()">
+    下一章</button>
+
+<form onclick="Chk_Iniload()" >
+    <label class="radio-inline">
+        <input type="radio" name="rd_type" id="any" checked>任意讀
+    </label>
+    <label class="radio-inline">
+        <input type="radio" id="seq" name="rd_type">順序讀
+    </label>
+    <label class="radio-inline">
+        <input type="radio" id="rnd" name="rd_type">隨機讀
+
+    </label>
+
+</form>
+<form onclick="playaudio()">
+    <label class="radio-inline">
+        <input type="radio" name="optradio" checked>台語有聲聖經
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="optradio">和合本有聲聖經
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="optradio">現代中文有聲聖經
+        
+    </label>
+    
+</form>
+<h2> <a id="new_b2" target="_blank"  href="https://mygoodfriend.net/TCV_Big5/">現代中文聖經</a></h2>
+<!--  <p id="test">original</p> -->
+
+
+<!-- <p id="test2">audio2</p> -->
+<script>
+    function pauseaudio() {
+            
+            for (var i = 1; i < 4; i++) {
+                audio = document.getElementById('audio' + i);
+                audio.pause();
+            }
+            
+        }
+    function playaudio(){
+        var audios = document.getElementsByName('optradio');
+        pauseaudio();
+        var audio_value;
+        for (var i = 0; i < audios.length; i++) {
+            
+            if (audios[i].checked) {
+                audio = document.getElementById('audio' + (i+1));
+                audio.play();
+                break;
+            }
+        }
+    }
+    function nextchap() {
+            
+            for (var i = 0; i < audios.length; i++) {
+
+                if (audios[i].checked) {
+                    audioend()
+                    break;
+                }
+            }
+        }
+    function audioend1() {
+        if (document.getElementById("any").checked) {
+
+        } else {
+            document.getElementById("any").checked = true;
+            document.getElementById("seq").checked = false;
+            document.getElementById("rnd").checked = false;
+        }
+        audioend()
+    }
+    
+     function audioend2() {
+             if (document.getElementById("any").checked) {
+
+         } else {
+             document.getElementById("any").checked = true;
+             document.getElementById("seq").checked = false;
+             document.getElementById("rnd").checked = false;
+         }
+         audioend()
+        }
+     function audioend3() {
+            if (document.getElementById("any").checked) {
+
+         } else {
+             document.getElementById("any").checked = true;
+             document.getElementById("seq").checked = false;
+             document.getElementById("rnd").checked = false;
+         }
+         audioend()
+        }
+    function audioend() {
+         var audios = document.getElementsByName('rd_type');
+
+        
+        if (audios[0].checked){
+            if (document.getElementById("SelChap").options.length == document.getElementById("SelChap").selectedIndex + 1) {
+                if (document.getElementById("SelTitle").options.length == document.getElementById("SelTitle").selectedIndex + 1) {
+
+                }
+                else {
+                    document.getElementById("SelTitle").selectedIndex++
+                    fSelTitle();
+                    // audio = document.getElementById('audio' + ptr);
+                    //  audio.play();
+                    playaudio();
+                }
+            }
+            else {
+
+                document.getElementById("SelChap").selectedIndex++
+
+                fselChap();
+                // audio = document.getElementById('audio' + ptr);
+                //  audio.play();
+                playaudio();
+
+            }
+            }else{
+                for (var i = 1; i < audios.length; i++) {
+                if (audios[i].checked) {
+
+                    query_DB(i, 0);
+                    break;
+                    }
+                }
+            }
+        }
+    function query_DB(rd_type,s_query){
+        var a = {
+            r_type:rd_type-1,
+             s_query:s_query
+            
+        };
+        $.get('https://script.google.com/macros/s/AKfycbxxigAjajqxuFjFhsnbCgSHIMkJe9miGUEWZ5sMW8SOzbQlJAaP/exec', a, function (data) {
+                // console.log(data.length);
+                // console.log(data);
+                data = JSON.parse(data);
+                // console.log(data.length);
+                // console.log(data);
+                Ini_sel(eval(data[0].SelTitle_idx), eval(data[0].SelChap_idx));
+                return 
+
+        })
+    }
+    function Chk_Iniload(){
+        var audios = document.getElementsByName('rd_type');
+        
+        for (var i = 1; i < audios.length; i++) {
+            if (audios[i].checked){
+                
+                query_DB(i, 0);
+                break;
+                }
+            }
+
+    }
+    function Ini_sel(SelTitle_idx, SelChap_idx){
+        document.getElementById("SelTitle").selectedIndex = SelTitle_idx - 1;
+        fSelTitle();
+        document.getElementById("SelChap").selectedIndex = SelChap_idx - 1;
+        fselChap();
+    }
+    function play_sel(SelTitle_idx, SelChap_idx){
+        document.getElementById("SelTitle").selectedIndex= SelTitle_idx-1;
+        fSelTitle();
+        document.getElementById("SelChap").selectedIndex= SelChap_idx-1;
+        fselChap();
+        playaudio();
+        
+        
+    }
+    function addOption(n,id) {
+        //根據id查詢物件，
+
+        var select = document.getElementById(id);
+        
+
+        for (var i = 1; i <= n; i++) {
+            // var opt = options[i];
+            var el = document.createElement("option");
+            el.textContent = i;
+            el.value = i;
+            select.appendChild(el);
+            
+        }
+      
+    }
+    function IniTitle(){
+        var Btitle=["創世記","出埃及記","利未記","民數記","申命記","約書亞記",
+"士師記","路得記","撒母耳記上","撒母耳記下","列王紀上","列王紀下",
+"歷代志上","歷代志下","以斯拉記","尼希米記","以斯帖記","約伯記",
+"詩篇","箴言","傳道書","雅歌","以賽亞書","耶利米書",
+"耶利米哀歌","以西結書","但以理書","何西阿書","約珥書","阿摩司書",
+"俄巴底亞書","約拿書","彌迦書","那鴻書","哈巴谷書","西番雅書",
+"哈該書","撒迦利亞書","瑪拉基書","馬太福音","馬可福音","路加福音",
+"約翰福音","使徒行傳","羅馬人書","哥林多前書","哥林多後書","加拉太書",
+"以弗所書","腓立比書","歌羅西書","帖撒羅尼迦前書","帖撒羅尼迦後書","提摩太前書",
+"提摩太後書","提多書","腓利門書","希伯來書","雅各書","彼得前書",
+"彼得後書","約翰一書","約翰二書","約翰三書","猶大書","啟示錄"
+];
+        var Btitle_ptr=["gen", "exo", "lev", "num", "deu", "jos",
+            "jug", "rut", "1sa", "2sa", "1ki", "2ki",
+            "1ch", "2ch", "ezr", "neh", "est", "job",
+            "psm", "pro", "ecc", "son", "isa", "jer",
+            "lam", "eze", "dan", "hos", "joe", "amo",
+            "oba", "jon", "mic", "nah", "hab", "zep",
+            "hag", "zec", "mal", "mat", "mak", "luk",
+            "jhn", "act", "rom", "1co", "2co", "gal",
+            "eph", "phl", "col", "1ts", "2ts", "1ti",
+            "2ti", "tit", "mon", "heb", "jas", "1pe",
+            "2pe", "1jn", "2jn", "3jn", "jud", "rev"
+];
+        var select = document.getElementById("SelTitle");
+        // var options = ["10", "11", "12", "13", "14","15","16"];
+        // alert(id, select.options[1].value);
+
+        for (var i = 1; i <= Btitle.length; i++) {
+            // var opt = options[i];
+            var el = document.createElement("option");
+            el.textContent = Btitle[i-1];
+            el.value = Btitle_ptr[i-1];
+            select.appendChild(el);
+            // select.options.add(el);
+            // alert(select.options[i-1].value);
+        }
+
+
+    }
+    function get_Title_Chap_Cnt(){
+         var chap_cnt = ["50", "40", "27", "36", "34", "24",
+            "21", "4", "31", "24", "22", "25",
+            "29", "36", "10", "13", "10", "42",
+            "150", "31", "12", "8", "66", "52",
+            "5", "48", "12", "14", "3", "9",
+            "1", "4", "7", "3", "3", "3",
+            "2", "14", "4", "28", "16", "24",
+            "21", "28", "16", "16", "13", "6",
+            "6", "4", "4", "5", "3", "6",
+            "4", "3", "1", "13", "5", "5",
+            "3", "5", "1", "1", "1", "22"
+
+        ];
+        return chap_cnt[document.getElementById("SelTitle").selectedIndex];
+    }
+    function get_new_bible2_p_old() {
+            var chap_ptr1 = [1047, 1098, 1139, 1167, 1204, 1239,
+            1264, 1286, 1291, 1323, 1348, 1371,
+            1397, 1427, 1464, 1475, 1489, 1501,
+            1544, 1695, 1727, 1740, 1749, 1890,
+            1945, 1951, 2000, 2013, 2028, 2032,
+            2042, 2044, 2049, 2057, 2061, 2065,
+            2069, 2072, 2087, 2093, 2122, 2139,
+            2164, 2186, 2215, 2232, 2249, 2263,
+            2270, 2277, 2282, 2287, 2293, 2297,
+            2304, 2309, 2313, 2315, 2329, 2335,
+            2341, 2345, 2351, 2353, 2355, 2357
+            ];
+            return chap_ptr1[document.getElementById("SelTitle").selectedIndex];
+        }
+        function get_new_bible2_p() {
+                var chap_ptr = ["01C", "02C", "03C", "04C", "05C", "06C",
+                "07C", "08C", "09C", "10C", "11C", "12C",
+                "13C", "14C", "15C", "16C", "17C", "18C",
+                "19C", "20C", "21C", "22C", "23C", "24C",
+                "25C", "26C", "27C", "28C", "29C", "30C",
+                "31C", "32C", "33C", "34C", "35C", "36C",
+                "37C", "38C", "39C", "40C", "41C", "42C",
+                "43C", "44C", "45C", "46C", "47C", "48C",
+                "49C", "50C", "51C", "52C", "53C", "54C",
+                "55C", "56C", "57C", "58C", "59C", "60C",
+                "61C", "62C", "63C", "64C", "65C", "66C"
+                ];
+                return chap_ptr[document.getElementById("SelTitle").selectedIndex];
+            }
+    function IniChap(){
+              
+
+        var select = document.getElementById("SelTitle").selectedIndex;
+        // alert(select);
+        document.getElementById("SelChap").options.length = 0;
+        // addOption(chap_cnt[select], "SelChap")
+        // alert(get_Title_Chap_Cnt());
+        addOption(get_Title_Chap_Cnt(), "SelChap");
+       fselChap();
+    }
+    function fSelTitle(){
+        
+        // alert(get_Title_Chap_Cnt());
+        IniChap();
+    }
+    function fSelTitle_a() {
+        if (document.getElementById("any").checked) {
+
+        } else {
+            document.getElementById("any").checked = true;
+            document.getElementById("seq").checked = false;
+            document.getElementById("rnd").checked = false;
+        }
+
+            fSelTitle();
+            // alert(get_Title_Chap_Cnt());
+            IniChap();
+        }
+
+    function Iniload(){
+        IniTitle();
+        // addOption(17, "SelChap")
+        IniChap();
+    }
+    function changeSrc() {
+        var xhead="https://www.lingshyang.com/bible/"
+        var num= document.getElementById("SelChap").value
+        var lead_num=""
+        if(num<10)
+        {
+            lead_num = ""
+        }
+        var src_ptr= document.getElementById("SelTitle").options[document.getElementById("SelTitle").selectedIndex].value;
+        // alert(src_ptr);
+        // var xtail = "/mak/mak"+lead_num+num+".htm";
+        var xtail = "/"+src_ptr+"/"+src_ptr + lead_num + num + ".htm";
+        var ids = ["taiwan_Bible", "bible_rome", "bible_5", "new_bible","bbe_bible"];
+        var i = 0;
+       // document.getElementById("test1").innerHTML = document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
+        while (ids[i]) {
+            // text += ids[i] + "<br>";
+            document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
+            i++;
+        }
+        
+        // xhead="http://bible.goodjob.tw/tcv_b5/";
+        xhead="http://mygoodfriend.net/TCV_Big5/B";
+        lead_num = "";
+        if (num < 10) {
+            lead_num = "00";
+            
+        } else
+            if(num<100){
+                lead_num="0";
+            }
+
+        //   alert(xhead + get_new_bible2_p() + lead_num + num + ".htm" );//+ lead_num + num + ".htm")  ;
+             
+        // document.getElementById("new_bible2").src =
+        //      xhead+(num-1+get_new_bible2_p())+".htm";
+         
+            document.getElementById("new_b2").href =
+            xhead + get_new_bible2_p() + lead_num + num + ".htm";
+        // document.getElementById("new_b2").innerText =
+        //     xhead + get_new_bible2_p() + lead_num + num + ".htm";  
+     
+
+        //  document.getElementById("new_bible2").src =
+        //     xhead +get_new_bible2_p()+  lead_num + num + ".htm";
+         
+
+    //    var id="taiwan_Bible" 
+       
+        //console.log(title);
+    } 
+  function fselChap_a() {
+       if (document.getElementById("any").checked) {
+
+      } else {
+          document.getElementById("any").checked = true;
+          document.getElementById("seq").checked = false;
+          document.getElementById("rnd").checked = false;
+      }
+      fselChap();
+  }
+  function fselChap() {
+        var audio_type=["Taiwanese","unv1","tcv"]
+        var lead_num = "";
+        var num= document.getElementById("SelChap").value ;
+        if (num < 100) {
+            if(num<10) { lead_num = "00";}
+            else
+                lead_num = "0";
+        }
+       
+        // var audio_src_h = "https://www.lingshyang.com/bible/tw_bible_soun/" + "041/41_";
+        
+        var audio_ptr= document.getElementById("SelTitle").selectedIndex+1;
+        
+        var audio_src_h = "https://media.fhl.net/" + audio_type[1] + "/" + audio_ptr + "/" + audio_ptr + "_"; //"41/41_";
+       
+    //    document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
+       
+        var audio_src = audio_src_h + lead_num + num + ".mp3";
+        var audio = document.getElementById('audio2');
+        var source = document.getElementById('audioSource2');
+        
+        source.src = audio_src;
+        
+        audio.load(); //call this to just preload the audio without playing
+        
+        audio_src_h = "https://media.fhl.net/" + audio_type[2] + "/" + audio_ptr + "C/" + audio_ptr + "_"; //"41/41_";
+      // document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
+        audio_src = audio_src_h + lead_num + num + ".mp3";
+        audio = document.getElementById('audio3');
+        source = document.getElementById('audioSource3');
+        source.src = audio_src;
+        audio.load(); //call this to just preload the audio without playing
+        
+        audio_src_h = "https://media.fhl.net/"+audio_type[0]+"/" + audio_ptr+"/"+audio_ptr+"_"; //"41/41_";
+        // document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
+        audio_src = audio_src_h + lead_num +num + ".mp3";
+        audio = document.getElementById('audio1');
+        source = document.getElementById('audioSource1');
+        source.src = audio_src; 
+        audio.load(); //call this to just preload the audio without playing
+
+
+
+        changeSrc();
+        // audio.play(); //call this to play the song right away
+    };
+  list.onclick = function (e) {
+        e.preventDefault();
+        var 
+         audio_src ="http://www.lingshyang.com/bible/tw_bible_soun/"+"041/41_0"+ document.getElementById("SelChap").value + ".mp3";
+        var  audio_src3="http://www.lingshyang.com/bible/tw_bible_soun/041/41_001.mp3"
+        // document.getElementById("test").innerHTML = "Be"
+        // if (audio_src3 = audio_src3) {
+        //     // document.getElementById("test").innerHTML = "Equal"+audio_src.length;}
+        // else
+        //     // {document.getElementById("test").innerHTML = "Not Equal";}
+        // // document.getElementById("test1").innerHTML = audio_src;
+        var elm = e.target;
+        var audio_src1=      elm.getAttribute('data-value');
+        //    document.getElementById("test2").innerHTML =audio_src1;
+        var audio = document.getElementById('audio');
+
+        var source = document.getElementById('audioSource');
+        // source.src = elm.getAttribute('data-value');
+        // source.src = audio_src
+        
+        source.src = audio_src; //elm.getAttribute('data-value');
+        // document.getElementById("test").innerHTML ="Be"
+        changeSrc();
+        audio.load(); //call this to just preload the audio without playing
+        audio.play(); //call this to play the song right away
+    };
+
+    
+</script>
+
+ 
+<!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
+<iframe id="taiwan_Bible" src="https://www.lingshyang.com/bible/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
+
+<iframe  id="bible_rome" src="https://www.lingshyang.com/bible/bible_rome/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
+
+<iframe id="bible_5" src="https://www.lingshyang.com/bible/bible_5/mak/mak14.htm" frameborder="0"></iframe>
+<!-- <iframe id="new_bible2" src="http://bible.goodjob.tw/tcv_b5/2135.htm" frameborder="0"></iframe> -->
+<iframe id="new_bible" src="https://www.lingshyang.com/bible/new_bible/mak/mak14.htm" frameborder="0"></iframe>
+
+<iframe id="bbe_bible" src="https://www.lingshyang.com/bible/bbe_bible/mak/mak14.htm" frameborder="0"></iframe>
+
+<br>
+
+<!-- <button onclick="removeSel()">Remove selected fruit</button>
+<button onclick="removeAll()">Remove All</button>
+
+<button onclick='addOption(17,"SelTest")'>AddOption</button>
+<iframe src="https://www.youtube.com/embed/TVNiTE513Sw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>
+<iframe src="https://www.youtube.com/embed/FRx1egV082U" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>     -->
+
+ </div> </body> </html>
