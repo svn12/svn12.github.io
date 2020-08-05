@@ -9,24 +9,27 @@
         select {font-size:18px;}
     </style>
     <link rel="stylesheet" href="link_P.css">
-</head>tml>
+</head>
 <body onload="Iniload()" > <div class="sidenav1">
+    <br>
+<p1 id="txt" >
 
-
+</p1>
+<p1 id="p1" >Hello World!</p1>
 <br>
 
-<audio id="audio1"  onended="audioend1()">
+<audio id="audio1"  onended="audioend()">
     <source id="audioSource1" src="">
     </source>
     Your browser does not support the audio format.
 </audio>
 <!-- controls="controls" -->
-<audio id="audio2"  onended="audioend2()">
+<audio id="audio2"  onended="audioend()">
     <source id="audioSource2" src="">
     </source>
     Your browser does not support the audio format.
 </audio>
-<audio id="audio3"  onended="audioend3()">
+<audio id="audio3"  onended="audioend()">
     <source id="audioSource3" src="">
     </source>
     Your browser does not support the audio format.
@@ -89,6 +92,23 @@
 
 <!-- <p id="test2">audio2</p> -->
 <script>
+    function startTime() {
+            var today = new Date();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            var s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('txt').innerHTML =
+                h + ":" + m + ":" + s;
+            var t = setTimeout(startTime, 500);
+        }
+        function checkTime(i) {
+            if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+            return i;
+        }
+    var rd_chap="???"
+    document.getElementById("p1").innerHTML = "已讀章節 : "+rd_chap +" /1189";
     function pauseaudio() {
             
             for (var i = 1; i < 4; i++) {
@@ -182,7 +202,7 @@
                 for (var i = 1; i < audios.length; i++) {
                 if (audios[i].checked) {
 
-                    query_DB(i, 0);
+                    query_DB(i, 1);
                     break;
                     }
                 }
@@ -194,13 +214,16 @@
              s_query:s_query
             
         };
+        
         $.get('https://script.google.com/macros/s/AKfycbxxigAjajqxuFjFhsnbCgSHIMkJe9miGUEWZ5sMW8SOzbQlJAaP/exec', a, function (data) {
                 // console.log(data.length);
                 // console.log(data);
                 data = JSON.parse(data);
                 // console.log(data.length);
                 // console.log(data);
+                 document.getElementById("p1").innerHTML = "已讀章節 : " + data[0].Rd_chap_cnt + " /1189";
                 Ini_sel(eval(data[0].SelTitle_idx), eval(data[0].SelChap_idx));
+                if(s_query==1) playaudio();
                 return 
 
         })
@@ -366,6 +389,7 @@
         }
 
     function Iniload(){
+        startTime();
         IniTitle();
         // addOption(17, "SelChap")
         IniChap();
@@ -478,7 +502,7 @@
         changeSrc();
         // audio.play(); //call this to play the song right away
     };
-  list.onclick = function (e) {
+  /*list.onclick = function (e) {
         e.preventDefault();
         var 
          audio_src ="http://www.lingshyang.com/bible/tw_bible_soun/"+"041/41_0"+ document.getElementById("SelChap").value + ".mp3";
@@ -505,7 +529,7 @@
         audio.play(); //call this to play the song right away
     };
 
-    
+    */
 </script>
 
  
