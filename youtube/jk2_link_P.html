@@ -264,7 +264,7 @@
         IniChap();
     }
     function changeSrc() {
-        var xhead="https://www.lingshyang.com/bible/"
+        var xhead="https://www.lingshyang.com/"
         var num= document.getElementById("SelChap").value
         var lead_num=""
         if(num<10)
@@ -275,7 +275,8 @@
         // alert(src_ptr);
         // var xtail = "/mak/mak"+lead_num+num+".htm";
         var xtail = "/"+src_ptr+"/"+src_ptr + lead_num + num + ".htm";
-        var ids = ["taiwan_Bible", "bible_rome", "bible_5", "new_bible","bbe_bible"];
+        // var ids = ["taiwan_Bible", "bible-room", "bible_5", "new_bible","bbe_bible"];
+        var ids = ["taiwan_Bible", "bible-room", "bible_5", "new_bible"];
         var i = 0;
        // document.getElementById("test1").innerHTML = document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
         while (ids[i]) {
@@ -284,6 +285,8 @@
             i++;
         }
         
+        document.getElementById("bible2010").src = "http://rcuv.hkbs.org.hk/RCUV2/"+ src_ptr+"/" +
+        lead_num + num ;
         // xhead="http://bible.goodjob.tw/tcv_b5/";
         xhead="http://mygoodfriend.net/TCV_Big5/B";
         lead_num = "";
@@ -393,15 +396,15 @@
 
  
 <!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
-<iframe id="taiwan_Bible" src="https://www.lingshyang.com/bible/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
+<iframe id="taiwan_Bible" src="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
 
-<iframe  id="bible_rome" src="https://www.lingshyang.com/bible/bible_rome/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
-
-<iframe id="bible_5" src="https://www.lingshyang.com/bible/bible_5/mak/mak14.htm" frameborder="0"></iframe>
+<iframe  id="bible-room" src="https://www.lingshyang.com/bible-room/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
+<iframe id="bible2010" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/" frameborder="0"></iframe>
+<iframe id="bible_5" src="https://www.lingshyang.com/bible_5/mak/mak14.htm" frameborder="0"></iframe>
 <!-- <iframe id="new_bible2" src="http://bible.goodjob.tw/tcv_b5/2135.htm" frameborder="0"></iframe> -->
-<iframe id="new_bible" src="https://www.lingshyang.com/bible/new_bible/mak/mak14.htm" frameborder="0"></iframe>
+<iframe id="new_bible" src="https://www.lingshyang.com/new_bible/mak/mak14.htm" frameborder="0"></iframe>
 
-<iframe id="bbe_bible" src="https://www.lingshyang.com/bible/bbe_bible/mak/mak14.htm" frameborder="0"></iframe>
+<!-- <iframe id="bbe_bible" src="https://www.lingshyang.com/bbe_bible/mak/mak14.htm" frameborder="0"></iframe> -->
 
 <br>
 
