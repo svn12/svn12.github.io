@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html> <html lang="en"> 
+    <head> <meta charset="UTF-8"> <title>General Query</title>
+    <link rel="stylesheet" href="..\youtube\reset.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>
+        form {
+            margin: 0px;
+            display: inline;
+            font-size: 16px;
+        }
+
+        button {
+            margin: 0px;
+            display: inline;
+            font-size: 16px;
+        }
+
+        /* label {display:inline;} */
+        /* input {display:inline;} */
+        select {
+            font-size: 18px;
+        }
+    </style>
+
+    <link rel="stylesheet" href="..\youtube\link_P_noside.css"></head> 
+<body> 
+     <form id="location-form" class="form-inline">
+         <label for="text">股票代碼&nbsp:&nbsp</label>
+         <input type="text" class="form-control" placeholder="輸入股票代碼" id="location-input" onchange="Query_stk()">
+         <!-- <input type="text" id="location-input" > -->
+
+
+
+         <!-- <button type="submit" class="btn-primary ">Submit</button> -->
+     </form>
+
+
+<script>
+    // Get location form
+    var locationForm = document.getElementById('location-form');
+
+    // Listen for submiot
+    locationForm.addEventListener('submit', Query_stk);
+    document.getElementById('location-input').addEventListener('change', Query_Tel);
+    function Query_stk(e) {
+    e.preventDefault();
+    Query_stk2();
+    }
+    function Query_stk2(){
+        var findString = document.getElementById('location-input').value;
+        // console.log(findString);
+        if(findString.length>0){
+
+document.getElementById("yahoo").href ="https://tw.stock.yahoo.com/q/bc?s="+findString
+document.getElementById("fchart").href ="https://www.cnyes.com/twstock/flashchart/"+findString+".htm"
+document.getElementById("Ginfo").href ="https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID="+findString
+document.getElementById("Cmoney").href ="http://www.cmoney.tw/finance/f00025.aspx?s="+findString
+document.getElementById("Sdog").href ="https://statementdog.com/analysis/tpe/"+findString
+
+document.getElementById("strea").src="https://invest.wessiorfinance.com/stock_treasure_map.html?stock="+findString
+
+document.getElementById("stxba").src="http://www.money-link.com.tw/stxba/index5.asp?id=" +findString
+document.getElementById("wearn").src="https://stock.wearn.com/income.asp?mode=search&kind=" +findString  
+document.getElementById("wantgoo").src="https://www.wantgoo.com/stock/" +findString 
+document.getElementById("megatime").src="http://pchome.megatime.com.tw/stock/sid" +findString+".html"
+document.getElementById("histock").src="https://histock.tw/stock/" +findString 
+document.getElementById("capital").src="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=" +findString
+
+document.getElementById("tendy").src="http://stock.tendy.net/td2kline.php?sid=" +findString
+document.getElementById("mops").src="http://mops.twse.com.tw/server-java/t164sb01?step=1&CO_ID="
+    +findString +"&SYEAR=2020&SSEASON=2&REPORT_ID=C"
+    
+
+    }
+    }
+    
+</script>
+<div class="main"> 
+    
+<li class="item1"> <a id="yahoo" href="https://tw.stock.yahoo.com/q/bc?s=2356">Yahoo</a> </li>
+<li class="item1"> <a id="fchart" href="https://www.cnyes.com/twstock/flashchart/2356.htm">聚亨股市</a> </li>
+<li class="item1"> <a id="Ginfo" href="https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=2356">GoodInfo</a> </li>
+<li class="item1"> <a id="Cmoney" href="http://www.cmoney.tw/finance/f00025.aspx?s=2356">Cmoney</a> </li>
+<li class="item1"> <a id="Sdog" href="https://statementdog.com/analysis/tpe/2356">財報狗</a> </li>
+<iframe id ="strea" src="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe id ="stxba" src="http://www.money-link.com.tw/stxba/index5.asp?id=2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe id="wearn" src="https://stock.wearn.com/income.asp?mode=search&kind=2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe id= "wantgoo" src="https://www.wantgoo.com/stock/2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe id="megatime" src="http://pchome.megatime.com.tw/stock/sid2356.html" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe id="histock" src="https://histock.tw/stock/2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe id= "capital" src="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe id="tendy" src="http://stock.tendy.net/td2kline.php?sid=2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe id="mops" src="http://mops.twse.com.tw/server-java/t164sb01?step=1&CO_ID=2356&SYEAR=2020&SSEASON=2&REPORT_ID=C" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div> </body> </html> 
