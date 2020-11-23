@@ -14,13 +14,13 @@
             </style>
 </head>
 <body onload="IniTitle()">
-    <h2 class="text-center">&nbsp&nbsp &nbspGoogle Sheet 資料查詢</h2>
+    <h2 >&nbsp&nbsp &nbsp新聖詩與啟應文查詢</h2>
     <div class="container ">
         <!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> -->
         <form id="location-form" class="form-inline">
             <!-- <input type="text" id="location-input" > -->
-            <label for="text">查詢姓名&nbsp:&nbsp</label>
-            <input type="text" class="form-control" placeholder="姓名關鍵字" id="location-input">
+            <label for="text">歌名或首別(聖詩001~650 啟應文01~66)&nbsp:&nbsp</label>
+            <input type="text" class="form-control" placeholder="關鍵字" id="location-input">
             <label for="select">&nbsp&nbsp來源&nbsp:&nbsp</label>
             
                 
@@ -40,12 +40,8 @@
     
     <script>
            function IniTitle() {
-                var Btitle = ["南門通訊錄","南門資料庫","長青樂活"
-                ];
-                var Btitle_ptr = ["'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing'",
-                "'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing'",
-                "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
-                // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
+                var Btitle = ["新聖詩"];
+                var Btitle_ptr = ["'https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing'"                // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
                 ];
                 var select = document.getElementById("selShurl");
                 // var options = ["10", "11", "12", "13", "14","15","16"];
@@ -108,8 +104,10 @@
                     }
                     // console.log(heads.length);
 
+   
                     var txt='';
-                    txt += '<table  class="table  table-hover "> <thead><tr>';
+                    // txt += '<table  class="table  table-hover "> <thead><tr>';
+                     txt += '<table  class="table"> <thead><tr>';
                     // heads.forEach(el=>console.log(el));
                     heads.forEach(function(e){
                         txt += "<th>" + e + "</th>";
@@ -120,14 +118,25 @@
                     // console.log(txt);
 
                     for (x in data) {
-                        txt += "<tr>";
                         // console.log(x);
-                        // console.log(data[x]);
-                        heads.forEach(function(e){
-                        txt += "<td>" + data[x][e] + "</td>";
+                        // console.log(data[x][heads[0]]);
+                        if(data[x][heads[0]].indexOf(findString)>=0){
+                            txt += "<tr>";
+                             
+                            //  console.log(data[x]);
+                            heads.forEach(function(e){
+                                if(e==heads[0]){
+                                    txt += "<td>" + data[x][e] + "</td>";
+                                } 
+    
 
-                        })
-                        txt += "</tr>";
+                                else {
+                                    if(data[x][e]!="")
+                                        txt +='<td><a href="' + data[x][e] + '">Link</a></td>';
+                                }
+                            })
+                            txt += "</tr>";
+                        }
                         // txt += "<tr><td>" + data[x].Name + "</td><td>"+ data[x].手機 +"</td></tr>";
                     }
                     txt += "</tbody></table>"
