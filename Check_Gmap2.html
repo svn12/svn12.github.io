@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <title>查姓名電話</title>
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script
+     defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC31HYhBVS38DAHjLXpu6qqfNyAh5mubEk&callback=initMap"></script>
+    <style> 
+           /* Set the size of the div element that contains the map */
+#map {
+  height: 600px;
+  /* The height is 400 pixels */
+  width: 100%;
+  /* The width is the width of the web page */
+}
+  .infoImg{
+  width:200px;
+  margin:8px 0;
+}
+#infoDiv span{
+  font-size:16px;
+  
+}
+.infoDiv div{
+  margin:10px 0;
+  width:70px;
+  height:40px;
+  background:url('http://example.oxxostudio.tw/it2016/it2016-day22-btn.jpg');
+  cursor:pointer 
+}
+            </style>
+</head>
+<body>
+    <h3>My Google Maps Demo</h3>
+    
+    <!--The div element for the map -->
+    <div id="map"></div>
+    <div class="marker-count">
+    Total markers: <span></span>
+    </div>
+    <!-- <div class="gettime">
+      current_time: <span></span>
+    </div> -->
+    <script>
+        // Initialize and add the map
+        // var markers = [];
+function initMap() {
+  var markers = [];
+  var infoWindows = [];
+  var loaction;
+  var geocoder = new google.maps.Geocoder();
+  var timer = [];
+  var s = -1;
+  var j;
+  var map;
+  var addr_list=[
+      
+["李祈瑩","0931-225692","10876台北市萬華區青年路28號10樓之2","2305-9669"],
+["王秀珠","0922-308732","10862台北市萬華區中華路二段416巷58號4樓之3","2396-8335"],
+["沈昱廷","","10862台北市萬華區中華路二段416巷58號4樓之3","2396-8335"],
+["徐鎮江","0988-953279","10859台北市萬華區西園路二段45之14號",""],
+["邱耀進","","10079台北市萬華區環河南路一段101號4樓",""],
+["侯雪純","0952-696160","10079台北市萬華區環河南路一段101號4樓",""],
+["邱群壹","0939-359955","10079台北市萬華區環河南路一段101號4樓",""],
+["邱群甯","0987-985770","10079台北市萬華區環河南路一段101號4樓",""],
+["許秀琴","","10867台北市萬華區寶興街166號2樓","2303-0918"],
+["林容安","","10867台北市萬華區寶興街166號2樓","2303-0918"],
+["葉盛","","台北市萬華區漢口街二段99號10樓","2388-3306"],
+["盧怡吟","0922-494816","台北市萬華區漢口街二段99號10樓","2388-3306"],
+["葉芃","","台北市萬華區漢口街二段99號10樓","2388-3306"],
+["葉蒨","","台北市萬華區漢口街二段99號10樓","2388-3306"],
+["葉蓁","台北市萬華區漢口街二段99號10樓","2388-3306"],
+["廖仁哲","","台北市萬華區德昌街185巷11號2樓","2303-8056"],
+["李玫欣","0975-912508","台北市萬華區德昌街185巷11號2樓","2303-8056"],
+["廖恆安","","台北市萬華區德昌街185巷11號2樓","2303-8056"],
+["廖宇豐","","台北市萬華區德昌街185巷11號2樓","2303-8056"],
+["劉湶佐","","10868台北市萬華區東園街73巷23號3樓","2305-2653"],
+["楊美妹","","10868台北市萬華區東園街73巷23號3樓","2305-2653"],
+["劉怡劭","","10868台北市萬華區東園街73巷23號3樓","2305-2653"],
+["劉松茂","","台北市萬華區萬大路434號7樓","2305-5501"],
+["楊莉夏","0933-535462","台北市萬華區萬大路434號7樓","2305-5501"],
+["劉佳硯","","台北市萬華區萬大路434號7樓","2305-5501"]
+  ]
+  var info_config1 = [
+    '<div id="infoDiv0" class="infoDiv">'+
+    '  <h2>總統府</h2>'+
+    '  <span>aaaaa</span><br/>'+
+    '  <div></div>'+
+    '</div>'
+  ];
+  var info_config = [
+     '<div id="infoDiv2" class="infoDiv">'+
+    '<h2>總統府</h2>'+
+    '<span>這是總統府喔！</span><br/>'+
+    '<img class="infoImg" src="http://www.president.gov.tw/Portals/0/images/PresidentOffice/BeautyBuliding/President/m_000064_342436.jpg"><br/>'+
+    '<i>(圖片取自總統府網站)</i>'+'</div>',
+    '<h2>民主紀念館</h2>'+
+    '<span>不是中正紀念堂喔</span><br/>'+
+    '<img class="infoImg" src="http://www.cksmh.gov.tw/upload/article/4248b77496baac99a290f6f202bfe786.jpg"><br/>'+
+    '<i>(圖片取自民主紀念館網站)</i>',
+    '<h2>南門教會</h2>'+
+    '<span>這是南門教會喔！</span><br/>',
+    '<h2>三元街</h2>'+
+    '<span>這是三元街252號喔！</span><br/>'
+  ];
+// var info_config = [
+//   '<div id="infoDiv1" class=”infoDiv>'+
+//   '  <h2>總統府</h2>'+
+//   '  <span></span><br/>'+
+//   '  <div></div>'+
+//   '</div>',
+
+// ];
+
+
+
+  //建立地圖 marker 的集合
+  var marker_config = [{
+    address: '中華民國總統府',icon:'https://icons.iconarchive.com/icons/goodstuff-no-nonsense/free-space/48/astronaut-icon.png'
+  },{
+    address: '台灣民主紀念館',icon:'https://icons.iconarchive.com/icons/zeusbox/lontar-eve/48/deer-icon.png'
+  },{
+    address: '南門教會',icon:'https://icons.iconarchive.com/icons/fatcow/farm-fresh/32/church-icon.png'
+  },{
+    address: '10079台北市中正區三元街252號4樓',icon:'https://icons.iconarchive.com/icons/icondigest/main-street/32/Home-Sweet-Home-icon.png'
+  }];  
+
+  //geocoder主程式
+  function _geocoder(address, callback){
+    geocoder.geocode({
+      address: address
+    }, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        loaction = results[0].geometry.location;
+        callback(loaction); //用一個 callback 就不用每次多寫上面這段
+      }
+    });
+  }
+function addMarker(addr){
+   _geocoder(addr,function(address){
+    // var map=google.maps.Map(document.getElementById('map'));
+    var marker = {
+          position:address,
+          map:map,
+          title:addr,
+          icon:'https://icons.iconarchive.com/icons/icondigest/main-street/32/Home-Sweet-Home-icon.png'
+        };
+        // j=markers.length;
+        marker0 = new google.maps.Marker(marker);
+        marker0.setMap(map);
+        // info_config [j]='<h3>'+addr+'</h3>'+'<span>'+address +'</span><br/>';
+        infoWindow0 = new google.maps.InfoWindow({
+         content: '<h3>'+addr+'</h3>'+'<span>'+address +'</span><br/>'
+      });
+        marker0.addListener('click', function() {
+          infoWindow0.open(map, marker0);
+        });
+   });
+  }
+  //使用地址或名稱標出位置
+ //使用地址或名稱標出位置
+ //使用地址或名稱標出位置
+  _geocoder('總統府',function(address){
+      map = new google.maps.Map(document.getElementById('map'), {
+      center: address,
+      zoom: 13
+    });
+  //  setInterval(function(){
+      
+  //     $('.gettime span').text(getTime());
+  //   },1000);
+    //設定資訊視窗內容
+   //設定資訊視窗內容
+    info_config.forEach(function(e,i){
+      infoWindows[i] = new google.maps.InfoWindow({
+        content: e
+      });
+      //設定監聽事件，在資訊視窗準備好之後，就綁定對應的流程
+      google.maps.event.addListener(infoWindows[i], 'domready', function() {
+        _content(i);
+      });
+    });
+  
+    //標出 marker
+    marker_config.forEach(function(e,i){
+      _geocoder(e.address,function(address){
+        var marker = {
+          position:address,
+          map:map,
+          title:e.address,
+          icon:e.icon
+        };
+        markers[i] = new google.maps.Marker(marker);
+        markers[i].setMap(map);
+        markers[i].addListener('click', function() {
+          infoWindows[i].open(map, markers[i]);
+        });
+      });
+    });
+
+ 
+  });
+   addMarker("臺大醫院");
+   addMarker("臺灣大學");
+   addMarker("台北植物園");
+   addMarker("台北建國中學");
+
+  function _setIcon(e,icon){
+    e.setIcon(icon);
+  }
+//   function _content(e){
+//   setInterval(function(){
+//     $('#infoDiv'+e+' > span').text(getTime());
+//     $('.gettime span').text(getTime());
+//   },1000);
+// }
+  function _content(e){
+  timer[e] = setInterval(function(){
+    $('#infoDiv'+e+' span').text(getTime());  //顯示當下時間
+  },1000);
+  $('#infoDiv'+e+' div').on('click',function(){
+
+    s = s * -1;
+    if(s<0){
+      $(this).css({
+        'background-position':'-70px 0'
+      });
+      _setIcon(markers[e],'http://example.oxxostudio.tw/it2016/it2016-day22-off.png');
+    }else{
+      $(this).css({
+        'background-position':'0 0'
+      });
+      _setIcon(markers[e],'http://example.oxxostudio.tw/it2016/it2016-day22-on.png');
+    }
+  });
+}
+  
+  function getTime() {
+    var date = new Date();
+    var h = date.getHours();
+    var m = date.getMinutes();
+    var s = date.getSeconds();
+    if (h < 10) {
+      h = '0' + h;
+    }
+    if (m < 10) {
+      m = '0' + m;
+    }
+    if (s < 10) {
+      s = '0' + s;
+    }
+    var now = h + ':' + m + ':' + s;
+    return now;
+  }
+  
+}
+
+    </script>
+  </body>
+</html>
