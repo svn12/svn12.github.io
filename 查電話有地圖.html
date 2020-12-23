@@ -170,7 +170,7 @@ function addMarker2(addr,info,title){
         console.log('infowindow--->',infowindow,infoWindows);
         console.log('Length Marker',markers.length,'infowindows length',infoWindows.length);
         
-        setTimeout(2000);
+        // setTimeout(2000);
         marker.addListener('click', function() {
           infowindow.open(map, marker);
         });
@@ -296,6 +296,8 @@ function addMarker2(addr,info,title){
                             if(addr!=next_addr){
                                 
                                 addMarker2(addr,info,title);
+                                info='';
+                                addr='';
                              }
                         }
 
