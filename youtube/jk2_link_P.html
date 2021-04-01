@@ -31,7 +31,7 @@
 </audio>
 <!-- <br> -->
 
-<h2> <a  target="_blank"  href="https://bible.fhl.net/NUI">信望愛聖經</a></h2>
+<h2> <a id="fhl_b" target="_blank"  href="https://bible.fhl.net/NUI/#/bible/Ga/5">信望愛聖經</a></h2>
 <h2> <a  target="_blank"  href="https://bible.fhl.net/fhl_mobile/">手機版聖經</a></h2>
 <h2> <a id="new_b2" target="_blank"  href="https://mygoodfriend.net/TCV_Big5/">現代中文</a></h2>
 <h2> <a id="bible-2010" target="_blank" href="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/">和修本</a></h2>
@@ -310,7 +310,8 @@
         //      xhead+(num-1+get_new_bible2_p())+".htm";
              document.getElementById("bible-2010").href = "http://rcuv.hkbs.org.hk/RCUV2/"+ src_ptr+"/" +
              lead_num + num ;
-            
+            document.getElementById("fhl_b").href = "https://bible.fhl.net/NUI/#/bible/"+ src_ptr+"/" +
+              num ;
 
             document.getElementById("new_b2").href =
             xhead + get_new_bible2_p() + lead_num + num + ".htm";
