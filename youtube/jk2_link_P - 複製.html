@@ -1,8 +1,5 @@
 ﻿<!DOCTYPE h<html lang="zh"">
-    <head><meta charset="UTF-8"><title>聽讀聖經</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <!-- <script src="https://code.jquery.com/jquery-1.9.1.js"></script> -->
-    <link rel="stylesheet" href="reset.css">
+    <head><meta charset="UTF-8"><title>聽讀聖經</title><link rel="stylesheet" href="reset.css">
     <style>form{margin:0px; display:inline;font-size:16px; }
         button{margin:0px; display:inline;font-size:16px; }
         /* label {display:inline;} */
@@ -11,7 +8,7 @@
     </style>
     <link rel="stylesheet" href="link_P.css">
 </head>
-<body onload="Iniload()" >     <div class="sidenav1">
+<body onload="Iniload()" > <div class="sidenav1">
 
 
 <br>
@@ -178,7 +175,6 @@
 "提摩太後書","提多書","腓利門書","希伯來書","雅各書","彼得前書",
 "彼得後書","約翰一書","約翰二書","約翰三書","猶大書","啟示錄"
 ];
-
         var Btitle_ptr=["gen", "exo", "lev", "num", "deu", "jos",
             "jug", "rut", "1sa", "2sa", "1ki", "2ki",
             "1ch", "2ch", "ezr", "neh", "est", "job",
@@ -273,7 +269,6 @@
         IniTitle();
         // addOption(17, "SelChap")
         IniChap();
-        query_fhl_bible();
     }
     function changeSrc() {
         var xhead="https://www.lingshyang.com/"
@@ -331,45 +326,7 @@
     //    var id="taiwan_Bible" 
        
         //console.log(title);
-        query_fhl_bible();
     } 
-    function query_fhl_bible(){
-        var Btitle_ptr_c=["創","出","利","民","申","書",
-                "士","得","撒上","撒下","王上","王下",
-                "代上","代下","拉","尼","斯","伯",
-                "詩","箴","傳","歌","賽","耶",
-                "哀","結","但","何","珥","摩",
-                "俄","拿","彌","鴻","哈","番",
-                "該","亞","瑪","太","可","路",
-                "約","徒","羅","林前","林後","加",
-                "弗","腓","西","帖前","帖後","提前",
-                "提後","多","門","來","雅","彼前",
-                "彼後","約一","約二","約三","猶","啟"
-                ];
-         var chap= document.getElementById("SelChap").value
-
-         
-         var src_ptr= document.getElementById("SelTitle").selectedIndex;
-        uri=Btitle_ptr_c[src_ptr];
-        url='https://bible.fhl.net/json/qb.php?chineses='+encodeURI(uri)+'&chap='+chap+'&version=bklcl&strong=0&gb=0'
-        url2='https://bible.fhl.net/json/qb.php?chineses='+encodeURI(uri)+'&chap='+chap+'&version=tghg&strong=0&gb=0'
-        // $("#demo1").html(src_ptr);
-       $("#demo2").append ("<br>"+url);
-        $.get(url,  function (data,status) {
-            var obj = JSON.parse(data);
-            $.get(url2,  function (data2,status) {
-                var obj2 = JSON.parse(data2);
-                $("#demo2").html('');
-                for (x in obj.record){
-                $("#demo2").append ("<br>"+chap+":"+obj.record[x].sec+" "+obj.record[x]["bible_text"]+ "<br>"+chap+":"+obj2.record[x].sec+" "+obj2.record[x]["bible_text"]);
-        
-                }
-            });
-
-            
-        }
-        )
-    }
   function fselChap() {
         var audio_type=["Taiwanese","unv1","tcv"]
         var lead_num = "";
@@ -417,17 +374,41 @@
         changeSrc();
         // audio.play(); //call this to play the song right away
     };
+  list.onclick = function (e) {
+        e.preventDefault();
+        var 
+         audio_src ="http://www.lingshyang.com/bible/tw_bible_soun/"+"041/41_0"+ document.getElementById("SelChap").value + ".mp3";
+        var  audio_src3="http://www.lingshyang.com/bible/tw_bible_soun/041/41_001.mp3"
+        // document.getElementById("test").innerHTML = "Be"
+        // if (audio_src3 = audio_src3) {
+        //     // document.getElementById("test").innerHTML = "Equal"+audio_src.length;}
+        // else
+        //     // {document.getElementById("test").innerHTML = "Not Equal";}
+        // // document.getElementById("test1").innerHTML = audio_src;
+        var elm = e.target;
+        var audio_src1=      elm.getAttribute('data-value');
+        //    document.getElementById("test2").innerHTML =audio_src1;
+        var audio = document.getElementById('audio');
 
-  
+        var source = document.getElementById('audioSource');
+        // source.src = elm.getAttribute('data-value');
+        // source.src = audio_src
+        
+        source.src = audio_src; //elm.getAttribute('data-value');
+        // document.getElementById("test").innerHTML ="Be"
+        changeSrc();
+        audio.load(); //call this to just preload the audio without playing
+        audio.play(); //call this to play the song right away
+    };
 
-   
+    
 </script>
-<p id="demo2">aaa</p>
- <!-- <p id="demo1">bbb</p> -->
+
+ 
 <!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
 <iframe id="taiwan_Bible" src="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
 
-<p  id="bible-room" src="https://www.lingshyang.com/bible-room/mak/mak14.htm" width=100% height="400px" frameborder="0" ></p>
+<iframe  id="bible-room" src="https://www.lingshyang.com/bible-room/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
 <!-- <iframe  id="bible_twn_roma" src="https://www.sl-pc.org.tw/bible/3/ECC/1" width=100% height="400px" frameborder="0" ></iframe> -->
 
 <iframe id="bible_5" src="https://www.lingshyang.com/bible_5/mak/mak14.htm" frameborder="0"></iframe>
