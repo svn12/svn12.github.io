@@ -2,8 +2,18 @@
     <head><meta charset="UTF-8"><title>聽讀聖經</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- <script src="https://code.jquery.com/jquery-1.9.1.js"></script> -->
-    <link rel="stylesheet" href="reset.css">
-    <style>form{margin:0px; display:inline;font-size:16px; }
+    <!-- <link rel="stylesheet" href="reset.css"> -->
+    <style>
+        td {
+                        display: table-cell;
+                        vertical-align: inherit;
+                        }
+        table {
+                border-collapse: separate;
+                text-indent: initial;
+                border-spacing: 2px;
+                }
+        form{margin:0px; display:inline;font-size:16px; }
         button{margin:0px; display:inline;font-size:16px; }
         /* label {display:inline;} */
         /* input {display:inline;} */
@@ -353,22 +363,109 @@
         uri=Btitle_ptr_c[src_ptr];
         url='https://bible.fhl.net/json/qb.php?chineses='+encodeURI(uri)+'&chap='+chap+'&version=bklcl&strong=0&gb=0'
         url2='https://bible.fhl.net/json/qb.php?chineses='+encodeURI(uri)+'&chap='+chap+'&version=tghg&strong=0&gb=0'
+        url3='https://bible.fhl.net/json/qb.php?chineses='+encodeURI(uri)+'&chap='+chap+'&version=unv&strong=0&gb=0'
+        url4='https://bible.fhl.net/json/qb.php?chineses='+encodeURI(uri)+'&chap='+chap+'&version=tcv95&strong=0&gb=0'
+        url5='https://bible.fhl.net/json/qb.php?chineses='+encodeURI(uri)+'&chap='+chap+'&version=rcuv&strong=0&gb=0'
         // $("#demo1").html(src_ptr);
-       $("#demo2").append ("<br>"+url);
+       
         $.get(url,  function (data,status) {
             var obj = JSON.parse(data);
+           
             $.get(url2,  function (data2,status) {
                 var obj2 = JSON.parse(data2);
-                $("#demo2").html('');
+                // $("#demo2").html('');
+                var txt='<br> <h1 align="center">'+ obj.v_name +'/'+obj2.v_name+'</h1>';
+                    // txt += '<table  class="table  table-hover "> <thead><tr>';
+                     txt += '<table  class="table"> <tbody>';
+
                 for (x in obj.record){
-                $("#demo2").append ("<br>"+chap+":"+obj.record[x].sec+" "+obj.record[x]["bible_text"]+ "<br>"+chap+":"+obj2.record[x].sec+" "+obj2.record[x]["bible_text"]);
-        
+                // $("#demo2").append ("<br>"+chap+":"+obj.record[x].sec+" "+obj.record[x]["bible_text"]+ "<br>"+chap+":"+obj2.record[x].sec+" "+obj2.record[x]["bible_text"]);
+                    txt += "<tr>";
+                    txt += '<td valign="top"> <font size="-1">'+
+                            chap+":"+obj.record[x].sec + "</font> </td>";
+                    txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                    txt += "</tr>";
+
+                    txt += "<tr>";
+                    txt += '<td valign="top"> <font size="-1">'+
+                            '' + "</font> </td>";
+                    txt += "<td>" + obj2.record[x]["bible_text"] + "</td>";
+                    txt += "</tr>";
+                    
+                   
+
                 }
+                txt += "</tbody></table>"
+                $("#demo1").html(txt);
+
+            
             });
 
             
-        }
-        )
+        })
+
+         $.get(url3,  function (data,status) {
+            var obj = JSON.parse(data);
+           
+                // $("#demo2").html('');
+                var txt='<br> <h1 align="center">'+ obj.v_name+'</h1>';
+                    // txt += '<table  class="table  table-hover "> <thead><tr>';
+                     txt += '<table  class="table"> <tbody>';
+
+                for (x in obj.record){
+                // $("#demo2").append ("<br>"+chap+":"+obj.record[x].sec+" "+obj.record[x]["bible_text"]+ "<br>"+chap+":"+obj2.record[x].sec+" "+obj2.record[x]["bible_text"]);
+                    txt += "<tr>";
+                    txt += '<td valign="top"> <font size="-1">'+
+                            chap+":"+obj.record[x].sec + "</font> </td>";
+                    txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                    txt += "</tr>";
+
+                }
+                txt += "</tbody></table>"
+                $("#demo3").html(txt);          
+        })
+        
+         $.get(url4,  function (data,status) {
+            var obj = JSON.parse(data);
+           
+                // $("#demo2").html('');
+                var txt='<br> <h1 align="center">'+ obj.v_name+'</h1>';
+                    // txt += '<table  class="table  table-hover "> <thead><tr>';
+                     txt += '<table  class="table"> <tbody>';
+
+                for (x in obj.record){
+                // $("#demo2").append ("<br>"+chap+":"+obj.record[x].sec+" "+obj.record[x]["bible_text"]+ "<br>"+chap+":"+obj2.record[x].sec+" "+obj2.record[x]["bible_text"]);
+                    txt += "<tr>";
+                    txt += '<td valign="top"> <font size="-1">'+
+                            chap+":"+obj.record[x].sec + "</font> </td>";
+                    txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                    txt += "</tr>";
+
+                }
+                txt += "</tbody></table>"
+                $("#demo4").html(txt);          
+        })
+         $.get(url5,  function (data,status) {
+            var obj = JSON.parse(data);
+           
+                // $("#demo2").html('');
+                var txt='<br> <h1 align="center">'+ obj.v_name+'</h1>';
+                    // txt += '<table  class="table  table-hover "> <thead><tr>';
+                     txt += '<table  class="table"> <tbody>';
+
+                for (x in obj.record){
+                // $("#demo2").append ("<br>"+chap+":"+obj.record[x].sec+" "+obj.record[x]["bible_text"]+ "<br>"+chap+":"+obj2.record[x].sec+" "+obj2.record[x]["bible_text"]);
+                    txt += "<tr>";
+                    txt += '<td valign="top"> <font size="-1">'+
+                            chap+":"+obj.record[x].sec + "</font> </td>";
+                    txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                    txt += "</tr>";
+
+                }
+                txt += "</tbody></table>"
+                $("#demo5").html(txt);          
+        })
+        
     }
   function fselChap() {
         var audio_type=["Taiwanese","unv1","tcv"]
@@ -422,18 +519,22 @@
 
    
 </script>
-<p id="demo2">aaa</p>
- <!-- <p id="demo1">bbb</p> -->
+
+ <div id="demo1">bbb</div>
+ <div id="demo3"></div>
+ <div id="demo4"></div>
+ <div id="demo5"></div>
+ <!-- <p id="demo2">aaa</p> -->
 <!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
-<iframe id="taiwan_Bible" src="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
+<p id="taiwan_Bible" src="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></p>
 
 <p  id="bible-room" src="https://www.lingshyang.com/bible-room/mak/mak14.htm" width=100% height="400px" frameborder="0" ></p>
 <!-- <iframe  id="bible_twn_roma" src="https://www.sl-pc.org.tw/bible/3/ECC/1" width=100% height="400px" frameborder="0" ></iframe> -->
 
-<iframe id="bible_5" src="https://www.lingshyang.com/bible_5/mak/mak14.htm" frameborder="0"></iframe>
+<p id="bible_5" src="https://www.lingshyang.com/bible_5/mak/mak14.htm" frameborder="0"></p>
 <!-- <iframe id="new_bible2" src="http://bible.goodjob.tw/tcv_b5/2135.htm" frameborder="0"></iframe> -->
-<iframe id="new_bible" src="https://www.lingshyang.com/new_bible/mak/mak14.htm" frameborder="0"></iframe>
-<iframe id="bible2010" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/" frameborder="0"></iframe>
+<ip id="new_bible" src="https://www.lingshyang.com/new_bible/mak/mak14.htm" frameborder="0"></ip>
+<p id="bible2010" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/" frameborder="0"></p>
 <!-- <iframe id="bbe_bible" src="https://www.lingshyang.com/bbe_bible/mak/mak14.htm" frameborder="0"></iframe> -->
 
 <br>
