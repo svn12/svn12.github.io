@@ -9,7 +9,7 @@
         <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
         <!-- <script src="https://code.jquery.com/jquery-1.9.1.js"></script> -->
         <!-- <link rel="stylesheet" href="reset.css"> -->
-        <style>
+        <style type="text/css">
             td {
                             display: table-cell;
                             vertical-align: inherit;
@@ -24,10 +24,16 @@
             /* label {display:inline;} */
             /* input {display:inline;} */
             select {font-size:18px;}
+        
+        
+            .container {
+                max-width: 700px;
+            }
+            
         </style>
     <link rel="stylesheet" href="link_P.css">
 </head>
-<body onload="Iniload()" >     <div class="sidenav1">
+<body onload="Iniload()" >     <div class="container">
 
 
 <br>
@@ -51,13 +57,15 @@
 <!-- <br> -->
 
 <h2> <a id="fhl_b" target="_blank"  href="https://bible.fhl.net/NUI/#/bible/Ga/5">信望愛聖經</a></h2>
-<h2> <a  target="_blank"  href="https://bible.fhl.net/fhl_mobile/">手機版聖經</a></h2>
-<h2> <a id="new_b2" target="_blank"  href="https://mygoodfriend.net/TCV_Big5/">現代中文</a></h2>
-<h2> <a id="bible-2010" target="_blank" href="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/">和修本</a></h2>
+<h2> <a  target="_blank"  href="https://bible.fhl.net/fhl_mobile/">手機聖經</a></h2>
+<!-- <h2> <a id="new_b2" target="_blank"  href="https://mygoodfriend.net/TCV_Big5/">現代中文</a></h2> -->
+
+<h2> <a id="taiwan_Bible" target="_blank" href="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm">台語聖經</a></h2>
+
 <h2> <a  target="_blank"  href="https://svn12.github.io/%E6%9F%A5%E8%81%96%E8%A9%A9.html">聖詩啟應文</a></h2>
 <br>
 <br>
-<form>
+<form >
     
     聖經:
     <select id="SelTitle" onchange="fSelTitle()">
@@ -74,13 +82,7 @@
     </select>
 
 </form>
-<button onclick="playaudio()">
-    播放</button>
-<button onclick="pauseaudio()">
-    暫停</button>
-<button onclick="audioend1()">
-    下一章</button>
-
+<br>
 <form onclick="playaudio()">
     <label class="radio-inline">
         <input type="radio" name="optradio" checked>台語有聲聖經
@@ -94,6 +96,12 @@
     </label>
     
 </form>
+<button onclick="playaudio()">
+    播放</button>
+<button onclick="pauseaudio()">
+    暫停</button>
+<button onclick="audioend1()">
+    下一章</button>
 
 <!--  <p id="test">original</p> -->
 
@@ -117,6 +125,18 @@
             if (audios[i].checked) {
                 audio = document.getElementById('audio' + (i+1));
                 audio.play();
+                switch (i){
+                    case 1:
+                        $(window).scrollTop($('#demo30').offset().top);
+                        break;
+                    case 2:
+                        $(window).scrollTop($('#demo40').offset().top);
+                        break;
+                    default: 
+                        $(window).scrollTop($('#demo1').offset().top);
+                        
+
+                }
                 break;
             }
         }
@@ -309,7 +329,7 @@
        // document.getElementById("test1").innerHTML = document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
         while (ids[i]) {
             // text += ids[i] + "<br>";
-            document.getElementById(ids[i]).src = xhead + ids[i] + xtail;
+            document.getElementById(ids[i]).href = xhead + ids[i] + xtail;
             i++;
         }
         
@@ -329,13 +349,13 @@
              
         // document.getElementById("new_bible2").src =
         //      xhead+(num-1+get_new_bible2_p())+".htm";
-             document.getElementById("bible-2010").href = "http://rcuv.hkbs.org.hk/RCUV2/"+ src_ptr+"/" +
+             document.getElementById("bible-2010").src = "http://rcuv.hkbs.org.hk/RCUV2/"+ src_ptr+"/" +
              lead_num + num ;
             document.getElementById("fhl_b").href = "https://bible.fhl.net/NUI/#/bible/"+ src_ptr+"/" +
               num ;
 
-            document.getElementById("new_b2").href =
-            xhead + get_new_bible2_p() + lead_num + num + ".htm";
+            // document.getElementById("new_b2").href =
+            // xhead + get_new_bible2_p() + lead_num + num + ".htm";
         // document.getElementById("new_b2").innerText =
         //     xhead + get_new_bible2_p() + lead_num + num + ".htm";  
      
@@ -526,12 +546,37 @@
    
 </script>
 
- <div id="demo1">bbb</div>
+ <div id="demo1"></div>
  
  <!-- <p id="demo2">aaa</p> -->
 <!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
-<iframe id="taiwan_Bible" src="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe>
+<p id="bible-2010" target="_blank" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/"></p>
+
+
+<!-- <iframe id="taiwan_Bible" src="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe> -->
+<br>
+
+<button id="demo30" onclick="playaudio()">
+    播放</button>
+<button onclick="pauseaudio()">
+    暫停</button>
+<button onclick="audioend1()">
+    下一章</button>
+<button onclick=$(window).scrollTop(0)>
+    backtoTop</button>   
+    
 <div id="demo3"></div>
+<br>
+
+<button id="demo40"onclick="playaudio()">
+    播放</button>
+<button onclick="pauseaudio()">
+    暫停</button>
+<button onclick="audioend1()">
+    下一章</button>
+<button onclick=$(window).scrollTop(0)>
+    backtoTop</button>   
+
  <div id="demo4"></div>
  <div id="demo5"></div>
 <p  id="bible-room" src="https://www.lingshyang.com/bible-room/mak/mak14.htm" width=100% height="400px" frameborder="0" ></p>
