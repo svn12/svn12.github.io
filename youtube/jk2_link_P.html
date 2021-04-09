@@ -116,6 +116,17 @@
             }
             
         }
+    function playaudio_3(){
+       
+        $('input[name="optradio"]')[1].checked = true; //radio 賦值==>第二個選項選取
+        playaudio()
+    }
+    function playaudio_4(){
+       
+        $('input[name="optradio"]')[2].checked = true; //radio 賦值==>第二個選項選取
+        playaudio()
+    }
+    
     function playaudio(){
         var audios = document.getElementsByName('optradio');
         pauseaudio();
@@ -133,7 +144,7 @@
                         $(window).scrollTop($('#demo40').offset().top);
                         break;
                     default: 
-                        $(window).scrollTop($('#demo1').offset().top);
+                        $(window).scrollTop($('#SelTitle').offset().top);
                         
 
                 }
@@ -556,7 +567,7 @@
 <!-- <iframe id="taiwan_Bible" src="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe> -->
 <br>
 
-<button id="demo30" onclick="playaudio()">
+<button id="demo30" onclick="playaudio_3()">
     播放</button>
 <button onclick="pauseaudio()">
     暫停</button>
@@ -564,11 +575,11 @@
     下一章</button>
 <button onclick=$(window).scrollTop(0)>
     backtoTop</button>   
-    
+
 <div id="demo3"></div>
 <br>
 
-<button id="demo40"onclick="playaudio()">
+<button id="demo40"onclick="playaudio_4()">
     播放</button>
 <button onclick="pauseaudio()">
     暫停</button>
