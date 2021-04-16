@@ -33,7 +33,9 @@
         </style>
     <link rel="stylesheet" href="link_P.css">
 </head>
-<body onload="Iniload()" >     <div class="container">
+<body onload="Iniload()" > 
+    
+        <div class="container">
 
 
 <br>
@@ -82,6 +84,11 @@
     </select>
 
 </form>
+<button onclick="fselChap()">經文</button>
+<input type="text" class="form-inline" placeholder="關鍵字" id="location-input">
+
+<button onclick="query_bible_keyw3()">查詢</button>
+
 <br>
 <form onclick="playaudio()">
     <label class="radio-inline">
@@ -96,6 +103,7 @@
     </label>
     
 </form>
+
 <button onclick="playaudio()">
     播放</button>
 <button onclick="pauseaudio()">
@@ -128,6 +136,10 @@
     }
     
     function playaudio(){
+        if($("#demo3 > h1").text().indexOf(')')>0) {
+          
+            fselChap();
+        }
         var audios = document.getElementsByName('optradio');
         pauseaudio();
         var audio_value;
@@ -504,6 +516,121 @@
         })
         
     }
+    function query_bible_keyw(){
+        var qstr=encodeURI($("#location-input").val());
+        qstr1="AAA"
+        $("#demo1").html(qstr1);
+        $("#demo3").html(qstr1);
+        $("#demo4").html(qstr1);
+        $("#demo5").html(qstr1);
+    }
+  function query_bible_keyw3(){
+         var qstr=encodeURI($("#location-input").val());
+        if(qstr=='') {
+            return;
+        }
+        pauseaudio();
+        url="https://bible.fhl.net/json/se.php?orig=0&limit=500&offset=0" + "&q=" + qstr + "&VERSION=tghg&strong=0&gb=0"
+        
+        $("#demo1").html('');
+        $.get(url,  function (data,status) {
+            var obj = JSON.parse(data);
+            
+            var txt='<br> <h1 align="center">'+ "台語漢羅 (" +obj.record_count.toString()+')</h1>';
+            
+            txt += '<table  class="table"> <tbody>';
+            
+            for (x in obj.record){
+                                
+                //    url2=url2.replace("bklcl", "tghg");
+                txt += "<tr>";
+                txt += '<td valign="top"> <font size="-1">'+obj.record[x].chineses+''+                           obj.record[x].chap.toString()+":"+obj.record[x].sec.toString() + "</font> </td>";
+                txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                txt += "</tr>";
+
+            };
+                    
+                    txt += "</tbody></table>"
+                    $("#demo1").html(txt);
+                     
+            
+        })
+        url=url.replace('tghg','unv');
+        $("#demo3").html('');
+        $.get(url,  function (data,status) {
+            var obj = JSON.parse(data);
+            
+            var txt='<br> <h1 align="center">'+ "和合本 (" +obj.record_count.toString()+')</h1>';
+            
+            txt += '<table  class="table"> <tbody>';
+            
+            for (x in obj.record){
+                                
+                //    url2=url2.replace("bklcl", "tghg");
+                txt += "<tr>";
+                txt += '<td valign="top"> <font size="-1">'+obj.record[x].chineses+''+                           obj.record[x].chap.toString()+":"+obj.record[x].sec.toString() + "</font> </td>";
+                txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                txt += "</tr>";
+
+            };
+                    
+                    txt += "</tbody></table>"
+                    $("#demo3").html(txt);
+                     
+            
+        })
+
+        url=url.replace('unv','tcv95')
+        $("#demo4").html('');
+        $.get(url,  function (data,status) {
+            var obj = JSON.parse(data);
+            
+            var txt='<br> <h1 align="center">'+ "現代中文譯本 (" +obj.record_count.toString()+')</h1>';
+            
+            txt += '<table  class="table"> <tbody>';
+            
+            for (x in obj.record){
+                                
+                //    url2=url2.replace("bklcl", "tghg");
+                txt += "<tr>";
+                txt += '<td valign="top"> <font size="-1">'+obj.record[x].chineses+''+                           obj.record[x].chap.toString()+":"+obj.record[x].sec.toString() + "</font> </td>";
+                txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                txt += "</tr>";
+
+            };
+                    
+                    txt += "</tbody></table>"
+                    $("#demo4").html(txt);
+                     
+            
+        })
+        
+        url=url.replace('tcv95','rcuv')
+        $("#demo5").html('');
+        $.get(url,  function (data,status) {
+            var obj = JSON.parse(data);
+            
+            var txt='<br> <h1 align="center">'+ "和修本 (" +obj.record_count.toString()+')</h1>';
+            
+            txt += '<table  class="table"> <tbody>';
+            
+            for (x in obj.record){
+                                
+                //    url2=url2.replace("bklcl", "tghg");
+                txt += "<tr>";
+                txt += '<td valign="top"> <font size="-1">'+obj.record[x].chineses+''+                           obj.record[x].chap.toString()+":"+obj.record[x].sec.toString() + "</font> </td>";
+                txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                txt += "</tr>";
+
+            };
+                    
+                    txt += "</tbody></table>"
+                    $("#demo5").html(txt);
+                     
+            
+        })
+        
+    }  
   function fselChap() {
         var audio_type=["Taiwanese","unv1","tcv"]
         var lead_num = "";
@@ -571,7 +698,7 @@
     播放</button>
 <button onclick="pauseaudio()">
     暫停</button>
-<button onclick="audioend1()">
+<button onclick="audioend2()">
     下一章</button>
 <button onclick=$(window).scrollTop(0)>
     backtoTop</button>   
@@ -583,7 +710,7 @@
     播放</button>
 <button onclick="pauseaudio()">
     暫停</button>
-<button onclick="audioend1()">
+<button onclick="audioend3()">
     下一章</button>
 <button onclick=$(window).scrollTop(0)>
     backtoTop</button>   
