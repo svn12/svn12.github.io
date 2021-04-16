@@ -24,8 +24,14 @@
             /* label {display:inline;} */
             /* input {display:inline;} */
             select {font-size:18px;}
-        
-        
+            .fixed-bottom {
+                    position: fixed;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: $zindex-fixed;
+                    }
+                            
             .container {
                 max-width: 700px;
             }
@@ -39,7 +45,10 @@
 
 
 <br>
-
+<nav class="navbar container fixed-bottom navbar-dark bg-dark">
+    <button class="btn btn-primary" id="previous" onclick=$(window).scrollTop(0)>Top</button>
+    <!-- <button class="btn btn-primary" id="next" onclick="readBook('next')">下一章</button> -->
+</nav>
 <audio id="audio1"  onended="audioend1()">
     <source id="audioSource1" src="">
     </source>
@@ -108,7 +117,7 @@
     播放</button>
 <button onclick="pauseaudio()">
     暫停</button>
-<button onclick="audioend1()">
+<button onclick="next_chap()">
     下一章</button>
 
 <!--  <p id="test">original</p> -->
@@ -205,6 +214,31 @@
             // audio = document.getElementById('audio' + ptr);
             //  audio.play();
             playaudio();
+
+        }
+    }
+    function next_chap(){
+        
+        if (document.getElementById("SelChap").options.length== document.getElementById("SelChap").selectedIndex+1){
+                if (document.getElementById("SelTitle").options.length == document.getElementById("SelTitle").selectedIndex + 1){
+
+                }
+                else{
+                    document.getElementById("SelTitle").selectedIndex++
+                    fSelTitle();
+                    // audio = document.getElementById('audio' + ptr);
+                    //  audio.play();
+                   // playaudio();
+                }
+        }
+        else {
+            
+            document.getElementById("SelChap").selectedIndex++
+            
+            fselChap();
+            // audio = document.getElementById('audio' + ptr);
+            //  audio.play();
+         //   playaudio();
 
         }
     }
@@ -698,10 +732,10 @@
     播放</button>
 <button onclick="pauseaudio()">
     暫停</button>
-<button onclick="audioend2()">
+<button onclick="next_chap()">
     下一章</button>
-<button onclick=$(window).scrollTop(0)>
-    backtoTop</button>   
+<!-- <button onclick=$(window).scrollTop(0)>
+    backtoTop</button>    -->
 
 <div id="demo3"></div>
 <br>
@@ -710,17 +744,18 @@
     播放</button>
 <button onclick="pauseaudio()">
     暫停</button>
-<button onclick="audioend3()">
+<button onclick="next_chap()">
     下一章</button>
-<button onclick=$(window).scrollTop(0)>
-    backtoTop</button>   
+<!-- <button onclick=$(window).scrollTop(0)>
+    backtoTop</button>    -->
 
  <div id="demo4"></div>
  
-<button onclick=$(window).scrollTop(0)>
-    backtoTop</button>   
+<!-- <button onclick=$(window).scrollTop(0)>
+    backtoTop</button>    -->
 
  <div id="demo5"></div>
+
 <p  id="bible-room" src="https://www.lingshyang.com/bible-room/mak/mak14.htm" width=100% height="400px" frameborder="0" ></p>
 <!-- <iframe  id="bible_twn_roma" src="https://www.sl-pc.org.tw/bible/3/ECC/1" width=100% height="400px" frameborder="0" ></iframe> -->
 
