@@ -18,8 +18,9 @@
             </style>
 </head>
 <body onload="IniTitle()">
+    <div class="container1">
     <div id="parent">
-    <h2 >&nbsp&nbsp &nbsp聖詩與啟應文&nbsp&nbsp &nbsp</h2>
+    <!-- <h2 >&nbsp&nbsp &nbsp聖詩與啟應文&nbsp&nbsp &nbsp</h2> -->
     <a href="https://svn12.github.io/%E6%9F%A5%E8%81%96%E8%A9%A9.html"><img width="80" height="80" src="https://chart.googleapis.com/chart?cht=qr&amp;chl=https%3A%2F%2Ftinyurl.com%2Fyzvshjn4&amp;chld=L|0&amp;chs=150" border="0"></a>
     <h3>&nbsp&nbsp &nbsp</h3>
     <h3><a href="https://www.dropbox.com/sh/q6uxx8wsajjzt17/AAD7pxz5-Xmmu8BZbX2BgekDa?dl=0&fbclid=IwAR2fJdygOWikE3EqA5u9y2scv2-MK1e_MUI-D-hGkCCQwU0YOKdRw7uS2HU">新聖詩</a></h3>
@@ -37,7 +38,7 @@
     <h3>&nbsp&nbsp &nbsp</h3>
 
 </div>
-    <div class="container ">
+    <br>
         <!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> -->
         <form id="location-form" class="form-inline">
             <!-- <input type="text" id="location-input" > -->
@@ -56,15 +57,16 @@
             <!-- <button type="submit" class="btn-primary ">Submit</button> -->
         </form>
        
-    </div>
-    <div class="table-responsive">
+   
+        <div class="table-responsive">
         <p id="show"></p>
          </div>
-    
+     </div>
     <script>
            function IniTitle() {
-                var Btitle = ["新聖詩"];
-                var Btitle_ptr = ["'https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing'"                // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
+                var Btitle = ["新聖詩","讚美詩網"];
+                var Btitle_ptr = ["'https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing'"   ,
+                 "https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit?usp=sharing"       
                 ];
                 var select = document.getElementById("selShurl");
                 // var options = ["10", "11", "12", "13", "14","15","16"];
@@ -103,7 +105,7 @@
                 var $show = $('#show');
                 var shURL= document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
                 // console.log(shURL);
-                shURL="'https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing'" 
+                // shURL="'https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing'" 
                 var a = {
                     // sheetUrl: 'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing',
                     // sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
