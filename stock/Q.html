@@ -25,35 +25,27 @@
 
     <link rel="stylesheet" href="..\youtube\link_P_noside.css"></head> 
 <body> 
-     <form id="location-form" class="form-inline">
-         <label for="text">股票代碼&nbsp:&nbsp</label>
-         <input type="text" class="form-control" placeholder="輸入股票代碼" id="location-input" onchange="Query_stk()">
-         <!-- <input type="text" id="location-input" > -->
-
-
-
-         <!-- <button type="submit" class="btn-primary ">Submit</button> -->
-     </form>
-
+    
 
 <script>
-    // Get location form
-    var locationForm = document.getElementById('location-form');
+  $(document).ready(function(){
+    $("form").submit(function(event){
+            event.preventDefault();
+            // alert("Submit prevented");
+        
+        });
+    });
 
-    // Listen for submiot
-    locationForm.addEventListener('submit', Query_stk);
-    document.getElementById('location-input').addEventListener('change', Query_Tel);
-    function Query_stk(e) {
-    e.preventDefault();
-    Query_stk2();
-    }
-    function Query_stk2(){
-        var findString = document.getElementById('location-input').value;
+    function Query_stk(){
+        // var findString = document.getElementById('location-input').value;
+        var findString = $("#location-input").val();
         // console.log(findString);
         if(findString.length>0){
 
-document.getElementById("yahoo").href ="https://tw.stock.yahoo.com/q/bc?s="+findString
-document.getElementById("fchart").href ="https://www.cnyes.com/twstock/flashchart/"+findString+".htm"
+// document.getElementById("yahoo").href ="https://tw.stock.yahoo.com/q/bc?s="+findString
+$("#yahoo").attr("href","https://tw.stock.yahoo.com/q/bc?s="+findString);
+$("#fchart").attr("href","https://www.cnyes.com/twstock/flashchart/"+findString+".htm");
+
 document.getElementById("Ginfo").href ="https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID="+findString
 document.getElementById("Cmoney").href ="http://www.cmoney.tw/finance/f00025.aspx?s="+findString
 document.getElementById("Sdog").href ="https://statementdog.com/analysis/tpe/"+findString
@@ -69,13 +61,23 @@ document.getElementById("capital").href="http://www.capital.com.tw/rank/index3.a
 
 document.getElementById("tendy").href="http://stock.tendy.net/td2kline.php?sid=" +findString
 document.getElementById("mops").href="http://mops.twse.com.tw/server-java/t164sb01?step=1&CO_ID="
-    +findString +"&SYEAR=2020&SSEASON=2&REPORT_ID=C"
+    +findString +"&SYEAR=2021&SSEASON=4&REPORT_ID=C"
     
 
     }
     }
     
 </script>
+ <form id="location-form" class="form-inline">
+         <label for="text">股票代碼&nbsp:&nbsp</label>
+         <input type="text" class="form-control" placeholder="輸入股票代碼" id="location-input" onchange="Query_stk()">
+         <!-- <input type="text" id="location-input" > -->
+
+
+
+         <button type="submit" class="btn-primary " >Go</button>
+     </form>
+
 <div class="main"> 
     
 <li class="item1"> <a id="yahoo" href="https://tw.stock.yahoo.com/q/bc?s=2356">Yahoo</a> </li>
