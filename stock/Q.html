@@ -51,23 +51,34 @@ $("#img3").attr("src","http://stock.wearn.com/foreign_buy.asp?stockid="+findStri
 $("#img4").attr("src","http://stock.wearn.com/acre.asp?stockid="+findString);
 $("#img5").attr("src","http://stock.wearn.com/sale_chart.asp?stockid="+findString);
 $("#img6").attr("src","http://stock.wearn.com/income_chart.asp?stockid="+findString);
+$("#img7").attr("src","https://stock.wearn.com/foreign_chart.asp?stockid="+findString);
+$("#img8").attr("src","https://stock.wearn.com/zhuli_chart.asp?stockid="+findString);
+
+
+
 $("#link1").attr("href","http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID="+findString);
 $("#link2").attr("href","https://statementdog.com/analysis/tpe/"+findString);
 $("#link3").attr("href","https://histock.tw/stock/"+findString);
 $("#link4").attr("href","http://www.cmoney.tw/finance/f00025.aspx?s="+findString);
 $("#link5").attr("href","http://www.money-link.com.tw/stxba/index5.asp?id="+findString);
 $("#link6").attr("href","http://stock.wearn.com/income.asp?mode=search&kind="+findString);
+$("#link7").attr("href","http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a="+findString);
+$("#link8").attr("href","http://pchome.megatime.com.tw/stock/sid"+findString+".html");
+
+
 $("#yahoo").attr("href","https://tw.stock.yahoo.com/q/bc?s="+findString);
 $("#fchart").attr("href","https://www.cnyes.com/twstock/flashchart/"+findString+".htm");
 
 // document.getElementById("Ginfo").href ="https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID="+findString
 // document.getElementById("Cmoney").href ="http://www.cmoney.tw/finance/f00025.aspx?s="+findString
 // document.getElementById("Sdog").href ="https://statementdog.com/analysis/tpe/"+findString
-$("#histock").href="https://histock.tw/stock/" +findString 
-$("#strea").href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock="+findString
+$("#histock").attr("href","https://histock.tw/stock/" +findString );
+$("#strea").attr("href","https://invest.wessiorfinance.com/stock_treasure_map.html?stock="+findString);
 
-document.getElementById("stxba").href="http://www.money-link.com.tw/stxba/index5.asp?id=" +findString
-document.getElementById("wearn").href="https://stock.wearn.com/income.asp?mode=search&kind=" +findString  
+document.getElementById("stxba").href="http://www.money-link.com.tw/stxba/index5.asp?id=" +findString;
+$("#wearn").attr("href","https://stock.wearn.com/a"+findString +".html");
+// document.getElementById("wearn").href="https://stock.wearn.com/income.asp?mode=search&kind=" +findString  
+
 document.getElementById("wantgoo").href="https://www.wantgoo.com/stock/" +findString 
 document.getElementById("megatime").href="http://pchome.megatime.com.tw/stock/sid" +findString+".html"
 
@@ -119,7 +130,7 @@ document.getElementById("mops").href="http://mops.twse.com.tw/server-java/t164sb
 
 </script>
  <form id="location-form" class="form-inline">
-         <label for="text">股票代碼&nbsp:&nbsp</label>
+         <label for="text"><a href="https://www.wantgoo.com/stock"> 大盤&nbsp &nbsp</a></label>
          <input type="text" class="form-control" placeholder="輸入股票代碼" id="location-input" onchange="Query_stk()" >
           <!-- <input type="text" class="form-control" placeholder="輸入股票代碼" id="location-input" onchange="Query_stk()"> -->
          <!-- <input type="text" id="location-input" > -->
@@ -141,7 +152,7 @@ document.getElementById("mops").href="http://mops.twse.com.tw/server-java/t164sb
 
 <!-- <iframe id ="stxba" src="http://www.money-link.com.tw/stxba/index5.asp?id=2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
 <!-- <iframe id="wearn" src="https://stock.wearn.com/income.asp?mode=search&kind=2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
-<li class="item1"><a id="wearn" href="https://stock.wearn.com/income.asp?mode=search&kind=2356">聚財網</a></li>
+<li class="item1"><a id="wearn" href="https://stock.wearn.com/a2356.html">聚財網</a></li>
 <li class="item1"><a id ="stxba" href="http://www.money-link.com.tw/stxba/index5.asp?id=2356">精誠</a></li>
 
 
@@ -152,8 +163,8 @@ document.getElementById("mops").href="http://mops.twse.com.tw/server-java/t164sb
 <!-- <iframe id="tendy" src="http://stock.tendy.net/td2kline.php?sid=2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
 <!-- <iframe id="histock" src="https://histock.tw/stock/2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
 <iframe id ="strea" src="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=2356" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
-<li class="item1" id="histock" ><a href="https://histock.tw/stock/2356">HiStock</a></li>
-<li class="item1" id="strea"><a href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=2356">樂活五線譜</a></li>
+<li class="item1"  ><a id="histock" href="https://histock.tw/stock/2356">HiStock</a></li>
+<li class="item1" ><a id="strea" href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=2356">樂活五線譜</a></li>
 
 <li class="item1"><a id="megatime" href="http://pchome.megatime.com.tw/stock/sid2356.html">PCHome股</a></li>
 <li class="item1"><a id= "capital" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=2356">群益網</a></li>
@@ -184,8 +195,16 @@ document.getElementById("mops").href="http://mops.twse.com.tw/server-java/t164sb
  
 <td> <a id="link3" href="https://histock.tw/stock/2356" target="_blank">
 <img id="img3" width='470'  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid=2356"></a> </td>
-</tr> </table>
-<iframe id="histock1" src="https://www.wantgoo.com/stock" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</tr> 
+
+<tr> <td> <a id="link7" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=2356" target="_blank">
+<img id="img7" width='470' alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid=2356"></a> </td>
+ 
+<td> <a id="link8" href="http://pchome.megatime.com.tw/stock/sid2356.html" target="_blank">
+<img id="img8" width='470'  alt="PChome" title="PCHome股" src="https://stock.wearn.com/zhuli_chart.asp?stockid=2356"></a> </td>
+</tr> 
+</table>
+<!-- <iframe id="histock1" src="https://www.wantgoo.com/stock" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
 
 
  </body> </html> 
