@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <title>查姓名電話</title>
+    <!-- <script src="https://code.jquery.com/jquery-1.9.1.js"></script> -->
+    <style> 
+            .container {  display: flex;}
+            </style>
+</head>
+<body onload="IniTitle()">
+    <!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> -->
+    <h2 >&nbsp&nbsp &nbsp姓名電話資料查詢</h2>
+    <div class="container ">
+        <!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> -->
+        <form id="location-form" class="form-inline">
+            <!-- <input type="text" id="location-input" > -->
+            <label for="text">查詢姓名&nbsp:&nbsp</label>
+            <input type="text" class="form-control" placeholder="姓名電話關鍵字" id="location-input">
+            <label for="select">&nbsp&nbsp來源&nbsp:&nbsp</label>
+            
+                
+            <select id="selShurl" class="form-control" onchange="Query_Tel2()">
+            
+            </select>
+            
+            
+
+            <!-- <button type="submit" class="btn-primary ">Submit</button> -->
+        </form>
+       
+    </div>
+    <div class="table-responsive">
+        <p id="show"></p>
+         </div>
+    
+    <script>
+           function IniTitle() {
+                var Btitle = ["南門通訊錄","南門資料庫","長青樂活"
+                ];
+                var Btitle_ptr = ["'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing'",
+                "'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing'",
+                "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
+                // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
+                ];
+                // var Btitle = ["南門通訊錄","長青樂活手機"
+                // ];
+                // var Btitle_ptr = ["'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing'",
+                
+                // "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
+                // // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
+                // ];
+                var select = document.getElementById("selShurl");
+                // var options = ["10", "11", "12", "13", "14","15","16"];
+                // alert(id, select.options[1].value);
+
+                for (var i = 1; i <= Btitle.length; i++) {
+                    // var opt = options[i];
+                    var el = document.createElement("option");
+                    el.textContent = Btitle[i - 1];
+                    el.value = Btitle_ptr[i - 1];
+                    select.appendChild(el);
+                    // select.options.add(el);
+                    // alert(select.options[i-1].value);
+                }
+
+
+            }
+        // Get location form
+            var locationForm = document.getElementById('location-form');
+
+            // Listen for submiot
+            locationForm.addEventListener('submit', Query_Tel);
+        document.getElementById('location-input').addEventListener('change', Query_Tel);
+        function Query_Tel(e) {
+                 e.preventDefault();
+                 Query_Tel2();
+        }
+         function        Query_Tel2(){
+                
+                var findString = document.getElementById('location-input').value;
+                // console.log(findString);
+                if(findString.length>0){
+                    
+                if(findString=='!'){ findString = '';}
+                document.getElementById("show").innerHTML = '查詢 "*' + findString+'*" 中 ....';
+                var $show = $('#show');
+                var shURL= document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
+                // console.log(shURL);
+                var a = {
+                    // sheetUrl: 'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing',
+                    // sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
+                    sheetUrl:shURL,
+                    sheetTag: 'List',
+                    findSting: findString
+                    };
+                $.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
+                    if(data.length==2){
+                        document.getElementById("show").innerHTML = '查無資料 請重新輸入再查詢';
+                    }
+                    else  if (data.length==0){ 
+                        document.getElementById("show").innerHTML = 'sheet Name 須為 "List"';}
+                    else {
+
+                    // console.log(data.length);
+                    // console.log(data);
+                    data = JSON.parse(data);
+                    var heads=[];
+                    for(head in data[0]){
+                        heads.push(head);
+                    }
+                    // console.log(heads.length);
+
+                    var txt='';
+                    txt += '<table  class="table  table-hover "> <thead><tr>';
+                    // heads.forEach(el=>console.log(el));
+                    heads.forEach(function(e){
+                        txt += "<th>" + e + "</th>";
+
+                    })
+                    
+                    txt+="</tr></thead><tbody>";
+                    // console.log(txt);
+
+                    for (x in data) {
+                        txt += "<tr>";
+                        // console.log(x);
+                        // console.log(data[x]);
+                        heads.forEach(function(e){
+                        txt += "<td>" + data[x][e] + "</td>";
+
+                        })
+                        txt += "</tr>";
+                        // txt += "<tr><td>" + data[x].Name + "</td><td>"+ data[x].手機 +"</td></tr>";
+                    }
+                    txt += "</tbody></table>"
+                    document.getElementById("show").innerHTML = txt;
+
+
+                    var arr = [];
+                    for (var i = 0; i < (a.endRow - a.row + 1); i++) {
+                        arr[i] = d.splice(0, (a.endCol - a.col + 1));
+                        $show.append(arr[i] + '<br/>');
+                    }
+                    }
+
+                });
+            };
+        }
+    </script>
+</body>
+</html>
