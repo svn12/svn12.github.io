@@ -6,35 +6,166 @@
     <title>Test</title>
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="link_P_noside.css">
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    background-color: #ffad77;
+}
+
+body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.cup-top {
+    position: relative;
+    width: 120px;
+    border-right: 15px solid transparent;
+    border-left: 15px solid transparent;
+    border-bottom: 40px solid #3a3a3a;
+    cursor: pointer;
+    transform-origin: right bottom;
+    transition: .5s;
+}
+
+.cup-top:hover {
+    transform: rotate(30deg);
+}
+
+.cup-top::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    left: -30px;
+    width: 180px;
+    height: 15px;
+    background-color: #000;
+    border-radius: 5px;
+}
+
+.cup-body {
+    position: relative;
+    width: 120px;
+    border-right: 15px solid transparent;
+    border-left: 15px solid transparent;
+    border-top: 200px solid #fff;
+    z-index: -1;
+    transform-origin: left bottom;
+    transition: .5s;
+}
+.cup-body:hover {
+    transform: rotate(-110deg);
+}
+.cup-body::after {
+    content: '';
+    position: absolute;
+    bottom: 60px;
+    left: -16px;
+    
+    width: 136px;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+    border-top: 70px solid #0ec59d;
+    /* border-bottom: 30px solid #70a574; */
+}
+
+button {
+    position: relative;
+    width: 240px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 30px;
+    text-transform: uppercase;
+    color: #2a00b5;
+    background-color: transparent;
+    border: 3px solid #2a00b5;
+    border-radius: 10px;
+    cursor: pointer;
+    outline: none;
+    overflow: hidden;
+    transition: .5s;
+}
+
+button::before, button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 120%;
+    height: 100%;
+    transform: skewX(-45deg);
+    z-index: -1;
+}
+
+button::before {
+    background-color: #2a00b5;
+    transition: .5s;
+}
+
+button::after {
+    background-color: rgba(255, 255, 255, .2);
+    transition: .5s;
+    transition-delay: .5s;
+}
+
+button:hover {
+    color: #fff;
+}
+
+button:hover::before {
+    left: -10%;
+}
+
+button:hover::after {
+    left: -70%;
+}
+.card {
+    position: relative;
+    width: 225px;
+    height: 400px;
+    box-shadow: 0 20px 20px rgba(0, 0, 0, .5);
+    transform-style: preserve-3d;
+    transition: 1s;
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+.card:hover {
+    transform: rotateY(180deg);
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}
+    </style>
 </head>
-<body>  
-<div class="main">
-        
+<body> 
 
-
-
-<br>
-<li class="item1"><a href="https://statementdog.com/analysis/tpe/2891
-">財報狗</a></li>
-<li class="item1"><a href="https://www.cnyes.com/twstock/flashchart/2891.htm
-">聚亨股市</a></li>
-<li class="item1"><a href="https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=2891
-">GoodInfo</a></li>
-    <br>
-    <iframe src="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=2891
-" frameborder="0"
-allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe src="https://histock.tw/stock/2891
-
-" frameborder="0"
-    allow="autoplay; encrypted-media" allowfullscreen> </iframe>
-    <br>
-<iframe src="https://www.wantgoo.com/stock/2891
-
-" frameborder="0">玩股王
-</iframe>
-<iframe src="https://stock.wearn.com/income.asp?mode=search&kind=2891
-" frameborder="0"></iframe>
-
+<div class="cup-top"></div>
+<div class="cup-body"></div>
+<button>Button</button>
+<div class="card">
+    <div class="card-front">
+    <img src="https://upload.cc/i1/2020/09/03/cqyBuM.png
+" alt="1">
+    </div>
+    <div class="card-back">
+    <img src="https://upload.cc/i1/2020/09/03/WALkjF.png
+" alt="2">
+    </div>
 </div>
+
 </body> </html>
