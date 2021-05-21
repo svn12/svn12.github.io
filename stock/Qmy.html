@@ -50,10 +50,12 @@ codeA.map(appendText1);
 
 }
 function show_a(link){
-  $("#T2").append(link.代碼); 
+  var txt2 = $("<p></p>").text(link.code); 
+  $("#T2").append(txt2); 
+
 }
 function  Array_R(){
-  d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
+  d3.tsv("https://svn12.github.io/doc/my_自選股.tsv", function(data) {
     console.log(data);
     data.map(show_a);
   })
