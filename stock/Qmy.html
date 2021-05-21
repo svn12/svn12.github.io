@@ -1,6 +1,8 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>JK_Stock.htm</title>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>MyStockQ.htm</title>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script src="https://d3js.org/d3.v4.js"></script>
 <script>
 
 function appendText1(code) {
@@ -47,19 +49,23 @@ var codeA=["0050","9917","5434","2891","0056","9925","00881","8422","4938"
 codeA.map(appendText1);
 
 }
-
-
-
-
-
-
+function show_a(link){
+  $("#T2").append(link.href); 
+}
+function  Array_R(){
+  d3.tsv("https://svn12.github.io/doc/person_by_country.tsv", function(data) {
+    console.log(data);
+    data.map(show_a);
+  })
+//   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
+// data - 家戶所得.csv
+}
 </script>
-</head>
 <body>
-
 <p>This is a paragraph.</p>
 <button onclick="appendText()">Append text</button>
-
+<button onclick="Array_R()">Read Array</button>
 <p id="T"> </p>
+<p id="T2"> </p>
 </body>
 </html>
