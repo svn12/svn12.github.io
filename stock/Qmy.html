@@ -50,12 +50,13 @@ codeA.map(appendText1);
 
 }
 function show_a(link){
+  appendText1(link.code);
   var txt2 = $("<p></p>").text(link.code); 
-  $("#T2").append(txt2); 
+  $("#T2").append(link.code +' '); 
 
 }
 function  Array_R(){
-  d3.tsv("https://svn12.github.io/doc/my_自選股.tsv", function(data) {
+  d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
     console.log(data);
     data.map(show_a);
   })
@@ -67,7 +68,7 @@ function  Array_R(){
 <p>This is a paragraph.</p>
 <button onclick="appendText()">Append text</button>
 <button onclick="Array_R()">Read Array</button>
-<p id="T"> </p>
 <p id="T2"> </p>
+<p id="T"> </p>
 </body>
 </html>
