@@ -57,6 +57,7 @@ function show_a(link){
 }
 function  Array_R(){
   $("#T2").html('');
+  $("#T").html('');
   d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
     console.log(data);
     data.map(show_a);
