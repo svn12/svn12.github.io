@@ -6,6 +6,7 @@
 <script>
 
 function appendText1(code) {
+  $("#T2").append(code +' '); 
   var str_code="";
   str_code=code;
   var txt1 = '<table border="1" cellspacing="0" cellpadding="7"> ';  
@@ -38,21 +39,21 @@ function appendText1(code) {
 }
 function appendText(){
 $("#T").html('');
-
+$("#T2").html('');
 // appendText1('0050');
 // appendText1('0050');
 // appendText1('2412');
 // appendText1('3376');
 // appendText1('6269');
 var codeA=["0050","9917","5434","2891","0056","9925","00881","8422","4938"
-,"6269","2458","3045","2356","2412","1101","2023",'6269']
+,"6269","2458","3045","2356","2412","1101","2023"]
 codeA.map(appendText1);
 
 }
 function show_a(link){
   appendText1(link.code);
   var txt2 = $("<p></p>").text(link.code); 
-  $("#T2").append(link.code +' '); 
+  // $("#T2").append(link.code +' '); 
 
 }
 function  Array_R(){
@@ -65,11 +66,59 @@ function  Array_R(){
 //   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
 // data - 家戶所得.csv
 }
+function  Google_sht_R(){
+  $("#T2").html('');
+  $("#T").html('');
+  var findString =''
+  if(findString=='!'){ findString = '';}
+  var select_sh=$('#select_sh').val();
+  var a = {
+                    sheetUrl:'"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"',
+                    sheetTag: select_sh,
+                    findSting: findString
+                    };
+   $.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
+                    if(data.length==2){
+                         $("#T2").html( '查無資料 請重新輸入再查詢');
+                    }
+                    else  if (data.length==0){ 
+                        $("#T2").html('sheet Name 須為 "List"');}
+                    else {
+
+                    // console.log(data.length);
+                    // console.log(data);
+                    data = JSON.parse(data);
+
+                    data.map(show_a);
+                  }
+                });
+  // d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
+  //   console.log(data);
+  //   data.map(show_a);
+  // })
+//   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
+// data - 家戶所得.csv
+}
+
 </script>
 <body>
-<p>This is a paragraph.</p>
-<button onclick="appendText()">Append text</button>
-<button onclick="Array_R()">Read Array</button>
+<!-- <p>This is a paragraph.</p> -->
+<button onclick="appendText()">Fixed Table</button>
+<button onclick="Array_R()">Read CSV</button>
+<!-- <button onclick="Google_sht_R()">Read G-Sheet</button> -->
+ <select id="select_sh" onchange="Google_sht_R()";>
+            <option value="" selected="selected">請選擇Sheet</option>
+            <option value="List">List</option>
+            <option value="List1">List1</option>
+            <option value="List2">List2</option>
+            <option value="List3">List3</option>
+            <option value="List4">List4</option>
+            <option value="List5">List5</option>
+            <option value="List6">List6</option>
+            <option value="List7">List7</option>
+            <option value="List8">List8</option>
+            
+</select>
 <p id="T2"> </p>
 <p id="T"> </p>
 </body>
