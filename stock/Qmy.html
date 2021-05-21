@@ -50,10 +50,10 @@ codeA.map(appendText1);
 
 }
 function show_a(link){
-  $("#T2").append(link.href); 
+  $("#T2").append(link.代碼); 
 }
 function  Array_R(){
-  d3.tsv("https://svn12.github.io/doc/person_by_country.tsv", function(data) {
+  d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
     console.log(data);
     data.map(show_a);
   })
