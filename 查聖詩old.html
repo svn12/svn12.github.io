@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <title>查聖詩啟應文</title>
-  
+    <!-- <script src="https://code.jquery.com/jquery-1.9.1.js"></script> -->
     <style> 
             .container {  max-width: 700px;}
             #parent {
@@ -39,72 +40,82 @@
 
 </div>
     <br>
-        
-         聖詩001~650 啟應文01~66 &nbsp: <input type="text"  class="form-control" placeholder="歌名或首別關鍵字" id="location-input" />
-   
-    <select id='selectTle'>
-        <option selected="selected" value="https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing">新聖詩</option>
-        <option value="https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit?usp=sharing">讚美詩網</option>
-        <!-- <option value="UK">UK</option> -->
-    </select>
-   
-    <!-- <input type="submit" value="查詢" /> -->
-    <input id="btnClickMe" type="button" value="查詢" />
+        <!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> -->
+        <form id="location-form" class="form-inline">
+            <!-- <input type="text" id="location-input" > -->
+            <label for="text">聖詩001~650 啟應文01~66 &nbsp </label>
+            <input type="text" class="form-control" placeholder="歌名或首別關鍵字" id="location-input">
+            <label for="text">&nbsp&nbsp</label>
+            <button onclick="Query_Tel2()">查詢</button>
+            <label for="select">&nbsp&nbsp來源&nbsp:&nbsp</label>
+            
+                
+            <select id="selShurl" class="form-control" onchange="Query_Tel2()">
+            
+            </select>
+            
+            
+
+            <!-- <button type="submit" class="btn-primary ">Submit</button> -->
+        </form>
        
+   
         <div class="table-responsive">
         <div id="show"></div>
+        
          </div>
      </div>
     <script>
-       
-        $(document).ready(function () {
-            
-            $(':input').change(function () {
-                //  alert(this.value);
-                 qTel();
-                })
-            
-            $('#btnClickMe').click(function () {
-                // alert($(this).val()+ '  ---' + txtptr.val());
-                 qTel();
-            })
-            
-            function qTel(){
-                var txtptr=$('input[type="text"]');
-                var selectedTle= $('#selectTle option:selected');
-                if(txtptr.val().length==0){
-                    alert ('請輸入關鍵字再查詢');
-                    return
+           function IniTitle() {
+                var Btitle = ["新聖詩","讚美詩網"];
+                var Btitle_ptr = ["'https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing'"   ,
+                 "https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit?usp=sharing"       
+                ];
+                var select = document.getElementById("selShurl");
+                // var options = ["10", "11", "12", "13", "14","15","16"];
+                // alert(id, select.options[1].value);
+
+                for (var i = 1; i <= Btitle.length; i++) {
+                    // var opt = options[i];
+                    var el = document.createElement("option");
+                    el.textContent = Btitle[i - 1];
+                    el.value = Btitle_ptr[i - 1];
+                    select.appendChild(el);
+                    // select.options.add(el);
+                    // alert(select.options[i-1].value);
                 }
-                else{
-                    // alert (txtptr.val()+ ' option--' + selectedTle.text() +' --' + selectedTle.val());
-                    Query_Tel2();
-                }
-                
+
 
             }
-        });
+        // Get location form
+            var locationForm = document.getElementById('location-form');
 
-          
+            // Listen for submiot
+            locationForm.addEventListener('submit', Query_Tel);
+        document.getElementById('location-input').addEventListener('change', Query_Tel);
+        function Query_Tel(e) {
+                 e.preventDefault();
+                 Query_Tel2();
+        }
          function        Query_Tel2(){
-                // var txtptr=$('input[type="text"]');
-                var selectedTle= $('#selectTle option:selected');
-
-                var findString =$('input[type="text"]').val();
-                // var findString = document.getElementById('location-input').value;
+                
+                var findString = document.getElementById('location-input').value;
                 // console.log(findString);
                 if(findString.length>0){
                     
                 if(findString=='!'){ findString = '';}
                 document.getElementById("show").innerHTML = '查詢 "*' + findString+'*" 中 ....';
                 var $show = $('#show');
-                var shURL= selectedTle.val();
+                var shURL= document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
+                // console.log(shURL);
+                // shURL="'https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing'" 
                 var a = {
+                    // sheetUrl: 'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing',
+                    // sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
                     sheetUrl:shURL,
                     sheetTag: 'List',
                     findSting: findString
                     };
-                   
                 $.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
                     if(data.length==2){
                         document.getElementById("show").innerHTML = '查無資料 請重新輸入再查詢';

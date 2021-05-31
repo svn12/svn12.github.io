@@ -1,16 +1,66 @@
-﻿<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>9917</title><link rel="stylesheet" href="..\youtube\reset.css"><link rel="stylesheet" href="..\youtube\link_P_noside.css"></head> <body> <div class="main"> 
-<li class="item1"> <a href="https://tw.stock.yahoo.com/q/bc?s=9917">Yahoo</a> </li>
-<li class="item1"> <a href="https://www.cnyes.com/twstock/flashchart/9917.htm">聚亨股市</a> </li>
-<li class="item1"> <a href="https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=9917">GoodInfo</a> </li>
-<li class="item1"> <a href="http://www.cmoney.tw/finance/f00025.aspx?s=9917">Cmoney</a> </li>
-<li class="item1"> <a href="https://statementdog.com/analysis/tpe/9917">財報狗</a> </li>
-<iframe src="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=9917" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe src="http://www.money-link.com.tw/stxba/index5.asp?id=9917" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe src="https://stock.wearn.com/income.asp?mode=search&kind=9917" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe src="https://www.wantgoo.com/stock/9917" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe src="http://pchome.megatime.com.tw/stock/sid9917.html" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe src="https://histock.tw/stock/9917" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe src="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=9917" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe src="http://stock.tendy.net/td2kline.php?sid=9917" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
-<iframe src="http://mops.twse.com.tw/server-java/t164sb01?step=1&CO_ID=9917&SYEAR=2020&SSEASON=2&REPORT_ID=C" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe>
-</div> </body> </html> 
+﻿<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> 
+    
+    <title>SlideImage Show</title>
+   
+
+    <style type="text/css">
+        .imgStyle {
+            width: 100px;
+            height: 100px;
+            border: 3px solid grey;
+        }
+    </style>
+    <!-- <script src="jquery-1.11.2.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var imageURLs = new Array();
+            var intervalId;
+            var btnStart = $('#btnStartSlideShow');
+            var btnStop = $('#btnStopSlideShow');
+
+            $('#divId img').each(function () {
+                imageURLs.push($(this).attr('src'));
+            });
+
+            function setImage() {
+                var mainImageElement = $('#mainImage');
+                var currentImageURL = mainImageElement.attr('src');
+                var currentImageIndex = $.inArray(currentImageURL, imageURLs);
+                if (currentImageIndex == (imageURLs.length - 1)) {
+                    currentImageIndex = -1;
+                }
+
+                mainImageElement.attr('src', imageURLs[currentImageIndex + 1])
+            }
+
+            btnStart.click(function () {
+                intervalId = setInterval(setImage, 1500);
+                $(this).attr('disabled', 'disabled');
+                btnStop.removeAttr('disabled');
+            });
+
+            btnStop.click(function () {
+                clearInterval(intervalId);
+                $(this).attr('disabled', 'disabled');
+                btnStart.removeAttr('disabled');
+            }).attr('disabled', 'disabled');
+        });
+    </script>
+</head>
+<body style="font-family:Arial">
+    <input id="btnStartSlideShow" type="button" value="Start Slideshow" />
+    <input id="btnStopSlideShow" type="button" value="Stop Slideshow" />
+    <br /><br />
+    <img id="mainImage" style="border:3px solid grey"
+         src="/images/cinqueterre.jpg" height="500" width="540" />
+    <br />
+    <div id="divId">
+        <img class="imgStyle" src="/images/cinqueterre.jpg" />
+        <img class="imgStyle" src="/images/slide1.png" />
+        <img class="imgStyle" src="/images/slide2.png" />
+        <img class="imgStyle" src="/images/宜蘭一日遊.jpg" />
+        <img class="imgStyle" src="/images/長青樂活課表.jpg" />
+    </div>
+</body>
+</html>
