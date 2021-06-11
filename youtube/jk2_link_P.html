@@ -27,26 +27,42 @@
             .fixed-bottom {
                     position: fixed;
                     right: 0;
-                    bottom: 0;
-                    left: 0;
-                    z-index: $zindex-fixed;
+                    /* bottom: 0; */
+                    /* left: 0; */
+                    display:none;
+                    /* z-index: $zindex-fixed; */
+                    /* bottom: 0; */
+                    /* right: 0; */
+                    /* border-left: 1px solid black; */
+                    /* border-top: 1px solid black; */
+                    /* background: red; */
                     }
                             
             .container {
                 max-width: 700px;
             }
-            
+            .sticky {
+                /* position: fixed; */
+                /* bottom: 0; */
+                /* right:0; */
+                display:inline-block;
+                /* width: 100%; */
+                /* background: rgba(0, 0, 0, 0.35); */
+                /* z-index: $zindex-fixed; */
+                transition: all 1.5s ease;
+
+                }
         </style>
     <link rel="stylesheet" href="link_P.css">
 </head>
 <body onload="Iniload()" > 
     
-        <div class="container">
+<div class="container">
 
 
 <br>
-<nav class="navbar container fixed-bottom navbar-dark bg-dark">
-    <button class="btn btn-primary" id="previous" onclick=$(window).scrollTop(0)>Top</button>
+<nav class="navbar fixed-bottom navbar-dark bg-dark">
+    <button class="btn btn-primary pull-right " id="previous" onclick=$(window).scrollTop(0)>Top</button>
     <!-- <button class="btn btn-primary" id="next" onclick="readBook('next')">下一章</button> -->
 </nav>
 <audio id="audio1"  onended="audioend1()">
@@ -168,8 +184,8 @@
                         $(window).scrollTop($('#demo40').offset().top);
                         break;
                     default: 
-                        $(window).scrollTop($('#SelTitle').offset().top);
-                        
+                        // $(window).scrollTop($('#SelTitle').offset().top);
+                        $(window).scrollTop(0);
 
                 }
                 break;
@@ -177,7 +193,7 @@
         }
     }
     function nextchap() {
-            
+           
             for (var i = 0; i < audios.length; i++) {
 
                 if (audios[i].checked) {
@@ -221,7 +237,17 @@
         }
     }
     function next_chap(){
-        
+         let oTop1 = $("#demo30").offset().top - window.innerHeight;
+            let oTop2 = $("#demo40").offset().top - window.innerHeight;
+         if($(window).scrollTop() > oTop2){
+             $('input[name="optradio"]')[2].checked = true;
+         } else if($(window).scrollTop() > oTop1){
+             $('input[name="optradio"]')[1].checked = true;
+         } else {
+             $('input[name="optradio"]')[0].checked = true;
+         }
+            console.log($(window).scrollTop() );
+            console.log(oTop1,oTop2);
         if (document.getElementById("SelChap").options.length== document.getElementById("SelChap").selectedIndex+1){
                 if (document.getElementById("SelTitle").options.length == document.getElementById("SelTitle").selectedIndex + 1){
 
@@ -565,6 +591,25 @@
 
         url6=url.replace('bklcl',selectedBVer)
         show_bible(url6,"#demo6",chap);
+        var audios = document.getElementsByName('optradio');
+        for (var i = 0; i < audios.length; i++) {
+             if (audios[i].checked) {
+                switch (i){
+                    case 1:
+                        $(window).scrollTop($('#demo30').offset().top);
+                        break;
+                    case 2:
+                        $(window).scrollTop($('#demo40').offset().top);
+                        break;
+                    default: 
+                        // $(window).scrollTop($('#SelTitle').offset().top);
+                        $(window).scrollTop(0);
+
+                }
+            }
+        }
+
+
     }
     function query_bible_keyw(){
         var qstr=encodeURI($("#location-input").val());
@@ -665,7 +710,24 @@
     };
 
   
+        /**
+     *
+     *  sticky navigation
+     *
+            */
 
+        let navbar = $(".navbar");
+
+        $(window).scroll(function () {
+        // get the complete hight of window
+        let oTop = $(".radio-inline").offset().top ;
+        console.log(oTop,$(window).scrollTop(),window.innerHeight);
+        if ($(window).scrollTop() >= oTop) {
+            navbar.addClass("sticky");
+        } else {
+            navbar.removeClass("sticky");
+        }
+        });
    
 </script>
 
