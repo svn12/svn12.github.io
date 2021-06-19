@@ -6,6 +6,7 @@
     <title>WEB學習</title>
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="link_P_noside.css">
+    
 </head>
 
 
@@ -26,7 +27,16 @@
         <li class="item1"><a href="https://www.youtube.com/watch?v=byeB0aQAEhQ&list=PLr6-GrHUlVf-HoyxrgOEHg9-JTVpQLvm_&t=0s">CSS Grid</a></li>
         <li class="item1"><a href="https://www.youtube.com/watch?v=xpZLS6R91rQ&list=PLr6-GrHUlVf96NLj3PQq-tmEB6woZjwEl&t=0s">EJ教學JS</a></li>
         <li class="item1"><a href="https://www.youtube.com/playlist?list=PLr6-GrHUlVf9J6_n0AaPCVPs8-krReZC8">CSS Flex</a></li>
+        <li class="item1"><a href="https://regexr.com/">RegExr</a></li>
+        <li class="item1"><a href="https://www.runoob.com/bootstrap/bootstrap-tutorial.html">Runoob</a></li>
+        <li class="item1"><a href="https://www.w3schools.com/">W3School1</a></li>
+        <li class="item1"><a href="https://www.w3school.com.cn/index.html">W3School2</a></li>
+        <li class="item1"><a href="https://reqres.in/api/user">Json例1</a></li>
+        <li class="item1"><a href="https://reqres.in/api/users?page=2">Json例2</a></li>
+        <li class="item1"><a href="https://reqres.in/api/users/5">Json例3</a></li>
         <li class="item1"><a href="https://www.w3schools.com/colors/colors_groups.asp">HTML Color</a></li>
+        <li class="item1"><a href="https://markdownlivepreview.com/">MarkDown1</a></li>
+        <li class="item1"><a href="https://domchristie.github.io/turndown/">HTML2MkDn</a></li>
     </div>    
          
  
@@ -39,4 +49,153 @@
     allow="autoplay; encrypted-media" allowfullscreen> </iframe>
     <!-- https://www.youtube.com/watch?v=4y2n8ZW2CsI&list=PLkjkWmYV3rz_61AVkfoF-HYGGdhSWhtx3 -->
 </div>
+<script>
+    //Learn JavaScript Promises In 10 Minutes
+    //https://youtu.be/DHvZLI7Db8E
+    let p=new Promise((resolve,reject)=>{
+        let a=1+2;
+        if(a==2){
+            resolve('Success');
+        }else {
+            reject('Failed');
+        }
+        })
+    p.then((message)=>{
+        console.log('This is in the then '+ message);
+    }).catch((message)=>{
+        console.log('This is in the catch  '+ message);
+    })
+    //  Part 2 
+    let userLeft = false
+    let userWatchingCatMeme = true
+    function watchTutorialCallback(callback, errorCallback) {
+    
+
+        if (userLeft) {
+            errorCallback({
+            name: 'User Left', 
+            message: ':('
+            })
+        } else if (userWatchingCatMeme) {
+            errorCallback({
+            name: 'User Watching Cat Meme',
+            message: 'WebDevSimplified < Cat' 
+            })
+        } else {
+            callback('Thumbs up and Subscribe')
+        }
+        }
+         watchTutorialCallback(message => {
+        console.log(message)
+        }, error => {
+        console.log(error.name + ' ' + error.message)
+        })
+        
+        function watchTutorialPromise() {
+       
+        return new Promise((resolve, reject) => {
+            if (userLeft) {
+            reject({
+                name: 'User Left', 
+                message: '-*Promise*-:('
+            })
+            } else if (userWatchingCatMeme) {
+            reject({
+                name: 'User Watching Cat Meme',
+                message: '-*Promise*-WebDevSimplified < Cat' 
+            })
+            } else {
+            resolve('-*Promise*-Thumbs up and Subscribe')
+            }
+        })
+        }
+
+       
+
+        watchTutorialPromise().then(message => {
+        console.log(message)
+        }).catch(error => {
+        console.log(error.name + ' ' + error.message)
+        })
+
+        const recordVideoOne = new Promise((resolve, reject) => {
+        resolve('Video 1 Recorded')
+        })
+
+        const recordVideoTwo = new Promise((resolve, reject) => {
+        resolve('Video 2 Recorded')
+        })
+
+        const recordVideoThree = new Promise((resolve, reject) => {
+        resolve('Video 3 Recorded')
+        })
+
+        Promise.all([
+        recordVideoOne,
+        recordVideoTwo,
+        recordVideoThree
+        ]).then(messages => {
+        console.log(messages)
+        })
+
+        Promise.race([
+        recordVideoOne,
+        recordVideoTwo,
+        recordVideoThree
+        ]).then(message => {
+        console.log(message)
+        })
+
+    // Learn Fetch API https://www.youtube.com/watch?v=cuEtnrL9-H0&list=PLZlA0Gpn_vH85jM1TWO6TdCtSr6ruglWn&index=8
+    if('3'=='5'){
+        console.log('Hello');
+        fetch('https://reqres.in/api/users')
+            .then(res => res.json())
+            .then(data => console.log("1---",data));
+        fetch('https://reqres.in/api/users/6')
+            .then(res => res.json())
+            .then(data => console.log("6---",data));
+        fetch('https://reqres.in/api/users/2')
+            .then(res => {
+                if(res.ok){
+                    console.log('Success');
+                    // res.json();
+                }else{
+                    console.log('Not Successful');
+                }
+                })
+            .then(data => console.log("3---",data))
+            .catch(error =>console.log("Error"));
+//------------- Add option
+        fetch('https://reqres.in/api/users',{
+            method:"POST",
+            
+            body:{
+                name:'User 1234'
+            }
+        })
+            .then(res => {
+                return res.json()
+            }
+                )
+            .then(data => console.log("4---",data))
+            .catch(error =>console.log("Error"));
+//------------- Add option header
+        fetch('https://reqres.in/api/users',{
+            method:"POST",
+            header:{
+                'Content-Type':'Application/json'
+            },
+            body:JSON.stringify({
+                name:'User 1234'
+            })
+        })
+            .then(res => {
+                return res.json()
+            }
+                )
+            .then(data => console.log("5---",data))
+            .catch(error =>console.log("Error"));
+        }            
+    </script>
 </body> </html>
