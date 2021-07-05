@@ -99,11 +99,45 @@ function  Google_sht_R(){
 //   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
 // data - 家戶所得.csv
 }
+function  GSname(){
+  $("#T2").html('');
+  $("#T").html('');
+  var findString =''
+  if(findString=='!'){ findString = '';}
+  var select_sh=$('#select_sh').val();
+  var a = {
+                    sheetUrl:'"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"'
+                    
+                    };
+   $.get('https://script.google.com/macros/s/AKfycbwaaebTgLD1LYY5Hm1gmfeacjnfVA4Ra3JlxWVVKPdbG1JntHUYK5XaGdC4eQsAvZ0/exec', a, function (data) {
+     $("#T2").html(data);
+                    if(data.length==2){
+                         $("#T2").html( '查無資料 請重新輸入再查詢');
+                    }
+                    else  if (data.length==0){ 
+                        $("#T2").html('sheet Name 須為 "List"');}
+                    else {
+
+                    // console.log(data.length);
+                    // console.log(data);
+                    //data = JSON.parse(data);
+
+                    //data.map(show_a);
+                  }
+                });
+  // d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
+  //   console.log(data);
+  //   data.map(show_a);
+  // })
+//   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
+// data - 家戶所得.csv
+}
 
 </script>
 <body>
 <!-- <p>This is a paragraph.</p> -->
 <button onclick="appendText()">Fixed Table</button>
+<button onclick="GSname()">GetSname</button>
 <button onclick="Array_R()">Read CSV</button>
 <!-- <button onclick="Google_sht_R()">Read G-Sheet</button> -->
  <select id="select_sh" onchange="Google_sht_R()";>
@@ -120,6 +154,7 @@ function  Google_sht_R(){
             
 </select>
 <a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing">Edit</a>
+
 <p id="T2"> </p>
 <p id="T"> </p>
 </body>
