@@ -76,8 +76,9 @@ function  Google_sht_R(){
   var findString =''
   if(findString=='!'){ findString = '';}
   var select_sh=$('#select_sh').val();
+  console.log(select_sh);
   var a = {
-                    sheetUrl:'"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"',
+                    sheetUrl:'https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing',
                     sheetTag: select_sh,
                     findSting: findString
                     };
@@ -90,9 +91,9 @@ function  Google_sht_R(){
                     else {
 
                     // console.log(data.length);
-                    // console.log(data);
+                    //console.log(data);
                     data = JSON.parse(data);
-
+					//console.log(data);
                     data.map(show_a);
                   }
                 });
@@ -159,7 +160,7 @@ function  GSname(){
             <option value="List8">List8</option>
             
 </select>
-<a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing">Edit</a>
+<a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing">Edit(Type 需文字)</a>
 
 <p id="T2"> </p>
 <p id="T"> </p>
