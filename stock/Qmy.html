@@ -115,13 +115,19 @@ function  GSname(){
                     };
    $.get('https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec', a, function (data) {
                 $("#select_sh").empty();
+                
+                $('#select_sh').append($('<option>', { 
+                      value: ' ',
+                      text : "請選擇Sheet"
+                      }));
+                       
                 data = JSON.parse(data);
                 $.each(data, function (i, item) {
                     $('#select_sh').append($('<option>', { 
                       value: item.Sname,
                       text : item.Sname 
                 }));
-});
+				});
                    
                 });
   // d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
@@ -130,6 +136,7 @@ function  GSname(){
   // })
 //   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
 // data - 家戶所得.csv
+
 }
 
 </script>
