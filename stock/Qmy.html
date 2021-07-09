@@ -82,7 +82,9 @@ function  Google_sht_R(){
                     sheetTag: select_sh,
                     findSting: findString
                     };
-   $.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
+   const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
+   $.get(Search_API, a, function (data) {    
+   //$.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
                     if(data.length==2){
                          $("#T2").html( '查無資料 請重新輸入再查詢');
                     }
@@ -118,8 +120,8 @@ function  GSname(){
                 $("#select_sh").empty();
                 
                 $('#select_sh').append($('<option>', { 
-                      value: ' ',
-                      text : "請選擇Sheet"
+                      value: '',
+                      text : "---請選擇----"
                       }));
                        
                 data = JSON.parse(data);
@@ -160,7 +162,7 @@ function  GSname(){
             <option value="List8">List8</option>
             
 </select>
-<a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing">Edit(Type 需文字)</a>
+<a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing">Edit</a>
 
 <p id="T2"> </p>
 <p id="T"> </p>

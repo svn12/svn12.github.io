@@ -104,8 +104,9 @@
                     sheetTag: 'List',
                     findSting: findString
                     };
-                   
-                $.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
+                    //https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec
+                const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
+                $.get(Search_API, a, function (data) {
                     if(data.length==2){
                         document.getElementById("show").innerHTML = '查無資料 請重新輸入再查詢';
                     }
