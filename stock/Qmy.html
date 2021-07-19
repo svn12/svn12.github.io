@@ -3,10 +3,68 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<style type="text/css">
+    #abgne_float_ad {
+		display: none;
+		position: absolute;
+	}
+	#abgne_float_ad .abgne_close_ad {
+		display: block;
+		text-align: center;
+		cursor: pointer;
+		font-size: 2rem;
+        color: blue;
+        background-color: darksalmon;
+        border-radius: 50%;
+	}
+	#abgne_float_ad a img {
+		border: none;
+	}
+	div.bigDiv {
+		height: 3000px;
+	}
+</style>
 <script>
 $(document).ready(function() {
   GSname();
   Array_R();
+  var $win = $(window),
+			$ad = $('#abgne_float_ad').css('opacity', 0).show(),	// 讓廣告區塊變透明且顯示出來
+			_width = $ad.width(),
+			_height = $ad.height(),
+			_diffY = 20, _diffX = 20,	// 距離右及下方邊距
+			_moveSpeed = 800;	// 移動的速度
+		console.log($ad.width()+"--"+$ad.height());
+        // $ad.height()=40;
+        // $ad.width()=40;
+        // console.log($ad.width()+"--"+$ad.height());
+		// 先把 #abgne_float_ad 移動到定點
+		$ad.css({
+			top: $(document).height(),
+			left: $win.width() - _width - _diffX,
+			opacity: 1
+		});
+		
+		// 幫網頁加上 scroll 及 resize 事件
+		$win.bind('scroll resize', function(){
+			var $this = $(this);
+			
+			// 控制 #abgne_float_ad 的移動
+			$ad.stop().animate({
+				top: $this.scrollTop() + $this.height() - _height - _diffY,
+				left: $this.scrollLeft() + $this.width() - _width - _diffX
+			}, _moveSpeed);
+		}).scroll();	// 觸發一次 scroll()
+		
+		// 關閉廣告
+		$('#abgne_float_ad .abgne_close_ad').click(function(){
+        // $('#abgne_float_ad img').click(function(){    
+			// $ad.hide();
+            $(window).scrollTop(0)
+		});
+	
   
 });
 function appendText1(code) {
@@ -14,53 +72,63 @@ function appendText1(code) {
   var str_code="";
   str_code=code;
   var txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
-    
+    const detail=!($('#brief').is(':checked'));
+      
     // http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}
     // http://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.TW
     //  https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=270&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=MFI
     // https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None
   	  txt1+='<tr>';  
-      txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID='+code+'" target="_blank"> <img id="img1" width="470" alt="台灣股市資訊網" title="台灣股市資訊網"  src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
-      txt1+=` <td> <a id="link2" href="https://statementdog.com/analysis/tpe/'+code+'" target="_blank"> <img  id="img2" width="470"  alt="財報狗" title="財報狗" src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
+      txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資訊網" title="台灣股市資訊網"  src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
+      txt1+=` <td> <a id="link2" href="https://statementdog.com/analysis/tpe/${code}" target="_blank"> <img  id="img2" width="470"  alt="財報狗" title="財報狗" src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
       txt1+='</tr>';
+      // let aa=`${code}.toString().substr(0,1)`
+      // let bb=aa.substr(0,1);
+      // console.log(code+"---"+aa+"---"+bb);
+      if(`${code.toString().substr(0,1)}`!="0"){
       // http://stock.wearn.com/sale_chart.asp?stockid=${code}
        //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
       txt1+='<tr>';  
-      txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id='+code+'" target="_blank"> <img id="img5" width="470" alt="精誠資訊" title="精誠資訊" src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
-      txt1+=' <td> <a id="link6" href="http://stock.wearn.com/income.asp?mode=search&kind='+code+'" target="_blank"> <img id="img6" width="470" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid='+code+'"></a> </td>';
+      txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> <img id="img5" width="470" alt="精誠資訊" title="精誠資訊" src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
+      txt1+=` <td> <a id="link6" href="http://stock.wearn.com/income.asp?mode=search&kind=${code}" target="_blank"> <img id="img6" width="470" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
       txt1+='</tr>';
       
+      // if(!($('#brief').is(':checked'))){
+       if(detail){ 
+       txt1+='<tr>';  
+      txt1+=` <td> <a href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=${code}" target="_blank"><img  width="470" alt="群益網" title="群益網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_${code}.gif"></a> </td>`;
+      txt1+=`<td> <a href="http://pchome.megatime.com.tw/stock/sid${code}.html" target="_blank"> <img width="470" alt="PChome" title="PCHome股"
+        src=" https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_ASSETS_M_S_${code}.gif"></a> </td>`;
+      txt1+='</tr>';
+        }
+      }
+      
+      if(detail){ 
+      txt1+='<tr>';  
+      txt1+=` <td> <a href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=${code}" target="_blank"><img  width="470" alt="群益網" title="群益網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
+      txt1+=`<td> <a href="http://pchome.megatime.com.tw/stock/sid${code}.html" target="_blank"> <img width="470" alt="PChome" title="PCHome股"
+        src="https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_${code}.gif"></a> </td>`;
+      txt1+='</tr>';
+      }
       // https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif
       // http://stock.wearn.com/acre.asp?stockid=${code}
       txt1+='<tr>';  
-      txt1+=`<td>  <a id="link4" href="http://www.cmoney.tw/finance/f00025.aspx?s='+code+'" target="_blank"><img id="img4" width="470" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif"></a> </td>`;
+      txt1+=`<td>  <a id="link4" href="http://www.cmoney.tw/finance/f00025.aspx?s=${code}" target="_blank"><img id="img4" width="470" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif"></a> </td>`;
       txt1+=' <td> <a id="link3" href="https://histock.tw/stock/'+code+'" target="_blank"> <img id="img3" width="470"  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid='+code+'"></a> </td>';
       txt1+='</tr>';
       
-      
+      if(detail){ 
       txt1+='<tr>';  
       txt1+=' <td> <a id="link7" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a='+code+'" target="_blank"><img id="img7" width="470" alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid='+code+'"></a> </td>';
       txt1+='<td> <a id="link8" href="http://pchome.megatime.com.tw/stock/sid'+code+'.html" target="_blank"> <img id="img8" width="470"  alt="PChome" title="PCHome股" src="https://stock.wearn.com/zhuli_chart.asp?stockid='+code+'"></a> </td>';
       txt1+='</tr>';
-      
+      }
       // https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_5434.gif
       //  https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_5434.gif
       //  https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_ASSETS_M_S_5434.gif
       //  https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_5434.gif
        
      
-      
-      txt1+='<tr>';  
-      txt1+=` <td> <a href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=${code}" target="_blank"><img  width="470" alt="群益網" title="群益網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
-      txt1+=`<td> <a href="http://pchome.megatime.com.tw/stock/sid${code}.html" target="_blank"> <img width="470" alt="PChome" title="PCHome股"
-        src="https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_${code}.gif"></a> </td>`;
-      txt1+='</tr>';
-      
-       txt1+='<tr>';  
-      txt1+=` <td> <a href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=${code}" target="_blank"><img  width="470" alt="群益網" title="群益網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_${code}.gif"></a> </td>`;
-      txt1+=`<td> <a href="http://pchome.megatime.com.tw/stock/sid${code}.html" target="_blank"> <img width="470" alt="PChome" title="PCHome股"
-        src=" https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_ASSETS_M_S_${code}.gif"></a> </td>`;
-      txt1+='</tr>';
       
       txt1+='</table>';
   
@@ -79,7 +147,7 @@ $("#T2").html('');
 // appendText1('3376');
 // appendText1('6269');
 var codeA=["0050","9917","5434","2891","0056","9925","00881","8422","4938"
-,"6269","2458","3045","2356","2412","1101","2023"]
+,"2458","3045","2439","2356","2412","1101","2023"]
 codeA.map(appendText1);
 
 }
@@ -166,6 +234,7 @@ function  GSname(){
 
 </script>
 <body>
+
 <!-- <p>This is a paragraph.</p> -->
 <button onclick="appendText()">Fixed Table</button>
 <button onclick="GSname()">GetSname</button>
@@ -177,6 +246,13 @@ function  GSname(){
             
 </select>
 <a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing">Edit</a>
+<input type="checkbox" id="brief" >Brief </br>
+<div id="abgne_float_ad" >
+		<span class="abgne_close_ad">Top</span>
+		<!-- <a href="http://vv0817.byethost3.com" target="_blank"> -->
+			<!-- <img src="./img/cell-phone.svg" title="Test~遊戲天地" class="abgne_close_ad"  /> -->
+		</a>
+</div>
 
 <p id="T2"> </p>
 <p id="T"> </p>
