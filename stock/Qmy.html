@@ -36,7 +36,7 @@ $(document).ready(function() {
 			_width = $ad.width(),
 			_height = $ad.height(),
 			_diffY = 20, _diffX = 20,	// 距離右及下方邊距
-			_moveSpeed = 800;	// 移動的速度
+			_moveSpeed = 1800;	// 移動的速度
 		console.log($ad.width()+"--"+$ad.height());
         // $ad.height()=40;
         // $ad.width()=40;
@@ -83,9 +83,7 @@ function appendText1(code) {
       txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資訊網" title="台灣股市資訊網"  src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
       txt1+=` <td> <a id="link2" href="https://statementdog.com/analysis/${code}" target="_blank"> <img  id="img2" width="470"  alt="財報狗" title="財報狗" src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
       txt1+='</tr>';
-      // let aa=`${code}.toString().substr(0,1)`
-      // let bb=aa.substr(0,1);
-      // console.log(code+"---"+aa+"---"+bb);
+     
       if(`${code.toString().substr(0,1)}`!="0"){
       // http://stock.wearn.com/sale_chart.asp?stockid=${code}
        //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
@@ -97,8 +95,8 @@ function appendText1(code) {
       // if(!($('#brief').is(':checked'))){
        if(detail){ 
        txt1+='<tr>';  
-      txt1+=` <td> <a href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=${code}" target="_blank"><img  width="470" alt="群益網" title="群益網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_${code}.gif"></a> </td>`;
-      txt1+=`<td> <a href="http://pchome.megatime.com.tw/stock/sid${code}.html" target="_blank"> <img width="470" alt="PChome" title="PCHome股"
+      txt1+=` <td> <a href="https://www.cnyes.com/twstock/flashchart/${code}.htm" target="_blank"><img  width="470" alt="鉅亨網" title="鉅亨網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_${code}.gif"></a> </td>`;
+      txt1+=`<td> <a href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=${code}" target="_blank"> <img width="470" alt="樂活五線譜" title="樂活五線譜"
         src=" https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_ASSETS_M_S_${code}.gif"></a> </td>`;
       txt1+='</tr>';
         }
@@ -106,8 +104,8 @@ function appendText1(code) {
       
       if(detail){ 
       txt1+='<tr>';  
-      txt1+=` <td> <a href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=${code}" target="_blank"><img  width="470" alt="群益網" title="群益網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
-      txt1+=`<td> <a href="http://pchome.megatime.com.tw/stock/sid${code}.html" target="_blank"> <img width="470" alt="PChome" title="PCHome股"
+      txt1+=` <td> <a href="https://www.wantgoo.com/stock/${code}" target="_blank"><img  width="470" alt="玩股網" title="玩股網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
+      txt1+=`<td> <a href="https://tw.stock.yahoo.com/q/bc?s=${code}" target="_blank"> <img width="470" alt="Yahoo" title="Yahoo"
         src="https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_${code}.gif"></a> </td>`;
       txt1+='</tr>';
       }
