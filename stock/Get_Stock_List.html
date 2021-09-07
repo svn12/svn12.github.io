@@ -1,0 +1,160 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>GetList</title><link rel="stylesheet" href="../youtube/reset.css"><link rel="stylesheet" href="../youtube/link_P.css">
+  <!-- https://github.com/eermagic/csharp-twse-stock-etf-list -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+  <!-- https://isin.twse.com.tw/isin/C_public.jsp?strMode=4 -->
+  <!-- https://isin.twse.com.tw/isin/C_public.jsp?strMode=2 -->
+</head>
+
+<body>
+<div class="main">
+<li class="item1"><a href="https://isin.twse.com.tw/isin/C_public.jsp?strMode=2">上市清單</a></li>
+ <li class="item1"><a href="https://isin.twse.com.tw/isin/C_public.jsp?strMode=4">上櫃清單</a></li>
+ <li class="item1"><a href="https://isin.twse.com.tw/isin/C_public.jsp?strMode=1">未上市清單</a></li>
+ <li class="item1"><a href="https://isin.twse.com.tw/isin/C_public.jsp?strMode=3">債券清單</a></li>
+ </div>
+ <main id="Page">
+
+    <div class="row">
+        <div class="col-md-3">
+            市場別
+            <select class="form-control" v-model="form.Q_MARKET_TYPE.value">
+                <option value="TWSE">證交所</option>
+                <option value="OTC">櫃買中心</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            資產別
+            <select class="form-control" v-model="form.Q_ASSETS_TYPE.value">
+                <option value="STOCK">股票</option>
+                <option value="ETF">ETF</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <br />
+            <button type="button" class="btn btn-default" v-on:click="GetList()">查詢</button>
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{gridList.CName}}清單
+            <div style="float:right;">
+                總筆數: {{gridList.RowCnt}}
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <th>代碼</th>
+                    <th>名稱</th>
+                    <th>市場別</th>
+                    <th>資產別</th>
+                    <th>上市日</th>
+                    <th>產業別</th>
+                </tr>
+                <tr v-for="(item, index) in gridList.datas">
+                    <td>{{item.SYMBOL_CODE}}</td>
+                    <td>{{item.SYMBOL_NAME}}</td>
+                    <td>{{item.MARKET_TYPE}}</td>
+                    <td>{{item.ASSETS_TYPE}}</td>
+                    <td>{{item.PUBLIC_DATE}}</td>
+                    <td>{{item.INDUSTRY}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script>
+    var Page = new Vue({
+        el: '#Page'
+        , data: function () {
+            var data = {
+                form: {}
+                , ctrlName: '@Url.Content("~/Home/")'
+            };
+            data.gridList = {
+                datas: []
+                , RowCnt: 0
+                , CName:''
+            };
+            return data;
+        }
+        , created: function () {
+            var self = this;
+            var columnList = [
+                'Q_MARKET_TYPE','Q_ASSETS_TYPE'
+            ];
+            self._CreateForm(self.form, columnList);
+            self.form.Q_MARKET_TYPE.value = "TWSE";
+            self.form.Q_ASSETS_TYPE.value = "STOCK";
+        }
+        , methods: {
+            GetToken: function () {
+                var token = '@Html.AntiForgeryToken()';
+                token = $(token).val();
+                return token;
+            }
+            , GetList: function () {
+                var self = this;
+                var postData = self._GetPostData(self.form, "Q_");
+                $.blockUI({ message: '處理中...' });
+                $.ajax({
+                    url:'@Url.Content("~/Home/GetList")',
+                    method:'POST',
+                    dataType:'json',
+                    data: { inModel: postData, __RequestVerificationToken: self.GetToken() },
+                    success: function (datas) {
+                        self.gridList.datas = [];
+                        self._RowDataBound(self.gridList.datas, datas.gridList);
+                        self.gridList.RowCnt = datas.RowCnt;
+                        self.gridList.CName = datas.CName;
+                        $.unblockUI();
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                    },
+                });
+            }
+            // 產生欄位控制項
+            , _CreateForm: function (form, variable) {
+                for (var key in variable) {
+                    control = {
+                        id: variable[key]
+                        , value: ''
+                    };
+                    Vue.set(form, variable[key], control);
+                }
+            }
+            // 產生送往後端的資料
+            , _GetPostData: function (form, blockName) {
+                var postData = {};
+                for (var key in form) {
+                    if (key.substring(0, 2) !== blockName)
+                        continue;
+                    postData[key] = form[key].value;
+                }
+                return postData;
+            }
+            // 產生列表欄位控制項
+            , _RowDataBound: function (gridDatas, datas) {
+                for (var i in datas) {
+                    var gridData = {};
+                    for (var key in datas[i]) {
+                        gridData[key] = datas[i][key];
+                    }
+                    gridDatas.push(gridData);
+                }
+            }
+        }
+    })
+</script>
+  
+</body>
+</html>
