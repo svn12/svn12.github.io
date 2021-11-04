@@ -137,6 +137,18 @@ function appendText1(code) {
   txt3.innerHTML = "Text.";         // Create text with DOM
   $("#T").append(txt1);   // Append new elements
 }
+
+//document.querySelector('#T2').textContent.match(/\w+/g)  Read All Show  2021.11.4
+function ReLoad_T2(){
+const codeA1=document.querySelector('#T2').textContent.match(/\w+/g) ;
+console.log(codeA1);
+$("#T").html('');
+$("#T2").html('');
+codeA1.map(appendText1);
+
+}
+
+
 function appendText(){
 $("#T").html('');
 $("#T2").html('');
@@ -235,9 +247,9 @@ function  GSname(){
 <body>
 
 <!-- <p>This is a paragraph.</p> -->
-<button onclick="appendText()">Fixed Table</button>
+<button onclick="appendText()">Fixed</button>
 <button onclick="GSname()">GetSname</button>
-<button onclick="Array_R()">Read CSV</button>
+<!-- <button onclick="Array_R()">Read CSV</button>
 <!-- <button onclick="Google_sht_R()">Read G-Sheet</button> -->
  <select id="select_sh" onchange="Google_sht_R()";>
             <option value="" selected="selected">請選擇Sheet</option>
@@ -245,7 +257,7 @@ function  GSname(){
             
 </select>
 <a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing">Edit</a>
-<input type="checkbox" id="brief" >Brief </br>
+<input type="checkbox" id="brief" onchange="ReLoad_T2()">Brief </br>
 <a href="https://www.cmoney.tw/etf/e210.aspx?key=0050">ETF成分</a>
 <div id="abgne_float_ad" >
 		<span class="abgne_close_ad fa  fa-arrow-circle-up" style="font-size:5rem;color:blue;"></span>
