@@ -7,6 +7,14 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style type="text/css">
+	#fixed-div {
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  height: 100px;
+	 
+	}
     #abgne_float_ad {
 		display: none;
 		position: absolute;
@@ -145,7 +153,17 @@ console.log(codeA1);
 $("#T").html('');
 $("#T2").html('');
 codeA1.map(appendText1);
+document.documentElement.scrollTop = 0; 
+document.getElementById("T2").style.display = "none";
+}
 
+function ShowT2(){
+const x = document.getElementById("T2");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
 }
 
 
@@ -160,11 +178,13 @@ $("#T2").html('');
 var codeA=["0050","9917","5434","2891","0056","9925","00881","8422","4938"
 ,"2458","3045","2439","2356","2412","1101","2023"]
 codeA.map(appendText1);
-
+document.documentElement.scrollTop = 0; 
 }
 function show_a(link){
   appendText1(link.code);
   var txt2 = $("<p></p>").text(link.code); 
+  document.documentElement.scrollTop = 0; 
+  
   // $("#T2").append(link.code +' '); 
 
 }
@@ -245,29 +265,33 @@ function  GSname(){
 
 </script>
 <body>
-
-<!-- <p>This is a paragraph.</p> -->
+<div id="fixed-div" >
+<!-- <p>This is a paragraph.</p> 
 <button onclick="appendText()">Fixed</button>
 <button onclick="GSname()">GetSname</button>
 <!-- <button onclick="Array_R()">Read CSV</button>
 <!-- <button onclick="Google_sht_R()">Read G-Sheet</button> -->
  <select id="select_sh" onchange="Google_sht_R()";>
-	<option value="" selected="selected">請選擇Sheet</option>
+	<!--  <option value="" selected="selected">請選擇Sheet</option>  -->
     <option value="List">List</option>
             
 </select>
 <a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing">Edit</a>
-<input type="checkbox" id="brief" onchange="ReLoad_T2()"  checked="checked">Brief </br>
+<input type="checkbox" id="brief" onchange="ReLoad_T2()"  checked="checked">Brief 
+<!--   <input type="checkbox" id="showT2" onchange="Show_T2()"  checked="checked">ShowList  -->
+<button onclick="ShowT2()">ShowList</button>
 <a href="https://www.cmoney.tw/etf/e210.aspx?key=0050">ETF成分</a>
 <a href="https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit#gid=646792547">類股</a>
-<div id="abgne_float_ad" >
+<p id="T2" style="display: none;"> </p>
+</div>
+<div id="abgne_float_ad_1" style="display: none;" >
 		<span class="abgne_close_ad fa  fa-arrow-circle-up" style="font-size:5rem;color:blue;"></span>
 		<!-- <a href="http://vv0817.byethost3.com" target="_blank"> -->
 			<!-- <img src="./img/cell-phone.svg" title="Test~遊戲天地" class="abgne_close_ad"  /> -->
 		</a>
 </div>
 
-<p id="T2"> </p>
+
 <p id="T"> </p>
 <iframe  src="https://histock.tw/tw" enableviewstate="True" frameborder="no" vspace="0" hspace="0"  width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
 </body>
