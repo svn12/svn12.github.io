@@ -7,6 +7,17 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style type="text/css">
+	 input,select{
+            margin: 0px;
+            display: inline;
+            font-size: 18px;
+        }
+
+        /* label {display:inline;} */
+        /* input {display:inline;} */
+        button {
+            font-size: 16px;
+        }
 	#fixed-div {
 	  position: fixed;
 	  top: 0;
@@ -88,10 +99,15 @@ function appendText1(code) {
     //  https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=270&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=MFI
     // https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None
   	  txt1+='<tr>';  
+  	  
       txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資訊網" title="台灣股市資訊網"  src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
-      txt1+=` <td> <a id="link2" href="https://statementdog.com/analysis/${code}" target="_blank"> <img  id="img2" width="470"  alt="財報狗" title="財報狗" src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
+      if(detail){
+      	txt1+=` <td> <a id="link2" href="https://statementdog.com/analysis/${code}" target="_blank"> <img  id="img2" width="470"  alt="財報狗" title="財報狗" src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
+      	}
+      else{
+		txt1+=` <td> <a id="link2" href="https://statementdog.com/analysis/${code}" target="_blank"> <img  id="img2" width="470"  alt="財報狗" title="財報狗" src="https://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.tw"></a> </td>`;
+		}     
       txt1+='</tr>';
-     
       if(`${code.toString().substr(0,1)}`!="0"){
       // http://stock.wearn.com/sale_chart.asp?stockid=${code}
        //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
@@ -271,17 +287,21 @@ function  GSname(){
 <button onclick="GSname()">GetSname</button>
 <!-- <button onclick="Array_R()">Read CSV</button>
 <!-- <button onclick="Google_sht_R()">Read G-Sheet</button> -->
- <select id="select_sh" onchange="Google_sht_R()";>
+
+<a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing">Edit</a>
+<input type="checkbox" id="brief" onchange="ReLoad_T2()"  checked="checked">Brief 
+<!--   <input type="checkbox" id="showT2" onchange="Show_T2()"  checked="checked">ShowList  -->
+
+<a href="https://www.cmoney.tw/etf/e210.aspx?key=0050">ETF成分</a>
+<a href="https://www.wantgoo.com/stock/etf/net-value?category=%E5%9C%8B%E5%85%A7%E6%88%90%E5%88%86%E8%AD%89%E5%88%B8%E6%8C%87%E6%95%B8%E8%82%A1%E7%A5%A8%E5%9E%8B%E5%9F%BA%E9%87%91&manager=&orderBy=volume&direction=1">ETF折溢價</a>
+<a href="https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit#gid=646792547">類股</a>
+<label for="text"><a href="https://www.wantgoo.com/stock/ranking/top-gainer"  target="_blank"> 排行&nbsp &nbsp</a></label>
+<button onclick="ShowT2()">ShowList</button>
+<select id="select_sh" onchange="Google_sht_R()";>
 	<!--  <option value="" selected="selected">請選擇Sheet</option>  -->
     <option value="List">List</option>
             
 </select>
-<a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing">Edit</a>
-<input type="checkbox" id="brief" onchange="ReLoad_T2()"  checked="checked">Brief 
-<!--   <input type="checkbox" id="showT2" onchange="Show_T2()"  checked="checked">ShowList  -->
-<button onclick="ShowT2()">ShowList</button>
-<a href="https://www.cmoney.tw/etf/e210.aspx?key=0050">ETF成分</a>
-<a href="https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit#gid=646792547">類股</a>
 <p id="T2" style="display: none;"> </p>
 </div>
 <div id="abgne_float_ad_1" style="display: none;" >
