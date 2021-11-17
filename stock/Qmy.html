@@ -49,7 +49,8 @@
 <script>
 $(document).ready(function() {
   GSname();
-  Array_R();
+  //Array_R();
+  appendText();
   var $win = $(window),
 			$ad = $('#abgne_float_ad').css('opacity', 0).show(),	// 讓廣告區塊變透明且顯示出來
 			_width = $ad.width(),
@@ -191,8 +192,7 @@ $("#T2").html('');
 // appendText1('2412');
 // appendText1('3376');
 // appendText1('6269');
-var codeA=["0050","9917","5434","2891","0056","9925","00881","8422","4938"
-,"2458","3045","2439","2356","2412","1101","2023"]
+var codeA=['0050','9917','2891','5434','6505','0056','9925','4938','00881','8422','3045','2356','2458','00878',"2412","1101","2023"];
 codeA.map(appendText1);
 document.documentElement.scrollTop = 0; 
 }
