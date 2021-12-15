@@ -1,4 +1,4 @@
-﻿<!DOCTYPE h<html lang="zh"">
+﻿<!DOCTYPE html><html lang="zh"">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -65,17 +65,9 @@
     <button class="btn btn-primary pull-right " id="previous" onclick=$(window).scrollTop(0)>Top</button>
     <!-- <button class="btn btn-primary" id="next" onclick="readBook('next')">下一章</button> -->
 </nav>
-<audio id="audio1"  onended="audioend1()">
-    <source id="audioSource1" src="">
-    </source>
-    Your browser does not support the audio format.
-</audio>
-<!-- controls="controls" -->
-<audio id="audio2"  onended="audioend2()">
-    <source id="audioSource2" src="">
-    </source>
-    Your browser does not support the audio format.
-</audio>
+
+<!-- controls="controls" 
+
 <audio id="audio3"  onended="audioend3()">
     <source id="audioSource3" src="">
     </source>
@@ -119,6 +111,7 @@
 <button onclick="query_bible_keyw3()">查詢</button>
 
 <br>
+
 <form onclick="playaudio()">
     <label class="radio-inline">
         <input type="radio" name="optradio" checked>台語有聲聖經
@@ -133,18 +126,79 @@
     
 </form>
 
-<button onclick="playaudio()">
+<audio id="audio1"  onended="audioend1()"  autoplay="autoplay"  controls="controls" preload=""  style='display:inline;'>
+    <source id="audioSource1" src="" style='display:inline;'>
+    </source>
+    Your browser does not support the audio format.
+</audio>
+<button onclick="next_chap()"  >
+    下一章</button>
+
+<div id="demo1"></div>
+ 
+ <!-- <p id="demo2">aaa</p> -->
+<!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
+<p id="bible-2010" target="_blank" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/"></p>
+
+
+<!-- <iframe id="taiwan_Bible" src="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe> -->
+<br>
+<audio id="audio2"  onended="audioend2()" autoplay="autoplay"  controls="controls">
+    <source id="audioSource2" src="">
+    </source>
+    Your browser does not support the audio format.
+</audio>
+<!-- <button id="demo30" onclick="playaudio_3()">
     播放</button>
 <button onclick="pauseaudio()">
-    暫停</button>
-<button onclick="next_chap()">
+    暫停</button>-->
+<button id="demo30" onclick="next_chap()">
     下一章</button>
+<!-- <button onclick=$(window).scrollTop(0)>
+    backtoTop</button>    -->
+
+<div id="demo3"></div>
+<br>
+<audio id="audio3"  onended="audioend3()" autoplay="autoplay"  controls="controls">
+    <source id="audioSource3" src="">
+    </source>
+    Your browser does not support the audio format.
+</audio>
+<!-- <button id="demo40"onclick="playaudio_4()">
+    播放</button>
+<button onclick="pauseaudio()">
+    暫停</button>-->
+<button id="demo40" onclick="next_chap()">
+    下一章</button>
+<!-- <button onclick=$(window).scrollTop(0)>
+    backtoTop</button>    -->
+
+ <div id="demo4"></div>
+ 
+<!-- <button onclick=$(window).scrollTop(0)>
+    backtoTop</button>    -->
+
+ <div id="demo5"></div>
+ <div id="demo6"></div>
+<p  id="bible-room" src="https://www.lingshyang.com/bible-room/mak/mak14.htm" width=100% height="400px" frameborder="0" ></p>
+<!-- <iframe  id="bible_twn_roma" src="https://www.sl-pc.org.tw/bible/3/ECC/1" width=100% height="400px" frameborder="0" ></iframe> -->
+
+<p id="bible_5" src="https://www.lingshyang.com/bible_5/mak/mak14.htm" frameborder="0"></p>
+<!-- <iframe id="new_bible2" src="http://bible.goodjob.tw/tcv_b5/2135.htm" frameborder="0"></iframe> -->
+<ip id="new_bible" src="https://www.lingshyang.com/new_bible/mak/mak14.htm" frameborder="0"></ip>
+<p id="bible2010" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/" frameborder="0"></p>
+<!-- <iframe id="bbe_bible" src="https://www.lingshyang.com/bbe_bible/mak/mak14.htm" frameborder="0"></iframe> -->
+
+<br>
+
+ </div> 
 
 <!--  <p id="test">original</p> -->
 
 
 <!-- <p id="test2">audio2</p> -->
 <script>
+
     function pauseaudio() {
             
             for (var i = 1; i < 4; i++) {
@@ -172,10 +226,12 @@
         var audios = document.getElementsByName('optradio');
         pauseaudio();
         var audio_value;
+		console.log(`audios length ---$(audios.length)`);
         for (var i = 0; i < audios.length; i++) {
             
             if (audios[i].checked) {
                 audio = document.getElementById('audio' + (i+1));
+				console.log(`Audio ---$(i)+1`);
                 audio.play();
                 switch (i){
                     case 1:
@@ -722,63 +778,37 @@
         $(window).scroll(function () {
         // get the complete hight of window
         let oTop = $(".radio-inline").offset().top ;
-        console.log(oTop,$(window).scrollTop(),window.innerHeight);
+        //console.log(oTop,$(window).scrollTop(),window.innerHeight);
         if ($(window).scrollTop() >= oTop) {
             navbar.addClass("sticky");
         } else {
             navbar.removeClass("sticky");
         }
         });
-   
+  var	audi1=document.getElementById('audio1');
+var	audi2=document.getElementById('audio2')
+var	audi3=document.getElementById('audio3')
+
+audi1.onplaying=function(){
+	audi2.pause();
+	audi3.pause();
+	
+	$('input[name="optradio"]')[0].checked = true;
+	}	
+audi2.onplaying=function(){
+	audi1.pause();
+	audi3.pause();
+	
+	$('input[name="optradio"]')[1].checked = true;
+	}	
+		
+audi3.onplaying=function(){
+	audi1.pause();
+	audi2.pause();
+	
+	$('input[name="optradio"]')[2].checked = true;
+	}	
+ 
 </script>
 
- <div id="demo1"></div>
- 
- <!-- <p id="demo2">aaa</p> -->
-<!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
-<p id="bible-2010" target="_blank" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/"></p>
-
-
-<!-- <iframe id="taiwan_Bible" src="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe> -->
-<br>
-
-<button id="demo30" onclick="playaudio_3()">
-    播放</button>
-<button onclick="pauseaudio()">
-    暫停</button>
-<button onclick="next_chap()">
-    下一章</button>
-<!-- <button onclick=$(window).scrollTop(0)>
-    backtoTop</button>    -->
-
-<div id="demo3"></div>
-<br>
-
-<button id="demo40"onclick="playaudio_4()">
-    播放</button>
-<button onclick="pauseaudio()">
-    暫停</button>
-<button onclick="next_chap()">
-    下一章</button>
-<!-- <button onclick=$(window).scrollTop(0)>
-    backtoTop</button>    -->
-
- <div id="demo4"></div>
- 
-<!-- <button onclick=$(window).scrollTop(0)>
-    backtoTop</button>    -->
-
- <div id="demo5"></div>
- <div id="demo6"></div>
-<p  id="bible-room" src="https://www.lingshyang.com/bible-room/mak/mak14.htm" width=100% height="400px" frameborder="0" ></p>
-<!-- <iframe  id="bible_twn_roma" src="https://www.sl-pc.org.tw/bible/3/ECC/1" width=100% height="400px" frameborder="0" ></iframe> -->
-
-<p id="bible_5" src="https://www.lingshyang.com/bible_5/mak/mak14.htm" frameborder="0"></p>
-<!-- <iframe id="new_bible2" src="http://bible.goodjob.tw/tcv_b5/2135.htm" frameborder="0"></iframe> -->
-<ip id="new_bible" src="https://www.lingshyang.com/new_bible/mak/mak14.htm" frameborder="0"></ip>
-<p id="bible2010" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/" frameborder="0"></p>
-<!-- <iframe id="bbe_bible" src="https://www.lingshyang.com/bbe_bible/mak/mak14.htm" frameborder="0"></iframe> -->
-
-<br>
-
- </div> </body> </html>
+ </body> </html>
