@@ -32,7 +32,7 @@
     <!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> 
     <h2 >&nbsp&nbsp &nbsp查報到編號</h2>  -->
     <div class="container ">
-         <h3 >查報到編號 (!全部) </h3> 
+         <p>查報到編號 (!全部) </p> 
         
             
             <input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Tel2()">
@@ -71,7 +71,7 @@ input.addEventListener("keyup", function(event) {
                 // console.log(findString);
                 if(findString.length>0){
                     
-                if(findString=='!'){ findString = '';}
+                if(findString=='!' || findString=='！'){ findString = '';}
                 document.getElementById("show").innerHTML = '查詢 "*' + findString+'*" 中 ....';
                 var $show = $('#show');
                 var shURL= Btitle_ptr[0];
