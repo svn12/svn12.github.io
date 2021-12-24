@@ -31,10 +31,13 @@
 <body onload="IniTitle()">
     <!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> 
     <h2 >&nbsp&nbsp &nbsp查報到編號</h2>  -->
+	
     <div class="container ">
-         <p>報到編號</p> 
-        
-            
+         
+			 <img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=https://bit.ly/3sufNMo &amp;size=40x40"></a>
+        <!--  <a href="https://bit.ly/3sufNMo">
+		<p>報到編號</p> 
+		-->
             <input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Tel2()">
             
             <button onclick="Query_Tel2()" id='myBtn'>查詢</button>
