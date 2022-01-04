@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <title>Search Stock</title>
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <style> 
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+            .container {  display: flex;
+			
+			}
+			
+            </style>
+</head>
+<body onload="IniTitle()">
+    <!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> 
+    <h2 >&nbsp&nbsp &nbsp查報到編號</h2>  -->
+	
+	<p></p>
+	<div class="container ">
+	<a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"  target="_blank">File</a>
+	股名<input type="text" placeholder="請輸入股票名稱代號" id="stkcode" >
+	
+	<button onclick="Query_stkcode()" id='myBtn3'>&nbsp&nbsp&nbsp&nbsp查股票名稱代號&nbsp&nbsp&nbsp&nbsp</button>
+	 
+	<a href="https://svn12.github.io/stock/Qmy.html"  target="_blank">View</a>
+	 </div>
+	 <p id="showstk"></p>
+	<div class="container ">
+	<h3>Push Test &nbsp&nbsp &nbsp</h3> <a href="https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing">UFile</a>
+	 </div>
+    <div class="container ">
+         
+			
+            Key1<input type="text"  id="Key1" >
+           &nbsp&nbsp  Key2<input type="text"  id="Key2" >
+            &nbsp&nbsp Key3<input type="text"  id="Key3" >
+			
+            &nbsp&nbsp Key4<input type="text"  id="Key4" >
+            
+    
+	<button onclick="Query_Tel2()" id='myBtn'>&nbsp&nbsp&nbsp&nbspPush&nbsp&nbsp&nbsp&nbsp</button>
+	</div>
+	<button onclick="Query_Tel3()" id='myBtn2'>Rsheet2Json</button>
+    <div class="table-responsive">
+        <p id="show"></p>
+         </div>
+    
+    <script>
+	const Wsheet_API='https://script.google.com/macros/s/AKfycbyhcGNu-7gSTB92Xex7CuhSp-z9G0smVmgGmLbWAZP9tSeWD6RW3kgU1grPhf4OUtpP/exec';
+	var input = document.getElementById('stkcode');
+	input.addEventListener("keyup", function(event) {
+	if (event.keyCode === 13) {
+		event.preventDefault();
+		document.getElementById("myBtn3").click();
+		}
+	});	
+   function IniTitle() {
+               
+            }
+        
+function Query_Tel2(){
+	 
+	const Key1 = document.getElementById('Key1').value;
+	const Key2 = document.getElementById('Key2').value;
+	const Key3 = document.getElementById('Key3').value;
+	const Key4 = document.getElementById('Key4').value;
+	const DataV={
+		Key1:Key1,
+		Key2:Key2,
+		Key3:Key3,
+		Key4:Key4
+	}
+	// console.log(findString);
+	
+	document.getElementById("show").innerHTML = 'Push ----> ' + JSON.stringify(DataV);
+	var $show = $('#show');
+	var shURL= 'https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing';
+	// console.log(shURL);
+	var a = {
+		sheetUrl:shURL,
+		sheetTag: 'Test',
+		Data: JSON.stringify(DataV)
+		};
+	const Push_API='https://script.google.com/macros/s/AKfycbzRn9IprYXwMaL3iNa7s8hjI7JoVLiMwYz-2DSOaEmcIFGeW-yWvGPNuDQpZhus2xax/exec';
+	const Push_APIdev='https://script.google.com/macros/s/AKfycbw8xHfrf-v-D0PKCxUrTccdKgYq_EO0fYFvDkRz8hA/dev';
+	
+	$.get(Push_API, a, function (data) {    
+	   
+		console.log(data);
+		//data = JSON.parse(data);
+		document.getElementById("show").innerHTML = "Output ---> "+ data;
+
+	});
+	}  
+function Query_stkcode(){
+	 
+ findString=document.getElementById('stkcode').value
+ console.log(findString);
+	
+	document.getElementById("showstk").innerHTML = 'Search stock ----> ' + findString;
+	
+	var shURL= 'https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit?usp=sharing';
+	//shURL='https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594'	// console.log(shURL);
+	var a = {
+		sheetUrl:shURL,
+		sheetTag: 'aa',
+		findSting: findString
+		};
+	const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
+                $.get(Search_API, a, function (data) {    
+	    //data = JSON.parse(data);
+		console.log(data.length);
+		console.log(data);
+		data = JSON.parse(data);
+		const sel=[1,2,4,5];
+		var heads=[];
+		var reduce=[];
+					var ptr=1;
+                    for(head in data[0]){
+						console.log('ptr-->'+ptr);
+						console.log(ptr in sel);
+						if(sel.includes(ptr)){ 
+                        heads.push(head);
+						}
+						ptr++;
+						
+                    }
+					reduce.push([heads[0]]);
+                    // console.log(heads.length);
+
+                    var txt='';
+                    txt += '<table  class="table  table-hover "> <thead><tr>';
+                    // heads.forEach(el=>console.log(el));
+                    heads.forEach(function(e){
+                        txt += "<th>" + e + "</th>";
+
+                    })
+                    
+                    txt+="</tr></thead><tbody>";
+                    // console.log(txt);
+					key=String(findString)
+                    for (x in data) {
+						console.log("x-->"+x);
+						console.log("data[x]-->"+data[x][heads[0]]);
+						if(String(data[x][heads[1]]).includes(key) || 
+						String(data[x][heads[2]]).includes(key) || 
+						String(data[x][heads[3]]).includes(key)){
+                        txt += "<tr>";
+                        console.log(x);
+						reduce.push([data[x][heads[0]]]);
+                        // console.log(data[x]);
+                        heads.forEach(function(e){
+						if(e=='code'){
+							txt += `<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=${data[x][e]}" target="_blank" >${data[x][e]}</a> </td>`
+							
+						}
+						else{
+                        txt += "<td>" + data[x][e] + "</td>";
+						}
+                        })
+                        txt += "</tr>";
+                        // txt += "<tr><td>" + data[x].Name + "</td><td>"+ data[x].手機 +"</td></tr>";
+						}
+                    }
+                    txt += "</tbody></table>"
+                    document.getElementById("showstk").innerHTML = txt;
+    
+	const stkshUrl='https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit#gid=859376116'
+	var a = {
+		sheetUrl:stkshUrl,
+		sheetTag: 'Temp',
+		Data: JSON.stringify(reduce)
+		};
+	
+	$.get(Wsheet_API, a, function (data) {    
+	   
+		console.log(data);
+		//data = JSON.parse(data);
+	//	document.getElementById("show").innerHTML = "Output2 ---> "+ data;
+
+	})
+
+	});
+	}  
+		
+function Query_Tel3(){
+	 
+	document.getElementById("show").innerHTML = 'RGsheet2JSON ----> ';
+	var $show = $('#show');
+	var shURL= 'https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing';
+	// console.log(shURL);
+	var a = {
+		sheetUrl:shURL,
+		sheetTag: 'Debug' //'Test'
+		};
+	const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
+	const RSheet2Json_API='https://script.google.com/macros/s/AKfycbwsHjkAvTx37IrpVzf07FVVHmVz0HqRGQ-__ucipLl2o-_U1C2yH0t-5ADrCevDO4RFfg/exec';
+	$.get(RSheet2Json_APIV2, a, function (data) {    
+	   
+		console.log(data);
+		//data = JSON.parse(data);
+		document.getElementById("show").innerHTML = "Output ---> "+ data;
+
+	
+	var a = {
+		sheetUrl:shURL,
+		sheetTag: 'Test',
+		Data: JSON.stringify(data)
+		};
+	
+	$.get(Wsheet_API, a, function (data) {    
+	   
+		console.log(data);
+		//data = JSON.parse(data);
+		document.getElementById("show").innerHTML = "Output2 ---> "+ data;
+
+	})
+	});
+	}
+    </script>
+</body>
+</html>
