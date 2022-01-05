@@ -34,12 +34,16 @@
 	
 	<p></p>
 	<div class="container ">
-	<a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"  target="_blank">File</a>
+	<a href="https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit?usp=sharing"  target="_blank">Source&nbsp&nbsp</a>
+	
+	<a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"  target="_blank">Output</a>
 	股名<input type="text" placeholder="請輸入股票名稱代號" id="stkcode" >
 	
 	<button onclick="Query_stkcode()" id='myBtn3'>&nbsp&nbsp&nbsp&nbsp查股票名稱代號&nbsp&nbsp&nbsp&nbsp</button>
 	 
-	<a href="https://svn12.github.io/stock/Qmy.html"  target="_blank">View</a>
+	<a href="https://svn12.github.io/stock/Qmy.html"  target="_blank">&nbsp&nbspView</a><br>
+	檔名<input type="text" placeholder="請輸入檔名" id="sname" >
+	<button onclick="Create_stk()" id='myBtn3s'>&nbsp&nbsp&nbsp&nbsp建立儲存&nbsp&nbsp&nbsp&nbsp</button>
 	 </div>
 	 <p id="showstk"></p>
 	<div class="container ">
@@ -69,6 +73,13 @@
 	if (event.keyCode === 13) {
 		event.preventDefault();
 		document.getElementById("myBtn3").click();
+		}
+	});	
+	var inputsname = document.getElementById('sname');
+	inputsname.addEventListener("keyup", function(event) {
+	if (event.keyCode === 13) {
+		event.preventDefault();
+		document.getElementById("myBtn3s").click();
 		}
 	});	
    function IniTitle() {
@@ -109,6 +120,35 @@ function Query_Tel2(){
 
 	});
 	}  
+function Create_stk(){
+	reduce=[["code"]];
+	var sname=document.getElementById("sname").value;
+	if(sname==""){
+		sname="Test1";
+	}
+	const tdArray=document.getElementById("showstk").querySelectorAll("tbody>tr>td");
+	for  (var i=0 ;i <document.getElementById("showstk").querySelectorAll("tbody>tr>td").length;i=i+5){
+		if(tdArray[i].querySelector("input").checked){
+		reduce.push([tdArray[i+1].querySelector("a").text])
+		}
+	}
+	if(reduce.length>1){
+		const stkshUrl='https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit#gid=859376116'
+	var a = {
+		sheetUrl:stkshUrl,
+		sheetTag: sname,
+		Data: JSON.stringify(reduce)
+		};
+	
+	$.get(Wsheet_API, a, function (data) {    
+	   
+		console.log(data);
+		//data = JSON.parse(data);
+	//	document.getElementById("show").innerHTML = "Output2 ---> "+ data;
+
+	})
+	}
+}	
 function Query_stkcode(){
 	 
  findString=document.getElementById('stkcode').value
@@ -120,7 +160,7 @@ function Query_stkcode(){
 	//shURL='https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594'	// console.log(shURL);
 	var a = {
 		sheetUrl:shURL,
-		sheetTag: 'aa',
+		sheetTag: '上市櫃',
 		findSting: findString
 		};
 	const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
@@ -148,6 +188,7 @@ function Query_stkcode(){
                     var txt='';
                     txt += '<table  class="table  table-hover "> <thead><tr>';
                     // heads.forEach(el=>console.log(el));
+					txt += `<th> Sel </th>`;
                     heads.forEach(function(e){
                         txt += "<th>" + e + "</th>";
 
@@ -168,6 +209,7 @@ function Query_stkcode(){
                         // console.log(data[x]);
                         heads.forEach(function(e){
 						if(e=='code'){
+							txt+=`<td> <input type="checkbox" checked> </td>`
 							txt += `<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=${data[x][e]}" target="_blank" >${data[x][e]}</a> </td>`
 							
 						}
