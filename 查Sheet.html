@@ -46,37 +46,7 @@ $(document).ready(function() {
  // GSname(shtUrl);
   R_Url();
 })
-function  Google_sht_R(){
-  $("#T2").html('');
-  $("#T").html('');
-  var findString =''
-  if(findString=='!'){ findString = '';}
-  var select_sh=$('#select_sh').val();
-  console.log(select_sh);
-  var a = {
-	sheetUrl:'https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing',
-	sheetTag: select_sh,
-	findSting: findString
-			};
-   const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
-   $.get(Search_API, a, function (data) {    
-   //$.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
-                    if(data.length==2){
-                         $("#T2").html( '查無資料 請重新輸入再查詢');
-                    }
-                    else  if (data.length==0){ 
-                        $("#T2").html('sheet Name 須為 "List"');}
-                    else {
 
-                    // console.log(data.length);
-                    //console.log(data);
-                    data = JSON.parse(data);
-					//console.log(data);
-                    data.map(show_a);
-                  }
-                });
-  
-}
 function RGsheet(){
 	 
 	document.getElementById("show").innerHTML = '讀取資料 ---- ' +document.getElementById("select_sh").value ;
@@ -137,6 +107,7 @@ function RGsheet(){
 	}
 function Google_sht_R(){
 	GSname(document.getElementById("select_url").value    );
+	document.getElementById("file_href").href =document.getElementById("select_url").value
 	}	
 function  GSname(shtUrl){
   
@@ -192,7 +163,8 @@ function  R_Url(){
 <body>
 <div id="fixed-div" > 
 <form >
-    File:
+    
+	<a href="" id="file_href" target="_blank">File</a>
     <select id="select_url" onchange="Google_sht_R()">
 
     </select>
