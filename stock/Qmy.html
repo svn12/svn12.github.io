@@ -88,10 +88,26 @@ $(document).ready(function() {
 	
   
 });
+function checkKey(array, search){
+	let result=false;
+	for (let key of array){
+      
+  	 if(search.includes(key)){
+    	result=true;
+    	break;
+   	 };
+   
+	}
+    return result;
+}
+
 function appendText1(code) {
+  const keyArray=['T','M','US','JP','F']
+  
   $("#T2").append(code +' '); 
   var str_code="";
   str_code=code;
+  if(!checkKey(keyArray, str_code)){
   var txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
     const detail=!($('#brief').is(':checked'));
       
@@ -160,7 +176,9 @@ function appendText1(code) {
   var txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
   var txt3 = document.createElement("p");
   txt3.innerHTML = "Text.";         // Create text with DOM
+  
   $("#T").append(txt1);   // Append new elements
+  }
 }
 
 //document.querySelector('#T2').textContent.match(/\w+/g)  Read All Show  2021.11.4
