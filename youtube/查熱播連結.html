@@ -76,7 +76,21 @@ function RGsheet(){
 	let $show = $('#show');
 	
 	$.get(RSheet2Json_APIV2, a, function (data) {    
-	  
+	  // Sort 
+	    
+	    let a;
+		//let data = [...data1];
+	    a=data.shift()
+		data.sort(function(a, b){
+		    if(a[1]>b[1]) return 1;
+			if(a[1]<b[1]) return -1;
+		return 0
+    
+		});
+		data.unshift(a);
+		
+		
+		
 		let heads=[];
 		for(head in data[0]){
 			heads.push(data[0][head]);
