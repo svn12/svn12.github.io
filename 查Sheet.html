@@ -35,9 +35,23 @@
 	  top: 100;
 	  left: 0;
 	  right: 0;
+	  overflow-x:auto;
 	/*  height: 60px;*/
 	 
 	}
+    table {
+	  border-collapse: collapse;
+	  border-spacing: 0;
+	  width: 100%;
+	  border: 1px solid #ddd;
+	}
+
+	th, td {
+	  text-align: left;
+	  padding: 8px;
+	}
+
+	tr:nth-child(even){background-color: #f2f2f2}
     
 </style>
 <script>
@@ -61,9 +75,6 @@ function RGsheet(){
 	const RSheet2Json_API='https://script.google.com/macros/s/AKfycbwsHjkAvTx37IrpVzf07FVVHmVz0HqRGQ-__ucipLl2o-_U1C2yH0t-5ADrCevDO4RFfg/exec';
 	$.get(RSheet2Json_APIV2, a, function (data) {    
 	   
-		//console.log(data);
-		//data = JSON.parse(data);
-	//	document.getElementById("show").innerHTML = "Output ---> "+ data;
 		var heads=[];
 		for(head in data[0]){
 			heads.push(data[0][head]);

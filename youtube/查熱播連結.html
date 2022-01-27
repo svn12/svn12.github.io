@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <title>查熱播連結</title>
+
+    <style> 
+            .container {  display: flex;}
+            </style>
+
+</head>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style type="text/css">
+	 input,select{
+            margin: 0px;
+            display: inline;
+            font-size: 18px;
+        }
+
+        /* label {display:inline;} */
+        /* input {display:inline;} */
+        button {
+            font-size: 16px;
+        }
+	#fixed-div {
+	  position: fixed;
+	  top: 100;
+	  left: 0;
+	  right: 0;
+	  
+	/*  height: 60px;*/
+	 
+	}
+    table {
+	  border-collapse: collapse;
+	  border-spacing: 0;
+	  width: 100%;
+	  border: 1px solid #ddd;
+	  overflow-x:auto;
+	}
+
+	th, td {
+	  text-align: left;
+	  padding: 8px;
+	}
+
+	tr:nth-child(even){background-color: #f2f2f2}
+</style>
+<script>
+$(document).ready(function() {
+  var shtUrl='"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"'
+ // GSname(shtUrl);
+  R_Url();
+})
+const fmain='https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit#gid=0';  //新聖詩連結
+const a = {
+		
+		sheetUrl:fmain,
+		sheetTag: '熱播連結' //'Test'
+		
+		};
+const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
+//const RSheet2Json_APIV4='https://script.google.com/macros/s/AKfycbwXUmw03tSPskFC7gkIJ8WhxNkg66PXTRvzim_ZuVivlpX4RUqQzoV85J9586MkxUaYFg/exec'
+	const ArrKey=[]
+function RGsheet(){
+	 
+	document.getElementById("show").innerHTML = '讀取資料 ---- ' +document.getElementById("select_url").value ;
+	let $show = $('#show');
+	
+	$.get(RSheet2Json_APIV2, a, function (data) {    
+	  
+		let heads=[];
+		for(head in data[0]){
+			heads.push(data[0][head]);
+		}
+		// console.log(heads.length);
+
+		let txt='';
+		txt += '<table  class="table  table-hover "> <thead><tr>';
+		// heads.forEach(el=>console.log(el));
+		heads.forEach(function(e){
+			txt += "<th align='center'>" + e + "</th>";
+
+		})
+		
+		txt+="</tr></thead><tbody>";
+		// console.log(txt);
+
+		for (x in data) {
+			if(x!="0" && data[x][3].includes(document.getElementById("select_url").value )){
+			txt += "<tr>";
+			heads.forEach(function(item,e){
+			if(e==0){
+				txt += "<td>" + data[x][e].slice(0,10) + "</td>";
+				}else
+				if(e==1){
+					txt += `<td> <a href="${data[x][e+1]}"> ${data[x][e]}</a> </td>`;
+				}else
+					{
+					txt += "<td>" + data[x][e] + "</td>";
+					}
+			})
+			txt += "</tr>";
+			}
+		}
+		txt += "</tbody></table>"
+		document.getElementById("show").innerHTML = txt;
+
+
+		var arr = [];
+		for (var i = 0; i < (a.endRow - a.row + 1); i++) {
+			arr[i] = d.splice(0, (a.endCol - a.col + 1));
+			$show.append(arr[i] + '<br/>');
+		}
+		
+	   });
+	}
+function Google_sht_R(){
+	
+	document.getElementById("file_href").href =fmain;
+	}	
+
+function  R_Url(){
+  
+	$.get(RSheet2Json_APIV2, a, function (data) {    
+	  
+		$("#select_url").empty();
+		
+		$.each(data, function (i, item) {
+			if(i!=0){
+				keys=item[3].split(",")
+				keys.forEach((val)=>{
+					key=val.trim();
+					if(!ArrKey.includes(key)){
+						$('#select_url').append($('<option>', { 
+							value: key,
+							text : key 
+						}));
+						ArrKey.push(key);
+						}
+					})
+				
+			}
+		});
+		RGsheet();
+		});
+
+}
+</script>
+<body>
+<div id="fixed-div" > 
+<form >
+    
+	<a href="https://forms.gle/BM1uHA3oFDQFv6jU6" id="file_href" target="_blank">輸入表單</a>
+   <!-- <select id="select_url" onchange="Google_sht_R()">   -->
+	
+	<a href="https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?resourcekey#gid=1135202331" id="file_href" target="_blank">File</a>
+   <select id="select_url" onchange="RGsheet()">
+
+    </select>
+</form>
+</div>
+<div id="fixed-div2" >
+<p id="T2" style="display: none;"> </p>
+<br><br>
+<p id="show"  > </p>
+</div>
+
+
+
+</body>
+</html>
