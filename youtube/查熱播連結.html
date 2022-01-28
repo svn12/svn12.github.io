@@ -64,19 +64,19 @@ const fmain='https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIO
 const a = {
 		
 		sheetUrl:fmain,
-		sheetTag: '熱播連結' //'Test'
-		
+		sheetTag: '熱播連結', //'Test'
+		key:1
 		};
 const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
-//const RSheet2Json_APIV4='https://script.google.com/macros/s/AKfycbwXUmw03tSPskFC7gkIJ8WhxNkg66PXTRvzim_ZuVivlpX4RUqQzoV85J9586MkxUaYFg/exec'
+const RSheet2Json_APIV5='https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec'
 	const ArrKey=[]
 function RGsheet(){
 	 
 	document.getElementById("show").innerHTML = '讀取資料 ---- ' +document.getElementById("select_url").value ;
 	let $show = $('#show');
 	
-	$.get(RSheet2Json_APIV2, a, function (data) {    
-	  // Sort 
+	$.get(RSheet2Json_APIV5, a, function (data) {    
+	  /* Sort 
 	    
 	    let a;
 		//let data = [...data1];
@@ -89,7 +89,7 @@ function RGsheet(){
 		});
 		data.unshift(a);
 		
-		
+		*/
 		
 		let heads=[];
 		for(head in data[0]){
