@@ -88,7 +88,8 @@ input.addEventListener("keyup", function(event) {
                     sheetTag: '報名清單',
                     findSting: findString
                     };
-				const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
+				//const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
+				const Search_API='https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec';
                 $.get(Search_API, a, function (data) {    
                 //$.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
                     if(data.length==2){
