@@ -1,0 +1,15 @@
+<script src="https://pulipulichen.github.io/jieba-js/jquery.js"></script>
+<script src="https://pulipulichen.github.io/jieba-js/require-jieba-js.js"></script>
+ 
+<script>
+_text = `這個布丁是在無聊的世界中找尋樂趣的一種不能吃的食物，喜愛動漫畫、遊戲、程式，以及跟世間脫節的生活步調。
+001 聖哉 聖哉 聖哉
+002 聖哉 聖哉 聖哉
+003 亞伯蘭的上帝
+004 天下萬國眾人著聽
+005 真主上帝造天地
+006 上帝創造天及地`
+call_jieba_cut(_text, function (_result) {
+  console.log(_result);
+});
+</script>
