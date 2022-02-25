@@ -50,9 +50,33 @@
 	  text-align: left;
 	  padding: 8px;
 	}
-
-	tr:nth-child(even){background-color: #f2f2f2}
-    
+	table thead {
+        background-color: orange;
+      }
+	table tbody {
+        display: block;
+        height: 400px;
+        overflow-y: scroll;
+      }  
+	 
+	 table tr {
+        width: 100%;
+        display: table;
+      }
+	tr:nth-child(even){
+		/* background-color: #f2f2f2 */
+		 background-color: lightblue;
+		}
+    table tbody {
+        /* firefox */
+        scrollbar-width: none;
+        /* ie10+ */
+        -ms-overflow-style: none;
+      }
+      /* chrome safari */
+      table tbody::-webkit-scrollbar {
+        display: none;
+      }
 </style>
 <script>
 $(document).ready(function() {
@@ -82,7 +106,7 @@ function RGsheet(){
 		// console.log(heads.length);
 
 		var txt='';
-		txt += '<table  class="table  table-hover "> <thead><tr>';
+		txt += '<table  class="table  table-hover "> <thead class=""><tr>';
 		// heads.forEach(el=>console.log(el));
 		heads.forEach(function(e){
 			txt += "<th align='center'>" + e + "</th>";
