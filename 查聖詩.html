@@ -10,12 +10,35 @@
     <title>查聖詩啟應文</title>
   
     <style> 
-            .container {  max-width: 700px;}
+		.container {  max-width: 700px;}
             #parent {
-        display:flex;
-        
-}
-            </style>
+			display:flex;
+			}
+		table {
+		  border-collapse: collapse;
+		  border-spacing: 0;
+		  width: 100%;
+		  border: 1px solid #ddd;
+		  overflow-x:scroll;
+		  overflow-y:scroll;
+		}
+
+		th, td {
+		  text-align: left;
+		  padding: 8px;
+		}
+
+		tr:nth-child(even){
+			/* background-color: #f2f2f2 
+			overflow-y: scroll;
+			display: block;
+			*/
+			 background-color: lightblue;
+			}
+		table thead {
+			background-color: orange;
+		  }
+	</style>
 </head>
 <body >
 

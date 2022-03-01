@@ -1,0 +1,40 @@
+<!DOCTYPEHTMLPUBLIC"-//W3C//DTDHTML4.0Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>ASC←→NATIVE Share</TITLE>
+<METANAME="Generator"CONTENT="EditPlus">
+<METANAME="Author"CONTENT="szwangdf@163.com">
+<METANAME="Keywords"CONTENT="ASC←→NATIVEツール">
+<METANAME="Description"CONTENT="ASC←→NATIVEツール">
+<script language="javascript">
+function native2ascii(){
+var regexp=/[^\x00]/g //'/[^/x00-/xff]/g';
+var n=document.getElementById("native").value;
+var a=n;
+while(m=regexp.exec(n)){
+a=a.split(m[0]).join(escape(m[0]).split("%").join("/"));
+}
+document.getElementById("ascii").value=a;
+}
+function ascii2native() {
+
+var a=document.getElementById("ascii").value;
+var n=a  //.replace("\", "/");
+//alert(n);
+var n=unescape(n.split("/").join("%"));
+document.getElementById("native").value=n;
+}
+</script>
+</HEAD>
+<BODY>
+<h1>ASC←→NATIVE分享</h1>
+CODE :<br>
+<textarea id="ascii" rows="10" cols="100"></textarea><br>
+漢字:            
+<input type="button" id="back"  value="CODE→漢字  ↓↓↓" onclick="ascii2native()">
+    
+<input type="button" id="convert" value="漢字→CODE  ↑↑↑" onclick="native2ascii()">
+<br>
+<textarea id="native" rows="10" cols="100"></textarea>
+</BODY>
+</HTML>
