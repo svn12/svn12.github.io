@@ -1,0 +1,370 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>US Stock </title>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style type="text/css">
+	 input,select{
+            margin: 0px;
+            display: inline;
+            font-size: 18px;
+        }
+
+        /* label {display:inline;} */
+        /* input {display:inline;} */
+        button {
+            font-size: 16px;
+        }
+	#fixed-div {
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  height: 100px;
+	 
+	}
+    #abgne_float_ad {
+		display: none;
+		position: absolute;
+	}
+	#abgne_float_ad .abgne_close_ad1 {
+		display: block;
+		text-align: center;
+		cursor: pointer;
+		font-size: 2rem;
+        color: blue;
+        background-color: darksalmon;
+        border-radius: 50%;
+	}
+	#abgne_float_ad a img {
+		border: none;
+	}
+	div.bigDiv {
+		height: 3000px;
+	}
+</style>
+<script>
+const sheet_src='https://docs.google.com/spreadsheets/d/1T0_DzmugEuWOf_R2ECwD50GsysngN6tcElm6HknDi7M/edit?usp=sharing'
+$(document).ready(function() {
+  GSname();
+  //Array_R();
+  appendText();
+  document.getElementById("file_href").href =sheet_src;
+  var $win = $(window),
+			$ad = $('#abgne_float_ad').css('opacity', 0).show(),	// 讓廣告區塊變透明且顯示出來
+			_width = $ad.width(),
+			_height = $ad.height(),
+			_diffY = 20, _diffX = 20,	// 距離右及下方邊距
+			_moveSpeed = 1800;	// 移動的速度
+		console.log($ad.width()+"--"+$ad.height());
+        // $ad.height()=40;
+        // $ad.width()=40;
+        // console.log($ad.width()+"--"+$ad.height());
+		// 先把 #abgne_float_ad 移動到定點
+		$ad.css({
+			top: $(document).height(),
+			left: $win.width() - _width - _diffX,
+			opacity: 1
+		});
+		
+		// 幫網頁加上 scroll 及 resize 事件
+		$win.bind('scroll resize', function(){
+			var $this = $(this);
+			
+			// 控制 #abgne_float_ad 的移動
+			$ad.stop().animate({
+				top: $this.scrollTop() + $this.height() - _height - _diffY,
+				left: $this.scrollLeft() + $this.width() - _width - _diffX
+			}, _moveSpeed);
+		}).scroll();	// 觸發一次 scroll()
+		
+		// 關閉廣告
+		$('#abgne_float_ad .abgne_close_ad').click(function(){
+        // $('#abgne_float_ad img').click(function(){    
+			// $ad.hide();
+            $(window).scrollTop(0)
+		});
+	
+  
+});
+function checkKey(array, search){
+	let result=false;
+	for (let key of array){
+      
+  	 if(search.includes(key)){
+    	result=true;
+    	break;
+   	 };
+   
+	}
+    return result;
+}
+
+function appendText1(code) {
+  
+  
+  $("#T2").append(code +' '); 
+  var str_code="";
+  str_code=code;
+  var txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
+  
+  	  txt1+='<tr>';  
+      txt1+=` <td> <a href="https://www.cnyes.com/twstock/flashchart/${code}.htm" target="_blank"><img  width="470" alt="鉅亨網" title="鉅亨網" 
+	    src="http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=5012&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
+      txt1+=`<td> <a href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=${code}" target="_blank"> <img width="470" alt="樂活五線譜" title="樂活五線譜"
+        src=" http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=5023&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
+      txt1+='</tr>';
+	  txt1+='<tr>';  
+      txt1+=` <td> <a href="https://www.cnyes.com/twstock/flashchart/${code}.htm" target="_blank"><img  width="470" alt="鉅亨網" title="鉅亨網" 
+	    src="http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=6&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
+      txt1+=`<td> <a href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=${code}" target="_blank"> <img width="470" alt="樂活五線譜" title="樂活五線譜"
+        src=" http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=9&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
+      txt1+='</tr>';
+      
+     
+      
+      txt1+='</table>';
+  
+  // Create text with HTML
+  var txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
+  var txt3 = document.createElement("p");
+  txt3.innerHTML = "Text.";         // Create text with DOM
+  
+  $("#T").append(txt1);   // Append new elements
+  
+}
+function appendText1_old(code) {
+  const keyArray=['T','M','US','JP','F']
+  
+  $("#T2").append(code +' '); 
+  var str_code="";
+  str_code=code;
+ // if(!checkKey(keyArray, str_code)){
+  if(/^[0-9]*$/.test( str_code) && str_code!=''){
+  var txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
+    const detail=!($('#brief').is(':checked'));
+      
+    // http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}
+    // http://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.TW
+    //  https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=270&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=MFI
+    // https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None
+  	  txt1+='<tr>';  
+  	  
+      txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資訊網" title="台灣股市資訊網"  src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
+      if(detail){
+      	txt1+=` <td> <a id="link2" href="https://statementdog.com/analysis/${code}" target="_blank"> <img  id="img2" width="470"  alt="財報狗" title="財報狗" src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
+      	}
+      else{
+		txt1+=` <td> <a id="link2" href="https://statementdog.com/analysis/${code}" target="_blank"> <img  id="img2" width="470"  alt="財報狗" title="財報狗" src="https://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.tw"></a> </td>`;
+		}     
+      txt1+='</tr>';
+      if(`${code.toString().substr(0,1)}`!="0"){
+      // http://stock.wearn.com/sale_chart.asp?stockid=${code}
+       //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
+      txt1+='<tr>';  
+      txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> <img id="img5" width="470" alt="精誠資訊" title="精誠資訊" src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
+      txt1+=` <td> <a id="link6" href="http://stock.wearn.com/income.asp?mode=search&kind=${code}" target="_blank"> <img id="img6" width="470" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
+      txt1+='</tr>';
+      
+      // if(!($('#brief').is(':checked'))){
+       if(detail){ 
+       txt1+='<tr>';  
+      txt1+=` <td> <a href="https://www.cnyes.com/twstock/flashchart/${code}.htm" target="_blank"><img  width="470" alt="鉅亨網" title="鉅亨網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_${code}.gif"></a> </td>`;
+      txt1+=`<td> <a href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=${code}" target="_blank"> <img width="470" alt="樂活五線譜" title="樂活五線譜"
+        src=" https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_ASSETS_M_S_${code}.gif"></a> </td>`;
+      txt1+='</tr>';
+        }
+      }
+      
+      if(detail){ 
+      txt1+='<tr>';  
+      txt1+=` <td> <a href="https://www.wantgoo.com/stock/${code}" target="_blank"><img  width="470" alt="玩股網" title="玩股網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
+      txt1+=`<td> <a href="https://tw.stock.yahoo.com/q/bc?s=${code}" target="_blank"> <img width="470" alt="Yahoo" title="Yahoo"
+        src="https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_${code}.gif"></a> </td>`;
+      txt1+='</tr>';
+      }
+      // https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif
+      // http://stock.wearn.com/acre.asp?stockid=${code}
+      txt1+='<tr>';  
+      txt1+=`<td>  <a id="link4" href="http://www.cmoney.tw/finance/f00025.aspx?s=${code}" target="_blank"><img id="img4" width="470" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif"></a> </td>`;
+      txt1+=' <td> <a id="link3" href="https://histock.tw/stock/'+code+'" target="_blank"> <img id="img3" width="470"  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid='+code+'"></a> </td>';
+      txt1+='</tr>';
+      
+      if(detail){ 
+      txt1+='<tr>';  
+      txt1+=' <td> <a id="link7" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a='+code+'" target="_blank"><img id="img7" width="470" alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid='+code+'"></a> </td>';
+      txt1+='<td> <a id="link8" href="http://pchome.megatime.com.tw/stock/sid'+code+'.html" target="_blank"> <img id="img8" width="470"  alt="PChome" title="PCHome股" src="https://stock.wearn.com/zhuli_chart.asp?stockid='+code+'"></a> </td>';
+      txt1+='</tr>';
+      }
+      // https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_5434.gif
+      //  https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_5434.gif
+      //  https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_ASSETS_M_S_5434.gif
+      //  https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_5434.gif
+       
+     
+      
+      txt1+='</table>';
+  
+  // Create text with HTML
+  var txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
+  var txt3 = document.createElement("p");
+  txt3.innerHTML = "Text.";         // Create text with DOM
+  
+  $("#T").append(txt1);   // Append new elements
+  }
+}
+//document.querySelector('#T2').textContent.match(/\w+/g)  Read All Show  2021.11.4
+function ReLoad_T2(){
+const codeA1=document.querySelector('#T2').textContent.match(/\w+/g) ;
+console.log(codeA1);
+$("#T").html('');
+$("#T2").html('');
+codeA1.map(appendText1);
+document.documentElement.scrollTop = 0; 
+document.getElementById("T2").style.display = "none";
+}
+
+function ShowT2(){
+const x = document.getElementById("T2");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+
+function appendText(){
+$("#T").html('');
+$("#T2").html('');
+
+var codeA=['QQQ','IWM','TLSA','VOO','DJX','NDX','RUT'];
+codeA.map(appendText1);
+document.documentElement.scrollTop = 0; 
+}
+function show_a(link){
+  appendText1(link.code);
+  var txt2 = $("<p></p>").text(link.code); 
+  document.documentElement.scrollTop = 0; 
+  
+  // $("#T2").append(link.code +' '); 
+
+}
+function  Array_R(){
+  $("#T2").html('');
+  $("#T").html('');
+  d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
+    console.log(data);
+    data.map(show_a);
+  })
+//   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
+// data - 家戶所得.csv
+}
+function  Google_sht_R(){
+  $("#T2").html('');
+  $("#T").html('');
+  var findString =''
+  if(findString=='!'){ findString = '';}
+  var select_sh=$('#select_sh').val();
+  console.log(select_sh);
+  var a = {
+                    sheetUrl:sheet_src,
+                    sheetTag: select_sh,
+                    findSting: findString
+                    };
+ //  const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
+   const Search_API='https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec';
+   $.get(Search_API, a, function (data) {    
+   //$.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
+                    if(data.length==2){
+                         $("#T2").html( '查無資料 請重新輸入再查詢');
+                    }
+                    else  if (data.length==0){ 
+                        $("#T2").html('sheet Name 須為 "List"');}
+                    else {
+
+                    // console.log(data.length);
+                    //console.log(data);
+                    data = JSON.parse(data);
+					//console.log(data);
+                    data.map(show_a);
+                  }
+                });
+  // d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
+  //   console.log(data);
+  //   data.map(show_a);
+  // })
+//   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
+// data - 家戶所得.csv
+}
+function  GSname(){
+  $("#T2").html('');
+  $("#T").html('');
+  
+  var select_sh=$('#select_sh').val();
+  var a = {
+                    sheetUrl:sheet_src
+                    
+                    };
+   $.get('https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec', a, function (data) {
+                $("#select_sh").empty();
+                
+                $('#select_sh').append($('<option>', { 
+                      value: '',
+                      text : "---請選擇----"
+                      }));
+                       
+                data = JSON.parse(data);
+                $.each(data, function (i, item) {
+                    $('#select_sh').append($('<option>', { 
+                      value: item.Sname,
+                      text : item.Sname 
+                }));
+				});
+                   
+                });
+  
+}
+
+</script>
+<body>
+<div id="fixed-div" >
+<!-- <p>This is a paragraph.</p> 
+<button onclick="appendText()">Fixed</button>
+<button onclick="GSname()">GetSname</button>
+<!-- <button onclick="Array_R()">Read CSV</button>
+<!-- <button onclick="Google_sht_R()">Read G-Sheet</button> -->
+
+<a href="" id="file_href" target="_blank">File</a>
+<input type="checkbox" id="brief" onchange="ReLoad_T2()"  checked="checked">Brief 
+<!--   <input type="checkbox" id="showT2" onchange="Show_T2()"  checked="checked">ShowList  -->
+
+<a href="http://www.aastocks.com/tc/usq/quote/quote.aspx"  target="_blank">美股報價</a>
+<a href="http://www.aastocks.com/tc/usq/etf/prescreen.aspx"  target="_blank">美股ETF</a>
+<a href="http://www.aastocks.com/tc/usq/market/nasdaq100.aspx"  target="_blank">納斯達克100</a>
+<label for="text"><a href="https://www.wantgoo.com/stock/ranking/top-gainer"  target="_blank"> 排行&nbsp &nbsp</a></label>
+<button onclick="ShowT2()">ShowList</button>
+<select id="select_sh" onchange="Google_sht_R()";>
+	<!--  <option value="" selected="selected">請選擇Sheet</option>  -->
+    <option value="List">List</option>
+            
+</select>
+<p id="T2" style="display: none;"> </p>
+</div>
+<div id="abgne_float_ad_1" style="display: none;" >
+		<span class="abgne_close_ad fa  fa-arrow-circle-up" style="font-size:5rem;color:blue;"></span>
+		<!-- <a href="http://vv0817.byethost3.com" target="_blank"> -->
+			<!-- <img src="./img/cell-phone.svg" title="Test~遊戲天地" class="abgne_close_ad"  /> -->
+		</a>
+</div>
+
+
+<p id="T"> </p>
+<iframe  src="https://histock.tw/stock/broker8.aspx" enableviewstate="True" frameborder="no" vspace="0" hspace="0"  width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
+<iframe  src="https://histock.tw/tw" enableviewstate="True" frameborder="no" vspace="0" hspace="0"  width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
+
+</body>
+</html>
