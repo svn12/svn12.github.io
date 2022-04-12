@@ -105,25 +105,27 @@ function checkKey(array, search){
 
 function appendText1(code) {
   
-  
+  const long=!($('#short').is(':checked'));
   $("#T2").append(code +' '); 
   var str_code="";
   str_code=code;
   var txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
-  
+	  if($('#short').is(':checked')){
   	  txt1+='<tr>';  
       txt1+=` <td> <a href="http://www.aastocks.com/tc/usq/quote/quote.aspx?symbol=${code}" target="_blank"><img  width="470" alt="aaStocks" title="aaStocks" 
 	    src="http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=5012&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
       txt1+=`<td> <a href="http://www.aastocks.com/tc/usq/quote/dynamic-chart.aspx?symbol=${code}" target="_blank"> <img width="470" alt="互動圖表" title="互動圖表"
         src=" http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=5023&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
       txt1+='</tr>';
+	  }
+	  if(long){
 	  txt1+='<tr>';  
       txt1+=` <td> <a href="https://finance.yahoo.com/chart/${code}.htm" target="_blank"><img  width="470" alt="Yahoo" title="Yahoo" 
 	    src="http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=6&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
       txt1+=`<td> <a href="https://invest.cnyes.com/usstock/detail/${code}" target="_blank"> <img width="470" alt="鉅亨網" title="鉅亨網"
         src=" http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=9&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
       txt1+='</tr>';
-      
+      }
      
       
       txt1+='</table>';
@@ -241,7 +243,7 @@ function appendText(){
 $("#T").html('');
 $("#T2").html('');
 
-var codeA=['QQQ','IWM','TSLA','VOO','TSM','NDX','SPX','DJIA'];
+var codeA=['IWM','QQQ','TSLA','VOO','VT','NDX','SPX','DJIA','TSM'];
 codeA.map(appendText1);
 document.documentElement.scrollTop = 0; 
 }
@@ -339,7 +341,7 @@ function  GSname(){
 <!-- <button onclick="Google_sht_R()">Read G-Sheet</button> -->
 
 <a href="" id="file_href" target="_blank">File</a>
-<input type="checkbox" id="brief" onchange="ReLoad_T2()"  checked="checked">Brief 
+<input type="checkbox" id="short" onchange="ReLoad_T2()"  checked="checked">Short 
 <!--   <input type="checkbox" id="showT2" onchange="Show_T2()"  checked="checked">ShowList  -->
 
 <a href="http://www.aastocks.com/tc/usq/quote/quote.aspx"  target="_blank">美股報價</a>
