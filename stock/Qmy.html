@@ -129,6 +129,7 @@ function appendText1(code) {
       if(`${code.toString().substr(0,1)}`!="0"){
       // http://stock.wearn.com/sale_chart.asp?stockid=${code}
        //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
+	   //https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_4938.gif
       txt1+='<tr>';  
       txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> <img id="img5" width="470" alt="精誠資訊" title="精誠資訊" src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
       txt1+=` <td> <a id="link6" href="http://stock.wearn.com/income.asp?mode=search&kind=${code}" target="_blank"> <img id="img6" width="470" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
@@ -154,7 +155,7 @@ function appendText1(code) {
       // https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif
       // http://stock.wearn.com/acre.asp?stockid=${code}
       txt1+='<tr>';  
-      txt1+=`<td>  <a id="link4" href="http://www.cmoney.tw/finance/f00025.aspx?s=${code}" target="_blank"><img id="img4" width="470" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif"></a> </td>`;
+      txt1+=`<td>  <a id="link4" href="http://www.cmoney.tw/finance/f00025.aspx?s=${code}" target="_blank"><img id="img4" width="470" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_${code}.gif"></a> </td>`;
       txt1+=' <td> <a id="link3" href="https://histock.tw/stock/'+code+'" target="_blank"> <img id="img3" width="470"  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid='+code+'"></a> </td>';
       txt1+='</tr>';
       
