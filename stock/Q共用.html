@@ -138,7 +138,8 @@ function appendText1_usd(code) {
 }
 function appendText1(code) {
   const keyArray=['T','M','US','JP','F']
-  
+  var href2=`https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
+  var title2='持股明細';
   $("#T2").append(code +' '); 
   var str_code="";
   str_code=code;
@@ -154,11 +155,15 @@ function appendText1(code) {
   	  txt1+='<tr>';  
   	  
       txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資訊網" title="台灣股市資訊網"  src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
-      if(detail){
-      	txt1+=` <td> <a id="link2" href="https://statementdog.com/analysis/${code}" target="_blank"> <img  id="img2" width="470"  alt="財報狗" title="財報狗" src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
+      if(`${code.toString().substr(0,1)}`!="0"){
+		href2="https://statementdog.com/analysis/${code}";
+		title2="財報狗";
+		}
+	  if(detail){
+      	txt1+=` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="470"  alt=${title2} title=${title2} src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
       	}
       else{
-		txt1+=` <td> <a id="link2" href="https://statementdog.com/analysis/${code}" target="_blank"> <img  id="img2" width="470"  alt="財報狗" title="財報狗" src="https://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.tw"></a> </td>`;
+		txt1+=` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="470"  alt=${title2} title=${title2} src="https://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.tw"></a> </td>`;
 		}     
       txt1+='</tr>';
       if(`${code.toString().substr(0,1)}`!="0"){
