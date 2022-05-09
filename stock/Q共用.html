@@ -53,7 +53,7 @@ $(document).ready(function() {
   //Array_R();
   appendText();
   document.getElementById("file_href").href =sheet_src;
-  var $win = $(window),
+  let $win = $(window),
 			$ad = $('#abgne_float_ad').css('opacity', 0).show(),	// 讓廣告區塊變透明且顯示出來
 			_width = $ad.width(),
 			_height = $ad.height(),
@@ -72,7 +72,7 @@ $(document).ready(function() {
 		
 		// 幫網頁加上 scroll 及 resize 事件
 		$win.bind('scroll resize', function(){
-			var $this = $(this);
+			let $this = $(this);
 			
 			// 控制 #abgne_float_ad 的移動
 			$ad.stop().animate({
@@ -107,9 +107,9 @@ function appendText1_usd(code) {
   
   
   $("#T2").append(code +' '); 
-  var str_code="";
+  let str_code="";
   str_code=code;
-  var txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
+  let txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
   
   	  txt1+='<tr>';  
       txt1+=` <td> <a href="https://www.cnyes.com/twstock/flashchart/${code}.htm" target="_blank"><img  width="470" alt="鉅亨網" title="鉅亨網" 
@@ -129,8 +129,8 @@ function appendText1_usd(code) {
       txt1+='</table>';
   
   // Create text with HTML
-  var txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
-  var txt3 = document.createElement("p");
+  let txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
+  let txt3 = document.createElement("p");
   txt3.innerHTML = "Text.";         // Create text with DOM
   
   $("#T").append(txt1);   // Append new elements
@@ -138,14 +138,14 @@ function appendText1_usd(code) {
 }
 function appendText1(code) {
   const keyArray=['T','M','US','JP','F']
-  var href2=`https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
-  var title2='持股明細';
+  let href4=`https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
+  //let title4='持股明細';
   $("#T2").append(code +' '); 
-  var str_code="";
+  let str_code="";
   str_code=code;
  // if(!checkKey(keyArray, str_code)){
   if(/^[0-9]*$/.test( str_code) && str_code!=''){
-  var txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
+  let txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
     const detail=!($('#brief').is(':checked'));
       
     // http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}
@@ -155,20 +155,22 @@ function appendText1(code) {
   	  txt1+='<tr>';  
   	  
       txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資訊網" title="台灣股市資訊網"  src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
-      if(`${code.toString().substr(0,1)}`!="0"){
+      
 		href2="https://statementdog.com/analysis/${code}";
 		title2="財報狗";
-		}
+		
+		
 	  if(detail){
       	txt1+=` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="470"  alt=${title2} title=${title2} src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
       	}
       else{
 		txt1+=` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="470"  alt=${title2} title=${title2} src="https://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.tw"></a> </td>`;
-		}     
+		}       
       txt1+='</tr>';
       if(`${code.toString().substr(0,1)}`!="0"){
       // http://stock.wearn.com/sale_chart.asp?stockid=${code}
        //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
+	   //https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_4938.gif
       txt1+='<tr>';  
       txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> <img id="img5" width="470" alt="精誠資訊" title="精誠資訊" src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
       txt1+=` <td> <a id="link6" href="http://stock.wearn.com/income.asp?mode=search&kind=${code}" target="_blank"> <img id="img6" width="470" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
@@ -194,7 +196,13 @@ function appendText1(code) {
       // https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif
       // http://stock.wearn.com/acre.asp?stockid=${code}
       txt1+='<tr>';  
-      txt1+=`<td>  <a id="link4" href="http://www.cmoney.tw/finance/f00025.aspx?s=${code}" target="_blank"><img id="img4" width="470" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_${code}.gif"></a> </td>`;
+	  if(`${code.toString().substr(0,1)}`!="0"){
+		href4="http://www.cmoney.tw/finance/f00025.aspx?s=${code}";
+		
+		}
+		
+		
+      txt1+=`<td>  <a id="link4" href=${href4} target="_blank"><img id="img4" width="470" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_${code}.gif"></a> </td>`;
       txt1+=' <td> <a id="link3" href="https://histock.tw/stock/'+code+'" target="_blank"> <img id="img3" width="470"  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid='+code+'"></a> </td>';
       txt1+='</tr>';
       
@@ -214,13 +222,14 @@ function appendText1(code) {
       txt1+='</table>';
   
   // Create text with HTML
-  var txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
-  var txt3 = document.createElement("p");
+  let txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
+  let txt3 = document.createElement("p");
   txt3.innerHTML = "Text.";         // Create text with DOM
   
   $("#T").append(txt1);   // Append new elements
   }
 }
+
 //document.querySelector('#T2').textContent.match(/\w+/g)  Read All Show  2021.11.4
 function ReLoad_T2(){
 const codeA1=document.querySelector('#T2').textContent.match(/\w+/g) ;
@@ -246,13 +255,13 @@ function appendText(){
 $("#T").html('');
 $("#T2").html('');
 
-var codeA=['4938','2412','0050','2357','2330','2303','1101','2002'];
+let codeA=['4938','2412','0050','2357','2330','2303','1101','2002'];
 codeA.map(appendText1);
 document.documentElement.scrollTop = 0; 
 }
 function show_a(link){
   appendText1(link.code);
-  var txt2 = $("<p></p>").text(link.code); 
+  let txt2 = $("<p></p>").text(link.code); 
   document.documentElement.scrollTop = 0; 
   
   // $("#T2").append(link.code +' '); 
@@ -271,11 +280,11 @@ function  Array_R(){
 function  Google_sht_R(){
   $("#T2").html('');
   $("#T").html('');
-  var findString =''
+  let findString =''
   if(findString=='!'){ findString = '';}
-  var select_sh=$('#select_sh').val();
+  let select_sh=$('#select_sh').val();
   console.log(select_sh);
-  var a = {
+  let a = {
                     sheetUrl:sheet_src,
                     sheetTag: select_sh,
                     findSting: findString
@@ -309,8 +318,8 @@ function  GSname(){
   $("#T2").html('');
   $("#T").html('');
   
-  var select_sh=$('#select_sh').val();
-  var a = {
+  let select_sh=$('#select_sh').val();
+  let a = {
                     sheetUrl:sheet_src
                     
                     };
