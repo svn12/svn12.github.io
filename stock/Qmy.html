@@ -137,7 +137,7 @@ function appendText1(code,remark) {
        //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
 	   //https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_4938.gif
       txt1+='<tr>';  
-      txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> <img id="img5" width="470" alt="精誠資訊" title="精誠資訊" src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
+      txt1+=` <td> <a href="https://www.wantgoo.com/stock/${code}" target="_blank"><img  width="470" alt="玩股網" title="玩股網"  src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
       txt1+=` <td> <a id="link6" href="http://stock.wearn.com/income.asp?mode=search&kind=${code}" target="_blank"> <img id="img6" width="470" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
       txt1+='</tr>';
       
@@ -153,7 +153,7 @@ function appendText1(code,remark) {
       
       if(detail){ 
       txt1+='<tr>';  
-      txt1+=` <td> <a href="https://www.wantgoo.com/stock/${code}" target="_blank"><img  width="470" alt="玩股網" title="玩股網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
+      txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> <img id="img5" width="470" alt="精誠資訊" title="精誠資訊" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
       txt1+=`<td> <a href="https://tw.stock.yahoo.com/q/bc?s=${code}" target="_blank"> <img width="470" alt="Yahoo" title="Yahoo"
         src="https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_${code}.gif"></a> </td>`;
       txt1+='</tr>';
