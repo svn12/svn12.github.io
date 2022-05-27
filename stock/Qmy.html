@@ -101,8 +101,8 @@ function checkKey(array, search){
     return result;
 }
 
-function appendText1(code) {
-  const keyArray=['T','M','US','JP','F']
+function appendText1(code,remark) {
+  //const keyArray=['T','M','US','JP','F']
   let href4=`https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
   //let title4='持股明細';
   $("#T2").append(code +' '); 
@@ -119,7 +119,7 @@ function appendText1(code) {
     // https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None
   	  txt1+='<tr>';  
   	  
-      txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資訊網" title="台灣股市資訊網"  src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
+      txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資" title="台灣股市資訊網_${remark}" src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
       
 		href2=`https://statementdog.com/analysis/${code}`;
 		title2="財報狗";
@@ -229,7 +229,14 @@ codeA.map(appendText1);
 document.documentElement.scrollTop = 0; 
 }
 function show_a(link){
+//Object.keys(link)
+
+  if(link.Weight==undefined){
   appendText1(link.code);
+  }
+  else{
+    appendText1(link.code,link.Weight);
+  }
   let txt2 = $("<p></p>").text(link.code); 
   document.documentElement.scrollTop = 0; 
   
