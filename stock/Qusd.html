@@ -103,7 +103,7 @@ function checkKey(array, search){
     return result;
 }
 
-function appendText1(code) {
+function appendText1(code,remark) {
   
   const long=!($('#short').is(':checked'));
   $("#T2").append(code +' '); 
@@ -112,17 +112,17 @@ function appendText1(code) {
   var txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
 	  if($('#short').is(':checked')){
   	  txt1+='<tr>';  
-      txt1+=` <td> <a href="http://www.aastocks.com/tc/usq/quote/quote.aspx?symbol=${code}" target="_blank"><img  width="470" alt="aaStocks" title="aaStocks--${code}" 
+      txt1+=` <td> <a href="http://www.aastocks.com/tc/usq/quote/quote.aspx?symbol=${code}" target="_blank"><img  width="470" alt="aaStocks" title="5分(3日) aaStocks--${code}-${remark}" 
 	    src="http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=5012&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
-      txt1+=`<td> <a href="http://www.aastocks.com/tc/usq/quote/dynamic-chart.aspx?symbol=${code}" target="_blank"> <img width="470" alt="互動圖表" title="互動圖表--${code}"
+      txt1+=`<td> <a href="http://www.aastocks.com/tc/usq/quote/dynamic-chart.aspx?symbol=${code}" target="_blank"> <img width="470" alt="互動圖表" title="1Hr(20日) 互動圖表--${code}-${remark}"
         src=" http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=5023&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
       txt1+='</tr>';
 	  }
 	  if(long){
 	  txt1+='<tr>';  
-      txt1+=` <td> <a href="https://finance.yahoo.com/chart/${code}.htm" target="_blank"><img  width="470" alt="Yahoo" title="Yahoo--${code}" 
+      txt1+=` <td> <a href="https://finance.yahoo.com/chart/${code}.htm" target="_blank"><img  width="470" alt="Yahoo" title="日(半年)Yahoo--${code}-${remark}" 
 	    src="http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=6&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
-      txt1+=`<td> <a href="https://invest.cnyes.com/usstock/detail/${code}" target="_blank"> <img width="470" alt="鉅亨網" title="鉅亨網--${code}"
+      txt1+=`<td> <a href="https://invest.cnyes.com/usstock/detail/${code}" target="_blank"> <img width="470" alt="鉅亨網" title="日(年)鉅亨網--${code}"
         src=" http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=9&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
       txt1+='</tr>';
       }
@@ -248,7 +248,11 @@ codeA.map(appendText1);
 document.documentElement.scrollTop = 0; 
 }
 function show_a(link){
-  appendText1(link.code);
+  if(  Object.keys(link).length==1){
+  appendText1(link.code);} else
+  {
+   appendText1(link.code,link[Object.keys(link)[1]]);
+  }
   var txt2 = $("<p></p>").text(link.code); 
   document.documentElement.scrollTop = 0; 
   
