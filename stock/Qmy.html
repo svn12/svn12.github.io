@@ -231,12 +231,24 @@ document.documentElement.scrollTop = 0;
 function show_a(link){
 //Object.keys(link)
 
-  if(link.Weight==undefined){
-  appendText1(link.code);
-  }
-  else{
-    appendText1(link.code,link.Weight);
-  }
+ // if(link.Weight==undefined){
+ // appendText1(link.code);
+ // }
+ // else{
+ //   appendText1(link.code,link.Weight);
+ // }
+  
+  if(  Object.keys(link).length==1){
+	appendText1(link.code);
+  } 
+  else {
+	if(link.Weight==undefined){
+		appendText1(link.code,link[Object.keys(link)[1]]);
+		}
+  else{ 
+		appendText1(link.code,link.Weight);
+		}
+	}
   let txt2 = $("<p></p>").text(link.code); 
   document.documentElement.scrollTop = 0; 
   
