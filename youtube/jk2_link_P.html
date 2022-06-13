@@ -136,6 +136,7 @@
 
 <div id="demo1"></div>
  <div id="demo1_2021"></div>
+ <div id="demo1_2021A"></div>
  <!-- <p id="demo2">aaa</p> -->
 <!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
 <p id="bible-2010" target="_blank" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/"></p>
@@ -599,9 +600,11 @@
          var selectedBVer= $('#SelBver option:selected').val();
         uri=Btitle_ptr_c[src_ptr];
         url='https://bible.fhl.net/json/qb.php?chineses='+encodeURI(uri)+'&chap='+chap+'&version=bklcl&strong=0&gb=0'
-        url2=url.replace('bklcl','tghg')
+        const url2=url.replace('bklcl','tghg')
+		const  url_2021=url.replace('bklcl',"ttvcl2021")
+		const  url2_2021=url.replace('bklcl',"ttvhl2021")
         // $("#demo1").html(src_ptr);
-        
+       /* 2022-6-13 
         $.get(url,  function (data,status) {
             var obj = JSON.parse(data);
            
@@ -640,8 +643,7 @@
 //   2021  
 
 	// $("#demo1").html(src_ptr);
-		const  url_2021=url.replace('bklcl',"ttvcl2021")
-		const  url2_2021=url.replace('bklcl',"ttvhl2021")
+		
         $.get(url_2021,  function (data,status) {
             var obj = JSON.parse(data);
            
@@ -679,10 +681,67 @@
         })
 
 //
+*/
+//   2021A 
+
+	// $("#demo1").html(src_ptr);
+		//const  url_2021=url.replace('bklcl',"ttvcl2021")
+		//const  url2_2021=url.replace('bklcl',"ttvhl2021")
+		
+		$("#demo1").html(""); 
+        $.get(url,  function (data,status) {
+            var obj = JSON.parse(data);
+           $.get(url_2021,  function (data,status) {
+            var obj3 = JSON.parse(data);
+			$.get(url2_2021,  function (data,status) {
+				var obj4 = JSON.parse(data);
+			
+					$.get(url2,  function (data2,status) {
+                var obj2 = JSON.parse(data2);
+                // $("#demo2").html('');
+                var txt='<br> <h1 align="center">'+ obj.v_name +'/'+obj3.v_name+'</h1>';
+                    // txt += '<table  class="table  table-hover "> <thead><tr>';
+                     txt += '<table  class="table"> <tbody>';
+
+                for (x in obj.record){
+                // $("#demo2").append ("<br>"+chap+":"+obj.record[x].sec+" "+obj.record[x]["bible_text"]+ "<br>"+chap+":"+obj2.record[x].sec+" "+obj2.record[x]["bible_text"]);
+                    txt += "<tr>";
+                    txt += '<td valign="top"> <font size="-1">'+
+                            chap+":"+obj.record[x].sec + "</font> </td>";
+                    txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                    txt += "</tr>";
+
+                    txt += "<tr>";
+                    txt += '<td valign="top"> <font size="-1">'+
+                            '' + "</font> </td>";
+                    txt += "<td>" + obj2.record[x]["bible_text"] + "</td>";
+                    txt += "</tr>";
+					
+					txt += "<tr>";
+                    txt += '<td valign="top"> <font size="-1">'+
+                            '' + "</font> </td>";
+                    txt += "<td>" + obj3.record[x]["bible_text"] + "</td>";
+                    txt += "</tr>";
+					txt += "<tr>";
+                    txt += '<td valign="top"> <font size="-1">'+
+                            '' + "</font> </td>";
+                    txt += "<td>" + obj4.record[x]["bible_text"] + "</td>";
+                    txt += "</tr>";
+                }
+                txt += "</tbody></table>"
+                $("#demo1_2021A").html(txt);
+            });
+			})
+		   })
+            
+        })
+
+//
 
         url3=url.replace('bklcl','unv')
         url4=url.replace('bklcl','tcv95')
         url5=url.replace('bklcl','rcuv')
+		
         show_bible(url3,"#demo3",chap);
         show_bible(url4,"#demo4",chap);
         show_bible(url5,"#demo5",chap);
@@ -754,7 +813,8 @@
         url="https://bible.fhl.net/json/se.php?orig=0&limit=500&offset=0" + "&q=" + qstr + "&VERSION=tghg&strong=0&gb=0"
         q_bible_keyw(url.replace('tghg',selectedBVer.val()),"#demo6",selectedBVer.text());
         q_bible_keyw(url,"#demo1","台語漢羅");// _2021
-		q_bible_keyw(url.replace('tghg','ttvhl2021'),"#demo1_2021","2021台語漢羅");// _2021
+		//q_bible_keyw(url.replace('tghg','ttvhl2021'),"#demo1_2021","2021台語漢羅");// _2021
+		q_bible_keyw(url.replace('tghg','ttvhl2021'),"#demo1_2021A","2021台語漢羅");// _2021
         q_bible_keyw(url.replace('tghg','unv'),"#demo3","和合本");
         q_bible_keyw(url.replace('tghg','tcv95'),"#demo4","現代中文譯本");
         q_bible_keyw(url.replace('tghg','rcuv'),"#demo5","和修本");
