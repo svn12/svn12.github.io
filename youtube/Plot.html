@@ -211,7 +211,8 @@ function  Plot_JK資產(){
 	   const xlabel = [];
 	   const data1=[];
 	   
-	   const data3=[]
+	   const data4=[];
+	   const data3=[];
 	   const data2=[];
 
 	   $.each(data, function (i, item) {
@@ -221,6 +222,7 @@ function  Plot_JK資產(){
 				data1.push(item[16]);
 				data2.push(item[1]);
 				data3.push(item[2]);	
+				data4.push(item[18]);	
 				}
 			}
 		);
@@ -244,6 +246,11 @@ function  Plot_JK資產(){
         data: data3,
         label: data[0][2],
         borderColor: "#8e5ea2",
+        fill: false
+      },{ 
+        data: data4,
+        label: data[0][18],
+        borderColor: "#c45850",
         fill: false
       }
     ]
