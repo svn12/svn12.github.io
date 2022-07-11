@@ -199,7 +199,12 @@ function  R_Url(){
 		});
 
 }
-
+function Remove_iframe() {
+  const element = document.getElementsByClassName("chartjs-hidden-iframe");
+  if(element.length>0){
+  element[0].remove();
+  }
+}
 function  Plot_JK資產(){
   const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
   var a = {
@@ -227,7 +232,7 @@ function  Plot_JK資產(){
 			}
 		);
 		
-	
+		Remove_iframe();
 		new Chart(document.getElementById("myChart2"), {
 		type: 'line',
 		data: {
@@ -264,8 +269,74 @@ function  Plot_JK資產(){
 		}); 
 		
 		});
-		}
-	function  Plot_直播(){
+}
+
+function  Plot_Sofie資產(){
+  const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+  var a = {
+		sheetUrl:fmain,
+		sheetTag: 'Lan_Stock' //'Test'
+		};
+	const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
+	$.get(RSheet2Json_APIV2, a, function (data) {    
+	   const xlabel = [];
+	   const data1=[];
+	   
+	   const data4=[];
+	   const data3=[];
+	   const data2=[];
+
+	   $.each(data, function (i, item) {
+			if(i!=0){
+				xlabel.push((new Date(item[0])).toLocaleDateString());
+				
+				data1.push(item[1]);
+				data2.push(item[3]);
+				data3.push(item[5]);	
+				data4.push(item[7]);	
+				}
+			}
+		);
+		
+		Remove_iframe();
+		new Chart("myChart2", {
+		type: 'line',
+		data: {
+			labels: xlabel,
+    datasets: [{ 
+        data: data1,
+        label: data[0][1],
+        borderColor: "#e8c3b9",
+        fill: false
+      }, { 
+        data: data2,
+        label: data[0][3],
+        borderColor: "#3e95cd",
+        fill: false
+      },{ 
+        data: data3,
+        label: data[0][5],
+        borderColor: "#8e5ea2",
+        fill: false
+      },{ 
+        data: data4,
+        label: data[0][7],
+        borderColor: "#c45850",
+        fill: false
+      }
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'JK資產'
+			}
+			}
+		}); 
+		
+		});
+}
+function  Plot_直播(){
   const fmain='https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing';
   var a = {
 		sheetUrl:fmain,
@@ -293,7 +364,8 @@ function  Plot_JK資產(){
 		
 	//	console.log(data);
 		//$("#select_url").empty();
-		new Chart(document.getElementById("myChart2"), {
+		Remove_iframe();
+		new Chart("myChart2", {
 		type: 'line',
 		data: {
 			labels: xlabel,
@@ -319,7 +391,7 @@ function  Plot_JK資產(){
 		}); 
 		
 		});
-		}
+}
 	
 
 
@@ -330,7 +402,8 @@ function  Plot_JK資產(){
 <body>
 <button type="button" onclick="Plot_直播()">直播紀錄</button>
 <button type="button" onclick="Plot_JK資產()">JK資產</button>
-<div id="fixed-div22" > 
+<button type="button" onclick="Plot_Sofie資產()">蘭資產</button>
+<div  > 
 
 	
 <canvas id="myChart2" style="width:100%;max-width:90%;max-height:80%"></canvas>
