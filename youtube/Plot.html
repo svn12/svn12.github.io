@@ -6,6 +6,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 	 <!-- 
+	Reference Chart.js example 
+		https://tobiasahlin.com/blog/chartjs-charts-to-get-you-started/
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="js/JK_JS.js"></script>	
@@ -275,7 +277,6 @@ function  Plot_JK資產(){
 		
 		});
 }
-
 function  Plot_Sofie資產(){
   const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
   var a = {
@@ -334,7 +335,66 @@ function  Plot_Sofie資產(){
   options: {
     title: {
       display: true,
-      text: '蘭資產'
+      text: '蘭股票'
+			}
+			}
+		}); 
+		
+		});
+}
+function  Plot_JK股票(){
+  const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+  var a = {
+		sheetUrl:fmain,
+		sheetTag: 'jk_stk' //'Test'
+		};
+	const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
+	$.get(RSheet2Json_APIV2, a, function (data) {    
+	   const xlabel = [];
+	   const data1=[];
+	   
+	  
+	   const data3=[];
+	   const data2=[];
+
+	   $.each(data, function (i, item) {
+			if(i>0){
+				xlabel.push((new Date(item[0])).toLocaleDateString());
+				
+				data1.push(item[5]);
+				data2.push(item[8]);
+				data3.push(item[9]);	
+				}
+			}
+		);
+		
+		Remove_iframe();
+		new Chart("myChart2", {
+		type: 'line',
+		data: {
+			labels: xlabel,
+    datasets: [{ 
+        data: data1,
+        label: data[0][5],
+        borderColor: "#e8c3b9",
+        fill: false
+      }, { 
+        data: data2,
+        label: data[0][8],
+        borderColor: "#3e95cd",
+        fill: false
+      },{ 
+        data: data3,
+        label: data[0][9],
+        borderColor: "#8e5ea2",
+        fill: false
+      }
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'JK股票'
 			}
 			}
 		}); 
@@ -407,7 +467,8 @@ function  Plot_直播(){
 <body>
 <button type="button" onclick="Plot_直播()">直播紀錄</button>
 <button type="button" onclick="Plot_JK資產()">JK資產</button>
-<button type="button" onclick="Plot_Sofie資產()">蘭資產</button>
+<button type="button" onclick="Plot_JK股票()">JK股票</button>
+<button type="button" onclick="Plot_Sofie資產()">蘭股票</button>
 
 
 <div id="plot" > 
