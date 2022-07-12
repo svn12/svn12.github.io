@@ -200,10 +200,15 @@ function  R_Url(){
 
 }
 function Remove_iframe() {
-  const element = document.getElementsByClassName("chartjs-hidden-iframe");
+  $("#plot").empty();
+  let g = document.createElement('canvas');
+  g.setAttribute("id", "myChart2");
+  g.setAttribute("style","width:100%;max-width:90%;max-height:80%");
+  document.getElementById("plot").appendChild(g)
+ /* const element = document.getElementsByClassName("chartjs-hidden-iframe");
   if(element.length>0){
   element[0].remove();
-  }
+  } */
 }
 function  Plot_JK資產(){
   const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
@@ -329,7 +334,7 @@ function  Plot_Sofie資產(){
   options: {
     title: {
       display: true,
-      text: 'JK資產'
+      text: '蘭資產'
 			}
 			}
 		}); 
@@ -403,14 +408,13 @@ function  Plot_直播(){
 <button type="button" onclick="Plot_直播()">直播紀錄</button>
 <button type="button" onclick="Plot_JK資產()">JK資產</button>
 <button type="button" onclick="Plot_Sofie資產()">蘭資產</button>
-<div  > 
+
+
+<div id="plot" > 
 
 	
-<canvas id="myChart2" style="width:100%;max-width:90%;max-height:80%"></canvas>
 
 </div>
-
-
 
 
 </body>
