@@ -227,8 +227,9 @@ function  Plot_JK資產(){
 	   const data3=[];
 	   const data2=[];
 
+	    const startno=document.getElementById("startno").value -1
 	   $.each(data, function (i, item) {
-			if(i!=0){
+			if(i>startno){
 				xlabel.push((new Date(item[0])).toLocaleDateString());
 				
 				data1.push(item[16]);
@@ -270,7 +271,7 @@ function  Plot_JK資產(){
   options: {
     title: {
       display: true,
-      text: 'JK資產'
+      text: `JK資產(共${xlabel.length}/${data.length-1}筆)`
 			}
 			}
 		}); 
@@ -292,8 +293,9 @@ function  Plot_Sofie資產(){
 	   const data3=[];
 	   const data2=[];
 
+	   const startno=document.getElementById("startno").value -1
 	   $.each(data, function (i, item) {
-			if(i!=0){
+			if(i>startno){
 				xlabel.push((new Date(item[0])).toLocaleDateString());
 				
 				data1.push(item[1]);
@@ -335,7 +337,7 @@ function  Plot_Sofie資產(){
   options: {
     title: {
       display: true,
-      text: '蘭股票'
+      text: `蘭股票(共${xlabel.length}/${data.length-1}筆)`
 			}
 			}
 		}); 
@@ -357,8 +359,10 @@ function  Plot_JK股票(){
 	   const data3=[];
 	   const data2=[];
 
+	    const startno=document.getElementById("startno").value-1 
 	   $.each(data, function (i, item) {
-			if(i>0){
+			if(i>startno){
+			
 				xlabel.push((new Date(item[0])).toLocaleDateString());
 				
 				data1.push(item[5]);
@@ -394,7 +398,7 @@ function  Plot_JK股票(){
   options: {
     title: {
       display: true,
-      text: 'JK股票'
+      text: `JK股票(共${xlabel.length}/${data.length-1}筆)`
 			}
 			}
 		}); 
@@ -414,9 +418,9 @@ function  Plot_直播(){
 	   
 	   const data3=[]
 	   
-
+	   const startno=document.getElementById("startno").value -1
 	   $.each(data, function (i, item) {
-			if(i!=0){
+			if(i>startno){
 				xlabel.push((new Date(item[1])).toLocaleDateString());
 				data2.push(item[2]);
 				if(item[3]==''){data3.push("");}
@@ -450,7 +454,7 @@ function  Plot_直播(){
   options: {
     title: {
       display: true,
-      text: '直播禮拜人數'
+      text: `直播禮拜人數(共${xlabel.length}/${data.length-1}筆)`
 			}
 			}
 		}); 
@@ -469,7 +473,7 @@ function  Plot_直播(){
 <button type="button" onclick="Plot_JK資產()">JK資產</button>
 <button type="button" onclick="Plot_JK股票()">JK股票</button>
 <button type="button" onclick="Plot_Sofie資產()">蘭股票</button>
-
+<input type="number" id="startno" value=10><br><br>
 
 <div id="plot" > 
 
