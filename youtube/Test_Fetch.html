@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<body>
+<h1>JavaScript Fetch API</h1>
+<h2>The fetch() Method</h2>
+<p id="dem02">Demo0 ===</p>
+<p id="demo">Demo Fetch a file to change this text.</p>
+<p id="demo1">Demo1 Fetch a file to change this text.</p>
+<p id="demo2">Demo2 Fetch a file to change this text.</p>
+
+
+
+<script>
+//getText('https://bible.fhl.net/json/qb.php?chineses=%E8%A9%A9&chap=1&version=bklcl&strong=0&gb=0',"demo1");
+//getText('https://bible.fhl.net/json/qb.php?chineses=%E8%A9%A9&chap=1&version=ttvcl2021&strong=0&gb=0',"demo2");
+async function getText1S(file,gid) {
+  let myObject = await fetch(file);
+ // let myText = await myObject.text();//JSON.parse(myObject);// myObject.text();JSON.parse(data)
+ // let myText1 = await JSON.parse(myText);// myObject.text();JSON.parse(data)
+  let myText1=await myObject.json();
+  //document.getElementById(gid).innerHTML = myText;
+  document.getElementById(gid).innerHTML = myText1.v_name;
+}
+async function getText(file,gid) {
+  const myObject = await fetch(file);
+ // let myText = await myObject.text();//JSON.parse(myObject);// myObject.text();JSON.parse(data)
+ // let myText1 = await JSON.parse(myText);// myObject.text();JSON.parse(data)
+  let myText1= await myObject.json();
+  //document.getElementById(gid).innerHTML = myText;
+  document.getElementById(gid).innerHTML = myText1.v_name;
+}
+async function getJSON(url) {
+  try {
+	  const response = await fetch(url);
+	  //let myText = await response.json();//JSON.parse(myObject);// myObject.text();JSON.parse(data)
+	  return response.json();// myObject.text();JSON.parse(data)
+   } catch (error) {
+    return(error);
+  }
+  
+}
+//getText('https://bible.fhl.net/json/qb.php?chineses=%E8%A9%A9&chap=1&version=bklcl&strong=0&gb=0',"demo1");
+//getText('https://bible.fhl.net/json/qb.php?chineses=%E8%A9%A9&chap=1&version=ttvcl2021&strong=0&gb=0',"demo2");
+async function main() {
+  const url1 = 'https://bible.fhl.net/json/qb.php?chineses=%E8%A9%A9&chap=1&version=bklcl&strong=0&gb=0';
+  const post = await getJSON(url1);
+  const url2 = 'https://bible.fhl.net/json/qb.php?chineses=%E8%A9%A9&chap=1&version=ttvcl2021&strong=0&gb=0';
+  const post2 = await getJSON(url2);
+  const url3 = 'https://bible.fhl.net/json2/qb.php?chineses=%E8%A9%A9&chap=1&version=ttvcl2021&strong=0&gb=0';
+  const post3 = await getJSON(url3);
+  document.getElementById("dem02").innerHTML = post.v_name+' '+ post2.v_name;
+
+  document.getElementById("demo").innerHTML = post2.v_name;
+  console.log(post,post2);
+}
+
+main();
+</script>
+
+</body>
+</html>
