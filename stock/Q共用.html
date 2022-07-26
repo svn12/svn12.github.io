@@ -6,6 +6,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style type="text/css">
 	 input,select{
             margin: 0px;
@@ -291,7 +292,7 @@ function appendText1_old(code) {
       // http://stock.wearn.com/acre.asp?stockid=${code}
       txt1+='<tr>';  
 	  if(`${code.toString().substr(0,1)}`!="0"){
-		href4="http://www.cmoney.tw/finance/f00025.aspx?s=${code}";
+		href4=`http://www.cmoney.tw/finance/f00025.aspx?s=${code}`;
 		
 		}
 		

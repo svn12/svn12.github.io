@@ -176,7 +176,7 @@ function appendText1(code,remark) {
       // http://stock.wearn.com/acre.asp?stockid=${code}
       txt1+='<tr>';  
 	  if(`${code.toString().substr(0,1)}`!="0"){
-		href4="http://www.cmoney.tw/finance/f00025.aspx?s=${code}";
+		href4=`http://www.cmoney.tw/finance/f00025.aspx?s=${code}`;
 		
 		}
 		
@@ -264,7 +264,7 @@ $("#T3").html('');
 2356
 00881
 8109
-let codeA=['9917','4938','5434','0050','2891','2845','9925','0056','00878','3045','2356','00881',"8109",'00900','00891',"2412","1101","2023",'2330','2303','2454','2308'];
+let codeA=['2845','9917','4938','0050','2891','9925','5434','3045','00878','2347','2356',"8109",'3260','00891',"2412","1101","2023",'2330','2303','2454','2308'];
 codeA.map(appendText1);
 document.documentElement.scrollTop = 0; 
 }
