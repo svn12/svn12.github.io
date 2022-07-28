@@ -226,7 +226,7 @@ function  Plot_JK資產(){
 	   const data4=[];
 	   const data3=[];
 	   const data2=[];
-
+	   const data5=[];
 	    const startno=document.getElementById("startno").value -1
 	   $.each(data, function (i, item) {
 			if(i>startno){
@@ -235,7 +235,8 @@ function  Plot_JK資產(){
 				data1.push(item[16]);
 				data2.push(item[1]);
 				data3.push(item[2]);	
-				data4.push(item[18]);	
+				data4.push(item[18]);
+				data5.push(item[13]);
 				}
 			}
 		);
@@ -264,6 +265,11 @@ function  Plot_JK資產(){
         data: data4,
         label: data[0][18],
         borderColor: "#c45850",
+        fill: false
+      },{ 
+        data: data5,
+        label: data[0][13],
+        borderColor: "#435850",
         fill: false
       }
     ]
@@ -358,7 +364,7 @@ function  Plot_JK股票(){
 	  
 	   const data3=[];
 	   const data2=[];
-
+	   const data4=[];
 	    const startno=document.getElementById("startno").value-1 
 	   $.each(data, function (i, item) {
 			if(i>startno){
@@ -367,7 +373,8 @@ function  Plot_JK股票(){
 				
 				data1.push(item[5]);
 				data2.push(item[8]);
-				data3.push(item[9]);	
+				data3.push(item[9]);
+				data4.push(item[21]);
 				}
 			}
 		);
@@ -391,6 +398,11 @@ function  Plot_JK股票(){
         data: data3,
         label: data[0][9],
         borderColor: "#8e5ea2",
+        fill: false
+      },{ 
+        data: data4,
+        label: data[0][21],
+        borderColor: "#e85ea2",
         fill: false
       }
     ]
