@@ -81,19 +81,35 @@ $(document).ready(function() {
 })
 
 function RGsheet(){
-	 
+	 //  讀   Sheet data
+	
+	const selsh=document.getElementById("select_sh").value;
+	if((selsh.indexOf("----")>0) || (selsh=='')) return;
 	document.getElementById("show").innerHTML = '讀取資料 ---- ' +document.getElementById("select_sh").value ;
+	
+	
 	var $show = $('#show');
 	var shURL= 'https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing';
 	// console.log(shURL);
+	const detail=($('#order').is(':checked'));
+	
 	var a = {
 		sheetUrl:document.getElementById("select_url").value ,
-		sheetTag: document.getElementById("select_sh").value  //'Test'
+		sheetTag: document.getElementById("select_sh").value , //'Test'
+		
 		};
+	if(detail){
+		a = {
+		sheetUrl:document.getElementById("select_url").value ,
+		sheetTag: document.getElementById("select_sh").value , //'Test'
+		key:document.getElementById("orderno").value
+		};
+	}
 	const RSheet2Json_API_link=	'https://script.google.com/macros/s/AKfycbzNfl10XRckFQjzyUrzeQXS_aJf7C39_V-k-UqKKuucjC0iEMJ5hkT0oCK-F-B-c10TcQ/exec'
 	const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
 	const RSheet2Json_API='https://script.google.com/macros/s/AKfycbwsHjkAvTx37IrpVzf07FVVHmVz0HqRGQ-__ucipLl2o-_U1C2yH0t-5ADrCevDO4RFfg/exec';
-	$.get(RSheet2Json_APIV2, a, function (data) {    
+	const RSheet2Json_APIV5='https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec'
+	$.get(RSheet2Json_APIV5, a, function (data) {    
 	   
 		var heads=[];
 		for(head in data[0]){
@@ -152,14 +168,33 @@ function Google_sht_R(){
 	GSname(document.getElementById("select_url").value    );
 	document.getElementById("file_href").href =document.getElementById("select_url").value
 	}	
+function RGsheet1(){
+	document.getElementById("orderno").value=0;
+	RGsheet();
+	}	
+function query_order(){
+    const detail=($('#order').is(':checked'));
+	const x = document.getElementById("orderno");
+	if(detail){
+			x.style.display = "inline";
+			x.value=0;
+		  } else {
+			x.style.display = "none";
+		  }
+	RGsheet();
+	}
+	
+	
+	
 function  GSname(shtUrl){
   
   var select_sh=$('#select_sh').val();
   var a = {
 	sheetUrl:shtUrl
                     };
+	$("#select_sh").empty();				
    $.get('https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec', a, function (data) {
-                $("#select_sh").empty();
+                
                 
                 $('#select_sh').append($('<option>', { 
                       value: '',
@@ -228,13 +263,17 @@ function  R_Url(){
 	
 	<a href="youtube/Plot.html" >Plot</a>
     <select id="select_url" onchange="Google_sht_R()">
-
+	
     </select>
     Sheet:
-    <select id="select_sh" onchange="RGsheet()";>
-	<!--  <option value="" selected="selected">請選擇Sheet</option>  -->
-    <option value="List">List</option>
-            
+    <select id="select_sh" onchange="RGsheet1()";>
+	<!--  <option value="" selected="selected">請選擇Sheet</option> 
+	   style="display: none;" 
+	-->
+	
+    <option value="List">List </option>
+    <input type="checkbox" id="order" onchange="query_order()" > 排序  
+	<input type="number" id="orderno" oninput="RGsheet()" value=0 style="display: none;" ><br>
 	</select>
 	
 </form>
