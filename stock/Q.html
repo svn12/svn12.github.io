@@ -6,11 +6,13 @@
     <style>
         form {
             margin: 0px;
-            display: inline;
+            display: inline-block;
             font-size: 18px;
+			background-color: yellow;
+			width:80%;
         }
 
-        input,select{
+        input1,select{
             margin: 0px;
             display: inline;
             font-size: 18px;
@@ -21,6 +23,59 @@
         button {
             font-size: 18px;
         }
+		/*the container must be positioned relative:*/
+		.autocomplete {
+		  position: relative;
+		  display: inline-block;
+		}
+
+		input {
+		  border: 1px solid transparent;
+		  background-color: #f1f1f1;
+		  padding: 10px;
+		  font-size: 16px;
+		}
+
+		input[type=text] {
+		  background-color: #f1f1f1;
+		  width: 80%;
+		}
+
+		input[type=submit] {
+		  background-color: DodgerBlue;
+		  color: #fff;
+		  cursor: pointer;
+		}
+
+		.autocomplete-items {
+		  position: absolute;
+		  border: 1px solid #d4d4d4;
+		  border-bottom: none;
+		  border-top: none;
+		  z-index: 99;
+		  /*position the autocomplete items to be the same width as the container:*/
+		  top: 100%;
+		  left: 0;
+		  right: 0;
+		}
+
+		.autocomplete-items div {
+		  padding: 10px;
+		  cursor: pointer;
+		  background-color: #fff; 
+		  border-bottom: 1px solid #d4d4d4; 
+		}
+
+		/*when hovering an item:*/
+		.autocomplete-items div:hover {
+		  background-color: #e9e9e9; 
+		}
+
+		/*when navigating through the items using the arrow keys:*/
+		.autocomplete-active {
+		  background-color: DodgerBlue !important; 
+		  color: #ffffff; 
+		}  
     </style>
 
     <link rel="stylesheet" href="..\youtube\link_P_noside.css"></head> 
@@ -29,6 +84,7 @@
 
 <script>
   $(document).ready(function(){
+	testRD();
     $("form").submit(function(event){
             event.preventDefault();
             // alert("Submit prevented");
@@ -40,7 +96,12 @@
 
     function Query_stk(){
         // var findString = document.getElementById('location-input').value;
-        var findString = $("#location-input").val();
+        let findString = $("#location-input").val();
+		let pt=findString.indexOf(' ');
+		if(pt>0){
+			findString=findString.substr(0, pt)
+		}
+		console.log(findString);
         // console.log(findString);
         if(findString.length>0){
 
@@ -127,23 +188,187 @@ document.getElementById("mops").href="http://mops.twse.com.tw/server-java/t164sb
         
         
     }  
+//---------------
+		function autocomplete_CH(inp, arr) {
+		// -----------------------
+		  /*the autocomplete function takes two arguments,
+		  the text field element and an array of possible autocompleted values:*/
+		  var currentFocus;
+		  /*execute a function when someone writes in the text field:*/
+		  inp.addEventListener("input", function(e) {
+			  let start_pos,mmatch,a, b, i, val = this.value;
+			  /*close any already open lists of autocompleted values*/
+			  closeAllLists();
+			  if (!val) { return false;}
+			  currentFocus = -1;
+			  /*create a DIV element that will contain the items (values):*/
+			  a = document.createElement("DIV");
+			  a.setAttribute("id", this.id + "autocomplete-list");
+			  a.setAttribute("class", "autocomplete-items");
+			  /*append the DIV element as a child of the autocomplete container:*/
+			  this.parentNode.appendChild(a);
+			  /*for each item in the array...*/
+			  for (i = 0; i < arr.length; i++) {
+				/*check if the item starts with the same letters as the text field value:
+				if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {  
+				mmatch=arr[i].toUpperCase().match(val.toUpperCase())*/
+				mmatch=arr[i].match(val)
+				if (mmatch ) {
+				  start_pos=mmatch?.index;
+				  /*create a DIV element for each matching element:*/
+				  b = document.createElement("DIV");
+				  /*make the matching letters bold:*/
+				  if(start_pos==0){
+					b.innerHTML = "<strong>" + arr[i].substr(start_pos, val.length) + "</strong>";
+					b.innerHTML += arr[i].substr(val.length);
+				  }else
+				  {
+					b.innerHTML = arr[i].substr(0,start_pos);
+					b.innerHTML += "<strong>" + arr[i].substr(start_pos, val.length) + "</strong>";
+					b.innerHTML += arr[i].substr(start_pos+val.length);
+				  }
+				  
+				  /*insert a input field that will hold the current array item's value:*/
+				  b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+				 // b.innerHTML = arr[i]+"<input type='hidden' value='" + arr[i] + "'>";
+				  /*execute a function when someone clicks on the item value (DIV element):*/
+				  b.addEventListener("click", function(e) {
+					  /*insert the value for the autocomplete text field:*/
+					  inp.value = this.getElementsByTagName("input")[0].value;
+					  //qTel();
+					  Query_stk();
+					  /*close the list of autocompleted values,
+					  (or any other open lists of autocompleted values:*/
+					  closeAllLists();
+				  });
+				  a.appendChild(b);
+				}
+			  }
+		  });
+		  /*execute a function presses a key on the keyboard:*/
+		  inp.addEventListener("keydown", function(e) {
+			  var x = document.getElementById(this.id + "autocomplete-list");
+			  if (x) x = x.getElementsByTagName("div");
+			  if (e.keyCode == 40) {
+				/*If the arrow DOWN key is pressed,
+				increase the currentFocus variable:*/
+				currentFocus++;
+				/*and and make the current item more visible:*/
+				addActive(x);
+			  } else if (e.keyCode == 38) { //up
+				/*If the arrow UP key is pressed,
+				decrease the currentFocus variable:*/
+				currentFocus--;
+				/*and and make the current item more visible:*/
+				addActive(x);
+			  } else if (e.keyCode == 13) {
+				/*If the ENTER key is pressed, prevent the form from being submitted,*/
+				e.preventDefault();
+				if (currentFocus > -1) {
+				  /*and simulate a click on the "active" item:*/
+				  if (x) x[currentFocus].click();
+				}
+			  }
+		  });
+		  
 
+		  function addActive(x) {
+			/*a function to classify an item as "active":*/
+			if (!x) return false;
+			/*start by removing the "active" class on all items:*/
+			removeActive(x);
+			if (currentFocus >= x.length) currentFocus = 0;
+			if (currentFocus < 0) currentFocus = (x.length - 1);
+			/*add class "autocomplete-active":*/
+			x[currentFocus].classList.add("autocomplete-active");
+		  }
+		  function removeActive(x) {
+			/*a function to remove the "active" class from all autocomplete items:*/
+			for (var i = 0; i < x.length; i++) {
+			  x[i].classList.remove("autocomplete-active");
+			}
+		  }
+		  function closeAllLists(elmnt) {
+			/*close all autocomplete lists in the document,
+			except the one passed as an argument:*/
+			var x = document.getElementsByClassName("autocomplete-items");
+			for (var i = 0; i < x.length; i++) {
+			  if (elmnt != x[i] && elmnt != inp) {
+				x[i].parentNode.removeChild(x[i]);
+			  }
+			}
+		  }
+		  /*execute a function when someone clicks in the document:*/
+		  document.addEventListener("click", function (e) {
+			  closeAllLists(e.target);
+		  });
+		}
+		async function testRD(){
+			$('input[type="text"]').val('');
+			const fmain='https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit?usp=sharing';
+			// ScrapStock_link
+			
+			const a = {
+				
+				sheetUrl:fmain,
+				sheetTag: '上市櫃2',
+				key:1
+				};
+			const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
+			const RSheet2Json_APIV5='https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec'
+
+
+			tt= await getJSON(	RSheet2Json_APIV5,a).then(function(data) {
+						console.log(data);
+						return  data;
+						})
+			console.log(tt);
+			let arr=[];
+				for(t in tt){
+					arr.push(tt[t][1]);
+				}
+			arr.shift();
+					
+			autocomplete_CH(document.getElementById("location-input"), arr);
+			return tt;	
+		};
+
+		async function getJSON(urlptr,para) {
+			try {
+				  var url = new URL(urlptr);
+				  for (let k in para) { url.searchParams.append(k, para[k]); }
+				  
+				 
+				  const response = await fetch(url);
+				  //let myText = await response.json();//JSON.parse(myObject);// myObject.text();JSON.parse(data)
+				  return response.json();// myObject.text();JSON.parse(data)
+				} catch (error) {
+				   return(error);
+				}
+		  
+			}
+		
 </script>
  <form id="location-form" class="form-inline">
          <label for="text"><a href="https://www.wantgoo.com/stock"> 大盤&nbsp &nbsp</a></label>
-         <input type="text" class="form-control" placeholder="輸入股票代碼" id="location-input" onchange="Query_stk()" >
-          <!-- <input type="text" class="form-control" placeholder="輸入股票代碼" id="location-input" onchange="Query_stk()"> -->
-         <!-- <input type="text" id="location-input" > -->
-
-
-
-         <button type="button" class="btn  btn-primary " onclick="Query_stk()" 
-         >Go</button>
-
+         
          <label for="text"><a href="https://www.wantgoo.com/stock/ranking/top-gainer"  target="_blank"> 排行&nbsp &nbsp</a></label>
          <label for="text"><a href="https://justdata.moneydj.com/z/zn/zna/zna.djhtm"  target="_blank"> 全球指數&nbsp &nbsp</a></label>
          <label for="text"><a href="https://justdata.moneydj.com/z/ze/zeg/zeg_23.djhtm"  target="_blank"> 行情表&nbsp &nbsp</a></label>
          <!-- <button onclick="query_stock_no()">查詢</button> -->
+          <!-- <input type="text" class="form-control" placeholder="輸入股票代碼" id="location-input" onchange="Query_stk()"> -->
+         <!-- <input type="text" id="location-input" > 
+		 <input id="btnClickMe" type="button" value="  查詢" >
+		 <input type="text" class="form-control" placeholder="輸入股票代碼" id="location-input" onchange="Query_stk()" >
+		 -->
+		 <div  class="autocomplete" >
+			
+			<input autocomplete="off" type="text"  class="form-control" placeholder="輸入股票代碼" id="location-input" />
+		
+		</div>
+		 
+         <button type="button" class="btn  btn-primary "  onclick="Query_stk()" > Go</button>
+
      </form>
 <div id="demo1"></div>
 
