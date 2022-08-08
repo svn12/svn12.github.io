@@ -8,8 +8,8 @@
             margin: 0px;
             display: inline-block;
             font-size: 18px;
-			background-color: yellow;
-			width:80%;
+			/* background-color: yellow;  */
+			width:95%;
         }
 
         input1,select{
@@ -38,7 +38,7 @@
 
 		input[type=text] {
 		  background-color: #f1f1f1;
-		  width: 80%;
+		  width: 90%;
 		}
 
 		input[type=submit] {
@@ -101,7 +101,7 @@
 		if(pt>0){
 			findString=findString.substr(0, pt)
 		}
-		console.log(findString);
+		//console.log(findString);
         // console.log(findString);
         if(findString.length>0){
 
@@ -161,9 +161,9 @@ document.getElementById("mops").href="http://mops.twse.com.tw/server-java/t164sb
         
         $("#demo1").html('');
         $.get(url,  function (data,status) {
-            console.log(data);
+            //console.log(data);
             var obj = JSON.parse(data);
-            console.log(obj);
+            //console.log(obj);
 
             var txt='<br> <h1 align="center">TTT</h1>';
             
@@ -312,7 +312,7 @@ document.getElementById("mops").href="http://mops.twse.com.tw/server-java/t164sb
 				
 				sheetUrl:fmain,
 				sheetTag: '上市櫃2',
-				key:1
+				key:0
 				};
 			const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
 			const RSheet2Json_APIV5='https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec'
@@ -322,7 +322,7 @@ document.getElementById("mops").href="http://mops.twse.com.tw/server-java/t164sb
 						console.log(data);
 						return  data;
 						})
-			console.log(tt);
+			//console.log(tt);
 			let arr=[];
 				for(t in tt){
 					arr.push(tt[t][1]);
@@ -330,7 +330,7 @@ document.getElementById("mops").href="http://mops.twse.com.tw/server-java/t164sb
 			arr.shift();
 					
 			autocomplete_CH(document.getElementById("location-input"), arr);
-			return tt;	
+			//return tt;	
 		};
 
 		async function getJSON(urlptr,para) {

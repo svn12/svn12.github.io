@@ -361,10 +361,10 @@
 
 
 			tt= await getJSON(	RSheet2Json_APIV5,a).then(function(data) {
-						console.log(data);
+						//console.log(data);
 						return  data;
 						})
-			console.log(tt);
+			//console.log(tt);
 			let arr=[];
 				for(t in tt){
 					arr.push(tt[t][0]);
@@ -372,7 +372,7 @@
 			arr.shift();
 					
 			autocomplete_CH(document.getElementById("location-input"), arr);
-			return tt;	
+			//return tt;	
 		};
 
 		async function getJSON(urlptr,para) {

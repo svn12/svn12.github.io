@@ -68,7 +68,7 @@ $(document).ready(function() {
 			_height = $ad.height(),
 			_diffY = 20, _diffX = 20,	// 距離右及下方邊距
 			_moveSpeed = 1800;	// 移動的速度
-		console.log($ad.width()+"--"+$ad.height());
+		//console.log($ad.width()+"--"+$ad.height());
         // $ad.height()=40;
         // $ad.width()=40;
         // console.log($ad.width()+"--"+$ad.height());
@@ -212,7 +212,7 @@ function appendText1(code,remark) {
 //document.querySelector('#T2').textContent.match(/\w+/g)  Read All Show  2021.11.4
 function ReLoad_T2(){
 const codeA1=document.querySelector('#T2').textContent.match(/\w+/g) ;
-console.log(codeA1);
+//console.log(codeA1);
 $("#T").html('');
 $("#T2").html('');
 
@@ -264,7 +264,8 @@ $("#T3").html('');
 2356
 00881
 8109
-let codeA=['2845','9917','4938','0050','2891','9925','5434','3045','00878','2347','2356','2603',"8109",'3260','00891',"2412","1101","2023",'2330','2303','2454','2308'];
+let codeA=['2845','9917','4938','0050','2891','9925','5434','3045','00878','2347','2356','2603','2882'
+		,'8109','3260','00891',"2412","1101","2023",'2330','2303','2454','2308'];
 codeA.map(appendText1);
 document.documentElement.scrollTop = 0; 
 }
@@ -301,7 +302,7 @@ function  Array_R(){
   $("#T3").html('');
   $("#T").html('');
   d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
-    console.log(data);
+    //console.log(data);
     data.map(show_a);
   })
 //   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
@@ -315,7 +316,7 @@ function  Google_sht_R(){
   let findString =''
   if(findString=='!'){ findString = '';}
   let select_sh=$('#select_sh').val();
-  console.log(select_sh);
+  //console.log(select_sh);
   let a = {
                     sheetUrl:'https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing',
                     sheetTag: select_sh,
