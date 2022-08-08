@@ -123,7 +123,7 @@ function appendText1(code,remark) {
   let str_code="";
   str_code=code;
  // if(!checkKey(keyArray, str_code)){
-  if(/^[0-9]*$/.test( str_code) && str_code!=''){
+  if(/^[0-9A-Z]*$/.test( str_code) && str_code!=''){
   let txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
     const detail=!($('#brief').is(':checked'));
       
