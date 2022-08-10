@@ -145,18 +145,18 @@
                     // select.options.add(el);
                     // alert(select.options[i-1].value);
                 }
-
-
-            }
-        // Get location form
-            var locationForm = document.getElementById('location-form');
+			// Get location form
+            //let locationForm = document.getElementById('location-form');
 
             // Listen for submit
-            locationForm.addEventListener('submit', Query_Tel);
-			document.getElementById('location-input').addEventListener('change', Query_Tel);
+			//locationForm.addEventListener('submit', Query_Tel2);
+			//document.getElementById('location-input').addEventListener('change', Query_Tel);
+
+            }
+       
 			
-        function Query_Tel(e) {
-                 e.preventDefault();
+        function Query_Tel() {
+                // e.preventDefault();
                  Query_Tel2();
         }
          function        Query_Tel2(){
@@ -367,7 +367,9 @@
 			//console.log(tt);
 			let arr=[];
 				for(t in tt){
+					if( arr.indexOf(tt[t][0]) <0){
 					arr.push(tt[t][0]);
+					}
 				}
 			arr.shift();
 					
