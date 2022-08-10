@@ -23,7 +23,7 @@
 
 
 <style type="text/css">
-	 input,select{
+	input,select{
             margin: 0px;
             display: inline;
             font-size: 18px;
@@ -31,11 +31,11 @@
 
         /* label {display:inline;} */
         /* input {display:inline;} */
-        button {
+    button {
             font-size: 16px;
         }
 	#fixed-div {
-	  position: fixed;
+	  position: fixed; 
 	  top: 100;
 	  left: 0;
 	  right: 0;
@@ -43,6 +43,7 @@
 	/*  height: 60px;*/
 	 
 	}
+	
     table {
 	  border-collapse: collapse;
 	  border-spacing: 0;
@@ -56,7 +57,13 @@
 	  text-align: left;
 	  padding: 8px;
 	}
-
+	
+	th{
+	 background: yellow;
+	 position: sticky;
+	 top: 0; /* Don't forget this, required for the stickiness */
+	 box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+	 }
 	tr:nth-child(even){
 		/* background-color: #f2f2f2 
 		overflow-y: scroll;
@@ -225,7 +232,7 @@ function  R_Url(){
 	console.log(url);
 	
 	fetch(url)
-		//.then(response => response.json()) 
+		//.then(resp/onse => response.json()) 
 		.then(function(response) {
 			console.log(response);
 			return response.json();
@@ -277,8 +284,10 @@ function  R_Url(){
 	</select>
 	
 </form>
+
 </div>
 <div id="fixed-div2" >
+
 <p id="T2" style="display: none;"> </p>
 <br><br>
 <p id="show" > </p>
