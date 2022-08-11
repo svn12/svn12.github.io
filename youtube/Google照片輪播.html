@@ -123,6 +123,7 @@ tr:nth-child(even) {
 <button class="w3-bar-item w3-button w3-light-blue w3-hover-purple" onclick="show_next_Slide1()">></button>
 <a href="https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?resourcekey#gid=1135202331" id="file_href" target="_blank">File</a>
 	<a href="https://www.publicalbum.org/blog/embedding-google-photos-albums" id="file_href" target="_blank">Tool</a>
+	<a href="https://support.awesome-table.com/hc/en-us/articles/360010324920-Display-images-from-Microsoft-OneDrive" target="_blank">OneDrive</a>
 	
 <h3 id='photo_text'>
 	
@@ -161,11 +162,11 @@ const a = {
 		};
 
 const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
-//const RSheet2Json_APIV5='https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec'
+const RSheet2Json_APIV6='https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec'
 const ArrKey=[]
 function  R_Url(){
   
-	$.get(RSheet2Json_APIV2, a, function (data) {    
+	$.get(RSheet2Json_APIV6, a, function (data) {    
 	  
 		//$("#select_url").empty();    <div class="text">${item[0]}</div>
 		let txt1;
