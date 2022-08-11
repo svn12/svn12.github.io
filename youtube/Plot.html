@@ -92,7 +92,8 @@ function RGsheet(){
 	const RSheet2Json_API_link=	'https://script.google.com/macros/s/AKfycbzNfl10XRckFQjzyUrzeQXS_aJf7C39_V-k-UqKKuucjC0iEMJ5hkT0oCK-F-B-c10TcQ/exec'
 	const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
 	const RSheet2Json_API='https://script.google.com/macros/s/AKfycbwsHjkAvTx37IrpVzf07FVVHmVz0HqRGQ-__ucipLl2o-_U1C2yH0t-5ADrCevDO4RFfg/exec';
-	$.get(RSheet2Json_APIV2, a, function (data) {    
+	const RSheet2Json_APIV6='https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec'
+	$.get(RSheet2Json_APIV6, a, function (data) {    
 	   
 		var heads=[];
 		for(head in data[0]){
@@ -213,6 +214,7 @@ function Remove_iframe() {
   } */
 }
 function  Plot_JK資產(){
+  Remove_iframe();
   const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
   var a = {
 		sheetUrl:fmain,
@@ -241,7 +243,7 @@ function  Plot_JK資產(){
 			}
 		);
 		
-		Remove_iframe();
+		
 		new Chart(document.getElementById("myChart2"), {
 		type: 'line',
 		data: {
@@ -285,6 +287,7 @@ function  Plot_JK資產(){
 		});
 }
 function  Plot_Sofie資產(){
+  Remove_iframe();
   const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
   var a = {
 		sheetUrl:fmain,
@@ -312,7 +315,7 @@ function  Plot_Sofie資產(){
 			}
 		);
 		
-		Remove_iframe();
+		//Remove_iframe();
 		new Chart("myChart2", {
 		type: 'line',
 		data: {
@@ -351,6 +354,7 @@ function  Plot_Sofie資產(){
 		});
 }
 function  Plot_JK股票(){
+  Remove_iframe();
   const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
   var a = {
 		sheetUrl:fmain,
@@ -379,7 +383,7 @@ function  Plot_JK股票(){
 			}
 		);
 		
-		Remove_iframe();
+		//Remove_iframe();
 		new Chart("myChart2", {
 		type: 'line',
 		data: {
@@ -418,6 +422,7 @@ function  Plot_JK股票(){
 		});
 }
 function  Plot_直播(){
+  Remove_iframe();
   const fmain='https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing';
   var a = {
 		sheetUrl:fmain,
@@ -445,7 +450,7 @@ function  Plot_直播(){
 		
 	//	console.log(data);
 		//$("#select_url").empty();
-		Remove_iframe();
+		//Remove_iframe();
 		new Chart("myChart2", {
 		type: 'line',
 		data: {
@@ -485,7 +490,7 @@ function  Plot_直播(){
 <button type="button" onclick="Plot_JK資產()">JK資產</button>
 <button type="button" onclick="Plot_JK股票()">JK股票</button>
 <button type="button" onclick="Plot_Sofie資產()">蘭股票</button>
-<input type="number" id="startno" value=10><br><br>
+<input type="number" id="startno" value=1><br><br>
 
 <div id="plot" > 
 
