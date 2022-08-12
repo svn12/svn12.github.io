@@ -348,6 +348,7 @@
 		}
 		async function testRD(){
 			$('input[type="text"]').val('');
+			document.getElementById("show").innerHTML = "";
 			const fmain=$('#selectTle option:selected').val();//'https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit?usp=sharing';
 			const shURL=$('#selShurl option:selected').val(); //document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
 			const a = {
@@ -365,18 +366,34 @@
 						return  data;
 						})
 			//console.log(tt);
+			/*
 			let arr=[];
 				for(t in tt){
 					if( arr.indexOf(tt[t][0]) <0){
 					arr.push(tt[t][0]);
 					}
 				}
-			arr.shift();
+			arr.shift();  */
+			let arr=[];
+			let col_len=tt[0].length;
+			for (t in tt){
+				if(t!='0'){
+					for (i=0;i<col_len;i++){
+					let	elem=tt[t][i].toString();
+						if(elem!=""){
+							if( arr.indexOf(elem) <0){
+								arr.push(elem));
+							}
+						}
+					}
+				}
+			}
+			
 					
 			autocomplete_CH(document.getElementById("location-input"), arr);
 			//return tt;	
 		};
-
+		
 		async function getJSON(urlptr,para) {
 			try {
 				  var url = new URL(urlptr);
