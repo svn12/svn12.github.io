@@ -207,9 +207,11 @@ function RGsheet(){
 				txt += "<td>" + (new Date(data[x][e])).toLocaleDateString() + "</td>";
 				}
 			else{
-				
-				txt += "<td>"+ data[x][e]+"</td>";
-			     
+				if(Number.isFinite(data[x][e])&&!Number.isInteger(data[x][e])){
+					txt += "<td>"+ data[x][e].toLocaleString(0,{ minimumFractionDigits: 2,maximumFractionDigits: 2});+"</td>";
+				}else{
+					txt += "<td>"+ data[x][e]+"</td>";
+					}
 				}
 				
 			})
@@ -504,21 +506,7 @@ function        Query_Tel2(){
 		async function testRD(a){
 			$('input[type="text"]').val('');
 			
-			/*
-			document.getElementById("show").innerHTML = '';
-			const fmain=$('#selectTle option:selected').val();//'https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit?usp=sharing';
-			const shURL=$('#selShurl option:selected').val(); //document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
-			const a = {
-				
-				sheetUrl:shURL,
-				sheetTag: 'List',
-				key:1
-				};
-			const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
-			const RSheet2Json_APIV5='https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec'
 			
-			const RSheet2Json_APIV6='https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec'
-			*/
 			tt= await getJSON(	RSheet2Json_APIV6,a).then(function(data) {
 						//console.log(data);
 						return  data;
@@ -535,19 +523,19 @@ function        Query_Tel2(){
 			*/
 			let arr=[];
 			let col_len=tt[0].length;
-			for (t in tt){
-				if(t!='0'){
-					for (i=0;i<col_len;i++){
-					let	elem=tt[t][i].toString();
+			let row_len=tt.length;
+			
+			for (j=0;j<col_len;j++){
+				for(i=1;i<row_len;i++){
+				let	elem=tt[i][j].toString();
 						if(elem!=""){
 							if( arr.indexOf(elem) <0){
 								arr.push(elem);
 							}
 						}
-					}
 				}
 			}
-			
+				
 			autocomplete_CH(document.getElementById("location-input"), arr);
 			//return tt;	
 		};
