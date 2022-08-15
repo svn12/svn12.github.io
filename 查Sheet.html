@@ -184,8 +184,8 @@ function RGsheet(){
 				
 			}
 		}
-		if(hd_cnt>1){
-				document.getElementById("query").style.display = "none";
+		if(hd_cnt<=1){
+				document.getElementById("query").style.display = "inline";
 				}
 		// console.log(heads.length);
 
@@ -244,7 +244,7 @@ function Google_sht_R(){
 	}	
 function RGsheet1(){
 	document.getElementById("orderno").value=0;
-	document.getElementById("query").style.display = "inline";
+	document.getElementById("query").style.display = "none";
 	
 	RGsheet();
 	
@@ -275,22 +275,23 @@ function  GSname(shtUrl){
 	document.getElementById("show").innerHTML = '';
    $.get('https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec', a, function (data) {
                 
-                
+          if(document.getElementById("select_url").value==a.sheetUrl){      
                 $('#select_sh').append($('<option>', { 
                       value: '',
                       text : `---請選擇---- ${$("#select_url option:selected").text()} `
-                      }));
+				  }));
                        
                 data = JSON.parse(data);
                 $.each(data, function (i, item) {
                     $('#select_sh').append($('<option>', { 
                       value: item.Sname,
                       text : item.Sname 
-                }));
+					}));
+				
 				});
-                   
-                });
-  
+			}   
+		});
+			
 }
 function  R_Url(){
   const fmain='https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit#gid=2114459986';
@@ -609,7 +610,7 @@ function        Query_Tel2(){
 	
     </select>
     Sheet:
-    <select id="select_sh" onchange="RGsheet1()";>
+    <select id="select_sh" onchange="RGsheet1()">
 	<input type="number" id="orderno" oninput="RGsheet()" value=0 style="display: none;" >
 	
 	<div id="query" style="display: none;" >
