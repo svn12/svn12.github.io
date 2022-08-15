@@ -175,10 +175,18 @@ function RGsheet(){
 
 	$.get(RSheet2Json_APIV6, a, function (data) {    
 	   
-		var heads=[];
+		let heads=[];
+		let hd_cnt=0;
 		for(head in data[0]){
 			heads.push(data[0][head]);
+			if(data[0][head]==""){
+				hd_cnt++;
+				
+			}
 		}
+		if(hd_cnt>1){
+				document.getElementById("query").style.display = "none";
+				}
 		// console.log(heads.length);
 
 		var txt='';
@@ -359,18 +367,49 @@ function        Query_Tel2(){
                     
                     txt+="</tr></thead><tbody>";
                     // console.log(txt);
-
+					for (x in data) {
+						if(x!="0"){
+						txt += "<tr>";
+						// console.log(x);
+						// console.log(data[x]);
+						heads.forEach(function(e){
+						//console.log('-------->',x,item ,data[x][item]);
+						if(data[x][e].length>=20 && ((new Date(data[x][e]))!="Invalid Date")){
+							txt += "<td>" + (new Date(data[x][e])).toLocaleDateString() + "</td>";
+							}
+						else{
+							let par=parseFloat(data[x][e])
+							if(Number.isFinite(par)&&!Number.isInteger(par)){
+								txt += "<td>"+ par.toLocaleString(0,{ minimumFractionDigits: 2,maximumFractionDigits: 2});+"</td>";
+							}else{
+								txt += "<td>"+ data[x][e]+"</td>";
+								}
+							}
+							
+						})
+						txt += "</tr>";
+						}
+					}
+						
+					
+					
+					
+					
+					
+/*
                     for (x in data) {
                         txt += "<tr>";
                         // console.log(x);
                         // console.log(data[x]);
                         heads.forEach(function(e){
+						
                         txt += "<td>" + data[x][e] + "</td>";
 
                         })
                         txt += "</tr>";
                         // txt += "<tr><td>" + data[x].Name + "</td><td>"+ data[x].手機 +"</td></tr>";
                     }
+					*/
                     txt += "</tbody></table>"
                     document.getElementById("show").innerHTML = txt;
 
@@ -405,15 +444,15 @@ function        Query_Tel2(){
 			  /*append the DIV element as a child of the autocomplete container:*/
 			  this.parentNode.appendChild(a);
 			  /*for each item in the array...*/
-			  console.log(val);
+			  //console.log(val);
 			  for (i = 0; i < arr.length; i++) {
 				/*check if the item starts with the same letters as the text field value:
 				if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {  
 				mmatch=arr[i].toUpperCase().match(val.toUpperCase())*/
 				
 				mmatch=arr[i].match(val);
-				console.log(i,arr[i]);
-				console.log(mmatch);
+				//console.log(i,arr[i]);
+				//console.log(mmatch);
 				if (mmatch ) {
 				  start_pos=mmatch?.index;
 				  /*create a DIV element for each matching element:*/
