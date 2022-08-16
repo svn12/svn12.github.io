@@ -174,7 +174,7 @@ function RGsheet(){
 	const RSheet2Json_APIV5='https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec'
 
 	$.get(RSheet2Json_APIV6, a, function (data) {    
-	   
+	   if(document.getElementById("select_sh").value==a.sheetTag){
 		let heads=[];
 		let hd_cnt=0;
 		for(head in data[0]){
@@ -189,7 +189,7 @@ function RGsheet(){
 				}
 		// console.log(heads.length);
 
-		var txt='';
+		let txt='';
 		txt += '<table  class="table  table-hover "> <thead><tr>';
 		// heads.forEach(el=>console.log(el));
 		heads.forEach(function(e1){
@@ -230,13 +230,15 @@ function RGsheet(){
 		document.getElementById("show").innerHTML = txt;
 
 
-		var arr = [];
-		for (var i = 0; i < (a.endRow - a.row + 1); i++) {
+		let arr = [];
+		for (let i = 0; i < (a.endRow - a.row + 1); i++) {
 			arr[i] = d.splice(0, (a.endCol - a.col + 1));
 			$show.append(arr[i] + '<br/>');
 		}
+	
 		testRD(a); //2022/8/14
-	   });
+	}
+   });
 	}
 function Google_sht_R(){
 	GSname(document.getElementById("select_url").value    );
