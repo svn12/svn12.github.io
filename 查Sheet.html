@@ -143,6 +143,23 @@ $(document).ready(function() {
   
 })
 	const RSheet2Json_APIV6='https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec'
+	const isValidUrl1 = urlString=> {
+	  	var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
+	    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
+	    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
+	    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
+	    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
+	    '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+	  return !!urlPattern.test(urlString);
+	}
+	const isValidUrl = urlString=> {
+      try { 
+      	return Boolean(new URL(urlString)); 
+      }
+      catch(e){ 
+      	return false; 
+      }
+	}
 function RGsheet(){
 	 //  讀   Sheet data
 	
@@ -211,19 +228,26 @@ function RGsheet(){
 			// console.log(x);
 			// console.log(data[x]);
 			heads.forEach(function(item,e){
-			if(data[x][e].length>=20 && ((new Date(data[x][e]))!="Invalid Date")){
-				txt += "<td>" + (new Date(data[x][e])).toLocaleDateString() + "</td>";
-				}
-			else{
-				if(Number.isFinite(data[x][e])&&!Number.isInteger(data[x][e])){
-					txt += "<td>"+ data[x][e].toLocaleString(0,{ minimumFractionDigits: 2,maximumFractionDigits: 2});+"</td>";
-				}else{
-					txt += "<td>"+ data[x][e]+"</td>";
-					}
-				}
+				const buf=data[x][e];
+				if(isValidUrl(buf)){
+					txt +=`<td> <a href="${buf}" target=_blank>${buf}</a></td>`
 				
-			})
-			txt += "</tr>";
+					//txt += "<td>"+aa+ buf+"</a></td>";
+				}else
+				{
+				if(buf.length>=20 && ((new Date(buf))!="Invalid Date")){
+					txt += "<td>" + (new Date(buf)).toLocaleDateString() + "</td>";
+					}
+				else{
+					if(Number.isFinite(buf)&&!Number.isInteger(buf)){
+						txt += "<td>"+ buf.toLocaleString(0,{ minimumFractionDigits: 2,maximumFractionDigits: 2});+"</td>";
+					}else{
+						txt += "<td>"+ buf+"</td>";
+						}
+					}
+				}	
+				})
+				txt += "</tr>";
 			}
 		}
 		txt += "</tbody></table>"
@@ -376,22 +400,28 @@ function        Query_Tel2(){
 						// console.log(x);
 						// console.log(data[x]);
 						heads.forEach(function(e){
+						 const buf=data[x][e];
 						//console.log('-------->',x,item ,data[x][item]);
-						if(data[x][e].length>=20 && ((new Date(data[x][e]))!="Invalid Date")){
-							txt += "<td>" + (new Date(data[x][e])).toLocaleDateString() + "</td>";
-							}
-						else{
-							let par=parseFloat(data[x][e])
-							if(Number.isFinite(par)&&!Number.isInteger(par)){
-								txt += "<td>"+ par.toLocaleString(0,{ minimumFractionDigits: 2,maximumFractionDigits: 2});+"</td>";
+							if(isValidUrl(buf)){
+								txt +=`<td> <a href="${buf}" target=_blank>${buf}</a></td>`
+					
 							}else{
-								txt += "<td>"+ data[x][e]+"</td>";
+							if(buf.length>=20 && ((new Date(buf))!="Invalid Date")){
+								txt += "<td>" + (new Date(buf)).toLocaleDateString() + "</td>";
 								}
+							else{
+								let par=parseFloat(buf)
+								if(Number.isFinite(par)&&!Number.isInteger(par)){
+									txt += "<td>"+ par.toLocaleString(0,{ minimumFractionDigits: 2,maximumFractionDigits: 2});+"</td>";
+								}else{
+									txt += "<td>"+ buf+"</td>";
+									}
+								}
+								
 							}
-							
-						})
-						txt += "</tr>";
-						}
+							})
+							txt += "</tr>";
+							}
 					}
 						
 					
