@@ -211,7 +211,7 @@ function RGsheet(){
 		// heads.forEach(el=>console.log(el));
 		heads.forEach(function(e1){
 		    
-			if(e1.length>=20 && ((new Date(e1))!="Invalid Date")){
+			if(e1.length>=2000 && ((new Date(e1))!="Invalid Date")){
 				txt += "<td>" + (new Date(e1)).toLocaleDateString() + "</td>";
 			}else
 			{
