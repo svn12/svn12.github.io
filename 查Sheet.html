@@ -210,9 +210,9 @@ function RGsheet(){
 		txt += '<table  class="table  table-hover "> <thead><tr>';
 		// heads.forEach(el=>console.log(el));
 		heads.forEach(function(e1){
-		    
-			if(e1.length>=2000 && ((new Date(e1))!="Invalid Date")){
-				txt += "<td>" + (new Date(e1)).toLocaleDateString() + "</td>";
+		    let Dt=new Date(e1);
+			if(e1.length>=20 && (Dt)!="Invalid Date"){
+				txt += "<td>" + Dt.toLocaleDateString()+ Dt.toLocaleTimeString() + "</td>";
 			}else
 			{
 			txt += "<th align='center'>" + e1 + "</th>";
