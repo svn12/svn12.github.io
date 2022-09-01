@@ -26,17 +26,20 @@
 
 
 <h1>The Regex Method to get YT List Id</h1>
-
-<p id="demo">
-VID_REGEX = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/ <br><br>
-regPlaylist = /[?&]list=([^#\&\?]+)/<br><br>
-YT_List= https://www.youtube.com/watch?v=1lyu1KKwC74&list=RDCLAK5uy_mfut9V_o1n9nVG_m5yZ3ztCif29AHUffI&index=4 <br><br>
-YT=https://www.youtube.com/watch?v=uZusDFpPDWM
-</p>
-<p id="demo1"></p>
 <h3><a href='https://regexr.com/'>Regexr</a> &emsp;</h3>
 <h3><a href='https://regex101.com/'>Regex測試</a> &emsp;</h3>
-<h3><a href='https://ithelp.ithome.com.tw/articles/10197315'>Regex例子 </a></h3>
+<h3><a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions'>Regex js Guide</a> &emsp;</h3>
+<h3><a href='https://ithelp.ithome.com.tw/articles/10197315'>Regex例子 </a>&emsp;</h3>
+<h3><a href='https://regexone.com/'>Regex習題 </a>&emsp;</h3>
+<h3><a href='https://regexone.com/references/javascript'>Regex js</a>&emsp;</h3>
+<p id="demo">
+regPlaylist = /[?&]list=([^#\&\?]+)/<br><br>
+VID_REGEX = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/ <br><br>
+VID_REGEX2=/youtu(?:.*\/v\/|.*v\=|\.be\/|.*?embed\/)([A-Za-z0-9_\-]{11})/<br><br>
+YT_List= https://www.youtube.com/watch?v=1lyu1KKwC74&list=RDCLAK5uy_mfut9V_o1n9nVG_m5yZ3ztCif29AHUffI&index=4 <br><br>
+YT=https://www.youtube.com/watch?v=uZusDFpPDWM<br><br>
+</p>
+<p id="demo1"></p>
 
 <h3><form action="/action_page.php">
   <label for="fname">YT List</label>
@@ -47,31 +50,19 @@ YT=https://www.youtube.com/watch?v=uZusDFpPDWM
  
   <p id="dec" ></p>
 <script>
-/*
-<link rel="stylesheet" href="reset.css">
-<link rel="stylesheet" href="link_P_noside.css">
- <label for="lname">URi_Encode:</label><br>
-  <input type="text" id="lname" name="lname"><br><br>
-let uri_encoded = "https://goodinfo.tw/tw2/StockList.asp?MARKET_CAT=%E4%B8%8A%E5%B8%82&INDUSTRY_CAT=%E4%B8%8A%E5%B8%82%E5%85%A8%E9%83%A8&SHEET=%E7%A7%BB%E5%8B%95%E5%9D%87%E7%B7%9A&SHEET2=%E7%9B%AE%E5%89%8D%E4%BD%8D%E7%BD%AE(%E5%85%83)&RPT_TIME=%E6%9C%80%E6%96%B0%E8%B3%87%E6%96%99";
 
-let decoded = decodeURI(uri_encoded);
-let encoded = encodeURI(decoded);
-let uri="https://goodinfo.tw/tw2/StockList.asp?MARKET_CAT=上市&INDUSTRY_CAT=上市全部&SHEET=移動均線&SHEET2=目前位置(元)&RPT_TIME=最新資料"
-let encoded1=encodeURI(uri);
-let decoded1=decodeURI(encoded1);
-document.getElementById("demo").innerHTML = "Encoded URI:<br>" + encoded + "<br><br>" + "Decoded URI:<br>" + decoded;
-document.getElementById("demo1").innerHTML = "Encoded URI:<br>" + encoded1 + "<br><br>" + "Decoded URI:<br>" + decoded1;
-*/
 function Query_stk(){
 // https://www.youtube.com/watch?v=1lyu1KKwC74&list=RDCLAK5uy_mfut9V_o1n9nVG_m5yZ3ztCif29AHUffI&index=4
     const url=document.getElementById("fname").value
 	const VID_REGEX = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+	const VID_REGEX2=/youtu(?:.*\/v\/|.*v\=|\.be\/|.*?embed\/)([A-Za-z0-9_\-]{11})/
     const regPlaylist = /[?&]list=([^#\&\?]+)/;
 	document.getElementById("enc").innerHTML ="<h3>YT List URL</h3>" +url;
 	if( url.match(regPlaylist)==null  ){
 			if(url.match(VID_REGEX)!=null ){
 				let video_id = url.match(VID_REGEX)[2];   // same VID_REGEX.exe(url)[2]
-				document.getElementById("dec").innerHTML =`<h3>Playlist ID:</h3>Error<br><h3>Video ID:</h3>${video_id}`;
+				let video_id2 = url.match(VID_REGEX2)[1]; 
+				document.getElementById("dec").innerHTML =`<h3>Playlist ID:</h3>Error<br><h3>Video ID :</h3>${video_id}<br><h3>Video ID2:</h3>${video_id2}`;
 				}
 			else{
 				document.getElementById("dec").innerHTML =`<h3>Playlist ID:</h3>Illegal PlayList` ;
@@ -80,12 +71,12 @@ function Query_stk(){
 		}
 	 else
 	{
-		var playlist_id = url.match(regPlaylist)[1];
+		let playlist_id = url.match(regPlaylist)[1];
 		
 		let video_id = url.match(VID_REGEX)[2];   // same VID_REGEX.exe(url)[2]
-		
+		let video_id2 = url.match(VID_REGEX2)[1];   // same VID_REGEX.exe(url)[2]
 		//const uri_encoded=document.getElementById("lname").value
-		document.getElementById("dec").innerHTML =`<h3>Playlist ID:</h3>${playlist_id}<br><h3>Video ID:</h3>${video_id}` ;
+		document.getElementById("dec").innerHTML =`<h3>Playlist ID:</h3>${playlist_id}<br><h3>Video ID :</h3>${video_id}<br><h3>Video ID2:</h3>${video_id2}` ;
 	}
 	
 }
