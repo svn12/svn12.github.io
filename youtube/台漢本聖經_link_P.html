@@ -273,7 +273,7 @@ $(document).ready(function() {
         document.getElementById("SelTitle").value=bible_detail[page-1].title_idx-1;
 		let select = document.getElementById("SelTitle").selectedIndex;
 		addOption(bible_info[select].T_chap, "SelChap");
-		document.getElementById("SelChap").value=bible_detail[page-1].Lchap;
+		document.getElementById("SelChap").value=bible_detail[page-1].Ichap;
 		cpage=page;
 		document.getElementById("img").src =bible_detail[cpage-1].imgURL;
 		
