@@ -55,7 +55,7 @@
         </style>
     <link rel="stylesheet" href="link_P.css">
 </head>
-<body onload="Iniload()" > 
+<body> 
     
 <div class="container">
 
@@ -63,12 +63,14 @@
 <br>
 <nav class="navbar fixed-bottom navbar-dark bg-dark">
     <button class="btn btn-primary pull-right " id="previous" onclick=$(window).scrollTop(0)>Top</button>
-    <!-- <button class="btn btn-primary" id="next" onclick="readBook('next')">下一章</button> -->
+    <!-- <button class="btn btn-primary" id="next" onclick="readBook('next')">下一章</button>
+	<body onload="Iniload()" > 
+	-->
 </nav>
 
 
 
-<h3> <a id="fhl_b" target="_blank"  href="https://bible.fhl.net/NUI/#/bible/Ga/5">信望愛聖經</a></h3>
+<h3> <a id="fhl_b" target="_blank"  href="https://bible.fhl.net/NUI/#/bible/gen/1">信望愛聖經</a></h3>
 <h3> <a id="taiwan_Bible" target="_blank" href="https://bible.fhl.net/NUI/_rwd/#/bible/%E5%89%B51:3-7.Ro1:1-5">電子聖經</a></h2>
 <!-- <h2> <a  target="_blank"  href="https://bible.fhl.net/fhl_mobile/">手機聖經</a></h2>
 <!-- <h2> <a id="new_b2" target="_blank"  href="https://mygoodfriend.net/TCV_Big5/">現代中文</a></h2> 
@@ -106,7 +108,7 @@
 <input type="checkbox" id="brief" onchange="query_fhl_bible()"  >全 
 <br>
 
-<form onclick="playaudio()">
+<form id="plaudio" pstate="0" onclick="playaudio()">
     <label class="radio-inline">
         <input type="radio" name="optradio" checked>台語有聲聖經
     </label>
@@ -117,15 +119,24 @@
         <input type="radio" name="optradio">現代中文有聲聖經
         
     </label>
+	<label class="radio-inline">
+        <input type="radio" name="optradio">和修本有聲聖經
+        
+    </label>
     
 </form>
 
-<audio id="audio1"  onended="audioend1()"   controls="controls" preload=""  style='display:inline;'>
-    <source id="audioSource1" src="" style='display:inline;'>
-    </source>
-    Your browser does not support the audio format.
+<audio id="audio1"  onended="audioendA()"   controls="controls" preload=""  style='display:inline;'>
+    
 </audio>
  <!-- <button onclick="next_chap()"  >
+ <source id="audioSource1" src="" style='display:inline;'>
+    </source>
+	<source id="audioSource2" src="">
+    </source>
+	 <source id="audioSource3" src="">
+    </source>
+    Your browser does not support the audio format.
     下一章</button>-->
 
 <div id="demo1"></div>
@@ -138,26 +149,19 @@
 
 <!-- <iframe id="taiwan_Bible" src="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm" width=100% height="400px" frameborder="0" ></iframe> -->
 <br>
-<audio id="audio2"  onended="audioend2()"  controls="controls">
-    <source id="audioSource2" src="">
-    </source>
-    Your browser does not support the audio format.
+<div id='ytaudio' data-video="ZoepYC3t6UA" data-state="0"  data-autoplay="0" data-loop="1" class="youtube-audio"></div>
+<div id="demo50"></div>
+<div id="demo5"></div>
+<audio id="audio2"  onended="audioendA()"  controls="controls">
+    
 </audio>
-<!-- <button id="demo30" onclick="playaudio_3()">
-    播放</button>
-<button onclick="pauseaudio()">
-    暫停</button>-->
-<!-- <button id="demo30" onclick="next_chap()">
-    下一章</button>
- <button onclick=$(window).scrollTop(0)>
-    backtoTop</button>    -->
+
 <div id="demo30"></div>
 <div id="demo3"></div>
 <br>
-<audio id="audio3"  onended="audioend3()"  controls="controls">
-    <source id="audioSource3" src="">
-    </source>
-    Your browser does not support the audio format.
+
+<audio id="audio3"  onended="audioendA()"  controls="controls">
+   
 </audio>
 
 <div id="demo40"></div>
@@ -166,7 +170,7 @@
 <!-- <button onclick=$(window).scrollTop(0)>
     backtoTop</button>    -->
 
- <div id="demo5"></div>
+ 
  <div id="demo6"></div>
 <p  id="bible-room" src="https://www.lingshyang.com/bible-room/mak/mak14.htm" width=100% height="400px" frameborder="0" ></p>
 <!-- <iframe  id="bible_twn_roma" src="https://www.sl-pc.org.tw/bible/3/ECC/1" width=100% height="400px" frameborder="0" ></iframe> -->
@@ -186,16 +190,71 @@
 
 <!-- <p id="test2">audio2</p> -->
 <script>
-
+	let bible_info=[],bible_detail=[];
+	$(document).ready(function() {
+  //GSname();
+  
+	Read_Bible();
+	Iniload();
+	})
+var r;	
+const RSheet2Json_APIV6='https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec'
+function  Read_Bible(){
+	const fmain='https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing';
+	  
+	let	a = {
+		sheetUrl:fmain,
+		sheetTag: '和修本 ' //'Test'
+		}
+	
+	$.get(RSheet2Json_APIV6, a, function (data) {    
+	 
+		$.each(data, function (i, item) {
+			if(i!=0){
+				
+				bible_detail.push({	YTid:item[3]});
+			}
+		})
+		console.log(`bible_detail ---- ${bible_detail.length}`);
+		//Google_sht_R();
+		a = {
+			sheetUrl:fmain,
+			sheetTag: '卷聖經' //'Test'
+			};
+		
+	
+		
+	$.get(RSheet2Json_APIV6, a, function (data) {    
+	   
+	//	console.log(data);
+		
+			$.each(data, function (i, item) {
+				if(i!=0){
+					
+					bible_info.push({S_ptr:item[6]-1});
+				}
+			})
+		console.log(`bible_info ---- ${bible_info.length}`);
+		})
+		
+		
+		
+		
+		});
+		
+	 
+	}
     function pauseaudio() {
             
             for (var i = 1; i < 4; i++) {
                 audio = document.getElementById('audio' + i);
                 audio.pause();
             }
+			//r.pauseVideo();
             
         }
-    function playaudio_3(){
+		
+   /* function playaudio_3(){
        
         $('input[name="optradio"]')[1].checked = true; //radio 賦值==>第二個選項選取
         playaudio()
@@ -205,28 +264,49 @@
         $('input[name="optradio"]')[2].checked = true; //radio 賦值==>第二個選項選取
         playaudio()
     }
-    
+    */
     function playaudio(){
         if($("#demo3 > h1").text().indexOf(')')>0) {
           
             fselChap();
         }
         var audios = document.getElementsByName('optradio');
-        pauseaudio();
+       // pauseaudio();
+	   
         var audio_value;
-		console.log(`audios length ---$(audios.length)`);
+		console.log(`audios length ---${audios.length}`);
         for (var i = 0; i < audios.length; i++) {
             
             if (audios[i].checked) {
+				console.log(`Audio checked---${i}`);
+				if(i<3){
+					console.log(`r.videoTitle---${r.videoTitle}`);
+					if(r.videoTitle!=""){
+						r.pauseVideo();}
+				
+				document.querySelector('#ytaudio>img').src='https://i.imgur.com/quyUPXN.png';
                 audio = document.getElementById('audio' + (i+1));
-				console.log(`Audio ---$(i)+1`);
-                audio.play();
+				
+				//audio.oncanplaythrough = (event) => {
+					audio.play();
+					console.log(`Play Audio  audio${i+1}`);
+					
+				document.querySelector('#ytaudio').dataset.state='0';
+				}else{
+					pauseaudio();
+					r.playVideo();
+					document.querySelector('#ytaudio>img').src='https://i.imgur.com/IDzX9gL.png';
+					document.querySelector('#ytaudio').dataset.state='1';
+				}
                 switch (i){
                     case 1:
                         $(window).scrollTop($('#demo30').offset().top);
                         break;
                     case 2:
                         $(window).scrollTop($('#demo40').offset().top);
+                        break;;
+                    case 3:
+                        $(window).scrollTop($('#demo50').offset().top);
                         break;
                     default: 
                         // $(window).scrollTop($('#SelTitle').offset().top);
@@ -238,14 +318,24 @@
         }
     }
     function nextchap() {
-           
-            for (var i = 0; i < audios.length; i++) {
+           if (document.getElementById("SelChap").options.length== document.getElementById("SelChap").selectedIndex+1){
+                if (document.getElementById("SelTitle").options.length == document.getElementById("SelTitle").selectedIndex + 1){
 
-                if (audios[i].checked) {
-                    audioend(i)
-                    break;
                 }
-            }
+                else{
+                    document.getElementById("SelTitle").selectedIndex++
+                    fSelTitle();
+                   
+                }
+        }
+        else {
+            
+            document.getElementById("SelChap").selectedIndex++
+            
+            fselChap();
+            
+
+        }
         }
     function audioend1() {
         audioend(1)
@@ -256,6 +346,17 @@
      function audioend3() {
             audioend(3)
         }
+	 function audioendA() {
+			let pstatus=!(document.getElementById('audio3').paused
+					&&document.getElementById('audio2').paused
+					&&document.getElementById('audio1').paused )
+					||document.getElementById('audio1').ended
+					||document.getElementById('audio2').ended
+					||document.getElementById('audio3').ended;
+			console.log(`audioendA pstatus: ${pstatus} not ${!pstatus}`);
+            nextchap();
+			if(pstatus){playaudio();}
+        }
     function audioend(ptr){
         
         if (document.getElementById("SelChap").options.length== document.getElementById("SelChap").selectedIndex+1){
@@ -265,8 +366,6 @@
                 else{
                     document.getElementById("SelTitle").selectedIndex++
                     fSelTitle();
-                    // audio = document.getElementById('audio' + ptr);
-                    //  audio.play();
                     playaudio();
                 }
         }
@@ -275,15 +374,14 @@
             document.getElementById("SelChap").selectedIndex++
             
             fselChap();
-            // audio = document.getElementById('audio' + ptr);
-            //  audio.play();
             playaudio();
 
         }
     }
+	
     function next_chap(){
          let oTop1 = $("#demo30").offset().top - window.innerHeight;
-            let oTop2 = $("#demo40").offset().top - window.innerHeight;
+          let oTop2 = $("#demo40").offset().top - window.innerHeight;
          if($(window).scrollTop() > oTop2){
              $('input[name="optradio"]')[2].checked = true;
          } else if($(window).scrollTop() > oTop1){
@@ -522,6 +620,16 @@
               num ;
 
             query_fhl_bible();
+			
+		//   
+			YTId=bible_detail[bible_info[document.getElementById("SelTitle").selectedIndex].S_ptr+document.getElementById("SelChap").selectedIndex].YTid;
+		
+				document.querySelector('#ytaudio').dataset.video=YTId;
+			const list = document.querySelector('#ytaudio');
+			while (list.hasChildNodes()) {
+				list.removeChild(list.firstChild);
+			}
+               onYouTubeIframeAPIReady();  
     } 
 	
 	async function getJSON(url) {
@@ -665,12 +773,20 @@
         var audios = document.getElementsByName('optradio');
         for (var i = 0; i < audios.length; i++) {
              if (audios[i].checked) {
+				if(i<4){
+				if(!document.querySelector(`#audio${i+1}`).paused){
+					document.querySelector(`#audio${i+1}`).play();
+					}
+				}
                 switch (i){
                     case 1:
                         $(window).scrollTop($('#demo30').offset().top);
                         break;
                     case 2:
                         $(window).scrollTop($('#demo40').offset().top);
+                        break;
+					case 3:
+                        $(window).scrollTop($('#demo50').offset().top);
                         break;
                     default: 
                         // $(window).scrollTop($('#SelTitle').offset().top);
@@ -746,7 +862,9 @@
         }
        
         // var audio_src_h = "https://www.lingshyang.com/bible/tw_bible_soun/" + "041/41_";
-        
+        let pstatus=document.getElementById('audio3').paused
+					&&document.getElementById('audio2').paused
+					&&document.getElementById('audio1').paused 
         var audio_ptr= document.getElementById("SelTitle").selectedIndex+1;
         
         var audio_src_h = "https://media.fhl.net/" + audio_type[1] + "/" + audio_ptr + "/" + audio_ptr + "_"; //"41/41_";
@@ -755,9 +873,9 @@
        
         var audio_src = audio_src_h + lead_num + num + ".mp3";
         var audio = document.getElementById('audio2');
-        var source = document.getElementById('audioSource2');
+     //   var source = document.getElementById('audioSource2');
         
-        source.src = audio_src;
+        audio.src = audio_src;
         
         audio.load(); //call this to just preload the audio without playing
         
@@ -765,22 +883,25 @@
       // document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
         audio_src = audio_src_h + lead_num + num + ".mp3";
         audio = document.getElementById('audio3');
-        source = document.getElementById('audioSource3');
-        source.src = audio_src;
+      //  source = document.getElementById('audioSource3');
+        audio.src = audio_src;
         audio.load(); //call this to just preload the audio without playing
         
         audio_src_h = "https://media.fhl.net/"+audio_type[0]+"/" + audio_ptr+"/"+audio_ptr+"_"; //"41/41_";
         // document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
         audio_src = audio_src_h + lead_num +num + ".mp3";
         audio = document.getElementById('audio1');
-        source = document.getElementById('audioSource1');
-        source.src = audio_src; 
+      //  source = document.getElementById('audioSource1');
+        audio.src = audio_src; 
         audio.load(); //call this to just preload the audio without playing
 
-
-
-        changeSrc();
-        // audio.play(); //call this to play the song right away
+		changeSrc();
+		console.log(` fselChap pstatus: ${pstatus} not ${!pstatus}`);
+		if(!pstatus){
+			console.log(`fselChap call playaudio`);
+				playaudio(); 
+			}
+     //   audio.play(); //call this to play the song right away
     };
 
   
@@ -825,7 +946,96 @@ audi3.onplaying=function(){
 	
 	$('input[name="optradio"]')[2].checked = true;
 	}	
- 
+ var tag = document.createElement('script');
+
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+function onYouTubeIframeAPIReady()
+{
+	
+    var o= function(e, t) 
+    // This function switches the imgs, you may want to change it
+    {
+        var a=e?"IDzX9gL.png":"quyUPXN.png"; 
+        //IDzX9gL is the stopped img and quyUPXN the playing img
+
+        t.setAttribute("src","https://i.imgur.com/"+a)
+        // folder or web direction the img is in. it can be "./"+a
+    };
+
+    
+		e = document.querySelector("#ytaudio");
+
+    
+        var t=document.createElement("img");
+
+       // t.setAttribute("id","youtube-icon"),
+        t.style.cssText="cursor:pointer;cursor:hand",
+		t.style.width="30px";
+		
+	//	t.style.height="30px",
+        e.appendChild(t);
+
+        var a=document.createElement("div");
+
+        a.setAttribute("id","youtube-player"),
+        e.appendChild(a);
+
+        t.setAttribute("src","https://i.imgur.com/quyUPXN.png");
+
+        e.onclick=function()
+        {
+            r.getPlayerState()===YT.PlayerState.PLAYING||r.getPlayerState()===YT.PlayerState.BUFFERING?
+			(r.pauseVideo(),o(!1, t),e.dataset.state="0"):(r.playVideo(),o(!0, t),e.dataset.state="1",pauseVideo())
+        };
+
+         r= new YT.Player("youtube-player",
+        {
+
+            height:"200",
+            width:"600",
+			
+            videoId:e.dataset.video,
+            playerVars:
+            {
+                autoplay:e.dataset.autoplay,loop:e.dataset.loop
+            },
+            events:
+            {
+                onReady:function(e)
+                {
+                    r.setPlaybackQuality("small"),
+                    o(r.getPlayerState()!==YT.PlayerState.CUED, t)
+					if(document.querySelector('#ytaudio').dataset.state=='1'){
+					r.playVideo();
+					o(1, t);
+					$(window).scrollTop($('#demo50').offset().top);
+					
+					}
+                },
+                onStateChange:function(e)
+                {
+					
+                   
+					e.data===YT.PlayerState.ENDED&&o(!1, t);
+				
+					//console.log(`e.data: ${e.data} `);
+					if(e.data===YT.PlayerState.ENDED){
+						
+						console.log('End');
+						nextchap();
+						
+					}
+                }
+            }
+        })
+		document.querySelector('#youtube-player').style.display='none';
+
+        
+    
+}
 </script>
 
  </body> </html>
