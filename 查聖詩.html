@@ -29,10 +29,11 @@
 			}
 		.video {
 			position: absolute;
-			top: 100;
-			left: 0;
-			width: 100%;
-			height: 100%;
+			
+			width: 90%;
+			height: 90%;
+			
+			left: 5%
 			
 			
 		}
@@ -191,12 +192,15 @@
         <div class="table-responsive">
         <div id="show"></div>
          </div>
-		<iframe id="YT" src="" frameborder="0" 
+		 <iframe id="YT" src="" frameborder="0" 
 			allowfullscreen class="video" ></iframe>
+		 <div id='ytaudio' data-video="y990k6j4ErE" data-state="0" data-autoplay="0" data-loop="1" class="youtube-audio"></div>
+		
 		
 	 </div>
 	
     <script>
+
        const shURL='https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing'
         $(document).ready(function () {
             testRD();
@@ -269,7 +273,16 @@
                         heads.push(head);
 						if(head=="YT"){
 							document.getElementById("YT").src = data[0].YT;
+							//
 							
+							document.querySelector('#ytaudio').dataset.video=get_video_id(data[0].YT);
+							const list = document.querySelector('#ytaudio');
+							while (list.hasChildNodes()) {
+									list.removeChild(list.firstChild);
+								}
+								   onYouTubeIframeAPIReady();   
+						//	document.getElementById("youtube-player").src=
+						//	`${data[0].YT}?autoplay=0&loop=1&enablejsapi=1&widgetid=1` //.dataset.video =data[0].YT
 						}
                     }
                     // console.log(heads.length);
@@ -500,7 +513,140 @@
 		  
 			}
 			
+	// 2. This code loads the IFrame Player API code asynchronously.
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+// 3. This function creates an <iframe> (and YouTube player)
+//    after the API code downloads.
+	 
+	 /* 
+ YouTube Audio Embed 
+ --------------------
 
+ Author: Amit Agarwal
+ Web: http://www.labnol.org/?p=26740
+
+ edited by Anton Chinaev
+*/
+var r;
+document.querySelector('#YT').style.display='none';
+// ---------------------------------------------
+function ChangeAudio(){
+			document.getElementById("location-input").value=$('#selectSub option:selected').val();
+            Query_Tel2();
+			
+			//const select=document.querySelector('#selectSub')
+			//	YTId=select.options[select.selectedIndex].value;
+			//	document.querySelector('#selectSub').options[document.querySelector('#selectSub').selectedIndex].value
+				document.querySelector('#ytaudio').dataset.video=YTId;
+			/*
+			const list = document.querySelector('#ytaudio');
+			while (list.hasChildNodes()) {
+				list.removeChild(list.firstChild);
+			}
+               onYouTubeIframeAPIReady();   
+*/			   
+            }
+			
+function onYouTubeIframeAPIReady()
+{
+	/*
+    var o= function(e, t) 
+    // This function switches the imgs, you may want to change it
+    {
+        var a=e?"IDzX9gL.png":"quyUPXN.png"; 
+        //IDzX9gL is the stopped img and quyUPXN the playing img
+
+        t.setAttribute("src","https://i.imgur.com/"+a)
+        // folder or web direction the img is in. it can be "./"+a
+    };
+  */
+  
+		e = document.querySelector("#ytaudio");
+
+     /*
+        var t=document.createElement("img");
+
+       // t.setAttribute("id","youtube-icon"),
+        t.style.cssText="cursor:pointer;cursor:hand",
+		t.style.width="30px";
+	//	t.style.height="30px",
+        e.appendChild(t);
+  */
+        var a=document.createElement("div");
+
+        a.setAttribute("id","youtube-player"),
+        e.appendChild(a);
+
+    /*    t.setAttribute("src","https://i.imgur.com/quyUPXN.png");
+
+        e.onclick=function()
+        {
+            r.getPlayerState()===YT.PlayerState.PLAYING||r.getPlayerState()===YT.PlayerState.BUFFERING?
+			(r.pauseVideo(),o(!1, t),e.dataset.state="0"):(r.playVideo(),o(!0, t),e.dataset.state="1")};
+*/
+        r= new YT.Player("youtube-player",
+        {
+
+            height:"100%",
+            width:"100%", 
+            videoId:e.dataset.video,
+			frameborder: "0" ,
+			
+            playerVars:
+            {
+                autoplay:e.dataset.autoplay,
+				loop:e.dataset.loop,
+				
+            },
+            events:
+            {
+                onReady:function(e)
+                {
+                   // r.setPlaybackQuality("small");
+                  //  o(r.getPlayerState()!==YT.PlayerState.CUED, t)
+					//console.log(` Ready state e.data: ${e.data} r.getPlayerState():${r.getPlayerState()}`);
+					if(document.querySelector('#ytaudio').dataset.state=='1'){
+					r.playVideo();
+					
+					//o(1, t);
+					document.querySelector('#ytaudio').dataset.state='0';
+					}
+                },
+                onStateChange:function(e)
+                {
+					
+                   
+				//	e.data===YT.PlayerState.ENDED&&o(!1, t);
+				
+					console.log(` change state e.data: ${e.data} r.getPlayerState():${r.getPlayerState()}`);
+					if(e.data===YT.PlayerState.ENDED){
+						
+						console.log('End');
+						//document.querySelector('#selectSub').options[document.querySelector('#selectSub').selectedIndex].value
+						const sele=document.getElementById("selectSub")
+						sele.selectedIndex++
+						if(sele.selectedIndex<0){
+							sele.selectedIndex=0;
+						}
+						document.querySelector('#ytaudio').dataset.state='1';
+						ChangeAudio();
+						
+					}
+                }
+            }
+        })
+		document.querySelector('#ytaudio').setAttribute("class","video")
+
+        
+    
+}
+function get_video_id(url) {
+    url = url.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+    return (url[2] !== undefined) ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
+}
     </script>
 </body>
 </html>
