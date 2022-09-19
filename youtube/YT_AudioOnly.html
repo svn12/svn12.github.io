@@ -10,6 +10,12 @@
 <link rel="stylesheet" href="link_P.css">
  
  <style> 
+ .container {
+			position: relative;
+			width: 100%;
+			height: 0;
+			padding-bottom: 56.25%;
+			}
 #parent {
 			display:flex;
 			
@@ -28,7 +34,7 @@
 </head>
 <body>
 
-
+<div class="container">
 <select id='selectSub' onchange="ChangeAudio()">
 		<option value="NQKC24th90U">UK</option> 
 		
@@ -42,9 +48,9 @@
 		
 		</select>
 <div id='parent'>
-
-<div id='ytaudio' data-video="" data-state="0" data-autoplay="0" data-loop="1" class="youtube-audio"></div>
 </div>
+<div id='ytaudio' data-video="" data-state="0" data-autoplay="0" data-loop="1" class="youtube-audio"></div>
+
 <!-- 播放相關按鈕-->
 <div class="row align-items-center pt-4">
   <div class="col text-center">
@@ -92,7 +98,7 @@
     </div>
   </div>
 </div>
-
+</div>
 
 <script>
 // https://developers.google.com/youtube/player_parameters
