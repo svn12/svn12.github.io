@@ -191,9 +191,112 @@ function shuffle(array) {
   }
 }	
 
-
 	  
 async function onYouTubeIframeAPIReady()
+{
+	
+    var o= function(e, t) 
+    // This function switches the imgs, you may want to change it
+    {
+	  
+		var a=e?"IDzX9gL.png":"quyUPXN.png"; 
+        //IDzX9gL is the stopped img and quyUPXN the playing img
+
+        t.setAttribute("src","https://i.imgur.com/"+a)
+        // folder or web direction the img is in. it can be "./"+a
+    };
+
+    
+		e = document.querySelector("#ytaudio");
+
+    
+        var t=document.createElement("img");
+
+       // t.setAttribute("id","youtube-icon"),
+        t.style.cssText="cursor:pointer;cursor:hand",
+		t.style.width="30px";
+		t.style.display = "none"; // jk
+	//	t.style.height="30px",
+        e.appendChild(t);
+
+        var a=document.createElement("div");
+
+        a.setAttribute("id","youtube-player"),
+        e.appendChild(a);
+
+        t.setAttribute("src","https://i.imgur.com/quyUPXN.png");
+
+        e.onclick=function()
+        {
+            r.getPlayerState()===YT.PlayerState.PLAYING||r.getPlayerState()===YT.PlayerState.BUFFERING?
+			(r.pauseVideo(),o(!1, t),e.dataset.state="0"):(r.playVideo(),o(!0, t),e.dataset.state="1")};
+		//------------------------------
+		RsheetData(fl1,$('#selectSub option:selected').val())
+		.then(res=> {
+				
+				return Array2Json(res).map((e) => { return get_video_id(e.href) });
+				
+				})
+		.then(res=>{
+		   r= new YT.Player("youtube-player",
+        {
+
+            height:"340",
+            width:"600",
+            videoId:res[0] , //e.dataset.video,
+            playerVars:
+            {
+                autoplay:e.dataset.autoplay,loop:e.dataset.loop,controls:0 ,
+				playlist:res.join()
+            },
+            events:
+            {
+                onReady: function(e)
+                {
+				
+					onPlayerReady(e);
+					//['VeUtIemOFUs','4MJRS-cLozU','fv5j64hBdqs','HaRU6yYYoX0','mId3S2G5WN4','JldgRbIKwMk'];
+                    
+					
+					
+				},
+                onStateChange:function(e)
+                {
+					
+                   
+					e.data===YT.PlayerState.ENDED&&o(!1, t);
+				
+				//	console.log(` change state e.data: ${e.data} r.getPlayerState():${r.getPlayerState()}`);
+					if(e.data===YT.PlayerState.ENDED){
+						
+						console.log('End');
+						const sele=document.getElementById("selectSub")
+						sele.selectedIndex++
+						if(sele.selectedIndex<0){
+							sele.selectedIndex=0;
+						}
+						ChangeAudio();
+						
+					}
+                }
+            }
+        })
+
+       document.querySelector('#ytaudio').setAttribute("class","video") 
+	   
+		//	e.target.setPlaybackQuality("small");
+			
+		//	e.target.loadPlaylist(res);
+			if(document.querySelector('#ytaudio').dataset.state=='1'){
+					e.target.playVideo();
+			}
+		})
+		
+        
+    
+}
+	  
+async function onYouTubeIframeAPIReady1()
 {
 	
     var o= function(e, t) 
@@ -279,6 +382,106 @@ async function onYouTubeIframeAPIReady()
     
 }
 async function onPlayerReady(e) {
+// refer https://www.letswrite.tw/youtube-iframe-api/
+    const play = document.getElementById('play');
+    const pause = document.getElementById('pause');
+    const stop = document.getElementById('stop');
+    const next = document.getElementById('next');
+    const previous = document.getElementById('previous');
+
+    const back = document.getElementById('back');
+    const forward = document.getElementById('forward');
+
+    const rate = document.getElementById('rate');
+
+    const volume = document.getElementById('volume');
+    const mute = document.getElementById('toggleMute');
+	const progress_bar = document.getElementById('progress-bar');
+    //- 播放、暫停、停止
+    play.addEventListener('click', () => {
+    //  mute.checked = true;
+     // e.target.mute().playVideo();
+	  e.target.playVideo();
+    });
+    pause.addEventListener('click', () => e.target.pauseVideo());
+    stop.addEventListener('click', () => e.target.stopVideo());
+    next.addEventListener('click', () => e.target.nextVideo());
+    previous.addEventListener('click', () => e.target.previousVideo());
+
+    // 後退、前進10秒
+    back.addEventListener('click', () => {
+      // 先抓到目前秒數
+      let current = e.target.getCurrentTime();
+      // 後退10秒：目前秒數 - 10
+      e.target.seekTo(current - 10);
+    });
+    forward.addEventListener('click', () => {
+      // 先抓到目前秒數
+      let current = e.target.getCurrentTime();
+      // 前進10秒：目前秒數 + 10
+      e.target.seekTo(current + 10);
+    });
+
+    //- 速度
+    rate.value = e.target.getPlaybackRate(); // 先抓目前的速度
+    rate.addEventListener('input', () => {
+		document.querySelector('#spdLabel').textContent=`速度:${rate.value}`
+		e.target.setPlaybackRate(Number(rate.value))
+		})
+
+    //- 音量
+    volume.value = e.target.getVolume(); // 先抓目前的音量
+    volume.addEventListener('input', () => e.target.setVolume(volume.value))
+
+    //- 靜音
+    //- 有聲的情況下無法自動播放，因此不執行 playVideo
+    mute.addEventListener('change', () => mute.checked ? e.target.mute().playVideo() : e.target.unMute());
+	
+	//progress_bar.addEventListener('mouseup touchend', function (ee) {
+	progress_bar.addEventListener('input', function (ee) {
+    // Calculate the new time for the video.
+    // new time in seconds = total duration in seconds * ( value of range input / 100 )
+    var newTime = e.target.getDuration() * (ee.target.value / 100);
+
+    // Skip video to new time.
+    e.target.seekTo(newTime);
+
+	});
+	///
+	// Update the controls on load
+    updateTimerDisplay();
+    updateProgressBar();
+
+    
+   
+
+    // Start interval to update elapsed time display and
+    // the elapsed part of the progress bar every second.
+    time_update_interval = setInterval(function () {
+        updateTimerDisplay();
+        updateProgressBar();
+    }, 1000)
+	// Clear any old interval.
+	 //clearInterval(time_update_interval);
+
+	//-------- Move from 
+	/*	let list_a=['fv5j64hBdqs','HaRU6yYYoX0','mId3S2G5WN4']
+		RsheetData(fl1,$('#selectSub option:selected').val())
+		.then(res=> {
+				
+				return Array2Json(res).map((e) => { return get_video_id(e.href) });
+				
+				})
+		.then(res=>{
+		//	e.target.setPlaybackQuality("small");
+			e.target.loadPlaylist(res);
+			if(document.querySelector('#ytaudio').dataset.state=='1'){
+					e.target.playVideo();
+			}
+		})
+		*/
+  }
+  async function onPlayerReady1(e) {
 // refer https://www.letswrite.tw/youtube-iframe-api/
     const play = document.getElementById('play');
     const pause = document.getElementById('pause');
