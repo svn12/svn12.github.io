@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
- 
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <meta charset="UTF-8">
 <!--
 <link rel="stylesheet" href="reset.css">
@@ -53,68 +53,73 @@ position: relative;
 
 
 		
-<div class="row align-items-center pt-4">
-	<div class="col-1 ">
-		<a href="" id="file_href" target="_blank">File</a>
+	<div class="row align-items-center pt-4">
+		<div class="col-1 ">
+			<a href="" id="file_href" target="_blank">File</a>
+		</div>
+		<div class="col-3 ">
+			<select id='selectSub' onchange="ChangeAudio()">
+				
+			</select>
+		</div>
+		
 	</div>
-	<div class="col-3 ">
-		<select id='selectSub' onchange="ChangeAudio()">
-			<!--
-			<option value="NQKC24th90U">UK</option> 
-			
-			<option selected="selected" value="Y3iDSy425gw">Effect38</option>
-			<option value="kySqZiH9Iho">新聖詩</option>
-			<option value="VKCTAiV_JgY">啟應文</option>
-			<option value="SeLsMaiWOY8">聖詩</option>
-			<option value="PldJFf5DVuA">28短</option>
-			<option value="tchzFf-Pics">聖歌隊</option>
-			<option value="sWSKKmoBROA">短27</option>
-			-->
-		</select>
-	</div>
+	
+<!-- 播放相關按鈕
+ 
+  https://www.w3schools.com/icons/google_icons_av.asp
+-->
+
+	<div class="row align-items-center pt-4">
+	
+		<div class="col-5 text-right ">
+			<div class="btn-group">
+			 
+			  <button class="btn btn-outline-dark material-icons" id="play" type="button">play_arrow</button>
+			  <button class="btn btn-outline-dark material-icons" id="pause" type="button">pause</button>
+			  <button class="btn btn-outline-dark material-icons" id="stop" type="button">stop</button>
+			  <button class="btn btn-outline-dark material-icons" id="previous" type="button">skip_previous</button>
+			  <button class="btn btn-outline-dark material-icons" id="next" type="button">skip_next</button>
+			  
+			  <button class="btn btn-outline-dark material-icons" id="back" type="button">fast_rewind</button>
+			  <button class="btn btn-outline-dark material-icons" id="forward" type="button">fast_forward</button>
+			</div>
+		</div>
+		<div class="col-5">
+		 <!-- 進度相關按鈕-->
+		<div class=" row  mb-0">
+		  <div class="col-3 text-right ">
+			<p><span id="current-time">0:00</span> </p>
+		  </div>
+		  <div class="col-7">
+			<input type="range" class="form-control-range" id="progress-bar" value="0">
+		  </div>
+		</div>
+		</div>
+		<div class="col-2">
+			<p><span id="duration" class="mb-0" >0:00</span></p>
+		</div>
+  </div>	
+	<div class="row align-items-center pt-4">
 	<div class="col-5">
 	 <!-- 聲音相關按鈕-->
-    <div class="form-group row align-items-center mb-0">
-      <div class="col-2 text-left">
-        <label class="mb-0" for="volume">音量</label>
-      </div>
-      <div class="col-10">
-        <input class="form-control-range" id="volume" type="range" min="0" max="100" step="1"/>
-      </div>
-    </div>
-  </div>
-  <div class="col-2">
-    <div class="custom-control custom-switch">
-      <input class="custom-control-input" id="toggleMute" type="checkbox" />
-      <label class="custom-control-label" for="toggleMute">靜音</label>
-    </div>
-  </div>
-   </div>
-<!-- 播放相關按鈕-->
-<div class="row align-items-center pt-4">
-	
-  <div class="col-7 ">
-    <div class="btn-group">
-      <button class="btn btn-outline-dark" id="play" type="button">播放</button>
-      <button class="btn btn-outline-dark" id="pause" type="button">暫停</button>
-      <button class="btn btn-outline-dark" id="stop" type="button">停止</button>
-      <button class="btn btn-outline-dark" id="previous" type="button">上首</button>
-      <button class="btn btn-outline-dark" id="next" type="button">下首</button>
-      <button class="btn btn-outline-dark" id="stop" type="button">停止</button>
-      <button class="btn btn-outline-dark" id="back" type="button">-10秒</button>
-      <button class="btn btn-outline-dark" id="forward" type="button">+10秒</button>
-    </div>
-  </div>
-  
-  </div>
-
-
-
-
- 
-<div class="row align-items-center pt-4">
+		<div class="form-group row align-items-center mb-0">
+		  <div class="col-3 text-left">
+			<label class="mb-0" for="volume">音量</label>
+		  </div>
+		  <div class="col-9">
+			<input class="form-control-range" id="volume" type="range" min="0" max="100" step="1"/>
+		  </div>
+		</div>
+	</div>
+	<div class="col-2">
+		<div class="custom-control custom-switch">
+		  <input class="custom-control-input" id="toggleMute" type="checkbox" />
+		  <label class="custom-control-label" for="toggleMute">靜音</label>
+		</div>
+	</div>
    <!-- 速度相關-->
-  <div class="col-9 ">
+  <div class="col-5 ">
     <div class="form-group row align-items-center mb-0">
       <div class="col-3 text-left">
         <label id="spdLabel" class="mb-0" for="volume">速度</label>
@@ -124,6 +129,16 @@ position: relative;
       </div>
     </div>
   </div>
+   </div>
+
+<div class="row align-items-center pt-4">
+	
+ </div>
+
+
+ 
+<div class="row align-items-center pt-4">
+  
   
 </div>
 <div class="row align-items-center pt-4">
@@ -223,7 +238,7 @@ async function onYouTubeIframeAPIReady()
             videoId:e.dataset.video,
             playerVars:
             {
-                autoplay:e.dataset.autoplay,loop:e.dataset.loop
+                autoplay:e.dataset.autoplay,loop:e.dataset.loop,controls:0 
             },
             events:
             {
@@ -276,7 +291,7 @@ async function onPlayerReady(e) {
 
     const volume = document.getElementById('volume');
     const mute = document.getElementById('toggleMute');
-
+	const progress_bar = document.getElementById('progress-bar');
     //- 播放、暫停、停止
     play.addEventListener('click', () => {
     //  mute.checked = true;
@@ -317,6 +332,33 @@ async function onPlayerReady(e) {
     //- 有聲的情況下無法自動播放，因此不執行 playVideo
     mute.addEventListener('change', () => mute.checked ? e.target.mute().playVideo() : e.target.unMute());
 	
+	//progress_bar.addEventListener('mouseup touchend', function (ee) {
+	progress_bar.addEventListener('input', function (ee) {
+    // Calculate the new time for the video.
+    // new time in seconds = total duration in seconds * ( value of range input / 100 )
+    var newTime = e.target.getDuration() * (ee.target.value / 100);
+
+    // Skip video to new time.
+    e.target.seekTo(newTime);
+
+	});
+	///
+	// Update the controls on load
+    updateTimerDisplay();
+    updateProgressBar();
+
+    
+   
+
+    // Start interval to update elapsed time display and
+    // the elapsed part of the progress bar every second.
+    time_update_interval = setInterval(function () {
+        updateTimerDisplay();
+        updateProgressBar();
+    }, 1000)
+	// Clear any old interval.
+	 //clearInterval(time_update_interval);
+
 	//-------- Move from 
 	//	let list_a=['fv5j64hBdqs','HaRU6yYYoX0','mId3S2G5WN4']
 		RsheetData(fl1,$('#selectSub option:selected').val())
@@ -362,7 +404,26 @@ async function onPlayerReady(e) {
 		*/
 		
   }
-  
+  function updateTimerDisplay(){
+    // Update current time text display.
+    $('#current-time').text(formatTime( r.getCurrentTime() ));
+    $('#duration').text(formatTime( r.getDuration() ));
+}
+
+	function formatTime(time){
+		time = Math.round(time);
+
+		var minutes = Math.floor(time / 60),
+		seconds = time - minutes * 60;
+
+		seconds = seconds < 10 ? '0' + seconds : seconds;
+
+		return minutes + ":" + seconds;
+	}
+	function updateProgressBar(){
+		// Update the value of our progress bar accordingly.
+		$('#progress-bar').val((r.getCurrentTime() / r.getDuration()) * 100);
+	}
  
 	async function  Read_Sheet(){
 
