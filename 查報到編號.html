@@ -8,7 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <title>查報到序號</title>
-    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+   
+	<script src="js/Fetch.js"></script>
     <style> 
 
 .button {
@@ -25,6 +26,34 @@
             .container {  display: flex;
 			
 			}
+	table {
+	  border-collapse: collapse;
+	  border-spacing: 0;
+	  width: 100%;
+	  border: 1px solid #ddd;
+	  overflow-x:scroll;
+	  overflow-y:scroll;
+	}
+	th{
+	 background: yellow;
+	 position: sticky;
+	 top: 0; /* Don't forget this, required for the stickiness */
+	 box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+	 }
+	tr:nth-child(even){
+		/* background-color: #f2f2f2 
+		overflow-y: scroll;
+		display: block;
+		position: fixed;
+		top: 30;
+		*/
+		 background-color: lightblue;
+		}
+	thead	{
+        background-color: orange;
+	
+			  
+      }
 			
             </style>
 </head>
@@ -33,45 +62,67 @@
     <h2 >&nbsp&nbsp &nbsp查報到編號</h2>  -->
 	<div class="container ">
 	<h3>查報到序號 &nbsp&nbsp &nbsp</h3> <a href="https://youtu.be/oLQVo89k7L0">聖誕慶祝會直播</a>
+	 
 	 </div>
-    <div class="container ">
+	 
+           
          
-			 <img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=https://bit.ly/3sufNMo &amp;size=60x60"></a>
+				
+    <div class="container1 ">
+       
+			<input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Tel2()">
+            <button onclick="Query_Tel2()" id='myBtn'>查詢</button>
+         <img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=https://bit.ly/3sufNMo &amp;size=60x60"></a>
         <!--  <a href="https://bit.ly/3sufNMo">
 		<p>報到編號</p> 
 		-->
-            <input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Tel2()">
-            
-            <button onclick="Query_Tel2()" id='myBtn'>查詢</button>
-            
-            
-       
+		 
        
     </div>
-    <div class="table-responsive">
+    <div class="table-responsive table-striped"">
         <p id="show"></p>
-         </div>
-    
+         
+		<table id="myTable1" style="width:90%" class="table"></table>
+	</div>
     <script>
+	  var Btitle_ptr = ["https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594",
+				 "https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
+                  "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
+                // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
+                ];
 	var input = document.getElementById('location-input');
-input.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-   event.preventDefault();
-   document.getElementById("myBtn").click();
-   
-  }
-});
+	input.addEventListener("keyup", function(event) {
+	if (event.keyCode === 13) {
+	   event.preventDefault();
+	   document.getElementById("myBtn").click();
+	   
+	}
+	});
+	Read_SheetData();
+	async function  Read_SheetData(){
+		document.querySelector("#myTable1").innerHTML = '';
+		await RsheetData(Btitle_ptr[0],'報名清單')
+		.then(data=> {
+				
+				TableShow(data,"#myTable1");
+				data.shift();
+				return data.map((e) => e[1]		)
+				})
+		.then(arr=>{
+				autocomplete_CH(document.getElementById("location-input"), arr,Query_Tel2);	
+			});
+		
+		
+		
+	}
+	
            function IniTitle() {
                
             }
         
         
          function        Query_Tel2(){
-                 var Btitle_ptr = ["https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594",
-				 "https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
-                  "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
-                // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
-                ];
+               
                 var findString = document.getElementById('location-input').value;
                 // console.log(findString);
                 if(findString.length>0){
