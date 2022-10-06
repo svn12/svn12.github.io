@@ -1,9 +1,35 @@
-﻿<!DOCTYPE html><html lang="zh-tw"><head><meta charset="UTF-8">
+﻿<!DOCTYPE html><html lang="zh-tw">
+<head><meta charset="UTF-8">
 <title>寬家</title>
 <link rel="stylesheet" href="reset.css">
 <link rel="stylesheet" href="link_P_noside.css">
-</head> <body> 
-<div class="main"> <ul>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src="../js./Fetch.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+.mySlides {display:none;}
+.container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.responsive-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+</style>
+</head>
+<body> 
+<div class="main w3-content w3-display-container" > <ul>
 <li class="item1"><a href="https://www.mainpi.com/query?i=548">軒琪診所</a> </li>
 <li class="item1"><a href="https://docs.google.com/spreadsheets/d/18sT6CKuJzMPJnp4JDcOt3484rDVyj5YGh6IBLOB7S9I/edit#gid=1835260732">軒琪記錄</a> </li>
 
@@ -19,5 +45,70 @@
 <li class="item1"><a href="https://photos.app.goo.gl/4WgbhcMz6b5zJKn19">平安照片_2</a> </li>
 <li class="item1"><a href="https://photos.app.goo.gl/PtbpwDwKwRgUfc7z7">戴家精選照片</a> </li>
  </ul>
-<iframe src="https://www.youtube.com/embed/videoseries?list=PLkjkWmYV3rz96Qhc0wq-z2aAyJDTh7Tna" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>
- </div> </body> </html>
+  </div> 
+ <div id='showit' class="w3-content w3-display-container">
+ <!-- <img class="mySlides" src="https://lh3.googleusercontent.com/DDg-b54YAsg_poJvP60aSudohQVs_OThflHKQLRMTmwQ2i8BWhcJVEnTuMWptpRQZ1vOee0fakbmmj146R5TIxj6izpE-dX2CKESf88bNbw5qTBw9tiAsJIya8HBoSfIG3ryKVblROw=w1920-h1080" style="width:100%">
+  <h2 class="w3-center">Manual Slideshow</h2>
+  *-->
+  <button class="w3-button w3-black w3-display-topleft" onclick="plusDivs(-1)">&#10094;</button>
+ <!--
+  <img class="mySlides" src="https://www.smile-dental.tw/wp-content/uploads/2022/09/板橋十月門診表_03.jpg.webp" style="width:100%">
+  <img class="mySlides" src="https://www.smile-dental.tw/wp-content/uploads/2022/09/汐止十月門診表-07.jpg.webp" style="width:100%">
+  <img class="mySlides" src="https://lh3.googleusercontent.com/jxPz9E8fmKy3lsryy6UjLWZ9wzVm_MX3VZbdn3PVDKWqj8IR5bXb1IvAU9hoHZ4qRuyV_4S7EZI3mi9880gM17PB1OHtNnhgIAdLK6JuIFzY0uzF4RGJgC3X54CKXwiIvasO0WRTjg=w1920-h1080" style="width:100%">
+<iframe  src="https://www.youtube.com/embed/videoseries?list=PLkjkWmYV3rz96Qhc0wq-z2aAyJDTh7Tna" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>
+	-->
+  <button class="w3-button w3-black w3-display-topright" onclick="plusDivs(1)">&#10095;</button>
+ </div>
+ 
+ 
+ 
+ <div class="container w3-content w3-display-container">
+<iframe class="responsive-iframe"  src="https://www.youtube.com/embed/videoseries?list=PLkjkWmYV3rz96Qhc0wq-z2aAyJDTh7Tna" width=100% > </iframe>
+ </div>  
+
+
+<script>
+
+var slideIndex = 1;
+photo_render('#showit');
+//showDivs(slideIndex);
+async function photo_render(sel){
+const fname='https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit#gid=112652118'
+  const sname='蒔美'
+	await Read_PhotoData(fname,sname)
+	.then(arr=>{
+		arr.forEach(( item) =>{
+		//	document.querySelector(sel).append(`<img class="mySlides" src="${item}" style="width:100%">`)
+			document.querySelector(sel).innerHTML += 
+              `<img class="mySlides" src="${item}" style="width:100%">`;
+		})
+	})
+	.then(()=>{
+		showDivs(slideIndex);
+	})
+}
+async function  Read_PhotoData(fname,sname){
+  
+	return await RsheetData(fname,sname)
+	.then(data=>{
+		data.shift();
+		return data.map((e) => e[1]		);
+	})
+}
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length}
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";  
+  }
+  x[slideIndex-1].style.display = "block";  
+}
+</script>
+
+ </body> </html>
