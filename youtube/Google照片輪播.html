@@ -207,7 +207,7 @@ function show_next_Slide() {
   //$("#photo_text").text(photo_text[slideIndex-1]);
  // doccument.querySelector('#photo_text.attr('href',photo_link[slideIndex-1]');
 	document.querySelector('#photo_text').innerHTML = 
-              `<a href="${photo_link[slideIndex-1]}">${photo_text[slideIndex-1]}</a>`;
+              `<a target="_blank" href="${photo_link[slideIndex-1]}">${photo_text[slideIndex-1]}</a>`;
 }
 function show_next_Slide1() {
 	clearTimeout(myTimeout);
