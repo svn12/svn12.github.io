@@ -29,7 +29,8 @@
 </style>
 </head>
 <body> 
-<div class="main w3-content w3-display-container" > <ul>
+<div class="main w3-content w3-display-container" > 
+<ul>
 <li class="item1"><a href="https://www.mainpi.com/query?i=548">軒琪診所</a> </li>
 <li class="item1"><a href="https://docs.google.com/spreadsheets/d/18sT6CKuJzMPJnp4JDcOt3484rDVyj5YGh6IBLOB7S9I/edit#gid=1835260732">軒琪記錄</a> </li>
 
@@ -50,14 +51,14 @@
  <!-- <img class="mySlides" src="https://lh3.googleusercontent.com/DDg-b54YAsg_poJvP60aSudohQVs_OThflHKQLRMTmwQ2i8BWhcJVEnTuMWptpRQZ1vOee0fakbmmj146R5TIxj6izpE-dX2CKESf88bNbw5qTBw9tiAsJIya8HBoSfIG3ryKVblROw=w1920-h1080" style="width:100%">
   <h2 class="w3-center">Manual Slideshow</h2>
   *-->
-  <button class="w3-button w3-black w3-display-topleft" onclick="plusDivs(-1)">&#10094;</button>
+  <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
  <!--
   <img class="mySlides" src="https://www.smile-dental.tw/wp-content/uploads/2022/09/板橋十月門診表_03.jpg.webp" style="width:100%">
   <img class="mySlides" src="https://www.smile-dental.tw/wp-content/uploads/2022/09/汐止十月門診表-07.jpg.webp" style="width:100%">
   <img class="mySlides" src="https://lh3.googleusercontent.com/jxPz9E8fmKy3lsryy6UjLWZ9wzVm_MX3VZbdn3PVDKWqj8IR5bXb1IvAU9hoHZ4qRuyV_4S7EZI3mi9880gM17PB1OHtNnhgIAdLK6JuIFzY0uzF4RGJgC3X54CKXwiIvasO0WRTjg=w1920-h1080" style="width:100%">
 <iframe  src="https://www.youtube.com/embed/videoseries?list=PLkjkWmYV3rz96Qhc0wq-z2aAyJDTh7Tna" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen> </iframe>
 	-->
-  <button class="w3-button w3-black w3-display-topright" onclick="plusDivs(1)">&#10095;</button>
+  <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
  </div>
  
  
@@ -80,7 +81,7 @@ const fname='https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIO
 		arr.forEach(( item) =>{
 		//	document.querySelector(sel).append(`<img class="mySlides" src="${item}" style="width:100%">`)
 			document.querySelector(sel).innerHTML += 
-              `<img class="mySlides" src="${item}" style="width:100%">`;
+              `<img class="mySlides" src="${item}" style="width:90%">`;
 		})
 	})
 	.then(()=>{

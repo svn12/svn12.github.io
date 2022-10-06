@@ -4,14 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="link_P_noside.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   
   
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
+ 
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 
@@ -112,22 +108,27 @@ tr:nth-child(even) {
 
   
 
-<!-- Start slideshow Section -->
+<!-- Start slideshow Section
+<button class="w3-bar-item w3-button w3-light-blue w3-hover-purple" onclick="show_pre_Slide()"><</button>
+<button class="w3-bar-item w3-button w3-light-blue w3-hover-purple" onclick="show_next_Slide1()">></button>
+ -->
  <div class="w3-content w3-justify w3-text-grey w3-padding-32" id="精選照片">
-  
+ 
 <div class="slideshow-container">
 <div class="w3-bar">
 
-<button class="w3-bar-item w3-button w3-light-blue w3-hover-purple" onclick="show_pre_Slide()"><</button>
-<button class="w3-bar-item w3-button w3-light-blue w3-hover-purple" onclick="toggle_show_slide()" id='toggle'>自動</button>
-<button class="w3-bar-item w3-button w3-light-blue w3-hover-purple" onclick="show_next_Slide1()">></button>
-<a href="https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?resourcekey#gid=1135202331" id="file_href" target="_blank">File</a>
+
+	<button class="w3-button w3-light-blue w3-hover-purple w3-display-topmiddle" onclick="toggle_show_slide()" id='toggle'>自動</button>
+
+	<button class="w3-button w3-black w3-display-left" onclick="show_pre_Slide()">&#10094;</button>
+	<button class="w3-button w3-black w3-display-right" onclick="show_next_Slide1()">&#10095;</button>
+	<div class="w3-display-topright">
+	<a href="https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?resourcekey#gid=1135202331" id="file_href" target="_blank">File</a>
 	<a href="https://www.publicalbum.org/blog/embedding-google-photos-albums" id="file_href" target="_blank">Tool</a>
 	<a href="https://support.awesome-table.com/hc/en-us/articles/360010324920-Display-images-from-Microsoft-OneDrive" target="_blank">OneDrive</a>
+	</div>
 	
-<h3 id='photo_text'>
-	
-	</h3>
+	<h3 id='photo_text'>	</h3>
 
 
 	
@@ -152,6 +153,7 @@ $(document).ready(function() {
 let slideIndex = 0;
 
 const photo_text=[];//['34歲全家福','90歲全家福']
+const photo_link=[];//['34歲全家福','90歲全家福']
 let myTimeout;
 const fmain='https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing';  //新聖詩連結
 const a = {
@@ -173,7 +175,7 @@ function  R_Url(){
 		$.each(data, function (i, item) {
 			if(i!=0){
 				if(item[0]=='') return false;
-				photo_text.push(item[0]);
+				photo_text.push(item[0]);photo_link.push(item[1]);
 			    txt1=`<div class="mySlides fade">
 					<img src="${item[1]}" >
 					
@@ -201,9 +203,11 @@ function show_next_Slide() {
   }
   slideIndex++;
   if (slideIndex > slides.length) {slideIndex = 1}   
-  slides[slideIndex-1].style.display = "block"; 
-  $("#photo_text").text(photo_text[slideIndex-1]);
-  
+	slides[slideIndex-1].style.display = "block"; 
+  //$("#photo_text").text(photo_text[slideIndex-1]);
+ // doccument.querySelector('#photo_text.attr('href',photo_link[slideIndex-1]');
+	document.querySelector('#photo_text').innerHTML = 
+              `<a href="${photo_link[slideIndex-1]}">${photo_text[slideIndex-1]}</a>`;
 }
 function show_next_Slide1() {
 	clearTimeout(myTimeout);
