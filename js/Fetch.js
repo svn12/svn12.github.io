@@ -87,6 +87,81 @@ function show_json(obj,ptr) {
 		let jsonStr = JSON.stringify(obj);
         document.querySelector(ptr).textContent=  jsonStr;
 		}
+		
+function  TablePlot(dataS,title,sel,indexs){
+  // indexs --- x y1~yn
+  const borderColors=["#e8c3b9","#3e95cd","#8e5ea2","#c45850","#435850"];
+  document.querySelector(sel).innerHTML = '';//.empty();
+  let g = document.createElement('canvas');
+  g.setAttribute("id", "myChart2");
+  g.setAttribute("style","width:100%;max-width:90%;max-height:80%");
+  document.querySelector(sel).appendChild(g);
+  
+  g = document.createElement('table');
+  g.setAttribute("id", "myTable1");
+  g.setAttribute("class","table");
+  
+  document.querySelector(sel).appendChild(g);
+  
+  let data=[];
+  let xd=indexs[0];
+  indexs.shift();
+  dataS.forEach((item,index)=>{
+	
+	if(isValidDate(item[xd]))
+		{
+		dataT=[(new Date(item[xd])).toLocaleDateString()];}
+		
+	else{ dataT=[item[xd]];}
+	
+	indexs.forEach(x=>{
+		dataT.push(item[x]);
+	})
+	data.push(dataT);
+	})
+	
+  let heads=data.shift();
+  xlabel=[];
+  dataset=[];
+  data.forEach(item=>{
+	xlabel.push(item[0]);
+	})
+	
+  for(let i=1;i<heads.length;i++){
+	data_temp=[];
+	data.forEach( item=> {
+		data_temp.push(item[i]);
+	})
+	dataset.push(
+		{ 
+        data: data_temp,
+        label: heads[i],
+        borderColor: borderColors[i-1],
+        fill: false
+		}
+	);
+  }
+	
+	
+
+  new Chart(document.getElementById("myChart2"), {
+		type: 'line',
+		data: {
+			labels: xlabel,
+			datasets: dataset
+			},
+		options: {
+				title:{
+				  display: true,
+				  text: title
+						}
+			 }
+		});
+	data.reverse();
+	data.unshift(heads);
+	TableShow(data,"#myTable1");
+	}
+
 function TableShow(rrows,sel){
 	let table1 = document.querySelector(sel);
 	table1.innerHTML = '';
