@@ -69,7 +69,7 @@
 </head>
 <body >
     <!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> -->
-    <h2 >&nbsp&nbsp &nbsp姓名電話資料查詢</h2>
+    <h2 >&nbsp&nbsp &nbsp姓名電話資料查詢(!查詢)</h2>
     <div class="container ">
         <!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> 
 		
@@ -116,7 +116,7 @@
             
            
 			});
-		
+		var sht_ptr=['List','夫婦團契','聖歌隊','List']
            function IniTitle() {
                 // var Btitle = ["南門通訊錄","南門資料庫","長青樂活"
                 // ];
@@ -125,13 +125,14 @@
                 // "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
                 // // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
                 // ];
-                var Btitle = ["南門通訊錄","長青樂活"
-                ];
-                var Btitle_ptr = ["'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing'",
-                
-                "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
+                var Btitle = ["南門通訊錄",'夫婦團契','聖歌隊',"長青樂活"];
+                var Btitle_ptr = ["https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
+				"https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
+				"https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
+                 "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
                 // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
                 ];
+				
                 var select = document.getElementById("selShurl");
                 // var options = ["10", "11", "12", "13", "14","15","16"];
                 // alert(id, select.options[1].value);
@@ -171,11 +172,12 @@
                 var $show = $('#show');
                 var shURL= document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
                 // console.log(shURL);
+				
                 var a = {
                     // sheetUrl: 'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing',
                     // sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
                     sheetUrl:shURL,
-                    sheetTag: 'List',
+                    sheetTag: sht_ptr[document.getElementById("selShurl").selectedIndex], //'List',
                     findSting: findString
                     };
 				const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
@@ -352,10 +354,11 @@
 			document.getElementById("show").innerHTML = '';
 			const fmain=$('#selectTle option:selected').val();//'https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit?usp=sharing';
 			const shURL=$('#selShurl option:selected').val(); //document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
+			
 			const a = {
 				
 				sheetUrl:shURL,
-				sheetTag: 'List',
+				sheetTag: sht_ptr[document.getElementById("selShurl").selectedIndex], //'List',sheetTag: 'List',
 				key:1
 				};
 			const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
