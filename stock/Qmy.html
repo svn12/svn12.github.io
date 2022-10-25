@@ -167,7 +167,10 @@ function appendText1(code,remark) {
       
       if(detail){ 
       txt1+='<tr>';  
-      txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> <img id="img5" width="470" alt="精誠資訊" title="精誠資訊" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
+	  //txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> 
+	 // https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId=1434
+      txt1+=` <td> <a id="link5" href="https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId=${code}" target="_blank"> 
+			<img id="img5" width="470" alt="精誠資訊" title="精誠資訊" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
       txt1+=`<td> <a href="https://tw.stock.yahoo.com/q/bc?s=${code}" target="_blank"> <img width="470" alt="Yahoo" title="Yahoo"
         src="https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_${code}.gif"></a> </td>`;
       txt1+='</tr>';
