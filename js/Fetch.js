@@ -88,7 +88,7 @@ function show_json(obj,ptr) {
         document.querySelector(ptr).textContent=  jsonStr;
 		}
 		
-function  TablePlot(dataS,title,sel,indexs){
+function  TablePlot(dataS,title,sel,indexs,remarkidx){
   // indexs --- x y1~yn
   const borderColors=["#e8c3b9","#3e95cd","#8e5ea2","#c45850","#435850"];
   document.querySelector(sel).innerHTML = '';//.empty();
@@ -157,6 +157,14 @@ function  TablePlot(dataS,title,sel,indexs){
 						}
 			 }
 		});
+		if(remarkidx!=null){
+		// Add remark field remarkidx
+			data.forEach((item,index)=>{
+			data[index]=[...item,...[dataS[index][remarkidx]]]   // Add remark data
+			 })
+			heads.push(dataS[0][remarkidx])
+	//
+		}
 	data.reverse();
 	data.unshift(heads);
 	TableShow(data,"#myTable1");

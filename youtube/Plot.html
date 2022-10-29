@@ -89,10 +89,11 @@ $(document).ready(function() {
   var shtUrl='"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"'
  // GSname(shtUrl);
  // R_Url();
+ let startno=parseInt(document.getElementById("startno").value) -1;
   
 })
 
-	let startno=document.getElementById("startno").value -1;
+	
 const RSheet2Json_APIV6='https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec'
 async function  Plot_JK資產(){
 	const startno=document.getElementById("startno").value -1
@@ -107,7 +108,7 @@ async function  Plot_JK資產(){
 		data.unshift(header);
 		}
 		title=`Plot_JK資產 (共${data.length-startno-1}/${data.length-1}筆)`;
-		TablePlot(data,title,'#plot',idx);
+		TablePlot(data,title,'#plot',idx,20);
 	})
 }
 
@@ -210,7 +211,7 @@ async function  Plot_Sofie資產(){
 		data.unshift(header);
 		}
 		title=`蘭股票 (共${data.length-startno-1}/${data.length-1}筆)`;
-		TablePlot(data,title,'#plot',idx);
+		TablePlot(data,title,'#plot',idx,9);
 	})
 }
 async function  Plot_JK股票_Now(){
@@ -245,7 +246,7 @@ async function  Plot_JK股票(){
 		 data.unshift(header);
 		 }
 		 title=`ＪＫ股票 (共${data.length-startno-1}/${data.length-1}筆)`;
-		 TablePlot(data,title,'#plot',idx);
+		 TablePlot(data,title,'#plot',idx,22);
 	 })
  }
  
@@ -269,7 +270,7 @@ const startno=document.getElementById("startno").value -1;
 		data.unshift(header);
 		}
 		title=`Plot_直播 (共${data.length-startno-1}/${data.length-1}筆)`;
-		TablePlot(data,title,'#plot',idx);
+		TablePlot(data,title,'#plot',idx,4);
 	})
 }
 
