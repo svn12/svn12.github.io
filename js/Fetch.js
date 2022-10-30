@@ -160,7 +160,7 @@ function  TablePlot(dataS,title,sel,indexs,remarkidx){
 		if(remarkidx!=null){
 		// Add remark field remarkidx
 			data.forEach((item,index)=>{
-			data[index]=[...item,...[dataS[index][remarkidx]]]   // Add remark data
+			data[index]=[...item,...[dataS[index+1][remarkidx]]]   // Add remark data
 			 })
 			heads.push(dataS[0][remarkidx])
 	//
