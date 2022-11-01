@@ -6,30 +6,39 @@
   <title>`PDF Show example
   </title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.0.279/pdf.min.js"></script>
+  <script src="../js/Fetch.js"></script>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <style>
   canvas { 
-  vertical-align: middle;
-  width: 100%; 
-  display: block;}
+	
+	width: 100%;
+	display: block}
+  button ,h1,div{
+	font-size: 2em;
+  }
   </style>
 </head>
 <body>
-
+<div class="w3-container"> 
 <h1>PDF Show
+    <select id='selectfile' onchange="show_sel_pdf()"></select>
+  	<span>頁數: <span id="page_num">1</span> / <span id="page_count"></span></span>
+	
   </h1>
 <div>
+<!--
+CreatOption(selector,opt_value,opt_text)
   <button id="prev">上一頁</button> 
   	<button id="next">下一頁</button>
-<!--		onclick="show_pre_Slide()"
+		onclick="show_pre_Slide()"
 	onclick="show_next_Slide1()"
-	
 	<div class="w3-bar">
-	<button id="prev" class="w3-button w3-blue w3-display-center" >&#10094;</button>
-	<button id="next" class="w3-button w3-blue w3-display-center" >&#10095;</button>
 	</div>
 	-->
-  	<span>頁數: <span id="page_num">1</span> / <span id="page_count"></span></span>
+	
+	<button id="prev" class="w3-button w3-blue w3-display-left" >&#10094;</button>
+	<button id="next" class="w3-button w3-blue w3-display-right" >&#10095;</button>
+	
 	
 	
 	<div class="w3-bar1"> 
@@ -37,14 +46,14 @@
 
 	</div>
   </div>
- 
+   </div>
 
 <script id="script">
   //
   // If absolute URL from the remote server is provided, configure the CORS
   // header on that server.
   //
-  const url = '../doc/old-2.pdf'; //'../doc/戴慶輝年表.pdf'  //'../doc/old-01.pdf';
+  const url = '../doc/old-2.pdf'; //'../doc/戴慶輝年表.pdf' '../doc/old-2.pdf' //'../doc/old-01.pdf';
 
   //https://www.sbchurch.org.tw/wp-content/uploads/old-2.pdf
   // The workerSrc property shall be specified.
@@ -58,6 +67,12 @@
 const canvas = document.getElementById("the-canvas");
 const outputScale = window.devicePixelRatio || 1;
 const context = canvas.getContext("2d");
+const fname=["old-01.pdf","old-2.pdf","2020手機班3-6課程表(附報名表).pdf","2020長青樂活站3-6課程表(附報名表)0.pdf"
+,"90回顧-靠主得勝的人生.pdf","90回顧-靠主得勝的人生o.pdf","ATEM_Mini_Manual.pdf"
+,"PSM300_guide_zh-TW.pdf","高雄國賓飯店二樓.pdf"
+,"報告事項_照相順序.pdf","感恩餐會座位.pdf","經文.pdf","戴慶輝90嵩壽簡述.pdf"
+,"戴慶輝90歲感恩禮拜程序表.pdf","戴慶輝90歲感恩禮拜程序表o.pdf","戴慶輝年表.pdf"
+,"戴慶輝故人略歷.pdf"];
 var pdfDoc = null,
   	pageNum = 1,
   	pageRendering = false,
@@ -67,13 +82,39 @@ var pdfDoc = null,
   	scale = 1;
   	
   	ctx = canvas.getContext( "2d" );
-
-  	function renderPage( num )
+	
+	  // resize the canvas to fill browser window dynamically
+	  window.addEventListener('resize', resizeCanvas, false);
+      CreatOption('#selectfile',fname,fname); 
+	  function resizeCanvas() {
+		queueRenderPage( pageNum );
+	  }
+	  function text_resize(vp_width){
+		var el = document.querySelectorAll("button");
+		for ( var i = 0; i < el.length; i ++ ) {
+			el[i].style.fontSize = "1em";
+}
+	  }
+	async function show_sel_pdf(){
+		sel_url = `../doc/${fname[document.querySelector('#selectfile').options.selectedIndex]}`;
+		const loadingTask1 = pdfjsLib.getDocument(sel_url);
+	  
+		pdfDoc = await loadingTask1.promise;
+		//
+		// Fetch the first page
+		//
+		document.getElementById( "page_count" ).textContent =await pdfDoc.numPages;
+		renderPage(1);
+		
+		}
+	
+	
+	function renderPage( num )
   	{
   		pageRendering = true;
   		pdfDoc.getPage( num )
 		.then( function( page ) {
-		scale=window.innerWidth/page.getViewport().viewBox[2]*1.3;
+		scale=window.innerWidth/page.getViewport().viewBox[2];
   		viewport = page.getViewport({ scale });
   	/*		canvas.height = viewport.height;
   			canvas.width = viewport.width;
@@ -86,7 +127,7 @@ var pdfDoc = null,
 			canvas.height = Math.floor(viewport.height * outputScale);
 			canvas.style.width = Math.floor(viewport.width) + "px";
 			canvas.style.height = Math.floor(viewport.height) + "px";
-
+		//	text_resize(canvas.width);
 			let transform = outputScale !== 1 
 			  ? [outputScale, 0, 0, outputScale, 0, 0] 
 			  : null;
@@ -148,51 +189,19 @@ var pdfDoc = null,
   		renderPage( pageNum );
   	});
 
-*/
+
 
 ///  
   const loadingTask = pdfjsLib.getDocument(url);
   (async () => {
      pdfDoc = await loadingTask.promise;
-    //
-    // Fetch the first page
-    //
+    
     document.getElementById( "page_count" ).textContent =await pdfDoc.numPages;
 	renderPage(1);
-	/*
-    page = await pdfDoc.getPage(1);
-    
-    
-    viewport = page.getViewport({ scale });
-    // Support HiDPI-screens.
-    
-
-    //
-    // Prepare canvas using PDF page dimensions
-    //
-    
-    
-
-    canvas.width = Math.floor(viewport.width * outputScale);
-    canvas.height = Math.floor(viewport.height * outputScale);
-    canvas.style.width = Math.floor(viewport.width) + "px";
-    canvas.style.height = Math.floor(viewport.height) + "px";
-
-     transform = outputScale !== 1 
-      ? [outputScale, 0, 0, outputScale, 0, 0] 
-      : null;
-
-    //
-    // Render PDF page into canvas context
-    //
-    const renderContext = {
-      canvasContext: context,
-      transform,
-      viewport,
-    };
-    page.render(renderContext);
-	*/
+	
   })();
+  */
+  show_sel_pdf();
 </script>
 <!--
 <hr>
