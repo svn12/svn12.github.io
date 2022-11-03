@@ -3,17 +3,12 @@
 <meta charset="UTF-8">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	 <!-- 
-	 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-	 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<script src="js/JK_JS.js"></script>	
-	-->
-   
+	<script>
+	const shtUrl='https://docs.google.com/spreadsheets/d/1tVHGXWaMNJ1Vd2yOdIsdI-YzBh2QlJjkQExGPl81T2c/edit?usp=sharing'
+	</script>
 	
-    <title>查Sheet</title>
+	
+    <title>夜市優惠</title>
 
     <style> 
             .container {  display: flex;}
@@ -30,7 +25,7 @@
 	}
 	input,select{
             margin: 0px;
-          /*  display: inline;*/
+            display: inline;
             font-size: 18px;
         }
 
@@ -138,10 +133,11 @@
 		}  
 </style>
 <script>
+//const shtUrl='https://docs.google.com/spreadsheets/d/1tVHGXWaMNJ1Vd2yOdIsdI-YzBh2QlJjkQExGPl81T2c/edit?usp=sharing'
 $(document).ready(function() {
-  var shtUrl='"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"'
- // GSname(shtUrl);
-  R_Url();
+  
+  GSname();
+//  R_Url();
   
 })
 	const RSheet2Json_APIV6='https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec'
@@ -176,13 +172,13 @@ function RGsheet(){
 	const detail=($('#order').is(':checked'));
 	
 	var a = {
-		sheetUrl:document.getElementById("select_url").value ,
+		sheetUrl:shtUrl ,
 		sheetTag: document.getElementById("select_sh").value , //'Test'
 		
 		};
 	if(detail){
 		a = {
-		sheetUrl:document.getElementById("select_url").value ,
+		sheetUrl:shtUrl ,
 		sheetTag: document.getElementById("select_sh").value , //'Test'
 		key:document.getElementById("orderno").value
 		};
@@ -292,7 +288,7 @@ function query_order(){
 	
 	
 	
-function  GSname(shtUrl){
+function  GSname(){
   
   var select_sh=$('#select_sh').val();
   var a = {
@@ -303,14 +299,15 @@ function  GSname(shtUrl){
 	document.getElementById("show").innerHTML = '';
    $.get('https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec', a, function (data) {
                 
-          if(document.getElementById("select_url").value==a.sheetUrl){      
+         // if(document.getElementById("select_url").value==a.sheetUrl){  
+		  if(a.sheetUrl==a.sheetUrl){  
               /*  $('#select_sh').append($('<option>', { 
                       value: '',
                       text : `---請選擇---- ${$("#select_url option:selected").text()} `
 				  }));
 				  */
-                data = JSON.parse(data.replace(/\n/g,' '));       
-              //  data = JSON.parse(data);
+                       
+                data = JSON.parse(data);
                 $.each(data, function (i, item) {
                     $('#select_sh').append($('<option>', { 
                       value: item.Sname,
@@ -323,6 +320,7 @@ function  GSname(shtUrl){
 		});
 			
 }
+/*
 function  R_Url(){
   const fmain='https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit#gid=2114459986';
   var a = {
@@ -346,7 +344,7 @@ function  R_Url(){
 		Google_sht_R();
 		});
 
-}
+} */
 //-----------------------------  New Added 2022/8/14
 function        Query_Tel2(){
                 
@@ -365,7 +363,7 @@ function        Query_Tel2(){
                     // sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
                     //sheetUrl:shURL,
                     //sheetTag: 'List',
-					sheetUrl:document.getElementById("select_url").value ,
+					sheetUrl:shtUrl ,
 					sheetTag: document.getElementById("select_sh").value , //'Test'
                     findSting: findString
                     };
@@ -381,7 +379,8 @@ function        Query_Tel2(){
 
                     // console.log(data.length);
                     // console.log(data);
-                    data = JSON.parse(data);
+					
+                    data = JSON.parse(data.replace(/\n/g,' '));
                     var heads=[];
                     for(head in data[0]){
                         heads.push(head);
@@ -636,16 +635,9 @@ function        Query_Tel2(){
 </script>
 <body>
 <div id="fixed-div2" > 
-<form >
+
     
-	<a href="" id="file_href" target="_blank">File</a>
 	
-	
-	<a href="youtube/Plot.html" >Plot</a>
-    <select id="select_url" onchange="Google_sht_R()">
-	
-    </select>
-    Sheet:
     <select id="select_sh" onchange="RGsheet1()">
 	<input type="number" id="orderno" oninput="RGsheet()" value=0 style="display: none;" >
 	
@@ -654,6 +646,7 @@ function        Query_Tel2(){
 			<div  class="autocomplete" >
 			
 			<input autocomplete="off" type="text"  class="form-control" placeholder="關鍵字" id="location-input" />
+			
 			</div>
 			
 			<button id="btnClickMe" type="button" class="btn  btn-primary "  onclick="Query_Tel2()" > 查詢</button>
@@ -665,10 +658,21 @@ function        Query_Tel2(){
     <option value="List">List </option>
     <input type="checkbox" id="order" onchange="query_order()" > 排序  
 	<a href="查Sheet_Link.html" >LinkVer</a>
+	<a href="" id="file_href" target="_blank">File</a>
+	
+	
+	<a href="youtube/Plot.html" >Plot</a>
+	
+    <select id="select_url" onchange="Google_sht_R()">
+	
+    </select>
+    Sheet:
+	<form >
+	</form>
 	-->
 	</select>
 	
-</form>
+
 
 </div>
 
