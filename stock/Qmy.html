@@ -4,6 +4,7 @@
 
 <script src="https://d3js.org/d3.v4.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="../js/Fetch.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style type="text/css">
@@ -56,6 +57,44 @@
 	   width: 100%;
 	   height: 100%;
 	}
+	table {
+	  border-collapse: collapse;
+	  border-spacing: 0;
+	  width: 100%;
+	  border: 1px solid #ddd;
+	  overflow-x:scroll;
+	  overflow-y:scroll;
+	}
+
+	th {
+	  text-align: center;
+	  padding: 8px;
+	}
+	td {
+	  text-align: left;
+	  padding: 8px;
+	}
+	th{
+	 background: yellow;
+	 /*position: sticky; */
+	 top: 0; /* Don't forget this, required for the stickiness */
+	 box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+	 }
+	tr:nth-child(even){
+		/* background-color: #f2f2f2 
+		overflow-y: scroll;
+		display: block;
+		position: fixed;
+		top: 30;
+		*/
+		 background-color: lightblue;
+		}
+	
+	thead	{
+        background-color: orange;
+	
+			  
+      }
 </style>
 <script>
 $(document).ready(function() {
@@ -342,6 +381,7 @@ function  Google_sht_R(){
                     data = JSON.parse(data);
 					//console.log(data);
                     data.map(show_a);
+					JSONTableShow(data,"#myTable2");
                   }
                 });
   // d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
@@ -405,6 +445,7 @@ $("#T3").html('');
     <option value="List">List</option>
             
 </select>
+
 <p id="T2" style="display: none;"> </p>
 </div>
 <div id="abgne_float_ad_1" style="display: none;" >
@@ -418,9 +459,13 @@ $("#T3").html('');
 <p id="T"> </p>
 
 <div id="T3" class="iframe-container">
+
 </div>
+<table id="myTable2" style="width:90%"  style="display: none;">   </table>
 <iframe  src="https://histock.tw/stock/broker8.aspx" enableviewstate="True" frameborder="no" vspace="0" hspace="0"  width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
 <iframe  src="https://histock.tw/tw" enableviewstate="True" frameborder="no" vspace="0" hspace="0"  width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
+
+
 
 </body>
 </html>
