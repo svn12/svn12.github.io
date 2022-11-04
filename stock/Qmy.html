@@ -2,7 +2,7 @@
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script src="https://d3js.org/d3.v4.js"></script>
+<!-- <script src="https://d3js.org/d3.v4.js"></script> -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script src="../js/Fetch.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -52,20 +52,28 @@
 	  position: relative;*/
 	}
 
-	.iframe-container iframe {
+	iframe {
 	   border: 0;
 	   width: 100%;
 	   height: 100%;
 	}
-	table {
+	p {table {
+		width: 100%;
+		
+		border-spacing: 0;
+		}
+	}
+	.showtable{
+ 	 
 	  border-collapse: collapse;
 	  border-spacing: 0;
 	  width: 100%;
 	  border: 1px solid #ddd;
 	  overflow-x:scroll;
 	  overflow-y:scroll;
-	}
-
+	  
+	 }
+	 
 	th {
 	  text-align: center;
 	  padding: 8px;
@@ -76,11 +84,11 @@
 	}
 	th{
 	 background: yellow;
-	 /*position: sticky; */
+	 position: sticky; 
 	 top: 0; /* Don't forget this, required for the stickiness */
 	 box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
 	 }
-	tr:nth-child(even){
+	.showtable tr:nth-child(even){
 		/* background-color: #f2f2f2 
 		overflow-y: scroll;
 		display: block;
@@ -89,18 +97,23 @@
 		*/
 		 background-color: lightblue;
 		}
+	 
+	 
+	 
 	
 	thead	{
         background-color: orange;
 	
 			  
       }
+	  
 </style>
 <script>
 $(document).ready(function() {
   GSname();
   //Array_R();
   appendText();
+  /*
   let $win = $(window),
 			$ad = $('#abgne_float_ad').css('opacity', 0).show(),	// 讓廣告區塊變透明且顯示出來
 			_width = $ad.width(),
@@ -135,7 +148,7 @@ $(document).ready(function() {
 			// $ad.hide();
             $(window).scrollTop(0)
 		});
-	
+	*/
   
 });
 function checkKey(array, search){
@@ -172,17 +185,17 @@ function appendText1(code,remark) {
     // https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None
   	  txt1+='<tr>';  
   	  
-      txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資" title="台灣股市資訊網_${remark}" src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
+      txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="100%" alt="台灣股市資" title="台灣股市資訊網_${remark}" src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
       
 		href2=`https://statementdog.com/analysis/${code}`;
 		title2="財報狗";
 		
 		
 	  if(detail){
-      	txt1+=` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="470"  alt=${title2} title=${title2} src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
+      	txt1+=` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="100%"  alt=${title2} title=${title2} src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
       	}
       else{
-		txt1+=` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="470"  alt=${title2} title=${title2} src="https://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.tw"></a> </td>`;
+		txt1+=` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="100%"  alt=${title2} title=${title2} src="https://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.tw"></a> </td>`;
 		}       
       txt1+='</tr>';
       if(`${code.toString().substr(0,1)}`!="0"){
@@ -190,15 +203,15 @@ function appendText1(code,remark) {
        //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
 	   //https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_4938.gif
       txt1+='<tr>';  
-      txt1+=` <td> <a href="https://www.wantgoo.com/stock/${code}" target="_blank"><img  width="470" alt="玩股網" title="玩股網"  src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
-      txt1+=` <td> <a id="link6" href="https://stock.wearn.com/a${code}.html" target="_blank"> <img id="img6" width="470" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
+      txt1+=` <td> <a href="https://www.wantgoo.com/stock/${code}" target="_blank"><img  width="100%" alt="玩股網" title="玩股網"  src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
+      txt1+=` <td> <a id="link6" href="https://stock.wearn.com/a${code}.html" target="_blank"> <img id="img6" width="100%" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
       txt1+='</tr>';
       
       // if(!($('#brief').is(':checked'))){
        if(detail){ 
        txt1+='<tr>';  
-      txt1+=` <td> <a href="https://www.cnyes.com/twstock/flashchart/${code}.htm" target="_blank"><img  width="470" alt="鉅亨網" title="鉅亨網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_${code}.gif"></a> </td>`;
-      txt1+=`<td> <a href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=${code}" target="_blank"> <img width="470" alt="樂活五線譜" title="樂活五線譜"
+      txt1+=` <td> <a href="https://www.cnyes.com/twstock/flashchart/${code}.htm" target="_blank"><img  width="100%" alt="鉅亨網" title="鉅亨網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_${code}.gif"></a> </td>`;
+      txt1+=`<td> <a href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=${code}" target="_blank"> <img width="100%" alt="樂活五線譜" title="樂活五線譜"
         src=" https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_ASSETS_M_S_${code}.gif"></a> </td>`;
       txt1+='</tr>';
         }
@@ -209,8 +222,8 @@ function appendText1(code,remark) {
 	  //txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> 
 	 // https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId=1434
       txt1+=` <td> <a id="link5" href="https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId=${code}" target="_blank"> 
-			<img id="img5" width="470" alt="精誠資訊" title="精誠資訊" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
-      txt1+=`<td> <a href="https://tw.stock.yahoo.com/q/bc?s=${code}" target="_blank"> <img width="470" alt="Yahoo" title="Yahoo"
+			<img id="img5" width="100%" alt="精誠資訊" title="精誠資訊" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
+      txt1+=`<td> <a href="https://tw.stock.yahoo.com/q/bc?s=${code}" target="_blank"> <img width="100%" alt="Yahoo" title="Yahoo"
         src="https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_${code}.gif"></a> </td>`;
       txt1+='</tr>';
       }
@@ -223,14 +236,14 @@ function appendText1(code,remark) {
 		}
 		
 		
-      txt1+=`<td>  <a id="link4" href=${href4} target="_blank"><img id="img4" width="470" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_${code}.gif"></a> </td>`;
-      txt1+=' <td> <a id="link3" href="https://histock.tw/stock/'+code+'" target="_blank"> <img id="img3" width="470"  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid='+code+'"></a> </td>';
+      txt1+=`<td>  <a id="link4" href=${href4} target="_blank"><img id="img4" width="100%" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_${code}.gif"></a> </td>`;
+      txt1+=' <td> <a id="link3" href="https://histock.tw/stock/'+code+'" target="_blank"> <img id="img3" width="100%"  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid='+code+'"></a> </td>';
       txt1+='</tr>';
       
       if(detail){ 
       txt1+='<tr>';  
-      txt1+=' <td> <a id="link7" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a='+code+'" target="_blank"><img id="img7" width="470" alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid='+code+'"></a> </td>';
-      txt1+='<td> <a id="link8" href="http://pchome.megatime.com.tw/stock/sid'+code+'.html" target="_blank"> <img id="img8" width="470"  alt="PChome" title="PCHome股" src="https://stock.wearn.com/zhuli_chart.asp?stockid='+code+'"></a> </td>';
+      txt1+=' <td> <a id="link7" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a='+code+'" target="_blank"><img id="img7" width="100%" alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid='+code+'"></a> </td>';
+      txt1+='<td> <a id="link8" href="http://pchome.megatime.com.tw/stock/sid'+code+'.html" target="_blank"> <img id="img8" width="100%"  alt="PChome" title="PCHome股" src="https://stock.wearn.com/zhuli_chart.asp?stockid='+code+'"></a> </td>';
       txt1+='</tr>';
       }
       // https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_5434.gif
@@ -271,6 +284,11 @@ const x = document.getElementById("T2");
   } else {
     x.style.display = "none";
   }
+}
+function ShowT2_A(){
+ document.getElementById("myTable2").scrollIntoView();
+  
+  
 }
 function ShowT3(){
 	$("#T").html('');
@@ -439,9 +457,12 @@ $("#T3").html('');
 <a href="https://histock.tw/twclass/A009"  target="_blank">電子</a>
 <a href="Q共用.html"  target="_blank">Q共用</a>
 <label for="text"><a href="https://www.wantgoo.com/stock/ranking/top-gainer"  target="_blank"> 排行&nbsp &nbsp</a></label>
-<button type="button" onclick="ShowT2()">ShowList</button><button type="button" onclick="ShowT3()">技術線圖</button>
+<button type="button" onclick="ShowT2_A()">ShowList</button>
+
 <select id="select_sh" onchange="Google_sht_R()";>
-	<!--  <option value="" selected="selected">請選擇Sheet</option>  -->
+	<!--  <option value="" selected="selected">請選擇Sheet</option> 
+	<button type="button" onclick="ShowT3()">技術線圖</button>
+	-->
     <option value="List">List</option>
             
 </select>
@@ -461,7 +482,7 @@ $("#T3").html('');
 <div id="T3" class="iframe-container">
 
 </div>
-<table id="myTable2" style="width:90%"  style="display: none;">   </table>
+<table class="showtable" id="myTable2" style="width:90%"  style="display: none;">   </table>
 <iframe  src="https://histock.tw/stock/broker8.aspx" enableviewstate="True" frameborder="no" vspace="0" hspace="0"  width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
 <iframe  src="https://histock.tw/tw" enableviewstate="True" frameborder="no" vspace="0" hspace="0"  width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
 
