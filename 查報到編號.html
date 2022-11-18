@@ -23,7 +23,7 @@
   font-size: 16px;
 }
 
-            .container {  display: flex;
+	.container {  display: flex;
 			
 			}
 	table {
@@ -59,23 +59,28 @@
 </head>
 <body onload="IniTitle()">
     <!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> 
-    <h2 >&nbsp&nbsp &nbsp查報到編號</h2>  -->
+    <h2 >&nbsp&nbsp &nbsp查報到編號</h2> 
+ <a href="https://youtu.be/oLQVo89k7L0">聖誕慶祝會直播</a>
+	
 	<div class="container ">
-	<h3>查報到序號 &nbsp&nbsp &nbsp</h3> <a href="https://youtu.be/oLQVo89k7L0">聖誕慶祝會直播</a>
+	<h2>查報到序號 &nbsp&nbsp </h2> 
+	<img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=https://bit.ly/3sufNMo &amp;size=60x60"></a>
 	 
-	 </div>
-	 
+</div>
+	--> 
            
          
 				
     <div class="container1 ">
-       
-			<input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Tel2()">
-            <button onclick="Query_Tel2()" id='myBtn'>查詢</button>
-         <img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=https://bit.ly/3sufNMo &amp;size=60x60"></a>
+      
+	 
+	  <input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Tel2()">
+          
+         
         <!--  <a href="https://bit.ly/3sufNMo">
 		<p>報到編號</p> 
-		-->
+		  <button onclick="Query_Tel2()" id='myBtn'>查詢</button>
+		
 		 
        
     </div>
@@ -84,6 +89,7 @@
          
 		<table id="myTable1" style="width:90%" class="table"></table>
 	</div>
+	-->
     <script>
 	  var Btitle_ptr = ["https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594",
 				 "https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
@@ -100,11 +106,11 @@
 	});
 	Read_SheetData();
 	async function  Read_SheetData(){
-		document.querySelector("#myTable1").innerHTML = '';
+		//document.querySelector("#myTable1").innerHTML = '';
 		await RsheetData(Btitle_ptr[0],'報名清單')
 		.then(data=> {
 				
-				TableShow(data,"#myTable1");
+			//	TableShow(data,"#myTable1");
 				data.shift();
 				return data.map((e) => ` ${e[0]} ${e[1]}-[${e[3]}]@${e[4]}--${e[6]}`	)
 				})
@@ -113,6 +119,7 @@
 			});
 		
 		
+
 		
 	}
 	
