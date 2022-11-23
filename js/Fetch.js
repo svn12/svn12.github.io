@@ -254,7 +254,7 @@ function get_video_id(url) {
     return (url[2] !== undefined) ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
 }
 //---------------
-		function autocomplete_CH(inp, arr,callback) {
+function autocomplete_CH(inp, arr,callback,parent_elem) {
 		// -----------------------
 		  /*the autocomplete function takes two arguments,
 		  the text field element and an array of possible autocompleted values:*/
@@ -264,6 +264,7 @@ function get_video_id(url) {
 			  let start_pos,mmatch,a, b, i, val = this.value;
 			  /*close any already open lists of autocompleted values*/
 			  closeAllLists();
+			  if(parent_elem!=null)parent_elem.setAttribute("style","display:block;"); //2022/11/23
 			  if (!val) { return false;}
 			  currentFocus = -1;
 			  /*create a DIV element that will contain the items (values):*/
@@ -308,9 +309,16 @@ function get_video_id(url) {
 					  /*close the list of autocompleted values,
 					  (or any other open lists of autocompleted values:*/
 					  closeAllLists();
+					  if(parent_elem!=null)parent_elem.setAttribute("style","display:block;"); //2022/11/23
 				  });
 				  a.appendChild(b);
 				}
+			  }
+			  if(a.childNodes.length>0 && parent_elem!=null)
+			  {
+				  parent_elem.setAttribute("style","display:none;");
+			  }else{
+				  parent_elem.setAttribute("style","display:block;"); //2022/11/23
 			  }
 		  });
 		  /*execute a function presses a key on the keyboard:*/

@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查報到序號</title>
+	
     <link rel="stylesheet1" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <title>查報到序號</title>
-   
-	<script src="js/Fetch.js"></script>
+	
+	<script src="../js/Fetch.js"></script>
     <style> 
 
 .button {
@@ -58,7 +59,14 @@
             </style>
 </head>
 <body onload="IniTitle()">
-    <!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> 
+    <!-- 
+	
+    <link rel="stylesheet1" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	
+	<h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> 
     <h2 >&nbsp&nbsp &nbsp查報到編號</h2> 
  <a href="https://youtu.be/oLQVo89k7L0">聖誕慶祝會直播</a>
 	
@@ -69,13 +77,13 @@
 </div>
 	--> 
            
-         
-				
-    <div class="container1 ">
+     <div class="container1 ">    
+	
+	<input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Tel2()">
+       			
+    
       
-	 
-	  <input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Tel2()">
-          
+	    
          
         <!--  <a href="https://bit.ly/3sufNMo">
 		<p>報到編號</p> 
@@ -84,13 +92,14 @@
 		 <p id="show"></p>
        
     </div>
+	-->
 	
     <div class="table-responsive table-striped"">
-        
+        <p id="show"></p>
          
 		<table id="myTable1" style="width:90%" class="table"></table>
 	</div>
--->	
+	
     <script>
 	  var Btitle_ptr = ["https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594",
 				 "https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
@@ -106,17 +115,19 @@
 	}
 	});
 	Read_SheetData();
+	
 	async function  Read_SheetData(){
 		//document.querySelector("#myTable1").innerHTML = '';
 		await RsheetData(Btitle_ptr[0],'報名清單')
 		.then(data=> {
-				
-			//	TableShow(data,"#myTable1");
+				TableShow(data,"#myTable1");
 				data.shift();
 				return data.map((e) => ` ${e[0]} ${e[1]}-[${e[3]}]@${e[4]}--${e[6]}`	)
 				})
 		.then(arr=>{
-				autocomplete_CH(document.getElementById("location-input"), arr,Query_Tel2);	
+				//document.querySelector("#myTable1").setAttribute("style","display:none;");
+				autocomplete_CH(document.getElementById("location-input"), arr,Query_Tel2,document.querySelector("#myTable1"));
+			//	document.querySelector("#myTable1").setAttribute("style","display:block;");
 			});
 		
 		
