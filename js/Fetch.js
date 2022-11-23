@@ -255,7 +255,7 @@ function get_video_id(url) {
 }
 //---------------
 function autocomplete_CH(inp, arr,callback,parent_elem) {
-		// -----------------------
+		// ----------------------
 		  /*the autocomplete function takes two arguments,
 		  the text field element and an array of possible autocompleted values:*/
 		  var currentFocus;
