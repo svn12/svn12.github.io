@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>查報到序號</title>
+    <title>聖誕愛餐預備</title>
 	
     <link rel="stylesheet1" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -11,6 +11,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 	
 	<script src="../js/Fetch.js"></script>
+	<script>
+	const shtUrl='https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit?usp=sharing'
+	</script>
+	
     <style> 
 
 .button {
@@ -58,7 +62,7 @@
 			
             </style>
 </head>
-<body onload="IniTitle()">
+<body onload="GSname()">
     <!-- 
 	
     <link rel="stylesheet1" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -76,58 +80,46 @@
 	 
 </div>
 	--> 
-           
-     <div class="container1 ">    
-	
-	<input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Tel2()">
-       			
+	 <div class="container1">  
+    <select class="form-select" id="select_sh" onchange="Read_SheetData()" aria-label="label for the select">  </select>
+	<!-- <h3>&nbsp &nbsp</h3> -->
+	<input type="text" placeholder="姓名城市關鍵字" id="location-input" > 
+    <!-- <a href="https://youtu.be/oLQVo89k7L0">聖誕慶祝會直播</a> -->
+     <!-- onclick="Query_Tel2()"> -->
     
-      
-	    
-         
-        <!--  <a href="https://bit.ly/3sufNMo">
-		<p>報到編號</p> 
-		  <button onclick="Query_Tel2()" id='myBtn'>查詢</button>
-		
-		 <p id="show"></p>
-       
-    </div>
-	-->
 	
     <div class="table-responsive table-striped"">
         <p id="show"></p>
          
-		<table id="myTable1" style="width:90%" class="table"></table>
+		<!-- <table id="myTable1" style="width:90%" class="table"></table> -->
+		<table id="myTable1"  class="table"></table>
 	</div>
 	
     <script>
-		const shtname='報名清單2021'
-	  var Btitle_ptr = ["https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594",
-				 "https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
-                  "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
-                // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
-                ];
+	 
 	var input = document.getElementById('location-input');
-	input.addEventListener("keyup", function(event) {
+	/* input.addEventListener("keyup", function(event) {
 	if (event.keyCode === 13) {
 	   event.preventDefault();
 	 //  document.getElementById("myBtn").click();
-	   
+	//    Dummy();
+    //    Read_SheetData();
 	}
-	});
-	Read_SheetData();
+	}); */
+	
 	
 	async function  Read_SheetData(){
 		//document.querySelector("#myTable1").innerHTML = '';
-		await RsheetData(Btitle_ptr[0],shtname)
+		await RsheetData(shtUrl,document.getElementById("select_sh").value)
 		.then(data=> {
 				TableShow(data,"#myTable1");
 				data.shift();
-				return data.map((e) => ` ${e[0]} ${e[1]}-[${e[3]}]@${e[4]}--${e[6]}`	)
+				return data.map((e) => ` ${e[1]}-(${e[2]})[${e[3]}]@${e[4]}-${e[6]}`	)
 				})
 		.then(arr=>{
 				//document.querySelector("#myTable1").setAttribute("style","display:none;");
-				autocomplete_CH(document.getElementById("location-input"), arr,Query_Tel2,document.querySelector("#myTable1"));
+				// autocomplete_CH(document.getElementById("location-input"), arr,Query_Tel2,document.querySelector("#myTable1"));
+				autocomplete_CH(document.getElementById("location-input"), arr,Dummy,document.querySelector("#myTable1"));
 			//	document.querySelector("#myTable1").setAttribute("style","display:block;");
 			});
 		
@@ -136,11 +128,43 @@
 		
 	}
 	
-           function IniTitle() {
-               
-            }
-        
-        
+function Dummy(){
+    document.getElementById('location-input').value='';
+}
+function  GSname(){
+  
+  var select_sh=$('#select_sh').val();
+  var a = {
+	sheetUrl:shtUrl
+                    };
+	$("#select_sh").empty();	
+	//document.getElementById("query").style.display = "none";
+	document.getElementById("show").innerHTML = '';
+   $.get('https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec', a, function (data) {
+                
+         // if(document.getElementById("select_url").value==a.sheetUrl){  
+		  if(a.sheetUrl==a.sheetUrl){  
+              /*  $('#select_sh').append($('<option>', { 
+                      value: '',
+                      text : `---請選擇---- ${$("#select_url option:selected").text()} `
+				  }));
+				  */
+                       
+                data = JSON.parse(data);
+                $.each(data, function (i, item) {
+                    $('#select_sh').append($('<option>', { 
+                      value: item.Sname,
+                      text : item.Sname 
+					}));
+				
+				});
+				Read_SheetData();;
+			}   
+		});
+			
+}
+
+		 
          function        Query_Tel2(){
                
                 var findString = document.getElementById('location-input').value;
@@ -150,13 +174,13 @@
                 if(findString=='!' || findString=='！'){ findString = '';}
                 document.getElementById("show").innerHTML = '查詢 "*' + findString+'*" 中 ....';
                 var $show = $('#show');
-                var shURL= Btitle_ptr[0];
+               
                 // console.log(shURL);
                 var a = {
                     // sheetUrl: 'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing',
                     // sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
-                    sheetUrl:shURL,
-                    sheetTag: shtname,
+                    sheetUrl:shtUrl,
+                    sheetTag: document.getElementById("select_sh").value,
                     findSting: findString
                     };
 				//const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';

@@ -92,6 +92,7 @@
 	</div>
 -->	
     <script>
+	const shtname='報名清單2021'
 	  var Btitle_ptr = ["https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594",
 				 "https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
                   "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
@@ -102,13 +103,13 @@
 	if (event.keyCode === 13) {
 	   event.preventDefault();
 	 //  document.getElementById("myBtn").click();
-	   
+	
 	}
 	});
 	Read_SheetData();
 	async function  Read_SheetData(){
 		//document.querySelector("#myTable1").innerHTML = '';
-		await RsheetData(Btitle_ptr[0],'報名清單')
+		await RsheetData(Btitle_ptr[0],shtname)
 		.then(data=> {
 				
 			//	TableShow(data,"#myTable1");
@@ -144,7 +145,7 @@
                     // sheetUrl: 'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing',
                     // sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
                     sheetUrl:shURL,
-                    sheetTag: '報名清單',
+                    sheetTag: shtname  ,//'報名清單2021',
                     findSting: findString
                     };
 				//const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
