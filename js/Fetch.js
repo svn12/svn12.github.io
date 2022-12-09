@@ -264,7 +264,10 @@ function autocomplete_CH(inp, arr,callback,parent_elem) {
 			  let start_pos,mmatch,a, b, i, val = this.value;
 			  /*close any already open lists of autocompleted values*/
 			  closeAllLists();
-			  if(parent_elem!=null)parent_elem.setAttribute("style","display:table;"); //2022/11/23
+			  if(parent_elem!=null){
+				// parent_elem.setAttribute("style","display:table;");
+				parent_elem.style.display=""
+			} //2022/11/23}
 			  if (!val) { return false;}
 			  currentFocus = -1;
 			  /*create a DIV element that will contain the items (values):*/
@@ -309,7 +312,10 @@ function autocomplete_CH(inp, arr,callback,parent_elem) {
 					  /*close the list of autocompleted values,
 					  (or any other open lists of autocompleted values:*/
 					  closeAllLists();
-					  if(parent_elem!=null)parent_elem.setAttribute("style","display:table;"); //2022/11/23
+					  if(parent_elem!=null){
+					  	// parent_elem.setAttribute("style","display:table;"); //2022/11/23
+						  parent_elem.style.display=""
+					  }
 				  });
 				  a.appendChild(b);
 				}
@@ -318,7 +324,8 @@ function autocomplete_CH(inp, arr,callback,parent_elem) {
 			  {
 				  parent_elem.setAttribute("style","display:none;");
 			  }else{
-				  parent_elem.setAttribute("style","display:table;"); //2022/11/23
+				//   parent_elem.setAttribute("style","display:table;"); //2022/11/23
+				  parent_elem.style.display=""
 			  }
 		  });
 		  /*execute a function presses a key on the keyboard:*/
