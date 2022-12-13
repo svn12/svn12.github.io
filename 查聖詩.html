@@ -155,7 +155,8 @@
 	 -->
     <br>
         <select id='selectTle' onchange="testRD()">
-        <option value="List">聖歌隊</option>
+        <option value="List">聖歌隊雅音</option>
+		<option value="聖歌隊2">聖歌隊自動</option>
 		<option selected="selected" value="新聖詩">新聖詩</option>
 		<option value="啟應文">啟應文</option>
 		<option value="聖詩">聖詩</option>
@@ -314,8 +315,14 @@
     
 
                                 else {
-                                    if(data[x][e]!="")
-                                        txt +='<td><a href="' + data[x][e] + '" target="_blank">連結</a></td>';
+                                    if(data[x][e]!=""){
+										//if(data[x][e].includes('you')||data[x][e].includes('http')){
+										if(/you|http/gi.test(data[x][e])){
+												txt +='<td><a href="' + data[x][e] + '" target="_blank">連結</a></td>';
+											}else{
+												txt += "<td>" + data[x][e] + "</td>";
+											}
+										}
                                 }
                             })
                             txt += "</tr>";
