@@ -81,6 +81,7 @@
 </div>
 	--> 
 	 <div class="container1">  
+	  <a href="https://bit.ly/3HpgjTz"><img width="80" height="80" src="https://chart.googleapis.com/chart?cht=qr&amp;chl=https://bit.ly/3HpgjTz&amp;chld=L|0&amp;chs=150" border="0"></a>
     <select class="form-select" id="select_sh" onchange="Read_SheetData()" aria-label="label for the select">  </select>
 	<!-- <h3>&nbsp &nbsp</h3> -->
 	<input type="text" placeholder="姓名關鍵字" id="location-input" > 
@@ -114,7 +115,7 @@
 		.then(data=> {
 				TableShow(data,"#myTable1");
 				data.shift();
-				return data.map((e) => ` ${e[1]}-(${e[2]})[${e[3]}]@${e[4]}-${e[6]}`	)
+				return data.map((e) => `${e[0]} ${e[1]}-(${e[2]})[${e[3]}]@${e[4]}-${e[6]}`	)
 				})
 		.then(arr=>{
 				//document.querySelector("#myTable1").setAttribute("style","display:none;");
