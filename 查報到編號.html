@@ -114,7 +114,7 @@
 				
 			//	TableShow(data,"#myTable1");
 				data.shift();
-				return data.map((e) => ` ${e[0]} ${e[1]}-[${e[3]}]@${e[4]}--${e[6]}`	)
+				return data.map((e) => ` ${e[0]} ${e[1]}(${e[2]})-[${e[3]}]@${e[4]}--${e[6]}`	)
 				})
 		.then(arr=>{
 				autocomplete_CH(document.getElementById("location-input"), arr,Query_Tel2);	
