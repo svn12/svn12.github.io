@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>早安圖</title>
+    <style>
+        .qqwe {
+            border: 10px solid #fff;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+
+        }
+
+        .acv {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px 20px;
+        }
+
+        body {
+            background-color: #343434;
+        }
+
+        /* #cover {
+            width: 800px;
+            height: 800px;
+            margin: 0 auto;
+        } */
+
+        #cover>img,
+        #cover>a>img {
+            /* float: left; */
+            border: 2px solid black;
+            width: 10%;
+            margin: 1%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cover">
+        <!-- <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (898).jpg">
+        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (898).jpg"></a>
+        
+        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (1).jpg">
+        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (1).jpg"></a>
+        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (2).jpg">
+        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (2).jpg"></a>
+        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (198).jpg">
+        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (198).jpg"></a>
+        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (298).jpg">
+        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (298).jpg"></a>
+        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (398).jpg">
+        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (398).jpg"></a>
+        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (498).jpg">
+        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (498).jpg"></a>
+        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (598).jpg">
+        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (598).jpg"></a>
+        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (698).jpg">
+        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (698).jpg"></a> -->
+
+
+
+    </div>
+
+
+    <script>
+        const cover = document.querySelector('#cover');
+        const showFig = function (start, end) {
+            cover.innerHTML = '';
+            let html = '';
+            for (let i = start; i <= end; i++) {
+                html += `<a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (${i}).jpg">
+                        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (${i}).jpg"></a>
+                        `;
+            }
+            cover.innerHTML = html;
+        };
+        showFig(1, 1477);
+    </script>
+</body>
+
+</html>
