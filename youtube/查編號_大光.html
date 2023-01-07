@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查大光選經文</title>
+
+    <link rel="stylesheet1" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script src="../js/Fetch.js"></script>
+    <style>
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+        .container {
+            display: flex;
+
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            overflow-x: scroll;
+            overflow-y: scroll;
+        }
+
+        th {
+            background: yellow;
+            position: sticky;
+            top: 0;
+            /* Don't forget this, required for the stickiness */
+            box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+        }
+
+        tr:nth-child(even) {
+            /* background-color: #f2f2f2 
+		overflow-y: scroll;
+		display: block;
+		position: fixed;
+		top: 30;
+		*/
+            background-color: lightblue;
+        }
+
+        thead {
+            background-color: orange;
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+	
+    <link rel="stylesheet1" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	
+	<h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> 
+    <h2 >&nbsp&nbsp &nbsp查報到編號</h2> 
+ <a href="https://youtu.be/oLQVo89k7L0">聖誕慶祝會直播</a>
+	
+	<div class="container ">
+	<h2>查報到序號 &nbsp&nbsp </h2> 
+	<img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=https://bit.ly/3sufNMo &amp;size=60x60"></a>
+	 
+</div>
+	-->
+
+    <div class="container1 ">
+
+        <!-- <input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Data()"> -->
+        <input type="text" placeholder="經文關鍵語" id="location-input">
+
+        <!--  <a href="https://bit.ly/3sufNMo">
+		<p>報到編號</p> 
+		  <button onclick="Query_Data()" id='myBtn'>查詢</button>
+		
+		 <p id="Tshow"></p>
+       
+    </div>
+	-->
+
+        <div class="table-responsive table-striped"">
+        
+        <p id='show'></p>
+        <table id='myTable1' style=" width:90%" class="table">
+            </table>
+
+
+        </div>
+        <script>
+            const shtname = '大光經文';
+            let All_data = [];
+            let GfileName = "https://docs.google.com/spreadsheets/d/1H0LF--8V1lRtE3tyUP1XJ29e0jLwDeLm-k7Whfxj86Y/edit?usp=sharing";
+            var input = document.getElementById('location-input');
+            input.addEventListener("keydown", function (event) {
+                // event.preventDefault();
+                if (document.getElementById('location-input').value != '') {
+                    document.querySelector('#show').style.display = 'none';
+                }
+                if (event.keyCode === 13) {
+                    // event.preventDefault();
+                    //  document.getElementById("myBtn").click();
+                    Query_Data();
+                }
+                if (event.keyCode === 8) {
+                    // event.preventDefault();
+                    //  document.getElementById("myBtn").click();
+                    if (document.getElementById('location-input').value.length === 1) {
+                        document.getElementById('location-input').value = '';
+                        document.querySelector("#myTable1").style.display = '';
+                        Query_Data();
+                    }
+                }
+                console.log(event);
+                // Query_Data();
+            });
+            Read_SheetData();
+
+            async function Read_SheetData() {
+                //document.querySelector("#myTable1").innerHTML = '';
+                await RsheetData(GfileName, shtname)
+                    .then(data => {
+                        TableShow(data, "#myTable1");
+                        All_data = [...data];
+                        data.shift();
+                        return data.map((e) => ` ${e[3]}-${e[4]}-[${e[0]} @${e[1]}]--${e[2]}`);
+                    })
+                    .then(arr => {
+                        // 
+
+                        // if (document.querySelector('#show').textContent != '') {
+                        //     document.querySelector('#show').style.display = 'none';
+                        // } else {
+                        //     document.querySelector('#show').style.display = '';
+                        // }
+                        autocomplete_CH(document.getElementById("location-input"), arr, Query_Data, document.querySelector("#myTable1"));
+
+                    });
+
+
+
+
+            }
+
+            function IniTitle() {
+
+            }
+
+            function Query_Data() {
+                const findString = document.getElementById('location-input').value;
+                document.getElementById('location-input').value = '';
+                document.querySelector('#location-inputautocomplete-list').innerHTML = '';
+                let headers = All_data.shift();
+                res = All_data.filter(ele => ele.some(elem => elem.includes(findString)));
+                res.unshift(headers);
+                All_data.unshift(headers);
+                TableShow(res, "#myTable1");
+                document.querySelector("#myTable1").style.display = '';
+            }
+        </script>
+</body>
+
+</html>
