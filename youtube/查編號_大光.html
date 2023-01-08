@@ -170,7 +170,7 @@
                 document.getElementById('location-input').value = '';
                 document.querySelector('#location-inputautocomplete-list').innerHTML = '';
                 let headers = All_data.shift();
-                res = All_data.filter(ele => ele.some(elem => elem.includes(findString)));
+                res = All_data.filter(ele => ele.some(elem => elem.toString().includes(findString)));
                 res.unshift(headers);
                 All_data.unshift(headers);
                 TableShow(res, "#myTable1");

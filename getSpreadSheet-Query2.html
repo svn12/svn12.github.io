@@ -1,419 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <title>查姓名電話</title>
-    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-    <style> 
-       .container {  display: flex;}
-	   		  
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	<title>查姓名電話</title>
+	<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="js/Fetch.js"></script>
+	<style>
+		.container {
+			display: flex;
+		}
+
 		/*the container must be positioned relative:*/
 		.autocomplete {
-		  position: relative;
-		  display: inline-block; 
+			position: relative;
+			display: inline-block;
 		}
 
 		input {
-		  border: 1px solid transparent;
-		  background-color: #f1f1f1;
-		  padding: 10px;
-		  font-size: 16px;
+			border: 1px solid transparent;
+			background-color: #f1f1f1;
+			padding: 10px;
+			font-size: 16px;
 		}
 
 		input[type=text] {
-		  background-color: #f1f1f1;
-		  width: 100%;
+			background-color: #f1f1f1;
+			width: 100%;
 		}
 
 		input[type=submit] {
-		  background-color: DodgerBlue;
-		  color: #fff;
-		  cursor: pointer;
+			background-color: DodgerBlue;
+			color: #fff;
+			cursor: pointer;
 		}
 
 		.autocomplete-items {
-		  position: absolute;
-		  border: 1px solid #d4d4d4;
-		  border-bottom: none;
-		  border-top: none;
-		  z-index: 99;
-		  /*position the autocomplete items to be the same width as the container:*/
-		  top: 100%;
-		  left: 0;
-		  right: 0;
+			position: absolute;
+			border: 1px solid #d4d4d4;
+			border-bottom: none;
+			border-top: none;
+			z-index: 99;
+			/*position the autocomplete items to be the same width as the container:*/
+			top: 100%;
+			left: 0;
+			right: 0;
 		}
 
 		.autocomplete-items div {
-		  padding: 10px;
-		  cursor: pointer;
-		  background-color: #fff; 
-		  border-bottom: 1px solid #d4d4d4; 
+			padding: 10px;
+			cursor: pointer;
+			background-color: #fff;
+			border-bottom: 1px solid #d4d4d4;
 		}
 
 		/*when hovering an item:*/
 		.autocomplete-items div:hover {
-		  background-color: #e9e9e9; 
+			background-color: #e9e9e9;
 		}
 
 		/*when navigating through the items using the arrow keys:*/
 		.autocomplete-active {
-		  background-color: DodgerBlue !important; 
-		  color: #ffffff; 
-		}  
-    </style>
+			background-color: DodgerBlue !important;
+			color: #ffffff;
+		}
+	</style>
 </head>
-<body >
-    <!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> -->
-    <h2 >&nbsp&nbsp &nbsp姓名電話資料查詢(!查詢)</h2>
-    <div class="container ">
-        <!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> 
+
+<body>
+	<!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> -->
+	<h2>&nbsp&nbsp &nbsp姓名電話資料查詢</h2>
+	<div class="container ">
+		<!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> 
 		
             <input type="text" class="form-control" placeholder="姓名電話關鍵字1" id="location-input1">
 		-->
-        <form id="location-form" class="form-inline">
-            <!-- <input type="text" id="location-input" > -->
-            <label for="text">查詢姓名&nbsp:&nbsp</label>
-			<div  class="autocomplete" >
-			
-			<input autocomplete="off" type="text"  class="form-control" placeholder="姓名電話關鍵字" id="location-input" />
+		<form id="location-form" class="form-inline">
+			<!-- <input type="text" id="location-input" > -->
+			<label for="text">查詢姓名&nbsp:&nbsp</label>
+			<div class="autocomplete">
+
+				<input autocomplete="off" type="text" class="form-control" placeholder="姓名電話關鍵字" id="location-input" />
 			</div>
-			<input id="btnClickMe" type="button" value="查詢" />
-            <label for="select">&nbsp&nbsp來源&nbsp:&nbsp</label>
-            
-                
-            <select id="selShurl" class="form-control" onchange="testRD()"  >
-            
-            </select>
-            
-            
+			<!-- <input id="btnClickMe" type="button" value="查詢" /> -->
+			<label for="select">&nbsp&nbsp來源&nbsp:&nbsp</label>
 
-            <!-- <button type="submit" class="btn-primary ">Submit</button> -->
-        </form>
-       
-    </div>
-    <div class="table-responsive">
-        <p id="show"></p>
-         </div>
-    
-    <script>
-			$(document).ready(function () {
-				IniTitle();
-				testRD();
-            $(':input').change(function () {
-                //  alert(this.value);
-                // qTel();
-                })
-            
-            $('#btnClickMe').click(function () {
-                // alert($(this).val()+ '  ---' + txtptr.val());
-                 Query_Tel();
-            })
-            
-           
+
+			<select id="selShurl" class="form-control" onchange="testRD()">
+
+			</select>
+
+
+
+			<!-- <button type="submit" class="btn-primary ">Submit</button> -->
+		</form>
+
+	</div>
+	<div class="table-responsive">
+		<p id="show"></p>
+		<table id='myTable1' style=" width:90%" class="table">
+		</table>
+	</div>
+
+	<script>
+		$(document).ready(function () {
+			IniTitle();
+			testRD();
+			$(':input').change(function () {
+				//  alert(this.value);
+				// qTel();
 			});
-		var sht_ptr=['List','夫婦團契','聖歌隊','List']
-           function IniTitle() {
-                // var Btitle = ["南門通訊錄","南門資料庫","長青樂活"
-                // ];
-                // var Btitle_ptr = ["'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing'",
-                // "'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing'",
-                // "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
-                // // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
-                // ];
-                var Btitle = ["南門通訊錄",'夫婦團契','聖歌隊',"長青樂活"];
-                var Btitle_ptr = ["https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
+
+			// $('#btnClickMe').click(function () {
+			// 	// alert($(this).val()+ '  ---' + txtptr.val());
+			// 	Query_Tel();
+			// });
+
+
+		});
+		var sht_ptr = ['List', '夫婦團契', '聖歌隊', 'List'];
+		let All_data = [];
+		function IniTitle() {
+
+			var Btitle = ["南門通訊錄", '夫婦團契', '聖歌隊', "長青樂活"];
+			var Btitle_ptr = ["https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
 				"https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
 				"https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
-                 "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
-                // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
-                ];
-				
-                var select = document.getElementById("selShurl");
-                // var options = ["10", "11", "12", "13", "14","15","16"];
-                // alert(id, select.options[1].value);
+				"https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
+				// "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
+			];
 
-                for (var i = 1; i <= Btitle.length; i++) {
-                    // var opt = options[i];
-                    var el = document.createElement("option");
-                    el.textContent = Btitle[i - 1];
-                    el.value = Btitle_ptr[i - 1];
-                    select.appendChild(el);
-                    // select.options.add(el);
-                    // alert(select.options[i-1].value);
-                }
+			var select = document.getElementById("selShurl");
 
-
-            }
-        /* Get location form
-            var locationForm = document.getElementById('location-form');
-
-            // Listen for submit
-            locationForm.addEventListener('submit', Query_Tel);
-			document.getElementById('location-input').addEventListener('change', Query_Tel);
-			*/
-			
-        function Query_Tel() {
-                // e.preventDefault();
-                 Query_Tel2();
-        }
-         function        Query_Tel2(){
-                
-                var findString = document.getElementById('location-input').value;
-                // console.log(findString);
-                if(findString.length>0){
-                    
-                if(findString=='!'){ findString = '';}
-                document.getElementById("show").innerHTML = '查詢 "*' + findString+'*" 中 ....';
-                var $show = $('#show');
-                var shURL= document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
-                // console.log(shURL);
-				
-                var a = {
-                    // sheetUrl: 'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing',
-                    // sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
-                    sheetUrl:shURL,
-                    sheetTag: sht_ptr[document.getElementById("selShurl").selectedIndex], //'List',
-                    findSting: findString
-                    };
-				const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
-                $.get(Search_API, a, function (data) {    
-                //$.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
-                    if(data.length==2){
-                        document.getElementById("show").innerHTML = '查無資料 請重新輸入再查詢';
-                    }
-                    else  if (data.length==0){ 
-                        document.getElementById("show").innerHTML = 'sheet Name 須為 "List"';}
-                    else {
-
-                    // console.log(data.length);
-                    // console.log(data);
-                    data = JSON.parse(data);
-                    var heads=[];
-                    for(head in data[0]){
-                        heads.push(head);
-                    }
-                    // console.log(heads.length);
-
-                    var txt='';
-                    txt += '<table  class="table  table-hover "> <thead><tr>';
-                    // heads.forEach(el=>console.log(el));
-                    heads.forEach(function(e){
-                        txt += "<th>" + e + "</th>";
-
-                    })
-                    
-                    txt+="</tr></thead><tbody>";
-                    // console.log(txt);
-
-                    for (x in data) {
-                        txt += "<tr>";
-                        // console.log(x);
-                        // console.log(data[x]);
-                        heads.forEach(function(e){
-                        txt += "<td>" + data[x][e] + "</td>";
-
-                        })
-                        txt += "</tr>";
-                        // txt += "<tr><td>" + data[x].Name + "</td><td>"+ data[x].手機 +"</td></tr>";
-                    }
-                    txt += "</tbody></table>"
-                    document.getElementById("show").innerHTML = txt;
-
-
-                    var arr = [];
-                    for (var i = 0; i < (a.endRow - a.row + 1); i++) {
-                        arr[i] = d.splice(0, (a.endCol - a.col + 1));
-                        $show.append(arr[i] + '<br/>');
-                    }
-                    }
-
-                });
-            };
-        }
-		//---------------
-		function autocomplete_CH(inp, arr) {
-		// -----------------------
-		  /*the autocomplete function takes two arguments,
-		  the text field element and an array of possible autocompleted values:*/
-		  var currentFocus;
-		  /*execute a function when someone writes in the text field:*/
-		  inp.addEventListener("input", function(e) {
-			  let start_pos,mmatch,a, b, i, val = this.value;
-			  /*close any already open lists of autocompleted values*/
-			  closeAllLists();
-			  if (!val) { return false;}
-			  currentFocus = -1;
-			  /*create a DIV element that will contain the items (values):*/
-			  a = document.createElement("DIV");
-			  a.setAttribute("id", this.id + "autocomplete-list");
-			  a.setAttribute("class", "autocomplete-items");
-			  /*append the DIV element as a child of the autocomplete container:*/
-			  this.parentNode.appendChild(a);
-			  /*for each item in the array...*/
-			  for (i = 0; i < arr.length; i++) {
-				/*check if the item starts with the same letters as the text field value:
-				if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {  
-				mmatch=arr[i].toUpperCase().match(val.toUpperCase())*/
-				mmatch=arr[i].match(val)
-				if (mmatch ) {
-				  start_pos=mmatch?.index;
-				  /*create a DIV element for each matching element:*/
-				  b = document.createElement("DIV");
-				  /*make the matching letters bold:*/
-				  if(start_pos==0){
-					b.innerHTML = "<strong>" + arr[i].substr(start_pos, val.length) + "</strong>";
-					b.innerHTML += arr[i].substr(val.length);
-				  }else
-				  {
-					b.innerHTML = arr[i].substr(0,start_pos);
-					b.innerHTML += "<strong>" + arr[i].substr(start_pos, val.length) + "</strong>";
-					b.innerHTML += arr[i].substr(start_pos+val.length);
-				  }
-				  
-				  /*insert a input field that will hold the current array item's value:*/
-				  b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-				 // b.innerHTML = arr[i]+"<input type='hidden' value='" + arr[i] + "'>";
-				  /*execute a function when someone clicks on the item value (DIV element):*/
-				  b.addEventListener("click", function(e) {
-					  /*insert the value for the autocomplete text field:*/
-					  inp.value = this.getElementsByTagName("input")[0].value;
-					  Query_Tel2();
-					  /*close the list of autocompleted values,
-					  (or any other open lists of autocompleted values:*/
-					  closeAllLists();
-				  });
-				  a.appendChild(b);
-				}
-			  }
-		  });
-		  /*execute a function presses a key on the keyboard:*/
-		  inp.addEventListener("keydown", function(e) {
-			  var x = document.getElementById(this.id + "autocomplete-list");
-			  if (x) x = x.getElementsByTagName("div");
-			  if (e.keyCode == 40) {
-				/*If the arrow DOWN key is pressed,
-				increase the currentFocus variable:*/
-				currentFocus++;
-				/*and and make the current item more visible:*/
-				addActive(x);
-			  } else if (e.keyCode == 38) { //up
-				/*If the arrow UP key is pressed,
-				decrease the currentFocus variable:*/
-				currentFocus--;
-				/*and and make the current item more visible:*/
-				addActive(x);
-			  } else if (e.keyCode == 13) {
-				/*If the ENTER key is pressed, prevent the form from being submitted,*/
-				e.preventDefault();
-				if (currentFocus > -1) {
-				  /*and simulate a click on the "active" item:*/
-				  if (x) x[currentFocus].click();
-				}
-			  }
-		  });
-		  
-
-		  function addActive(x) {
-			/*a function to classify an item as "active":*/
-			if (!x) return false;
-			/*start by removing the "active" class on all items:*/
-			removeActive(x);
-			if (currentFocus >= x.length) currentFocus = 0;
-			if (currentFocus < 0) currentFocus = (x.length - 1);
-			/*add class "autocomplete-active":*/
-			x[currentFocus].classList.add("autocomplete-active");
-		  }
-		  function removeActive(x) {
-			/*a function to remove the "active" class from all autocomplete items:*/
-			for (var i = 0; i < x.length; i++) {
-			  x[i].classList.remove("autocomplete-active");
+			for (var i = 1; i <= Btitle.length; i++) {
+				// var opt = options[i];
+				var el = document.createElement("option");
+				el.textContent = Btitle[i - 1];
+				el.value = Btitle_ptr[i - 1];
+				select.appendChild(el);
+				// select.options.add(el);
+				// alert(select.options[i-1].value);
 			}
-		  }
-		  function closeAllLists(elmnt) {
-			/*close all autocomplete lists in the document,
-			except the one passed as an argument:*/
-			var x = document.getElementsByClassName("autocomplete-items");
-			for (var i = 0; i < x.length; i++) {
-			  if (elmnt != x[i] && elmnt != inp) {
-				x[i].parentNode.removeChild(x[i]);
-			  }
-			}
-		  }
-		  /*execute a function when someone clicks in the document:*/
-		  document.addEventListener("click", function (e) {
-			  closeAllLists(e.target);
-		  });
-		}
-		async function testRD(){
-			$('input[type="text"]').val('');
-			document.getElementById("show").innerHTML = '';
-			const fmain=$('#selectTle option:selected').val();//'https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit?usp=sharing';
-			const shURL=$('#selShurl option:selected').val(); //document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
-			
-			const a = {
-				
-				sheetUrl:shURL,
-				sheetTag: sht_ptr[document.getElementById("selShurl").selectedIndex], //'List',sheetTag: 'List',
-				key:1
-				};
-			const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
-			const RSheet2Json_APIV5='https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec'
-			const RSheet2Json_APIV6='https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec'
-
-			tt= await getJSON(	RSheet2Json_APIV6,a).then(function(data) {
-						//console.log(data);
-						return  data;
-						})
-			//console.log(tt);
-			/*
-			let arr=[];
-				for(t in tt){
-					if( arr.indexOf(tt[t][0]) <0){
-					arr.push(tt[t][0]);
+			var input = document.getElementById('location-input');
+			input.addEventListener("keydown", function (event) {
+				// event.preventDefault();
+				if (document.getElementById('location-input').value != '') {
+					document.querySelector('#show').style.display = 'none';
+				}
+				if (event.keyCode === 13) {
+					// event.preventDefault();
+					//  document.getElementById("myBtn").click();
+					Query_Data();
+				}
+				if (event.keyCode === 8) {
+					// event.preventDefault();
+					//  document.getElementById("myBtn").click();
+					if (document.getElementById('location-input').value.length === 1) {
+						document.getElementById('location-input').value = '';
+						document.querySelector("#myTable1").style.display = '';
+						Query_Data();
 					}
 				}
-			arr.shift();
-			*/
-			let arr=[];
-			let col_len=tt[0].length;
-			let row_len=tt.length;
-			
-			for (j=0;j<col_len;j++){
-				for(i=1;i<row_len;i++){
-				let	elem=tt[i][j].toString();
-						if(elem!=""){
-							if( arr.indexOf(elem) <0){
-								arr.push(elem);
-							}
-						}
-				}
-			}
-			
-			autocomplete_CH(document.getElementById("location-input"), arr);
-			//return tt;	
+				console.log(event);
+				// Query_Data();
+			});
+
+		}
+
+
+		function Query_Tel() {
+			// e.preventDefault();
+			// Query_Tel2();
+			Query_Data();
+		}
+
+		function Query_Data() {
+			const findString = document.getElementById('location-input').value;
+			document.getElementById('location-input').value = '';
+			document.querySelector('#location-inputautocomplete-list').innerHTML = '';
+			let headers = All_data.shift();
+			res = All_data.filter(ele => ele.some(elem => elem.toString().includes(findString)));
+			res.unshift(headers);
+			All_data.unshift(headers);
+			TableShow(res, "#myTable1");
+			document.querySelector("#myTable1").style.display = '';
+		}
+		async function testRD() {
+			$('input[type="text"]').val('');
+			document.getElementById("show").innerHTML = '';
+			document.getElementById("myTable1").innerHTML = '';
+			const fmain = $('#selectTle option:selected').val();//'https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit?usp=sharing';
+			const shURL = $('#selShurl option:selected').val(); //document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
+
+			const a = {
+
+				sheetUrl: shURL,
+				sheetTag: sht_ptr[document.getElementById("selShurl").selectedIndex], //'List',sheetTag: 'List',
+				key: 1
+			};
+
+			const RSheet2Json_APIV2 = 'https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec';
+			const RSheet2Json_APIV5 = 'https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec';
+			const RSheet2Json_APIV6 = 'https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec';
+			await RsheetData(shURL, sht_ptr[document.getElementById("selShurl").selectedIndex])
+				.then(data => {
+					// TableShow(data, "#myTable1");
+					All_data = [...data];
+					data.shift();
+					return data.map((e) => ` [${e[0]}]-${e[1]}-[${e[2]} @${e[3]}]--${e[4]}`);
+				})
+				.then(arr => {
+					// 
+
+					// if (document.querySelector('#show').textContent != '') {
+					//     document.querySelector('#show').style.display = 'none';
+					// } else {
+					//     document.querySelector('#show').style.display = '';
+					// }
+					autocomplete_CH(document.getElementById("location-input"), arr, Query_Data, document.querySelector("#myTable1"));
+
+				});
+			// tt = await getJSON(RSheet2Json_APIV6, a).then(function (data) {
+			// 	//console.log(data);
+			// 	return data;
+			// });
+
+			// let arr = [];
+			// let col_len = tt[0].length;
+			// let row_len = tt.length;
+
+			// for (j = 0; j < col_len; j++) {
+			// 	for (i = 1; i < row_len; i++) {
+			// 		let elem = tt[i][j].toString();
+			// 		if (elem != "") {
+			// 			if (arr.indexOf(elem) < 0) {
+			// 				arr.push(elem);
+			// 			}
+			// 		}
+			// 	}
+			// }
+
+			// autocomplete_CH(document.getElementById("location-input"), arr);
+			// //return tt;	
 		};
 
-		async function getJSON(urlptr,para) {
+		async function getJSON(urlptr, para) {
 			try {
-				  var url = new URL(urlptr);
-				  for (let k in para) { url.searchParams.append(k, para[k]); }
-				  
-				 
-				  const response = await fetch(url);
-				  //let myText = await response.json();//JSON.parse(myObject);// myObject.text();JSON.parse(data)
-				  return response.json();// myObject.text();JSON.parse(data)
-				} catch (error) {
-				   return(error);
-				}
-		  
-			}
-			
+				var url = new URL(urlptr);
+				for (let k in para) { url.searchParams.append(k, para[k]); }
 
-    </script>
+
+				const response = await fetch(url);
+				//let myText = await response.json();//JSON.parse(myObject);// myObject.text();JSON.parse(data)
+				return response.json();// myObject.text();JSON.parse(data)
+			} catch (error) {
+				return (error);
+			}
+
+		}
+
+
+	</script>
 </body>
+
 </html>
