@@ -48,7 +48,8 @@
       padding: 20px;
       font-size: larger;
     }
-    .container .Clock {
+
+    .container .Clock1 {
       position: absolute;
       /* bottom: 0; */
       top: 400px;
@@ -62,11 +63,12 @@
       padding: 20px;
       font-size: larger;
     }
+
     /* Bottom right text */
     .text-block {
       position: absolute;
       top: 10px;
-      /* left: 10%; */
+      left: 10%;
       text-align: center;
       background-color: transparent;
       color: rgb(241, 2, 2);
@@ -86,9 +88,9 @@
     #subj {
       color: yellow;
 
-      letter-spacing: 15px;
+      letter-spacing: 10px;
       /* letter-spacing: 10px; */
-      font-size: 60px;
+      font-size: 75px;
       text-shadow: 3px 3px 1px green;
       /* font-family: 思源黑體 , 微軟正黑體 , 蘋方黑體 , 華康麗黑體 , Helvetica , Arial , sans-serif , serif; */
       font-family: DFKai-SB, 蘋方黑體, 華康麗黑體, Helvetica, Arial, sans-serif, serif;
@@ -98,7 +100,7 @@
       color: red;
       font-family: 蘋方黑體, 華康麗黑體, 思源黑體, 微軟正黑體, Helvetica, Arial, sans-serif, serif;
       /* letter-spacing: 10px; */
-      font-size: 45px;
+      font-size: 40px;
       text-shadow: 2px 2px 1px white;
       /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
     }
@@ -134,15 +136,16 @@
     <div class="content">
       <h1><a href="https://www.youtube.com/channel/UCdBgZC0GhG7uEdn9oEx1L8g" id="church"></a></h1>
       <h1 id="Dtime"></h1>
+      <h1 id="CurTime" style="text-align: right;color: darksalmon;">10:00 AM</h1>
       <!-- <h1 id="church">台北南門長老教會 台語禮拜 </h1>
       <h1 id="Dtime">2023.1.10 10:30</h1> -->
     </div>
     <div class="Clock">
-      <h1 id="CurTime">10:00 AM</h1>
+
     </div>
-    
-      
-      
+
+
+
   </div>
   <script>
     img_Src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdAtv04UT9QCuUwP8mXDB5ghw561SZiddhmw&usqp=CAU';
@@ -180,20 +183,20 @@
     }
 
     function setDate() {
-        const now = new Date();
+      const now = new Date();
 
-        let seconds = now.getSeconds();
-        
-        let mins = now.getMinutes();
-        mins = mins < 10 ? "0" + mins : mins;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-        const hour = now.getHours();
-        CurTime.innerText = ` ${hour}:${mins}:${seconds}`;
-      }
+      let seconds = now.getSeconds();
+      seconds = seconds < 10 ? "0" + seconds : seconds;
 
-      setInterval(setDate, 1000);
+      let mins = now.getMinutes();
+      mins = mins < 10 ? "0" + mins : mins;
+      const hour = now.getHours();
+      CurTime.innerText = ` ${hour}:${mins}:${seconds}`;
+    }
 
-      setDate();
+    setInterval(setDate, 1000);
+
+    setDate();
   </script>
 </body>
 
