@@ -48,7 +48,20 @@
       padding: 20px;
       font-size: larger;
     }
-
+    .container .Clock {
+      position: absolute;
+      /* bottom: 0; */
+      top: 400px;
+      text-align: right;
+      /* background: rgb(0, 0, 0); */
+      /* Fallback color */
+      /* background: rgba(0, 0, 0, 0.5); */
+      /* Black background with 0.5 opacity */
+      color: greenyellow;
+      width: 100%;
+      padding: 20px;
+      font-size: larger;
+    }
     /* Bottom right text */
     .text-block {
       position: absolute;
@@ -94,9 +107,11 @@
       text-decoration: none;
       color: #f1f1f1;
     }
-    a,a:focus{
-  outline:none;
-}
+
+    a,
+    a:focus {
+      outline: none;
+    }
   </style>
 </head>
 
@@ -121,9 +136,13 @@
       <h1 id="Dtime"></h1>
       <!-- <h1 id="church">台北南門長老教會 台語禮拜 </h1>
       <h1 id="Dtime">2023.1.10 10:30</h1> -->
-
-
     </div>
+    <div class="Clock">
+      <h1 id="CurTime">10:00 AM</h1>
+    </div>
+    
+      
+      
   </div>
   <script>
     img_Src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdAtv04UT9QCuUwP8mXDB5ghw561SZiddhmw&usqp=CAU';
@@ -133,6 +152,7 @@
     const speaker = document.querySelector('#speaker');
     const church = document.querySelector('#church');
     const Dtime = document.querySelector('#Dtime');
+    const CurTime = document.querySelector('#CurTime');
 
     // img.src=img_Src;
     const fileLink = 'https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing';
@@ -157,11 +177,23 @@
           img.src = data[1][5];
         })
         ;
-
-
-
-
     }
+
+    function setDate() {
+        const now = new Date();
+
+        let seconds = now.getSeconds();
+        
+        let mins = now.getMinutes();
+        mins = mins < 10 ? "0" + mins : mins;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        const hour = now.getHours();
+        CurTime.innerText = ` ${hour}:${mins}:${seconds}`;
+      }
+
+      setInterval(setDate, 1000);
+
+      setDate();
   </script>
 </body>
 
