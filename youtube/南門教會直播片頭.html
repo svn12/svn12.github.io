@@ -295,15 +295,18 @@
     Read_SheetData();
     let imageArr = [];
     let curImage = 0;
-    
+
     scrollText.addEventListener('animationiteration', setImage);
-    scrollText.addEventListener('click',setImage);
+    scrollText.addEventListener('click', setImage);
+    document.querySelector('.text-block').addEventListener('click', () => {
+      window.open("https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit#gid=1065429392");
+    });
     async function Read_SheetData() {
       //document.querySelector("#myTable1").innerHTML = '';
       await RsheetData(fileLink, '直播禮拜內容')
         .then(data => {
           data[1].forEach((item, index) => {
-            if (index > 5 && item!=='') {
+            if (index > 5 && item !== '') {
               imageArr.push(item);
             }
           });
