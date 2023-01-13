@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2023復活節CD</title>
+</head>
+
+<body>
+    <h1>2023復活節CD</h1>
+    <div id="song"></div>
+
+    <!-- <figure>
+        <figcaption>Listen to the T-Rex:</figcaption>
+        <audio controls
+            src="https://onedrive.live.com/download?cid=F85AB9D746215FED&resid=F85AB9D746215FED%2113151&authkey=AMVBSHGtG_7BZ1M">
+
+        </audio>
+    </figure> -->
+    <script>
+        const song_name = [
+            '*P04 基督之榮光 01 The Glories Of Christ'
+            , '*P16 祂今奉主聖名臨別 02 He Comes In The Name Of The Lord'
+            , '*P30 上帝愛疼,恩典極大 03 Behold The Love, The Grace Of God'
+            , '*P38 一個禮拜日之早起 04 One Sunday Morning'
+            , 'P45 阮今吟講主榮光 05 His Glories Now We Sing'
+            , '*P55 咱永活之盼望 06 Our Living Hope'
+            , 'P63 基督之榮光 07 The Glories Of Christ (Reprise)'];
+        const song_onedrv = [
+            '<iframe src="https://onedrive.live.com/embed?cid=F85AB9D746215FED&resid=F85AB9D746215FED%2113151&authkey=AMVBSHGtG_7BZ1M" width="98" height="120" frameborder="0" scrolling="no"></iframe>'
+            , '<iframe src="https://onedrive.live.com/embed?cid=F85AB9D746215FED&resid=F85AB9D746215FED%2113150&authkey=APaiif_C1SEjo6U" width="98" height="120" frameborder="0" scrolling="no"></iframe>'
+            , '<iframe src="https://onedrive.live.com/embed?cid=F85AB9D746215FED&resid=F85AB9D746215FED%2113152&authkey=AEBt01jn8pdkbVw" width="98" height="120" frameborder="0" scrolling="no"></iframe>'
+            , '<iframe src="https://onedrive.live.com/embed?cid=F85AB9D746215FED&resid=F85AB9D746215FED%2113153&authkey=AKd5RyopS0N-Obo" width="98" height="120" frameborder="0" scrolling="no"></iframe>'
+            , '<iframe src="https://onedrive.live.com/embed?cid=F85AB9D746215FED&resid=F85AB9D746215FED%2113154&authkey=ANMb3mcqKm1TyhI" width="98" height="120" frameborder="0" scrolling="no"></iframe>'
+            , '<iframe src="https://onedrive.live.com/embed?cid=F85AB9D746215FED&resid=F85AB9D746215FED%2113156&authkey=AO8IczjnyF2qLxc" width="98" height="120" frameborder="0" scrolling="no"></iframe>'
+            , '<iframe src="https://onedrive.live.com/embed?cid=F85AB9D746215FED&resid=F85AB9D746215FED%2113155&authkey=AB-0NkH1S0y5VfA" width="98" height="120" frameborder="0" scrolling="no"></iframe>'
+        ];
+
+        
+        const song = document.querySelector('#song');
+        let audios = '';
+        song_name.forEach((item, index) => {
+            audios += `<figcaption>${item}</figcaption>
+        <audio controls
+            src="${/src="(.*)" w/.exec(song_onedrv[index])[1].replace('embed', 'download')}">
+
+        </audio>`;
+        });
+        // show.innerHTML=temp;
+        song.innerHTML = audios;
+            // const node = document.createTextNode(temp);
+            // para.appendChild(node);
+    </script>
+</body>
+
+</html>
