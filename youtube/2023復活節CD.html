@@ -9,7 +9,8 @@
 </head>
 
 <body>
-    <h1>2023復活節CD</h1>
+    <h1>2023復活節CD 
+    永活的盼望(復活節清唱曲)</h1>
     <div id="song"></div>
 
     <!-- <figure>
@@ -44,7 +45,8 @@
         song_name.forEach((item, index) => {
             audios += `<figcaption>${item}</figcaption>
         <audio controls
-            src="${/src="(.*)" w/.exec(song_onedrv[index])[1].replace('embed', 'download')}">
+            // src="${/src="(.*)" w/.exec(song_onedrv[index])[1].replace('embed', 'download')}">
+            src="${/src="(.*)" w/.exec(song_onedrv[index])[1].replace('https','http').replace('embed', 'download')}">
 
         </audio>`;
         });
