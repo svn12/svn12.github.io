@@ -65,7 +65,7 @@
 
   <p id="demo" style="display: none;"></p>
   <div class="container">
-    <h2 id="add_text">add_text</h2>
+    <h2 id="add_text"></h2>
 
 
 
@@ -110,7 +110,7 @@
         .then(data => {
           data.forEach((item, index) => {
             if (index > 0) {
-              imageArr.push(item);
+              imageArr.push(item[0]);
             }
           });
           add_text.innerText = imageArr[0];
