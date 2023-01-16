@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://svn12.github.io/js/Fetch.js"></script>
+  <title>直播片頭 加字</title>
+
+  <style>
+    html {
+      /*>>>>>>>>>>>>  BACKGROUND COLOR  <<<<<<<<<<<<<<<*/
+      /* background: gold; */
+      /* background: white; */
+      background: transparent;
+
+      font-size: 2vw;
+
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    /* body {
+      height: 100vh;
+      margin: 0;
+    } */
+
+    .container {
+      /* position: relative; */
+      max-width: 1920px;
+      /* margin: 0 auto; */
+      /* vertical-align: middle; */
+    }
+
+
+
+
+
+    #add_text {
+      white-space: nowrap;
+      /* left: 20%; */
+      left: 50%;
+      transform: translate(-50%, 0);
+      text-align: center;
+      /* word-break: break-all; */
+      position: absolute;
+      top: 80%;
+      color: white;
+      font-size: 2rem;
+      text-shadow: 2px 2px 1px black;
+      /* , 3px 3px 2px white; */
+
+      margin: 0;
+
+      font-family: PingFang, STHeiti, "Microsoft JhengHei", "Noto Sans CJK TC", sans-serif, serif;
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <p id="demo" style="display: none;"></p>
+  <div class="container">
+    <h2 id="add_text">add_text</h2>
+
+
+
+  </div>
+  <script>
+    // img_Src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQja5a_9x_nigBTrMw0jI8oyUARzNMDK84LSN_GxnJAZeAKt9GqL4yJmONdu7OZG4VdOxU&usqp=CAU';
+    // img_Src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdAtv04UT9QCuUwP8mXDB5ghw561SZiddhmw&usqp=CAU';
+    const oneFrameDuration = 20;
+    const add_text = document.querySelector('#add_text');
+    const img = document.querySelector('#img');
+    const subj = document.querySelector('#subj');
+    const poem = document.querySelector('#poem');
+    const speaker = document.querySelector('#speaker');
+    const church = document.querySelector('#church');
+    const Dtime = document.querySelector('#Dtime');
+    const Bdate = document.querySelector('#Bdate');
+    const CurTime = document.querySelector('#CurTime');
+    const scrollText = document.querySelector('#scrollText');
+
+
+    // img.src=img_Src;
+    const fileLink = 'https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing';
+    Read_SheetData();
+    let imageArr = [];
+    let curImage = 0;
+
+    // add_text.addEventListener('animationiteration', setImage);
+    // add_text.addEventListener('click', setImage);
+    // document.querySelector('.text-block').addEventListener('click', () => {
+    //   window.open("https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit#gid=1065429392");
+    // });
+    document.addEventListener("click", setImage,true);
+
+    function myFunction(el) {
+      document.getElementById("demo").innerHTML = `${el.x} ${el.y}  ${window.innerWidth}`;
+      console.log(el);
+      // event.stopPropagation();
+    }
+    async function Read_SheetData() {
+      //document.querySelector("#myTable1").innerHTML = '';
+      await RsheetData(fileLink, '加字')
+        .then(data => {
+          data.forEach((item, index) => {
+            if (index > 0) {
+              imageArr.push(item);
+            }
+          });
+          add_text.innerText = imageArr[0];
+        })
+        ;
+    }
+
+    function setDate() {
+      const now = new Date();
+
+      let seconds = now.getSeconds();
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      let mins = now.getMinutes();
+      mins = mins < 10 ? "0" + mins : mins;
+      const hour = now.getHours();
+      CurTime.innerText = ` ${hour}:${mins}:${seconds}`;
+    }
+    function setImage_org() {
+      if (++curImage == imageArr.length) {
+        curImage = 0;
+      }
+      // img.src = imageArr[curImage];
+      document.body.style.backgroundImage = `url(${imageArr[curImage]})`;
+    }
+    function setImage(el) {
+      // console.log(`${el.x} ${el.y}  ${window.innerWidth}`);
+      if (el.x > window.innerWidth / 2) {
+        if (++curImage == imageArr.length) {
+          curImage = 0;
+        }
+      }else{
+        if (--curImage <= 0) {
+          curImage = imageArr.length-1;
+        }
+      }
+      add_text.innerText = imageArr[curImage];
+      console.log(`${el.x} ${el.y}  ${window.innerWidth} ${curImage}`);
+      document.getElementById("demo").innerHTML = `${curImage} ${el.x} ${el.y}  ${window.innerWidth}`;
+    }
+    function setAniDuration(duration) {
+      scrollText.getAnimations()[0]['effect'].updateTiming({
+        delay: 0,
+        direction: "normal",
+        duration: duration,
+        easing: "linear",
+        endDelay: 0,
+        fill: "none",
+        iterationStart: 0,
+        iterations: Infinity
+      });
+    }
+    function setAniKeyFrame(ratio) {
+      const kframe = [
+        { offset: 0, easing: 'linear', composite: 'auto', transform: 'translateX(100%)', computedOffset: 0 }
+        ,
+        { offset: 1, easing: 'linear', composite: 'auto', transform: `translateX(-${ratio}%)`, computedOffset: 1 }
+
+      ];
+
+      scrollText.getAnimations()[0]['effect'].setKeyframes(kframe);
+
+    }
+    // setInterval(setDate, 1000);
+    // setInterval(setImage, 115000);
+    // setDate();
+  </script>
+</body>
+
+</html>
