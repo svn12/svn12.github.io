@@ -14,9 +14,9 @@
 	<style>
 		.container {
 			display: flex;
-			 width: 100%;
-			 justify-content: space-between
-  /* margin: 50px auto;
+			width: 100%;
+			justify-content: space-between
+				/* margin: 50px auto;
   border: 5px solid #eee; */
 		}
 
@@ -24,7 +24,7 @@
 		.autocomplete {
 			position: relative;
 			display: inline-block;
-			 width: 65%;
+			width: 65%;
 		}
 
 		input {
@@ -80,7 +80,7 @@
 <body>
 	<h2 class="text-center">資料查詢</h2>
 	<div class="container ">
-		
+
 		<!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> 
 		
             <input type="text" class="form-control" placeholder="姓名電話關鍵字1" id="location-input1">
@@ -156,6 +156,8 @@
 				// event.preventDefault();
 				if (document.getElementById('location-input').value != '') {
 					document.querySelector('#show').style.display = 'none';
+				} else {
+					document.querySelector('#show').style.display = '';
 				}
 				if (event.keyCode === 13) {
 					// event.preventDefault();
@@ -217,7 +219,14 @@
 					// TableShow(data, "#myTable1");
 					All_data = [...data];
 					data.shift();
-					return data.map((e) => ` [${e[0]}]-${e[1]}-[${e[2]} @${e[3]}]--${e[4]}`);
+					// return data.map((e) => ` [${e[0]}]-${e[1]}-[${e[2]} @${e[3]}]--${e[4]}`);
+					return data.map((e) => {
+						let item = e[0];
+						for (i = 1; i < e.length; i++) {
+							item = item + '|' + e[i];
+						}
+						return item;
+					});
 				})
 				.then(arr => {
 					// 

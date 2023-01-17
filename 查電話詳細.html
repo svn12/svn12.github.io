@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -14,14 +14,18 @@
 	<style>
 		.container {
 			display: flex;
+			width: 100%;
+			justify-content: space-between
+				/* margin: 50px auto;
+  border: 5px solid #eee; */
 		}
 
 		/*the container must be positioned relative:*/
 		.autocomplete {
 			position: relative;
 			display: inline-block;
+			width: 65%;
 		}
-
 		input {
 			border: 1px solid transparent;
 			background-color: #f1f1f1;
@@ -74,33 +78,34 @@
 
 <body>
 	<!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> -->
-	<h2>&nbsp&nbsp &nbsp姓名電話詳細資料</h2>
-	<div class="container ">
-		<!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> 
+		<h2 class="text-center">資料查詢</h2>
+		<div class="container ">
 		
-            <input type="text" class="form-control" placeholder="姓名電話關鍵字1" id="location-input1">
-		-->
-		<form id="location-form" class="form-inline">
+			<!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> 
+				
+		            <input type="text" class="form-control" placeholder="姓名電話關鍵字1" id="location-input1">
+				-->
 			<!-- <input type="text" id="location-input" > -->
-			<label for="text">&nbsp&nbsp查詢姓名&nbsp:&nbsp</label>
+			<!-- <div for="text">查詢姓名:</div> -->
+			<!-- <form id="location-form" class="form-inline"> -->
 			<div class="autocomplete">
-
-				<input autocomplete="off" type="text" class="form-control" placeholder="姓名電話關鍵字" id="location-input" />
+		
+				<input autocomplete="off" type="text" class="form-control" placeholder="姓名關鍵字" id="location-input" />
 			</div>
 			<!-- <input id="btnClickMe" type="button" value="查詢" /> -->
-			<label for="select">&nbsp&nbsp來源&nbsp:&nbsp</label>
-
-
+			<!-- <div for="select">來源</div> -->
+		
+		
 			<select id="selShurl" class="form-control" onchange="testRD()">
-
+		
 			</select>
-
-
-
+		
+		
+		
 			<!-- <button type="submit" class="btn-primary ">Submit</button> -->
-		</form>
-
-	</div>
+			<!-- </form> -->
+		
+		</div>
 	<div class="table-responsive">
 		<p id="show"></p>
 		<table id='myTable1' style=" width:90%" class="table">
@@ -116,17 +121,12 @@
 				// qTel();
 			});
 
-			// $('#btnClickMe').click(function () {
-			// 	// alert($(this).val()+ '  ---' + txtptr.val());
-			// 	Query_Tel();
-			// });
-
 
 		});
 		let All_data = [];
 		var sht_ptr = ['List', 'List', 'List'];
 		function IniTitle() {
-
+			
 			const Btitle = ["南門通訊錄", "南門資料庫", "長青樂活"];
 			const Btitle_ptr = ["'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing'",
 				"https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing",
@@ -149,6 +149,8 @@
 				// event.preventDefault();
 				if (document.getElementById('location-input').value != '') {
 					document.querySelector('#show').style.display = 'none';
+				}else{
+					document.querySelector('#show').style.display ='';
 				}
 				if (event.keyCode === 13) {
 					// event.preventDefault();
@@ -202,70 +204,30 @@
 				key: 1
 			};
 
-			const RSheet2Json_APIV2 = 'https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec';
-			const RSheet2Json_APIV5 = 'https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec';
-			const RSheet2Json_APIV6 = 'https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec';
 			await RsheetData(shURL, sht_ptr[document.getElementById("selShurl").selectedIndex])
 				.then(data => {
 					// TableShow(data, "#myTable1");
 					All_data = [...data];
 					data.shift();
 					// return data.map((e) => ` [${e[0]}]-${e[1]}-[${e[2]} @${e[3]}]--${e[4]}--${e[5]}--${e[6]}`);
+					// 
 					return data.map((e) => {
-						if(e.length > 5 )
-							{ return ` [${e[0]}]-${e[1]}-[${e[2]} @${e[3]}]--${e[4]}--${e[5]} ${e[6]}` } else
-							{ return ` [${e[0]}]-${e[1]}-[${e[2]} @${e[3]}]--${e[4]}` };
+						let item = e[0];
+						for (i = 1; i < e.length; i++) {
+							item = item + '|' + e[i];
+						}
+						return item;
 					});
 				})
 				.then(arr => {
-					// 
-
-					// if (document.querySelector('#show').textContent != '') {
-					//     document.querySelector('#show').style.display = 'none';
-					// } else {
-					//     document.querySelector('#show').style.display = '';
-					// }
+				
 					autocomplete_CH(document.getElementById("location-input"), arr, Query_Data, document.querySelector("#myTable1"));
 
 				});
-			// tt = await getJSON(RSheet2Json_APIV6, a).then(function (data) {
-			// 	//console.log(data);
-			// 	return data;
-			// });
-
-			// let arr = [];
-			// let col_len = tt[0].length;
-			// let row_len = tt.length;
-
-			// for (j = 0; j < col_len; j++) {
-			// 	for (i = 1; i < row_len; i++) {
-			// 		let elem = tt[i][j].toString();
-			// 		if (elem != "") {
-			// 			if (arr.indexOf(elem) < 0) {
-			// 				arr.push(elem);
-			// 			}
-			// 		}
-			// 	}
-			// }
-
-			// autocomplete_CH(document.getElementById("location-input"), arr);
-			// //return tt;	
+			
 		};
 
-		async function getJSON(urlptr, para) {
-			try {
-				var url = new URL(urlptr);
-				for (let k in para) { url.searchParams.append(k, para[k]); }
-
-
-				const response = await fetch(url);
-				//let myText = await response.json();//JSON.parse(myObject);// myObject.text();JSON.parse(data)
-				return response.json();// myObject.text();JSON.parse(data)
-			} catch (error) {
-				return (error);
-			}
-
-		}
+		
 
 
 	</script>
