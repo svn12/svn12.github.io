@@ -65,11 +65,11 @@
       font-size: 2.5rem;
     }
 
-    .container .Clock1 {
+    .Header .Clock {
       position: absolute;
       /* bottom: 0; */
       top: 400px;
-      text-align: right;
+      text-align: left;
       /* background: rgb(0, 0, 0); */
       /* Fallback color */
       /* background: rgba(0, 0, 0, 0.5); */
@@ -135,13 +135,27 @@
     }
 
     #Bdate {
+      
       color: rgb(22, 7, 241);
       margin: 0.7em;
       font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica, Arial, sans-serif, serif;
       /* letter-spacing: 10px; */
-      font-size: 0.5em;
+      font-size: 0.6em;
       text-shadow: 2px 2px 1px white;
       text-align: right;
+      /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
+    }
+    #CurTime {
+      
+      position: absolute;
+      top: 0;
+      color: rgb(22, 7, 241);
+      margin: 0.7em;
+      font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica, Arial, sans-serif, serif;
+      /* letter-spacing: 10px; */
+      font-size: 0.6em;
+      text-shadow: 2px 2px 1px white;
+      text-align: left;
       /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
     }
 
@@ -251,8 +265,12 @@
       <!-- <p>What a beautiful sunrise</p> -->
     </div>
     <div class="Header">
+      <p id="CurTime" style="display:none"></p>
       <h2><a href="https://www.youtube.com/channel/UCdBgZC0GhG7uEdn9oEx1L8g" id="church"></a></h2>
       <p id="Bdate"></p>
+      <!-- <div class="Clock1" >
+      </div> -->
+
       <!-- <h1 id="Dtime"></h1> -->
       <!-- <h1 id="CurTime" style="text-align: right;color: blue; text-shadow: 3px 3px 2px white;">10:00 AM</h1> -->
       <!-- <h1 id="church">台北南門長老教會 台語禮拜 </h1>
@@ -262,18 +280,9 @@
     <div class="scroll-left">
       <h2 id="scrollText">
 
-        <!-- <h2 id="scrollText">
-        2023年1月1日
-        講道:張宣信牧師 司禮:葉宏一執事 司琴:林恩慈老師
-        宣召............林後 5 ：17
-        聖經.……......以西結 33：12 20；傳道書 12：1 7
-        講道.……......轉向 -->
       </h2>
     </div>
-    <div class="Clock">
-
-    </div>
-
+    
 
 
   </div>
@@ -300,6 +309,7 @@
 
     scrollText.addEventListener('animationiteration', setImage);
     scrollText.addEventListener('click', setImage);
+    
     document.querySelector('.text-block').addEventListener('click', () => {
       window.open("https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit#gid=1065429392");
     });
@@ -379,7 +389,7 @@
       scrollText.getAnimations()[0]['effect'].setKeyframes(kframe);
 
     }
-    // setInterval(setDate, 1000);
+    setInterval(setDate, 1000);
     // setInterval(setImage, 115000);
     // setDate();
   </script>
