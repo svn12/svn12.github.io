@@ -58,7 +58,7 @@
 		}
 
 		.autocomplete-items div {
-			
+
 			white-space: nowrap;
 			padding: 10px;
 			cursor: pointer;
@@ -175,7 +175,7 @@
 						Query_Data();
 					}
 				}
-				console.log(event);
+				// console.log(event);
 				// Query_Data();
 			});
 
@@ -187,13 +187,29 @@
 			// Query_Tel2();
 			Query_Data();
 		}
-
+		// function removeDuplicates(arr) {
+		// 	var unique = [];
+		// 	arr.forEach(element => {
+		// 		if (!unique.includes(element)) {
+		// 			unique.push(element);
+		// 		}
+		// 	});
+		// 	return unique;
+		// }
 		function Query_Data() {
 			const findString = document.getElementById('location-input').value;
+			const extList = document.querySelector('#location-inputautocomplete-list');
 			document.getElementById('location-input').value = '';
-			document.querySelector('#location-inputautocomplete-list').innerHTML = '';
+			if (extList !== null) extList.innerHTML = '';
 			let headers = All_data.shift();
-			res = All_data.filter(ele => ele.some(elem => elem.toString().includes(findString)));
+			fString = findString.match(/[^|]*/)[0];
+			res = All_data.filter(ele => ele.some(elem => elem.toString().includes(fString)));
+			
+			// res = removeDuplicates(All_data).filter(ele => ele.some(elem => elem.toString().includes(fString)));
+			// 	 function removeDuplicates(arr) {
+			// 	return arr.filter((item,
+			// 		index) => arr.indexOf(item) === index);
+			// }
 			res.unshift(headers);
 			All_data.unshift(headers);
 			TableShow(res, "#myTable1");
@@ -238,7 +254,8 @@
 					// } else {
 					//     document.querySelector('#show').style.display = '';
 					// }
-					autocomplete_CH(document.getElementById("location-input"), arr, Query_Data, document.querySelector("#myTable1"));
+					autocomplete_CH(document.getElementById("location-input"), arr, Query_Data);
+					// autocomplete_CH(document.getElementById("location-input"), arr, Query_Data, document.querySelector("#myTable1"));
 
 				});
 			// tt = await getJSON(RSheet2Json_APIV6, a).then(function (data) {

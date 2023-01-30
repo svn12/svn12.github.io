@@ -309,7 +309,9 @@ function autocomplete_CH(inp, arr, callback, parent_elem) {
         b.addEventListener("click", function (e) {
           /*insert the value for the autocomplete text field:*/
           inp.value = this.getElementsByTagName("input")[0].value;
+          document.getElementById("location-input").value = inp.value;
           callback();
+          // callback();
           /*close the list of autocompleted values,
 					  (or any other open lists of autocompleted values:*/
           closeAllLists();
@@ -326,8 +328,10 @@ function autocomplete_CH(inp, arr, callback, parent_elem) {
       //   parent_elem.setAttribute("style","display:none;");
       parent_elem.style.display = "none";
     } else {
-      //   parent_elem.setAttribute("style","display:table;"); //2022/11/23
-      parent_elem.style.display = "";
+      if (parent_elem != null) {
+        //   parent_elem.setAttribute("style","display:table;"); //2022/11/23
+        parent_elem.style.display = "";
+      }
     }
   });
   /*execute a function presses a key on the keyboard:*/

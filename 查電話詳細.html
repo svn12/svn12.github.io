@@ -168,7 +168,7 @@
 						Query_Data();
 					}
 				}
-				console.log(event);
+				// console.log(event);
 				// Query_Data();
 			});
 
@@ -182,16 +182,18 @@
 		}
 
 		function Query_Data() {
-			const findString = document.getElementById('location-input').value;
-			document.getElementById('location-input').value = '';
-			document.querySelector('#location-inputautocomplete-list').innerHTML = '';
-			let headers = All_data.shift();
-			res = All_data.filter(ele => ele.some(elem => elem.toString().includes(findString)));
-			res.unshift(headers);
-			All_data.unshift(headers);
-			TableShow(res, "#myTable1");
-			document.querySelector("#myTable1").style.display = '';
-		}
+				const findString = document.getElementById('location-input').value;
+				const extList = document.querySelector('#location-inputautocomplete-list');
+				document.getElementById('location-input').value = '';
+				if (extList !== null) extList.innerHTML = '';
+				let headers = All_data.shift();
+				fString = findString.match(/[^|]*/)[0];
+				res = All_data.filter(ele => ele.some(elem => elem.toString().includes(fString)));
+				res.unshift(headers);
+				All_data.unshift(headers);
+				TableShow(res, "#myTable1");
+				document.querySelector("#myTable1").style.display = '';
+			}
 		async function testRD() {
 			$('input[type="text"]').val('');
 			document.getElementById("show").innerHTML = '';
@@ -223,7 +225,9 @@
 				})
 				.then(arr => {
 				
-					autocomplete_CH(document.getElementById("location-input"), arr, Query_Data, document.querySelector("#myTable1"));
+					// autocomplete_CH(document.getElementById("location-input"), arr, ,Query_Data document.querySelector("#myTable1"));
+					
+					autocomplete_CH(document.getElementById("location-input"), arr, Query_Data);
 
 				});
 			
