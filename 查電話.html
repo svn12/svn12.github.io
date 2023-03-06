@@ -24,7 +24,7 @@
 		.autocomplete {
 			position: relative;
 			display: inline-block;
-			width: 90%;
+			width: 100%;
 		}
 
 		input {
@@ -111,7 +111,7 @@
 	<div class="table-responsive">
 		<p id="show"></p>
 		<table id='myTable1' style=" width:90%" class="table">
-		</table>
+	</table>
 	</div>
 
 	<script>
@@ -157,9 +157,9 @@
 			input.addEventListener("keydown", function (event) {
 				// event.preventDefault();
 				if (document.getElementById('location-input').value != '') {
-					document.querySelector('#show').style.display = 'none';
+					document.querySelector('#myTable1').style.display = 'none';
 				} else {
-					document.querySelector('#show').style.display = '';
+					document.querySelector('#myTable1').style.display = '';
 				}
 				if (event.keyCode === 13) {
 					// event.preventDefault();
