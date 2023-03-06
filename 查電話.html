@@ -24,7 +24,7 @@
 		.autocomplete {
 			position: relative;
 			display: inline-block;
-			width: 65%;
+			width: 90%;
 		}
 
 		input {
@@ -36,7 +36,7 @@
 
 		input[type=text] {
 			background-color: #f1f1f1;
-			width: 100%;
+			width: 90%;
 		}
 
 		input[type=submit] {
@@ -204,7 +204,7 @@
 			let headers = All_data.shift();
 			fString = findString.match(/[^|]*/)[0];
 			res = All_data.filter(ele => ele.some(elem => elem.toString().includes(fString)));
-			
+
 			// res = removeDuplicates(All_data).filter(ele => ele.some(elem => elem.toString().includes(fString)));
 			// 	 function removeDuplicates(arr) {
 			// 	return arr.filter((item,
