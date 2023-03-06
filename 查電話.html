@@ -81,7 +81,7 @@
 
 <body>
 	<h2 class="text-center">資料查詢 2</h2>
-	<p id="keycode"></p>
+	<!-- <p id="keycode"></p> -->
 	<div class="container ">
 
 		<!-- <p >查詢姓名&nbsp&nbsp:&nbsp&nbsp </p> 
@@ -157,7 +157,7 @@
 			var input = document.getElementById('location-input');
 			input.addEventListener("keydown", function (event) {
 				// event.preventDefault();
-				document.querySelector('#keycode').textContent=event.keyCode;
+				// document.querySelector('#keycode').textContent=event.keyCode;
 				if (document.getElementById('location-input').value != '') {
 					document.querySelector('#myTable1').style.display = 'none';
 				} else {
