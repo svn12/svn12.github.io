@@ -24,7 +24,7 @@
 		.autocomplete {
 			position: relative;
 			display: inline-block;
-			width: 65%;
+			/* width: 65%; */
 		}
 		input {
 			border: 1px solid transparent;
@@ -227,8 +227,9 @@
 				
 					// autocomplete_CH(document.getElementById("location-input"), arr, ,Query_Data document.querySelector("#myTable1"));
 					
-					autocomplete_CH(document.getElementById("location-input"), arr, Query_Data);
-
+					// autocomplete_CH(document.getElementById("location-input"), arr, Query_Data);
+					autocomplete_CH(document.getElementById("location-input"), arr, Query_Data, document.querySelector("#myTable1"));
+					
 				});
 			
 		};
