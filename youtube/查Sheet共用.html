@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>查Sheet</title>
+	<title>查Sheet共用</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://svn12.github.io/js/Fetch.js"></script>
 </head>
@@ -15,7 +15,7 @@
 		
 		<a href="" id="file_href" target="_blank">File</a>
 
-		<a href="youtube/Plot.html">Plot</a>
+		<a href="https://docs.google.com/spreadsheets/d/1D7DXH35QrH3um2hyAQhM4SsdVGvSHilTUTKnjvyDD40/edit?usp=sharing"  target="_blank">Main</a>
 		
 		<select id="select_url" onchange="Google_sht_R()">
 		</select>
@@ -186,6 +186,7 @@
 		}
 	</style>
 	<script>
+		const main_sheet='https://docs.google.com/spreadsheets/d/1D7DXH35QrH3um2hyAQhM4SsdVGvSHilTUTKnjvyDD40/edit?usp=sharing';
 		const RSheet2Json_APIV6 = 'https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec';
 		$(document).ready(function () {
 			// var shtUrl = '"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"';
@@ -307,7 +308,7 @@
 			document.getElementById("file_href").href = document.getElementById("select_url").value;
 		}
 		function R_Url() {
-			const fmain = 'https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit#gid=2114459986';
+			const fmain = main_sheet;
 			var a = {
 				sheetUrl: fmain,
 				sheetTag: 'Main' //'Test'
