@@ -324,6 +324,12 @@
               imageArr.push(item);
             }
           });
+          if(imageArr.length==0){
+            imageArr=[
+              'http://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg'
+             , 'http://www.pctnm.tw/images/main/94ea826b6ea9923e0ba550e1b91a6c02.jpg'
+            ,	'http://www.pctnm.tw/images/main/de0ee6118741dd3a94cdb1fc1042c995.jpg']
+          }
           subj.textContent = data[1][0];
           speaker.textContent = data[1][2];
           poem.textContent = data[1][1];
@@ -339,7 +345,8 @@
           //	TableShow(data,"#myTable1");`
           church.textContent = `南門長老教會網路直播`;
           // img.src = data[1][6];
-          document.body.style.backgroundImage = `url(${data[1][6]})`;
+          // document.body.style.backgroundImage = `url(${data[1][6]})`;
+          document.body.style.backgroundImage = `url(${imageArr[0]})`;
           scrollText.textContent = data[1][5].replace(/[\r\n,\n]/g, " ");
           ratio = scrollText.scrollWidth / scrollText.clientWidth;
           setAniKeyFrame(Math.ceil(ratio * 100));
