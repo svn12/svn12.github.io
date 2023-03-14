@@ -1,492 +1,521 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>MyStockQ.htm</title>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <meta charset="UTF-8">
+  <title>MyStockQ.htm</title>
 
-<!-- <script src="https://d3js.org/d3.v4.js"></script> -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script src="../js/Fetch.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style type="text/css">
-	 input,select{
-            margin: 0px;
-            display: inline;
-            font-size: 18px;
-        }
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-        /* label {display:inline;} */
-        /* input {display:inline;} */
-        button {
-            font-size: 16px;
-        }
-	#fixed-div {
-	  position: fixed;
-	  top: 0;
-	  left: 0;
-	  right: 0;
-	  height: 100px;
-	 
-	}
-    #abgne_float_ad {
-		display: none;
-		position: absolute;
-	}
-	#abgne_float_ad .abgne_close_ad1 {
-		display: block;
-		text-align: center;
-		cursor: pointer;
-		font-size: 2rem;
+    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="../js/Fetch.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style type="text/css">
+      input,
+      select {
+        margin: 0px;
+        display: inline;
+        font-size: 18px;
+      }
+
+      /* label {display:inline;} */
+      /* input {display:inline;} */
+      button {
+        font-size: 16px;
+      }
+
+      #fixed-div {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+
+      }
+
+      #abgne_float_ad {
+        display: none;
+        position: absolute;
+      }
+
+      #abgne_float_ad .abgne_close_ad1 {
+        display: block;
+        text-align: center;
+        cursor: pointer;
+        font-size: 2rem;
         color: blue;
         background-color: darksalmon;
         border-radius: 50%;
-	}
-	#abgne_float_ad a img {
-		border: none;
-	}
-	div.bigDiv {
-		height: 3000px;
-	}
-	.iframe-container {
-	 /* overflow: hidden;
+      }
+
+      #abgne_float_ad a img {
+        border: none;
+      }
+
+      div.bigDiv {
+        height: 3000px;
+      }
+
+      .iframe-container {
+        /* overflow: hidden;
 	  padding-top: 56.25%;  16:9
 	  position: relative;*/
-	}
+      }
 
-	iframe {
-	   border: 0;
-	   width: 100%;
-	  /*  height: 100%;*/
-	}
-	p {table {
-		width: 100%;
-		
-		border-spacing: 0;
-		}
-	}
-	.showtable{
- 	 
-	  border-collapse: collapse;
-	  border-spacing: 0;
-	  width: 100%;
-	  border: 1px solid #ddd;
-	  overflow-x:scroll;
-	  overflow-y:scroll;
-	  
-	 }
-	 
-	th {
-	  text-align: center;
-	  padding: 8px;
-	}
-	td {
-	  text-align: left;
-	  padding: 8px;
-	}
-	th{
-	 background: yellow;
-	 position: sticky; 
-	 top: 0; /* Don't forget this, required for the stickiness */
-	 box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
-	 }
-	.showtable tr:nth-child(even){
-		/* background-color: #f2f2f2 
+      iframe {
+        border: 0;
+        width: 100%;
+        /*  height: 100%;*/
+      }
+
+      p {
+        table {
+          width: 100%;
+
+          border-spacing: 0;
+        }
+      }
+
+      .showtable {
+
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+        overflow-x: scroll;
+        overflow-y: scroll;
+
+      }
+
+      th {
+        text-align: center;
+        padding: 8px;
+      }
+
+      td {
+        text-align: left;
+        padding: 8px;
+      }
+
+      th {
+        background: yellow;
+        position: sticky;
+        top: 0;
+        /* Don't forget this, required for the stickiness */
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+      }
+
+      .showtable tr:nth-child(even) {
+        /* background-color: #f2f2f2 
 		overflow-y: scroll;
 		display: block;
 		position: fixed;
 		top: 30;
 		*/
-		 background-color: lightblue;
-		}
-	 
-	 
-	 
-	
-	thead	{
-        background-color: orange;
-	
-			  
+        background-color: lightblue;
       }
-	  
-</style>
-<script>
-$(document).ready(function() {
-  GSname();
-  //Array_R();
-  appendText();
-  /*
-  let $win = $(window),
-			$ad = $('#abgne_float_ad').css('opacity', 0).show(),	// 讓廣告區塊變透明且顯示出來
-			_width = $ad.width(),
-			_height = $ad.height(),
-			_diffY = 20, _diffX = 20,	// 距離右及下方邊距
-			_moveSpeed = 1800;	// 移動的速度
-		//console.log($ad.width()+"--"+$ad.height());
-        // $ad.height()=40;
-        // $ad.width()=40;
-        // console.log($ad.width()+"--"+$ad.height());
-		// 先把 #abgne_float_ad 移動到定點
-		$ad.css({
-			top: $(document).height(),
-			left: $win.width() - _width - _diffX,
-			opacity: 1
-		});
-		
-		// 幫網頁加上 scroll 及 resize 事件
-		$win.bind('scroll resize', function(){
-			let $this = $(this);
-			
-			// 控制 #abgne_float_ad 的移動
-			$ad.stop().animate({
-				top: $this.scrollTop() + $this.height() - _height - _diffY,
-				left: $this.scrollLeft() + $this.width() - _width - _diffX
-			}, _moveSpeed);
-		}).scroll();	// 觸發一次 scroll()
-		
-		// 關閉廣告
-		$('#abgne_float_ad .abgne_close_ad').click(function(){
-        // $('#abgne_float_ad img').click(function(){    
-			// $ad.hide();
-            $(window).scrollTop(0)
-		});
-	*/
-  
-});
-function checkKey(array, search){
-	let result=false;
-	for (let key of array){
-      
-  	 if(search.includes(key)){
-    	result=true;
-    	break;
-   	 };
-   
-	}
-    return result;
-}
-function appendText3(code){
- let txt1 = `<iframe src="https://www.cmoney.tw/finance/${code}/technicalanalysis"  > </iframe> <br><br>`;
- $("#T3").append(txt1);   // Append new elements
-}
-function appendText1(code,remark) {
-  //const keyArray=['T','M','US','JP','F']
-  let href4=`https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
-  //let title4='持股明細';
-  $("#T2").append(code +' '); 
-  let str_code="";
-  str_code=code;
- // if(!checkKey(keyArray, str_code)){
-  if(/^[0-9A-Z]*$/.test( str_code) && str_code!=''){
-  let txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
-    const detail=!($('#brief').is(':checked'));
-      
-    // http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}
-    // http://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.TW
-    //  https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=270&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=MFI
-    // https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None
-  	  txt1+='<tr>';  
-  	  
-      txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="100%" alt="台灣股市資" title="台灣股市資訊網_${remark}" src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
-      
-		href2=`https://statementdog.com/analysis/${code}`;
-		title2="財報狗";
-		
-		
-	  if(detail){
-      	txt1+=` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="100%"  alt=${title2} title=${title2} src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
-      	}
-      else{
-		txt1+=` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="100%"  alt=${title2} title=${title2} src="https://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.tw"></a> </td>`;
-		}       
-      txt1+='</tr>';
-      if(`${code.toString().substr(0,1)}`!="0"){
-      // http://stock.wearn.com/sale_chart.asp?stockid=${code}
-       //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
-	   //https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_4938.gif
-      txt1+='<tr>';  
-      txt1+=` <td> <a href="https://www.wantgoo.com/stock/${code}" target="_blank"><img  width="100%" alt="玩股網" title="玩股網"  src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
-      txt1+=` <td> <a id="link6" href="https://stock.wearn.com/a${code}.html" target="_blank"> <img id="img6" width="100%" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
-      txt1+='</tr>';
-      
-      // if(!($('#brief').is(':checked'))){
-       if(detail){ 
-       txt1+='<tr>';  
-      txt1+=` <td> <a href="https://www.cnyes.com/twstock/flashchart/${code}.htm" target="_blank"><img  width="100%" alt="鉅亨網" title="鉅亨網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_${code}.gif"></a> </td>`;
-      txt1+=`<td> <a href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=${code}" target="_blank"> <img width="100%" alt="樂活五線譜" title="樂活五線譜"
+
+
+
+
+      thead {
+        background-color: orange;
+
+
+      }
+    </style>
+    <script>
+      $(document).ready(function () {
+        GSname();
+        //Array_R();
+        appendText();
+        /*
+        let $win = $(window),
+            $ad = $('#abgne_float_ad').css('opacity', 0).show(),	// 讓廣告區塊變透明且顯示出來
+            _width = $ad.width(),
+            _height = $ad.height(),
+            _diffY = 20, _diffX = 20,	// 距離右及下方邊距
+            _moveSpeed = 1800;	// 移動的速度
+          //console.log($ad.width()+"--"+$ad.height());
+              // $ad.height()=40;
+              // $ad.width()=40;
+              // console.log($ad.width()+"--"+$ad.height());
+          // 先把 #abgne_float_ad 移動到定點
+          $ad.css({
+            top: $(document).height(),
+            left: $win.width() - _width - _diffX,
+            opacity: 1
+          });
+        	
+          // 幫網頁加上 scroll 及 resize 事件
+          $win.bind('scroll resize', function(){
+            let $this = $(this);
+          	
+            // 控制 #abgne_float_ad 的移動
+            $ad.stop().animate({
+              top: $this.scrollTop() + $this.height() - _height - _diffY,
+              left: $this.scrollLeft() + $this.width() - _width - _diffX
+            }, _moveSpeed);
+          }).scroll();	// 觸發一次 scroll()
+        	
+          // 關閉廣告
+          $('#abgne_float_ad .abgne_close_ad').click(function(){
+              // $('#abgne_float_ad img').click(function(){    
+            // $ad.hide();
+                  $(window).scrollTop(0)
+          });
+        */
+
+      });
+      function checkKey(array, search) {
+        let result = false;
+        for (let key of array) {
+
+          if (search.includes(key)) {
+            result = true;
+            break;
+          };
+
+        }
+        return result;
+      }
+      function appendText3(code) {
+        let txt1 = `<iframe src="https://www.cmoney.tw/finance/${code}/technicalanalysis"  > </iframe> <br><br>`;
+        $("#T3").append(txt1);   // Append new elements
+      }
+      function appendText1(code, remark) {
+        //const keyArray=['T','M','US','JP','F']
+        let href4 = `https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
+        //let title4='持股明細';
+        $("#T2").append(code + ' ');
+        let str_code = "";
+        str_code = code;
+        // if(!checkKey(keyArray, str_code)){
+        if (/^[0-9A-Z]*$/.test(str_code) && str_code != '') {
+          let txt1 = '<table border="1" cellspacing="0" cellpadding="7"> ';
+          const detail = !($('#brief').is(':checked'));
+
+          // http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}
+          // http://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.TW
+          //  https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=270&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=MFI
+          // https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None
+          txt1 += '<tr>';
+
+          txt1 += ` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="100%" alt="台灣股市資" title="台灣股市資訊網_${remark}" src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
+
+          href2 = `https://statementdog.com/analysis/${code}`;
+          title2 = "財報狗";
+
+
+          if (detail) {
+            txt1 += ` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="100%"  alt=${title2} title=${title2} src="https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"></a> </td>`;
+          }
+          else {
+            txt1 += ` <td> <a id="link2" href=${href2} target="_blank"> <img  id="img2" width="100%"  alt=${title2} title=${title2} src="https://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.tw"></a> </td>`;
+          }
+          txt1 += '</tr>';
+          if (`${code.toString().substr(0, 1)}` != "0") {
+            // http://stock.wearn.com/sale_chart.asp?stockid=${code}
+            //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
+            //https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_4938.gif
+            txt1 += '<tr>';
+            txt1 += ` <td> <a href="https://www.wantgoo.com/stock/${code}" target="_blank"><img  width="100%" alt="玩股網" title="玩股網"  src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
+            txt1 += ` <td> <a id="link6" href="https://stock.wearn.com/a${code}.html" target="_blank"> <img id="img6" width="100%" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
+            txt1 += '</tr>';
+
+            // if(!($('#brief').is(':checked'))){
+            if (detail) {
+              txt1 += '<tr>';
+              txt1 += ` <td> <a href="https://www.cnyes.com/twstock/flashchart/${code}.htm" target="_blank"><img  width="100%" alt="鉅亨網" title="鉅亨網" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_${code}.gif"></a> </td>`;
+              txt1 += `<td> <a href="https://invest.wessiorfinance.com/stock_treasure_map.html?stock=${code}" target="_blank"> <img width="100%" alt="樂活五線譜" title="樂活五線譜"
         src=" https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_ASSETS_M_S_${code}.gif"></a> </td>`;
-      txt1+='</tr>';
+              txt1 += '</tr>';
+            }
+          }
+
+          if (detail) {
+            txt1 += '<tr>';
+            //txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> 
+            // https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId=1434
+            txt1 += ` <td> <a id="link5" href="https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId=${code}" target="_blank"> 
+			<img id="img5" width="100%" alt="精誠資訊" title="精誠資訊" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
+            txt1 += `<td> <a href="https://tw.stock.yahoo.com/q/bc?s=${code}" target="_blank"> <img width="100%" alt="Yahoo" title="Yahoo"
+        src="https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_${code}.gif"></a> </td>`;
+            txt1 += '</tr>';
+          }
+          // https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif
+          // http://stock.wearn.com/acre.asp?stockid=${code}
+          txt1 += '<tr>';
+          if (`${code.toString().substr(0, 1)}` != "0") {
+            href4 = `http://www.cmoney.tw/finance/f00025.aspx?s=${code}`;
+
+          }
+
+
+          txt1 += `<td>  <a id="link4" href=${href4} target="_blank"><img id="img4" width="100%" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_${code}.gif"></a> </td>`;
+          txt1 += ' <td> <a id="link3" href="https://histock.tw/stock/' + code + '" target="_blank"> <img id="img3" width="100%"  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid=' + code + '"></a> </td>';
+          txt1 += '</tr>';
+
+          if (detail) {
+            txt1 += '<tr>';
+            txt1 += ' <td> <a id="link7" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=' + code + '" target="_blank"><img id="img7" width="100%" alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid=' + code + '"></a> </td>';
+            txt1 += '<td> <a id="link8" href="http://pchome.megatime.com.tw/stock/sid' + code + '.html" target="_blank"> <img id="img8" width="100%"  alt="PChome" title="PCHome股" src="https://stock.wearn.com/zhuli_chart.asp?stockid=' + code + '"></a> </td>';
+            txt1 += '</tr>';
+          }
+          // https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_5434.gif
+          //  https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_5434.gif
+          //  https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_ASSETS_M_S_5434.gif
+          //  https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_5434.gif
+
+
+
+          txt1 += '</table>';
+
+          // Create text with HTML
+          let txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
+          let txt3 = document.createElement("p");
+          txt3.innerHTML = "Text.";         // Create text with DOM
+
+          $("#T").append(txt1);   // Append new elements
         }
       }
-      
-      if(detail){ 
-      txt1+='<tr>';  
-	  //txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> 
-	 // https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId=1434
-      txt1+=` <td> <a id="link5" href="https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId=${code}" target="_blank"> 
-			<img id="img5" width="100%" alt="精誠資訊" title="精誠資訊" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
-      txt1+=`<td> <a href="https://tw.stock.yahoo.com/q/bc?s=${code}" target="_blank"> <img width="100%" alt="Yahoo" title="Yahoo"
-        src="https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_${code}.gif"></a> </td>`;
-      txt1+='</tr>';
+
+      //document.querySelector('#T2').textContent.match(/\w+/g)  Read All Show  2021.11.4
+      function ReLoad_T2() {
+        const codeA1 = document.querySelector('#T2').textContent.match(/\w+/g);
+        //console.log(codeA1);
+        $("#T").html('');
+        $("#T2").html('');
+
+        $("#T3").html('');
+        codeA1.map(appendText1);
+        document.documentElement.scrollTop = 0;
+        document.getElementById("T2").style.display = "none";
       }
-      // https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif
-      // http://stock.wearn.com/acre.asp?stockid=${code}
-      txt1+='<tr>';  
-	  if(`${code.toString().substr(0,1)}`!="0"){
-		href4=`http://www.cmoney.tw/finance/f00025.aspx?s=${code}`;
-		
-		}
-		
-		
-      txt1+=`<td>  <a id="link4" href=${href4} target="_blank"><img id="img4" width="100%" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_${code}.gif"></a> </td>`;
-      txt1+=' <td> <a id="link3" href="https://histock.tw/stock/'+code+'" target="_blank"> <img id="img3" width="100%"  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid='+code+'"></a> </td>';
-      txt1+='</tr>';
-      
-      if(detail){ 
-      txt1+='<tr>';  
-      txt1+=' <td> <a id="link7" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a='+code+'" target="_blank"><img id="img7" width="100%" alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid='+code+'"></a> </td>';
-      txt1+='<td> <a id="link8" href="http://pchome.megatime.com.tw/stock/sid'+code+'.html" target="_blank"> <img id="img8" width="100%"  alt="PChome" title="PCHome股" src="https://stock.wearn.com/zhuli_chart.asp?stockid='+code+'"></a> </td>';
-      txt1+='</tr>';
+
+      function ShowT2() {
+        const x = document.getElementById("T2");
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
       }
-      // https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_5434.gif
-      //  https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_CF_M_S_5434.gif
-      //  https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_ASSETS_M_S_5434.gif
-      //  https://goodinfo.tw/StockInfo/image/StockDayTrading/DAY_TRADING_DATE_5434.gif
-       
-     
-      
-      txt1+='</table>';
-  
-  // Create text with HTML
-  let txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
-  let txt3 = document.createElement("p");
-  txt3.innerHTML = "Text.";         // Create text with DOM
-  
-  $("#T").append(txt1);   // Append new elements
-  }
-}
-
-//document.querySelector('#T2').textContent.match(/\w+/g)  Read All Show  2021.11.4
-function ReLoad_T2(){
-const codeA1=document.querySelector('#T2').textContent.match(/\w+/g) ;
-//console.log(codeA1);
-$("#T").html('');
-$("#T2").html('');
-
-$("#T3").html('');
-codeA1.map(appendText1);
-document.documentElement.scrollTop = 0; 
-document.getElementById("T2").style.display = "none";
-}
-
-function ShowT2(){
-const x = document.getElementById("T2");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
-}
-function ShowT2_A(){
- document.getElementById("myTable2").scrollIntoView();
-  
-  
-}
-function ShowT3(){
-	$("#T").html('');
-	
-	$("#T3").html('');
-	let codeA = document.getElementById("T2").innerHTML.split(" "); 
-	//document.getElementById("demo").innerHTML = myArray; 
-	
-	codeA.map(appendText3);
-	
-}
+      function ShowT2_A() {
+        document.getElementById("myTable2").scrollIntoView();
 
 
-function appendText(){
-$("#T").html('');
-$("#T2").html('');
-$("#T3").html('');
-// appendText1('0050');
-// appendText1('0050');
-// appendText1('2412');
-// appendText1('3376');
-// appendText1('6269');
-9917
-4938
-5434
-0050
-2891
-2845
-9925
-0056
-00878
-3045
-2356
-00881
-8109
-//  Initial ------->
-let codeA=['2845','9917','4938','00772B','9925','5434','0050','2891','3045','2356','00878','2347','00679B','8109','2882'
-		,"2412","1101","2023",'2330','2303','2454','2308','2603','3260','00891'];
-codeA.map(appendText1);
-document.documentElement.scrollTop = 0; 
-}
-function show_a(link){
-//Object.keys(link)
+      }
+      function ShowT3() {
+        $("#T").html('');
 
- // if(link.Weight==undefined){
- // appendText1(link.code);
- // }
- // else{
- //   appendText1(link.code,link.Weight);
- // }
-  
-  if(  Object.keys(link).length==1){
-	appendText1(link.code,link.code);
-  } 
-  else {
-	if(link.Weight==undefined){
-		appendText1(link.code,link[Object.keys(link)[1]]);
-		}
-  else{ 
-		appendText1(link.code,link.Weight);
-		}
-	}
-  let txt2 = $("<p></p>").text(link.code); 
-  document.documentElement.scrollTop = 0; 
-  
-  // $("#T2").append(link.code +' '); 
+        $("#T3").html('');
+        let codeA = document.getElementById("T2").innerHTML.split(" ");
+        //document.getElementById("demo").innerHTML = myArray; 
 
-}
-function  Array_R(){
-  $("#T2").html('');
-  
-  $("#T3").html('');
-  $("#T").html('');
-  d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
-    //console.log(data);
-    data.map(show_a);
-  })
-//   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
-// data - 家戶所得.csv
-}
-function  Google_sht_R(){
-  $("#T2").html('');
-  
-  $("#T3").html('');
-  $("#T").html('');
-  let findString =''
-  if(findString=='!'){ findString = '';}
-  let select_sh=$('#select_sh').val();
-  //console.log(select_sh);
-  let a = {
-                    sheetUrl:'https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing',
-                    sheetTag: select_sh,
-                    findSting: findString
-                    };
- //  const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
-   const Search_API='https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec';
-   $.get(Search_API, a, function (data) {    
-   //$.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
-                    if(data.length==2){
-                         $("#T2").html( '查無資料 請重新輸入再查詢');
-                    }
-                    else  if (data.length==0){ 
-                        $("#T2").html('sheet Name 須為 "List"');}
-                    else {
+        codeA.map(appendText3);
 
-                    // console.log(data.length);
-                    //console.log(data);
-                    data = JSON.parse(data);
-					//console.log(data);
-                    data.map(show_a);
-					JSONTableShow(data,"#myTable2");
-                  }
-                });
-  // d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
-  //   console.log(data);
-  //   data.map(show_a);
-  // })
-//   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
-// data - 家戶所得.csv
-}
-function  GSname(){
-  $("#T2").html('');
-  $("#T").html('');
-  
-$("#T3").html('');
-  let select_sh=$('#select_sh').val();
-  let a = {
-                    sheetUrl:'"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"'
-                    
-                    };
-   $.get('https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec', a, function (data) {
-                $("#select_sh").empty();
-                
-                $('#select_sh').append($('<option>', { 
-                      value: '',
-                      text : "---請選擇----"
-                      }));
-                       
-                data = JSON.parse(data);
-                $.each(data, function (i, item) {
-                    $('#select_sh').append($('<option>', { 
-                      value: item.Sname,
-                      text : item.Sname 
-                }));
-				});
-                   
-                });
-  
-}
+      }
 
-</script>
-<body>
-<div id="fixed-div" >
-<!-- <p>This is a paragraph.</p> 
+
+      function appendText() {
+        $("#T").html('');
+        $("#T2").html('');
+        $("#T3").html('');
+        // appendText1('0050');
+        // appendText1('0050');
+        // appendText1('2412');
+        // appendText1('3376');
+        // appendText1('6269');
+        9917;
+        4938;
+        5434;
+        0050;
+        2891;
+        2845;
+        9925;
+        0056;
+        00878;
+        3045;
+        2356;
+        00881;
+        8109;
+        //  Initial ------->
+        let codeA = ['00772B', '9917', '2845', '4938', '00773B', '2882', '9925', '5434', '0050', '00679B', '2891'
+          , '2356', '2347', '00878', '2881', '3045', '8109', '6770'
+          , "2412", "1101", "2023", '2330', '2303', '2454', '2308', '2603', '3260', '00891'
+          , '6233', '3062', '3006', '3661'];
+        codeA.map(appendText1);
+        document.documentElement.scrollTop = 0;
+      }
+      function show_a(link) {
+        //Object.keys(link)
+
+        // if(link.Weight==undefined){
+        // appendText1(link.code);
+        // }
+        // else{
+        //   appendText1(link.code,link.Weight);
+        // }
+
+        if (Object.keys(link).length == 1) {
+          appendText1(link.code, link.code);
+        }
+        else {
+          if (link.Weight == undefined) {
+            appendText1(link.code, link[Object.keys(link)[1]]);
+          }
+          else {
+            appendText1(link.code, link.Weight);
+          }
+        }
+        let txt2 = $("<p></p>").text(link.code);
+        document.documentElement.scrollTop = 0;
+
+        // $("#T2").append(link.code +' '); 
+
+      }
+      function Array_R() {
+        $("#T2").html('');
+
+        $("#T3").html('');
+        $("#T").html('');
+        d3.csv("https://svn12.github.io/doc/my_自選股.csv", function (data) {
+          //console.log(data);
+          data.map(show_a);
+        });
+        //   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
+        // data - 家戶所得.csv
+      }
+      function Google_sht_R() {
+        $("#T2").html('');
+
+        $("#T3").html('');
+        $("#T").html('');
+        let findString = '';
+        if (findString == '!') { findString = ''; }
+        let select_sh = $('#select_sh').val();
+        //console.log(select_sh);
+        let a = {
+          sheetUrl: 'https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing',
+          sheetTag: select_sh,
+          findSting: findString
+        };
+        //  const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
+        const Search_API = 'https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec';
+        $.get(Search_API, a, function (data) {
+          //$.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
+          if (data.length == 2) {
+            $("#T2").html('查無資料 請重新輸入再查詢');
+          }
+          else if (data.length == 0) {
+            $("#T2").html('sheet Name 須為 "List"');
+          }
+          else {
+
+            // console.log(data.length);
+            //console.log(data);
+            data = JSON.parse(data);
+            //console.log(data);
+            data.map(show_a);
+            JSONTableShow(data, "#myTable2");
+          }
+        });
+        // d3.csv("https://svn12.github.io/doc/my_自選股.csv", function(data) {
+        //   console.log(data);
+        //   data.map(show_a);
+        // })
+        //   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
+        // data - 家戶所得.csv
+      }
+      function GSname() {
+        $("#T2").html('');
+        $("#T").html('');
+
+        $("#T3").html('');
+        let select_sh = $('#select_sh').val();
+        let a = {
+          sheetUrl: '"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"'
+
+        };
+        $.get('https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec', a, function (data) {
+          $("#select_sh").empty();
+
+          $('#select_sh').append($('<option>', {
+            value: '',
+            text: "---請選擇----"
+          }));
+
+          data = JSON.parse(data);
+          $.each(data, function (i, item) {
+            $('#select_sh').append($('<option>', {
+              value: item.Sname,
+              text: item.Sname
+            }));
+          });
+
+        });
+
+      }
+
+    </script>
+
+  <body>
+    <div id="fixed-div">
+      <!-- <p>This is a paragraph.</p> 
 <button onclick="appendText()">Fixed</button>
 <button onclick="GSname()">GetSname</button>
 <!-- <button onclick="Array_R()">Read CSV</button>
 <!-- <button onclick="Google_sht_R()">Read G-Sheet</button> -->
 
-<a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"  target="_blank">Edit</a>
-<input type="checkbox" id="brief" onchange="ReLoad_T2()"  checked="checked">Brief 
-<!--   <input type="checkbox" id="showT2" onchange="Show_T2()"  checked="checked">ShowList  -->
+      <a href="https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"
+        target="_blank">Edit</a>
+      <input type="checkbox" id="brief" onchange="ReLoad_T2()" checked="checked">Brief
+      <!--   <input type="checkbox" id="showT2" onchange="Show_T2()"  checked="checked">ShowList  -->
 
-<a href="https://www.cmoney.tw/etf/e210.aspx?key=0050"  target="_blank">ETF成分</a>
-<a href="https://www.wantgoo.com/stock/etf/net-value?category=%E5%9C%8B%E5%85%A7%E6%88%90%E5%88%86%E8%AD%89%E5%88%B8%E6%8C%87%E6%95%B8%E8%82%A1%E7%A5%A8%E5%9E%8B%E5%9F%BA%E9%87%91&manager=&orderBy=volume&direction=1"  target="_blank">ETF折溢價</a>
-<a href="https://histock.tw/twclass/A009"  target="_blank">電子</a>
-<a href="Q共用.html"  target="_blank">Q共用</a>
-<label for="text"><a href="https://www.wantgoo.com/stock/ranking/top-gainer"  target="_blank"> 排行&nbsp &nbsp</a></label>
-<button type="button" onclick="ShowT2_A()">ShowList</button>
+      <a href="https://www.cmoney.tw/etf/e210.aspx?key=0050" target="_blank">ETF成分</a>
+      <a href="https://www.wantgoo.com/stock/etf/net-value?category=%E5%9C%8B%E5%85%A7%E6%88%90%E5%88%86%E8%AD%89%E5%88%B8%E6%8C%87%E6%95%B8%E8%82%A1%E7%A5%A8%E5%9E%8B%E5%9F%BA%E9%87%91&manager=&orderBy=volume&direction=1"
+        target="_blank">ETF折溢價</a>
+      <a href="https://histock.tw/twclass/A009" target="_blank">電子</a>
+      <a href="Q共用.html" target="_blank">Q共用</a>
+      <label for="text"><a href="https://www.wantgoo.com/stock/ranking/top-gainer" target="_blank"> 排行&nbsp
+          &nbsp</a></label>
+      <button type="button" onclick="ShowT2_A()">ShowList</button>
 
-<select id="select_sh" onchange="Google_sht_R()";>
-	<!--  <option value="" selected="selected">請選擇Sheet</option> 
+      <select id="select_sh" onchange="Google_sht_R()" ;>
+        <!--  <option value="" selected="selected">請選擇Sheet</option> 
 	<button type="button" onclick="ShowT3()">技術線圖</button>
 	-->
-    <option value="List">List</option>
-            
-</select>
+        <option value="List">List</option>
 
-<p id="T2" style="display: none;"> </p>
-</div>
-<div id="abgne_float_ad_1" style="display: none;" >
-		<span class="abgne_close_ad fa  fa-arrow-circle-up" style="font-size:5rem;color:blue;"></span>
-		<!-- <a href="http://vv0817.byethost3.com" target="_blank"> -->
-			<!-- <img src="./img/cell-phone.svg" title="Test~遊戲天地" class="abgne_close_ad"  /> -->
-		</a>
-</div>
+      </select>
 
-
-<p id="T"> </p>
-
-<div id="T3" class="iframe-container">
-
-</div>
-<table class="showtable" id="myTable2" style="width:90%"  style="display: none;">   </table>
-<iframe  src="https://histock.tw/stock/broker8.aspx" enableviewstate="True" frameborder="no" vspace="0" hspace="0"  width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
-<iframe  src="https://histock.tw/tw" enableviewstate="True" frameborder="no" vspace="0" hspace="0"  width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
+      <p id="T2" style="display: none;"> </p>
+    </div>
+    <div id="abgne_float_ad_1" style="display: none;">
+      <span class="abgne_close_ad fa  fa-arrow-circle-up" style="font-size:5rem;color:blue;"></span>
+      <!-- <a href="http://vv0817.byethost3.com" target="_blank"> -->
+      <!-- <img src="./img/cell-phone.svg" title="Test~遊戲天地" class="abgne_close_ad"  /> -->
+      </a>
+    </div>
 
 
+    <p id="T"> </p>
 
-</body>
+    <div id="T3" class="iframe-container">
+
+    </div>
+    <table class="showtable" id="myTable2" style="width:90%" style="display: none;"> </table>
+    <iframe src="https://histock.tw/stock/broker8.aspx" enableviewstate="True" frameborder="no" vspace="0" hspace="0"
+      width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
+    <iframe src="https://histock.tw/tw" enableviewstate="True" frameborder="no" vspace="0" hspace="0" width="1250"
+      height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
+
+
+
+  </body>
+
 </html>
