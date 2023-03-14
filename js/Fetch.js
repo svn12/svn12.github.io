@@ -36,13 +36,16 @@ function Array2Json(res) {
 async function RsheetData(shtUrl, shtName) {
   const RSheet2Json_APIV6 =
     "https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec";
+  const RSheet2Json_APIV7 =
+    "https://script.google.com/macros/s/AKfycbwW8w21yItaTo5-rrhxRkkkM2Y2g95rWV9ivbOaJBprrA-7_EbHOA2Wpdu2bN_F2FPB4Q/exec";
+
   let a = {
     sheetUrl: shtUrl,
     sheetTag: shtName, //'Main' //'Test'
   };
   const u = new URLSearchParams(a).toString();
   //let urlParameters = Object.entries(a).map(e => e.join('=')).join('&');
-  let url = RSheet2Json_APIV6 + `?${u}`;
+  let url = RSheet2Json_APIV7 + `?${u}`;
   //console.log(url);
   //url='https://randomuser.me/api/';
 
