@@ -173,6 +173,8 @@ function TableShow(rrows, sel) {
     th = document.createElement("th");
     if (isValidDate(elem)) {
       th.innerHTML = new Date(elem).toLocaleDateString();
+    } else if (typeof elem == "object") {
+      th.innerHTML = Object.values(elem)[0];
     } else {
       th.innerHTML = elem;
     }
@@ -183,19 +185,23 @@ function TableShow(rrows, sel) {
     let row = table1.insertRow(index + 1);
     elem.map((elem, index) => {
       let cell = row.insertCell(index);
-      if (isValidUrl(elem)) {
-        cell.innerHTML = `<a href="${elem}" target=_blank>${elem}</a>`;
+      if (typeof elem == "object") {
+        cell.innerHTML = Object.values(elem)[0];
       } else {
-        if (Number.isFinite(elem) && !Number.isInteger(elem)) {
-          cell.innerHTML = elem.toLocaleString(0, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          });
+        if (isValidUrl(elem)) {
+          cell.innerHTML = `<a href="${elem}" target=_blank>${elem}</a>`;
         } else {
-          if (isValidDate(elem)) {
-            cell.innerHTML = new Date(elem).toLocaleDateString();
+          if (Number.isFinite(elem) && !Number.isInteger(elem)) {
+            cell.innerHTML = elem.toLocaleString(0, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            });
           } else {
-            cell.innerHTML = elem;
+            if (isValidDate(elem)) {
+              cell.innerHTML = new Date(elem).toLocaleDateString();
+            } else {
+              cell.innerHTML = elem;
+            }
           }
         }
       }
