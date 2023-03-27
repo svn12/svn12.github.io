@@ -129,20 +129,20 @@ function  Plot_JK資產1(){
   Remove_iframe();
   const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
   var a = {
-		sheetUrl:fmain,
-		sheetTag: 'All' //'Test'
-		};
+	  sheetUrl:fmain,
+	  sheetTag: 'All' //'Test'
+	};
 	const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
 	$.get(RSheet2Json_APIV6, a, function (data) {    
-	   const xlabel = [];
-	   const data1=[];
-	   
-	   const data4=[];
-	   const data3=[];
-	   const data2=[];
-	   const data5=[];
+		const xlabel = [];
+		const data1=[];
+		
+		const data4=[];
+		const data3=[];
+		const data2=[];
+		const data5=[];
 	    const startno=document.getElementById("startno").value -1
-	   $.each(data, function (i, item) {
+		$.each(data, function (i, item) {
 			if(i>startno){
 				xlabel.push((new Date(item[0])).toLocaleDateString());
 				
@@ -151,56 +151,56 @@ function  Plot_JK資產1(){
 				data3.push(item[2]);	
 				data4.push(item[18]);
 				data5.push(item[13]);
-				}
 			}
+		}
 		);
 		
 		
 		new Chart(document.getElementById("myChart2"), {
-		type: 'line',
-		data: {
-			labels: xlabel,
-    datasets: [{ 
-        data: data1,
-        label: data[0][16],
-        borderColor: "#e8c3b9",
-        fill: false
-      }, { 
-        data: data2,
-        label: data[0][1],
-        borderColor: "#3e95cd",
-        fill: false
-      },{ 
-        data: data3,
-        label: data[0][2],
-        borderColor: "#8e5ea2",
-        fill: false
-      },{ 
-        data: data4,
-        label: data[0][18],
-        borderColor: "#c45850",
-        fill: false
-      },{ 
-        data: data5,
-        label: data[0][13],
-        borderColor: "#435850",
-        fill: false
-      }
-    ]
-  },
+			type: 'line',
+			data: {
+				labels: xlabel,
+				datasets: [{ 
+					data: data1,
+					label: data[0][16],
+					borderColor: "#e8c3b9",
+					fill: false
+				}, { 
+					data: data2,
+					label: data[0][1],
+					borderColor: "#3e95cd",
+					fill: false
+				},{ 
+					data: data3,
+					label: data[0][2],
+					borderColor: "#8e5ea2",
+					fill: false
+				},{ 
+					data: data4,
+					label: data[0][18],
+					borderColor: "#c45850",
+					fill: false
+				},{ 
+					data: data5,
+					label: data[0][13],
+					borderColor: "#435850",
+					fill: false
+				}
+			]
+		},
   options: {
-    title: {
-      display: true,
-      text: `JK資產(共${xlabel.length}/${data.length-1}筆)`
-			}
-			}
-		}); 
-		
-		});
+	  title: {
+		  display: true,
+		  text: `JK資產(共${xlabel.length}/${data.length-1}筆)`
+		}
+	}
+}); 
+
+});
 }
 async function  Plot_Sofie資產(){
 	const startno=document.getElementById("startno").value -1
-  const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+	const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
 	const idx=[0,1,3,5,7]
 	await RsheetData(fmain,'Lan_Stock')
 	.then(data=>{
@@ -210,16 +210,34 @@ async function  Plot_Sofie資產(){
 		data=data1.slice(startno);
 		data.unshift(header);
 		}
-		title=`蘭股票 (共${data.length-startno-1}/${data.length-1}筆)`;
+		title=`蘭股票  (共${data1.length-1} 最後 ${data.length - 1}筆)`;
 		TablePlot(data,title,'#plot',idx,9);
 	})
 }
 async function  Plot_JK股票_Now(){
-  
+
  let startno=document.getElementById("startno").value -1;
   const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
 	const idx=[0,1,2]
 	await RsheetData(fmain,'JK_Now')
+	.then(data=>{
+		data1=data;
+		// if(startno!=0){
+		// let header=data.shift();
+		// data=data1.slice(startno);
+		// data.unshift(header);
+		// }
+		title=`ＪＫ股票_Now  `;
+		TablePlot(data,title,'#plot',idx);
+	})
+}
+async function  Plot_JK資產_profit(){
+	
+	let startno=document.getElementById("startno").value -1;
+	
+	const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+	const idx=[0,19,20]
+	await RsheetData(fmain,'All')
 	.then(data=>{
 		data1=data;
 		if(startno!=0){
@@ -227,7 +245,44 @@ async function  Plot_JK股票_Now(){
 		data=data1.slice(startno);
 		data.unshift(header);
 		}
-		title=`ＪＫ股票_Now (共${data.length-startno-1}/${data.length-1}筆)`;
+		// Add Sum accumulated
+		idx.push(data[0].length)
+		data[0].push("累計損益")
+		
+		let sum= 0;
+		for (let i=1;i<data.length;i++){
+			sum=sum+data[i][idx[1]];
+			data[i].push(sum);
+		}
+		//
+		title=`ＪＫ股票_日損益 (共${data1.length-1} 最後 ${data.length-1}筆)`;
+		TablePlot(data,title,'#plot',idx);
+	})
+}
+async function  Plot_JK股票_profit(){
+  
+ let startno=document.getElementById("startno").value -1;
+  const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+	const idx=[0,7]
+	await RsheetData(fmain,'jk_stk')
+	.then(data=>{
+		data1=data;
+		if(startno!=0){
+		let header=data.shift();
+		data=data1.slice(startno);
+		data.unshift(header);
+		}
+		// Add Sum accumulated
+		idx.push(data[0].length)
+		data[0].push("累計損益")
+		
+		let sum= 0;
+		for (let i=1;i<data.length;i++){
+			sum=sum+data[i][idx[1]];
+			data[i].push(sum);
+		}
+		//
+		title=`ＪＫ股票_日損益 (共${data1.length-1} 最後 ${data.length-1}筆)`;
 		TablePlot(data,title,'#plot',idx);
 	})
 }
@@ -245,7 +300,7 @@ async function  Plot_JK股票(){
 		 data=data1.slice(startno);
 		 data.unshift(header);
 		 }
-		 title=`ＪＫ股票 (共${data.length-startno-1}/${data.length-1}筆)`;
+		 title=`ＪＫ股票  (共${data1.length-1} 最後 ${data.length - 1}筆)`;
 		 TablePlot(data,title,'#plot',idx,22);
 	 })
  }
@@ -269,7 +324,7 @@ const startno=document.getElementById("startno").value -1;
 		data=data1.slice(startno);
 		data.unshift(header);
 		}
-		title=`Plot_直播 (共${data.length-startno-1}/${data.length-1}筆)`;
+		title=`Plot_直播  (共${data1.length - 1} 最後 ${data.length - 1}筆)`;
 		TablePlot(data,title,'#plot',idx,4);
 	})
 }
@@ -283,8 +338,10 @@ const startno=document.getElementById("startno").value -1;
 <body>
 <button type="button" onclick="Plot_直播()">直播紀錄</button>
 <button type="button" onclick="Plot_JK資產()">JK資產</button>
+<button type="button" onclick="Plot_JK資產_profit()">JK資產_月損益</button>
 <button type="button" onclick="Plot_JK股票()">JK股票</button>
 <button type="button" onclick="Plot_JK股票_Now()">JK股票_Now</button>
+<button type="button" onclick="Plot_JK股票_profit()">JK股票_損益</button>
 <button type="button" onclick="Plot_Sofie資產()">蘭股票</button>
 <input type="number" id="startno" value=1><br><br>
 
