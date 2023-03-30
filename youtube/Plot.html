@@ -1,9 +1,11 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
-	 <!-- 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- 
 	Reference Chart.js example 
 		https://tobiasahlin.com/blog/chartjs-charts-to-get-you-started/
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -14,15 +16,17 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 	-->
-    
+
 	<script src="../js/Fetch.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-    <title>Plot</title>
+	<title>Plot</title>
 
-    <style> 
-            .container {  display: flex;}
-            </style>
+	<style>
+		.container {
+			display: flex;
+		}
+	</style>
 
 </head>
 
@@ -30,304 +34,231 @@
 
 
 <style type="text/css">
-	 input,select{
-            margin: 0px;
-            display: inline;
-            font-size: 18px;
-        }
-
-        /* label {display:inline;} */
-        /* input {display:inline;} */
-        button {
-            font-size: 16px;
-        }
-	#fixed-div {
-	  position: fixed;
-	  top: 100;
-	  left: 0;
-	  right: 0;
-	  overflow-x:auto;
-	/*  height: 60px;*/
-	 
+	input,
+	select {
+		margin: 0px;
+		display: inline;
+		font-size: 18px;
 	}
-    table {
-	  position: relative;
-	  top: 100;
-	  border-collapse: collapse;
-	  border-spacing: 0;
-	  width: 100%;
-	  border: 1px solid #ddd;
-	  overflow-x:scroll;
-	  overflow-y:scroll;
+
+	/* label {display:inline;} */
+	/* input {display:inline;} */
+	button {
+		font-size: 16px;
+	}
+
+	#fixed-div {
+		position: fixed;
+		top: 100;
+		left: 0;
+		right: 0;
+		overflow-x: auto;
+		/*  height: 60px;*/
+
+	}
+
+	table {
+		position: relative;
+		top: 100;
+		border-collapse: collapse;
+		border-spacing: 0;
+		width: 100%;
+		border: 1px solid #ddd;
+		overflow-x: scroll;
+		overflow-y: scroll;
 	}
 
 	td {
-	  text-align: center;
-	  padding: 8px;
+		text-align: center;
+		padding: 8px;
 	}
-	th{
-	 background: yellow;
-	 position: sticky;
-	 top: 0; /* Don't forget this, required for the stickiness */
-	 box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
-	 }
-	tr:nth-child(even){
+
+	th {
+		background: yellow;
+		position: sticky;
+		top: 0;
+		/* Don't forget this, required for the stickiness */
+		box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+	}
+
+	tr:nth-child(even) {
 		/* background-color: #f2f2f2 
 		overflow-y: scroll;
 		display: block;
 		*/
-		 background-color: lightblue;
-		}
-	table>tr{
-		
-		
-        background-color: orange;
-      }
+		background-color: lightblue;
+	}
+
+	table>tr {
+
+
+		background-color: orange;
+	}
 </style>
 <script>
-$(document).ready(function() {
-  var shtUrl='"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"'
- // GSname(shtUrl);
- // R_Url();
- let startno=parseInt(document.getElementById("startno").value) -1;
-  
-})
+	$(document).ready(function () {
+		var shtUrl = '"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"';
+		// GSname(shtUrl);
+		// R_Url();
+		let startno = parseInt(document.getElementById("startno").value) - 1;
+
+	});
+
 
 	
-const RSheet2Json_APIV6='https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec'
-async function  Plot_JK資產(){
-	const startno=document.getElementById("startno").value -1
-	const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
-	const idx=[0,16,1,2,18,13,19]
-	await RsheetData(fmain,'All')
-	.then(data=>{
-		data1=data;
-		if(startno!=0){
-		let header=data.shift();
-		data=data1.slice(startno);
-		data.unshift(header);
-		}
-		title=`Plot_JK資產 (共${data.length-startno-1}/${data.length-1}筆)`;
-		TablePlot(data,title,'#plot',idx,20);
-	})
-}
-
-
-
-function Remove_iframe() {
-  $("#plot").empty();
-  let g = document.createElement('canvas');
-  g.setAttribute("id", "myChart2");
-  g.setAttribute("style","width:100%;max-width:90%;max-height:80%");
-  document.getElementById("plot").appendChild(g)
- /* const element = document.getElementsByClassName("chartjs-hidden-iframe");
-  if(element.length>0){
-  element[0].remove();
-  } */
-}
-function  Plot_JK資產1(){
-  Remove_iframe();
-  const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
-  var a = {
-	  sheetUrl:fmain,
-	  sheetTag: 'All' //'Test'
-	};
-	const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
-	$.get(RSheet2Json_APIV6, a, function (data) {    
-		const xlabel = [];
-		const data1=[];
-		
-		const data4=[];
-		const data3=[];
-		const data2=[];
-		const data5=[];
-	    const startno=document.getElementById("startno").value -1
-		$.each(data, function (i, item) {
-			if(i>startno){
-				xlabel.push((new Date(item[0])).toLocaleDateString());
-				
-				data1.push(item[16]);
-				data2.push(item[1]);
-				data3.push(item[2]);	
-				data4.push(item[18]);
-				data5.push(item[13]);
-			}
-		}
-		);
-		
-		
-		new Chart(document.getElementById("myChart2"), {
-			type: 'line',
-			data: {
-				labels: xlabel,
-				datasets: [{ 
-					data: data1,
-					label: data[0][16],
-					borderColor: "#e8c3b9",
-					fill: false
-				}, { 
-					data: data2,
-					label: data[0][1],
-					borderColor: "#3e95cd",
-					fill: false
-				},{ 
-					data: data3,
-					label: data[0][2],
-					borderColor: "#8e5ea2",
-					fill: false
-				},{ 
-					data: data4,
-					label: data[0][18],
-					borderColor: "#c45850",
-					fill: false
-				},{ 
-					data: data5,
-					label: data[0][13],
-					borderColor: "#435850",
-					fill: false
+	async function Plot_JK資產() {
+		$("#plot").empty();
+		const startno = document.getElementById("startno").value - 1;
+		const fmain = 'https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+		const idx = [0, 16, 1, 2, 18, 13, 19];
+		await RsheetData(fmain, 'All')
+			.then(data => {
+				data1 = data;
+				if (startno != 0) {
+					let header = data.shift();
+					data = data1.slice(startno);
+					data.unshift(header);
 				}
-			]
-		},
-  options: {
-	  title: {
-		  display: true,
-		  text: `JK資產(共${xlabel.length}/${data.length-1}筆)`
-		}
+				title = `Plot_JK資產 (共${data.length - startno - 1}/${data.length - 1}筆)`;
+				TablePlot(data, title, '#plot', idx, 20);
+			});
 	}
-}); 
-
-});
-}
-async function  Plot_Sofie資產(){
-	const startno=document.getElementById("startno").value -1
-	const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
-	const idx=[0,1,3,5,7]
-	await RsheetData(fmain,'Lan_Stock')
-	.then(data=>{
-		data1=data;
-		if(startno!=0){
-		let header=data.shift();
-		data=data1.slice(startno);
-		data.unshift(header);
-		}
-		title=`蘭股票  (共${data1.length-1} 最後 ${data.length - 1}筆)`;
-		TablePlot(data,title,'#plot',idx,9);
-	})
-}
-async function  Plot_JK股票_Now(){
-
- let startno=document.getElementById("startno").value -1;
-  const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
-	const idx=[0,1,2]
-	await RsheetData(fmain,'JK_Now')
-	.then(data=>{
-		data1=data;
-		// if(startno!=0){
-		// let header=data.shift();
-		// data=data1.slice(startno);
-		// data.unshift(header);
-		// }
-		title=`ＪＫ股票_Now  `;
-		TablePlot(data,title,'#plot',idx);
-	})
-}
-async function  Plot_JK資產_profit(){
-	
-	let startno=document.getElementById("startno").value -1;
-	
-	const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
-	const idx=[0,19,20]
-	await RsheetData(fmain,'All')
-	.then(data=>{
-		data1=data;
-		if(startno!=0){
-		let header=data.shift();
-		data=data1.slice(startno);
-		data.unshift(header);
-		}
-		// Add Sum accumulated
-		idx.push(data[0].length)
-		data[0].push("累計損益")
-		
-		let sum= 0;
-		for (let i=1;i<data.length;i++){
-			sum=sum+data[i][idx[1]];
-			data[i].push(sum);
-		}
-		//
-		title=`ＪＫ股票_日損益 (共${data1.length-1} 最後 ${data.length-1}筆)`;
-		TablePlot(data,title,'#plot',idx);
-	})
-}
-async function  Plot_JK股票_profit(){
-  
- let startno=document.getElementById("startno").value -1;
-  const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
-	const idx=[0,7]
-	await RsheetData(fmain,'jk_stk')
-	.then(data=>{
-		data1=data;
-		if(startno!=0){
-		let header=data.shift();
-		data=data1.slice(startno);
-		data.unshift(header);
-		}
-		// Add Sum accumulated
-		idx.push(data[0].length)
-		data[0].push("累計損益")
-		
-		let sum= 0;
-		for (let i=1;i<data.length;i++){
-			sum=sum+data[i][idx[1]];
-			data[i].push(sum);
-		}
-		//
-		title=`ＪＫ股票_日損益 (共${data1.length-1} 最後 ${data.length-1}筆)`;
-		TablePlot(data,title,'#plot',idx);
-	})
-}
-
-async function  Plot_JK股票(){
-  
-  let startno=document.getElementById("startno").value -1;
-   const fmain='https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
-	 const idx=[0,5,8,9,21]
-	 await RsheetData(fmain,'jk_stk')
-	 .then(data=>{
-		 data1=data;
-		 if(startno!=0){
-		 let header=data.shift();
-		 data=data1.slice(startno);
-		 data.unshift(header);
-		 }
-		 title=`ＪＫ股票  (共${data1.length-1} 最後 ${data.length - 1}筆)`;
-		 TablePlot(data,title,'#plot',idx,22);
-	 })
- }
- 
 
 
+
+
+	async function Plot_Sofie資產() {
+		$("#plot").empty();
+		const startno = document.getElementById("startno").value - 1;
+		const fmain = 'https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+		const idx = [0, 1, 3, 5, 7];
+		await RsheetData(fmain, 'Lan_Stock')
+			.then(data => {
+				data1 = data;
+				if (startno != 0) {
+					let header = data.shift();
+					data = data1.slice(startno);
+					data.unshift(header);
+				}
+				title = `蘭股票  (共${data1.length - 1} 最後 ${data.length - 1}筆)`;
+				TablePlot(data, title, '#plot', idx, 9);
+			});
+	}
+	async function Plot_JK股票_Now() {
+		$("#plot").empty();
+		let startno = document.getElementById("startno").value - 1;
+		const fmain = 'https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+		const idx = [0, 1, 2];
+		await RsheetData(fmain, 'JK_Now')
+			.then(data => {
+				data1 = data;
+				// if(startno!=0){
+				// let header=data.shift();
+				// data=data1.slice(startno);
+				// data.unshift(header);
+				// }
+				title = `ＪＫ股票_Now  `;
+				TablePlot(data, title, '#plot', idx);
+			});
+	}
+	async function Plot_JK資產_profit() {
+		$("#plot").empty();
+		let startno = document.getElementById("startno").value - 1;
+
+		const fmain = 'https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+		const idx = [0, 19, 20];
+		await RsheetData(fmain, 'All')
+			.then(data => {
+				data1 = data;
+				if (startno != 0) {
+					let header = data.shift();
+					data = data1.slice(startno);
+					data.unshift(header);
+				}
+				// Add Sum accumulated
+				idx.push(data[0].length);
+				data[0].push("累計損益");
+
+				let sum = 0;
+				for (let i = 1; i < data.length; i++) {
+					sum = sum + data[i][idx[1]];
+					data[i].push(sum);
+				}
+				//
+				title = `JK資產_月損益 (共${data1.length - 1} 最後 ${data.length - 1}筆)`;
+				TablePlot(data, title, '#plot', idx);
+			});
+	}
+	async function Plot_JK股票_profit() {
+		$("#plot").empty();
+		let startno = document.getElementById("startno").value - 1;
+		const fmain = 'https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+		const idx = [0, 7];
+		await RsheetData(fmain, 'jk_stk')
+			.then(data => {
+				data1 = data;
+				if (startno != 0) {
+					let header = data.shift();
+					data = data1.slice(startno);
+					data.unshift(header);
+				}
+				// Add Sum accumulated
+				idx.push(data[0].length);
+				data[0].push("累計損益");
+
+				let sum = 0;
+				for (let i = 1; i < data.length; i++) {
+					sum = sum + data[i][idx[1]];
+					data[i].push(sum);
+				}
+				//
+				title = `ＪＫ股票_日損益 (共${data1.length - 1} 最後 ${data.length - 1}筆)`;
+				TablePlot(data, title, '#plot', idx);
+			});
+	}
+
+	async function Plot_JK股票() {
+		$("#plot").empty();
+		let startno = document.getElementById("startno").value - 1;
+		const fmain = 'https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+		const idx = [0, 5, 8, 9, 21];
+		await RsheetData(fmain, 'jk_stk')
+			.then(data => {
+				data1 = data;
+				if (startno != 0) {
+					let header = data.shift();
+					data = data1.slice(startno);
+					data.unshift(header);
+				}
+				title = `ＪＫ股票  (共${data1.length - 1} 最後 ${data.length - 1}筆)`;
+				TablePlot(data, title, '#plot', idx, 22);
+			});
+	}
 
 
 
 
 
-async function  Plot_直播(){
-const startno=document.getElementById("startno").value -1;
-	const fmain='https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing';
-	const idx=[1,2,3]
-	await RsheetData(fmain,'表單回應 1' )
-	.then(data=>{
-		data1=data;
-		if(startno!=0){
-		let header=data.shift();
-		data=data1.slice(startno);
-		data.unshift(header);
-		}
-		title=`Plot_直播  (共${data1.length - 1} 最後 ${data.length - 1}筆)`;
-		TablePlot(data,title,'#plot',idx,4);
-	})
-}
+
+
+
+	async function Plot_直播() {
+		$("#plot").empty();
+		const startno = document.getElementById("startno").value - 1;
+		const fmain = 'https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing';
+		const idx = [1, 2, 3];
+		await RsheetData(fmain, '表單回應 1')
+			.then(data => {
+				data1 = data;
+				if (startno != 0) {
+					let header = data.shift();
+					data = data1.slice(startno);
+					data.unshift(header);
+				}
+				title = `Plot_直播  (共${data1.length - 1} 最後 ${data.length - 1}筆)`;
+				TablePlot(data, title, '#plot', idx, 4);
+			});
+	}
 
 
 
@@ -335,22 +266,24 @@ const startno=document.getElementById("startno").value -1;
 
 
 </script>
+
 <body>
-<button type="button" onclick="Plot_直播()">直播紀錄</button>
-<button type="button" onclick="Plot_JK資產()">JK資產</button>
-<button type="button" onclick="Plot_JK資產_profit()">JK資產_月損益</button>
-<button type="button" onclick="Plot_JK股票()">JK股票</button>
-<button type="button" onclick="Plot_JK股票_Now()">JK股票_Now</button>
-<button type="button" onclick="Plot_JK股票_profit()">JK股票_損益</button>
-<button type="button" onclick="Plot_Sofie資產()">蘭股票</button>
-<input type="number" id="startno" value=1><br><br>
+	<button type="button" onclick="Plot_直播()">直播紀錄</button>
+	<button type="button" onclick="Plot_JK資產()">JK資產</button>
+	<button type="button" onclick="Plot_JK資產_profit()">JK資產_月損益</button>
+	<button type="button" onclick="Plot_JK股票()">JK股票</button>
+	<button type="button" onclick="Plot_JK股票_profit()">JK股票_損益</button>
+	<button type="button" onclick="Plot_JK股票_Now()">JK股票_Now</button>
+	<button type="button" onclick="Plot_Sofie資產()">蘭股票</button>
+	<input type="number" id="startno" placeholder="股票(764)資產(35,54) "><br><br>
 
-<div id="plot" > 
+	<div id="plot">
 
-	
 
-</div>
+
+	</div>
 
 
 </body>
+
 </html>
