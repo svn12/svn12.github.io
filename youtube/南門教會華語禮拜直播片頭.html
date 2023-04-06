@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://svn12.github.io/js/Fetch.js"></script>
-  <title>南門教會直播片頭</title>
+  <title>南門教會華語禮拜直播片頭</title>
 
   <style>
     html {
@@ -318,7 +318,7 @@
     });
     async function Read_SheetData() {
       //document.querySelector("#myTable1").innerHTML = '';
-      await RsheetData(fileLink, '台語禮拜')
+      await RsheetData(fileLink, '華語禮拜')
         .then(data => {
           data[1].forEach((item, index) => {
             if (index > 5 && item !== '') {

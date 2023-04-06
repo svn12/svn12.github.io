@@ -185,7 +185,35 @@
 					data[i].push(sum);
 				}
 				//
-				title = `JK資產_月損益 (共${data1.length - 1} 最後 ${data.length - 1}筆)`;
+				title = `蘭股票_損益 (共${data1.length - 1} 最後 ${data.length - 1}筆)`;
+				TablePlot(data, title, '#plot', idx);
+			});
+	}
+	async function Plot_Sofie資產_profit() {
+		$("#plot").empty();
+		let startno = document.getElementById("startno").value - 1;
+
+		const fmain = 'https://docs.google.com/spreadsheets/d/1yQ_lM1agwbTrCS0mSh2bVg_e0cPjLFQbqF7uFkY155A/edit?usp=sharing';
+		const idx = [0, 2];
+		await RsheetData(fmain, 'Lan_Stock')
+			.then(data => {
+				data1 = data;
+				if (startno != 0) {
+					let header = data.shift();
+					data = data1.slice(startno);
+					data.unshift(header);
+				}
+				// Add Sum accumulated
+				idx.push(data[0].length);
+				data[0].push("累計損益");
+
+				let sum = 0;
+				for (let i = 1; i < data.length; i++) {
+					sum = sum + data[i][idx[1]];
+					data[i].push(sum);
+				}
+				//
+				title = `蘭股票_損益 (共${data1.length - 1} 最後 ${data.length - 1}筆)`;
 				TablePlot(data, title, '#plot', idx);
 			});
 	}
@@ -275,6 +303,7 @@
 	<button type="button" onclick="Plot_JK股票_profit()">JK股票_損益</button>
 	<button type="button" onclick="Plot_JK股票_Now()">JK股票_Now</button>
 	<button type="button" onclick="Plot_Sofie資產()">蘭股票</button>
+	<button type="button" onclick="Plot_Sofie資產_profit()">蘭股票_損益</button>
 	<input type="number" id="startno" placeholder="股票(764)資產(35,54) "><br><br>
 
 	<div id="plot">
