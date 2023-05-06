@@ -107,7 +107,7 @@ function TablePlot(dataS, title, sel, indexs, remarkidx) {
   indexs.shift();
   dataS.forEach((item, index) => {
     if (isValidDate(item[xd])) {
-      dataT = [new Date(item[xd]).toLocaleDateString()];
+	dataT = [new Date(item[xd].replace("T15","T16")).toLocaleDateString()];
     } else {
       dataT = [item[xd]];
     }
