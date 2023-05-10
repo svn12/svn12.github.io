@@ -5,4 +5,4 @@ github.bat
 *.py
 *.xlsm
 .tmp.*
-
+._*
