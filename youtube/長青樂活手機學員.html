@@ -5,31 +5,29 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>南門查Sheet共用</title>
+	<title>南門長青樂活手機班學員資料</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- <script src="js/Fetch.js"></script> -->
 	<script src="https://svn12.github.io/js/Fetch.js"></script>
 </head>
 
 <body>
 	<div id="fixed-div1">
+
+		<!-- <a href="" id="file_href" target="_blank">表單</a> -->
 		
-		<a href="" id="file_href" target="_blank">File</a>
-
-		<a href="https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing"  target="_blank">Main</a>
-		<!-- <a href="https://docs.google.com/spreadsheets/d/1D7DXH35QrH3um2hyAQhM4SsdVGvSHilTUTKnjvyDD40/edit?usp=sharing"  target="_blank">Main</a> -->
 		
-		<select id="select_url" onchange="Google_sht_R()">
-		</select>
-		Sheet:
-		<select id="select_sh" onchange="testRD()">
-			<!-- <input type="number" id="orderno" oninput="RGsheet()" value=0 style="display: none;"> -->
+		
+		<!-- <select id="select_sh" onchange="testRD()">
+			<!-- <input type="number" id="orderno" oninput="RGsheet()" value=0 style="display: none;"> 
+				
+			</select> -->
+			<a href="https://ppt.cc/fK0RDx"  target="_blank">表單輸入 </a>
+			<div class="autocomplete">
+				
+				<input autocomplete="off" type="text" class="form-control" placeholder="關鍵字" id="location-input" />
+			</div>
 
-		</select>
-	</div>
-	<label for="text">查詢&nbsp:&nbsp</label>
-	<div class="autocomplete">
-
-		<input autocomplete="off" type="text" class="form-control" placeholder="關鍵字" id="location-input" />
 	</div>
 
 	<!-- <div id="query" style="display: none;"> 
@@ -68,7 +66,7 @@
 		input,
 		select {
 			margin: 0px;
-			/*  display: inline;*/
+			display: inline;
 			font-size: 18px;
 		}
 
@@ -187,12 +185,14 @@
 		}
 	</style>
 	<script>
-		const main_sheet='https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing';
 		const RSheet2Json_APIV6 = 'https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec';
+		const Sel_url = 'https://docs.google.cohttps://docs.google.com/spreadsheets/d/1D7DXH35QrH3um2hyAQhM4SsdVGvSHilTUTKnjvyDD40/edit?usp=sharing';
+
 		$(document).ready(function () {
-			// var shtUrl = '"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"';
-			// GSname(shtUrl);
-			R_Url();
+
+			//R_Url();
+			// Google_sht_R();
+			testRD();
 
 		});
 		let All_data = [];
@@ -226,27 +226,27 @@
 			testRD();
 		}
 		function Query_Data() {
-				const findString = document.getElementById('location-input').value;
-				const extList= document.querySelector('#location-inputautocomplete-list');
-				document.getElementById('location-input').value = '';
-				if(extList!==null)extList.innerHTML = '';
-				let headers = All_data.shift();
-				fString = findString.match(/[^|]*/)[0];
-				res = All_data.filter(ele => ele.some(elem => elem.toString().includes(fString)));
-				res.unshift(headers);
-				All_data.unshift(headers);
-				TableShow(res, "#myTable1");
-				document.querySelector("#myTable1").style.display = '';
-			}
+			const findString = document.getElementById('location-input').value;
+			const extList = document.querySelector('#location-inputautocomplete-list');
+			document.getElementById('location-input').value = '';
+			if (extList !== null) extList.innerHTML = '';
+			let headers = All_data.shift();
+			fString = findString.match(/[^|]*/)[0];
+			res = All_data.filter(ele => ele.some(elem => elem.toString().includes(fString)));
+			res.unshift(headers);
+			All_data.unshift(headers);
+			TableShow(res, "#myTable1");
+			document.querySelector("#myTable1").style.display = '';
+		}
 		async function testRD() {
-			$('input[type="text"]').val('');
+			// $('input[type="text"]').val('');
 			document.getElementById("show").innerHTML = '';
 			document.getElementById("myTable1").innerHTML = '';
 			// const fmain = $('#selectTle option:selected').val();//'https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit?usp=sharing';
 			// const shURL = $('#selShurl option:selected').val(); //document.getElementById("selShurl").options[document.getElementById("selShurl").selectedIndex].value;
 
-			const shURL = document.getElementById("select_url").value;
-			const sheetTag = document.getElementById("select_sh").value; //'Test'
+			const shURL = Sel_url;   //document.getElementById("select_url").value;
+			const sheetTag = '長青樂活手機學員資料' //document.getElementById("select_sh").value; //'Test'
 
 			await RsheetData(shURL, sheetTag)
 				.then(data => {
@@ -284,35 +284,38 @@
 			document.getElementById("show").innerHTML = '';
 			$.get('https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec', a, function (data) {
 
-				if (document.getElementById("select_url").value == a.sheetUrl) {
-					/*  $('#select_sh').append($('<option>', { 
-							value: '',
-							text : `---請選擇---- ${$("#select_url option:selected").text()} `
-						}));
-						*/
-					data = JSON.parse(data.replace(/\n/g, ' '));
-					//  data = JSON.parse(data);
-					$.each(data, function (i, item) {
-						$('#select_sh').append($('<option>', {
-							value: item.Sname,
-							text: item.Sname
-						}));
+				//	if (document.getElementById("select_url").value == a.sheetUrl) {
+				/*  $('#select_sh').append($('<option>', { 
+						value: '',
+						text : `---請選擇---- ${$("#select_url option:selected").text()} `
+					}));
+					*/
+				data = JSON.parse(data.replace(/\n/g, ' '));
+				//  data = JSON.parse(data);
+				$.each(data, function (i, item) {
+					$('#select_sh').append($('<option>', {
+						value: item.Sname,
+						text: item.Sname
+					}));
 
-					});
-					RGsheet();
-				}
+				});
+				RGsheet();
+				//}
 			});
 
 		}
 		function Google_sht_R() {
-			GSname(document.getElementById("select_url").value);
-			document.getElementById("file_href").href = document.getElementById("select_url").value;
+
+			GSname(Sel_url);
+			document.getElementById("file_href").href = Sel_url;
+			// GSname(document.getElementById("select_url").value);
+			// document.getElementById("file_href").href = document.getElementById("select_url").value;
 		}
 		function R_Url() {
-			const fmain = main_sheet;
+			const fmain = 'https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit#gid=2114459986';
 			var a = {
 				sheetUrl: fmain,
-				sheetTag: '南門Main' //'Test'
+				sheetTag: 'Main' //'Test'
 			};
 
 			$.get(RSheet2Json_APIV6, a, function (data) {
