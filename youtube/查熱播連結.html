@@ -122,7 +122,9 @@ function RGsheet(){
 		// console.log(txt);
 
 		for (x in data) {
-			if(x!="0" && data[x][3].includes(document.getElementById("select_url").value )){
+			if(x!="0" && 
+				(data[x][3].includes(document.getElementById("select_url").value) ||
+				document.getElementById("select_url").value=='All')){
 			txt += "<tr>";
 			heads.forEach(function(item,e){
 			if(e==0){
@@ -160,7 +162,7 @@ function  R_Url(){
 	$.get(RSheet2Json_APIV2, a, function (data) {    
 	  
 	//	$("#select_url").empty();
-		
+	
 		$.each(data, function (i, item) {
 			if(i!=0){
 				keys=item[3].split(",")
@@ -177,6 +179,10 @@ function  R_Url(){
 				
 			}
 		});
+		$('#select_url').append($('<option>', { 
+							value: 'All',
+							text : 'All' 
+						}));
 		RGsheet();
 		});
 
