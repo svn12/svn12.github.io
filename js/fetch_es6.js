@@ -412,4 +412,4 @@ function CreatOption(selector, opt_value, opt_text) {
     select.appendChild(opt);
   });
 }
-export { RsheetData, Rsheet };
+export default RsheetData;
