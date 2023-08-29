@@ -1,4 +1,4 @@
-async function Rsheet(shtUrl) {
+export async function Rsheet(shtUrl) {
   const RSheet_API =
     "https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec";
   const u = new URLSearchParams({ sheetUrl: shtUrl }).toString();
@@ -33,7 +33,7 @@ function Array2Json(res) {
   //console.log("result",result);
   return result; // 使用 json() 可以得到 json 物件
 }
-async function RsheetData(shtUrl, shtName) {
+export default async function RsheetData(shtUrl, shtName) {
   const RSheet2Json_APIV6 =
     "https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec";
   const RSheet2Json_APIV7 =
@@ -412,4 +412,4 @@ function CreatOption(selector, opt_value, opt_text) {
     select.appendChild(opt);
   });
 }
-export default RsheetData;
+// export default RsheetData;
