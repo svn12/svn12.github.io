@@ -111,7 +111,7 @@ function appendText1_usd(code) {
   let str_code="";
   str_code=code;
   let txt1 = '<table border="1" cellspacing="0" cellpadding="7"> '; 
-  
+   // https://stock.capital.com.tw/rtgif/gifstkchartasp2.djgif?w=600&h=450&id=00772B
   	  txt1+='<tr>';  
       txt1+=` <td> <a href="https://www.cnyes.com/twstock/flashchart/${code}.htm" target="_blank"><img  width="470" alt="鉅亨網" title="鉅亨網" 
 	    src="http://charts.aastocks.com/servlet/Charts?fontsize=12&15MinDelay=T&titlestyle=1&lang=1&vol=1&stockid=${code}.US&period=5012&type=1&com=70005&scheme=1&chartwidth=870&chartheight=760&Indicator=1&indpara1=5&indpara2=35&indpara3=200&subChart1=2&ref1para1=14&ref1para2=0&ref1para3=0&subChart2=3&ref2para1=12&ref2para2=26&ref2para3=9&logoStyle=1&u=13"></a> </td>`;
@@ -155,7 +155,8 @@ function appendText1(code,remark) {
     // https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None
   	  txt1+='<tr>';  
   	  
-      txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資" title="台灣股市資訊網_${remark}" src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
+      //txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資" title="台灣股市資訊網_${remark}" src="http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
+      txt1+=` <td>  <a id="link1" href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="470" alt="台灣股市資" title="台灣股市資訊網_${remark}" src="https://stock.capital.com.tw/rtgif/gifstkchartasp2.djgif?w=600&h=450&id=${code}"></a> </td>`;
       
 		href2=`https://statementdog.com/analysis/${code}`;
 		title2="財報狗";
