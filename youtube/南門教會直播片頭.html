@@ -5,10 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://svn12.github.io/js/Fetch.js"></script>
-    <!-- <style media="screen, print">
-     
-      } -->
-    </style>
     <title>南門教會直播片頭</title>
 
     <style>
@@ -17,7 +13,11 @@
         src: url("../doc/jf-openhuninn-2.0.ttf");
         /*src: url("https://github.com/justfont/open-huninn-font/blob/master/font/jf-openhuninn-2.0.ttf"); */
       }
-     
+      * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+      }
       html {
         /*>>>>>>>>>>>>  BACKGROUND COLOR  <<<<<<<<<<<<<<<*/
         /* background: gold; */
@@ -30,15 +30,15 @@
         height: 100%;
       }
 
-      * {
-        box-sizing: border-box;
-      }
+
       body {
-        /*font-family: "Helvetica", "Arial","LiHei Pro","黑體-繁","微軟黑體","jsfont"; */
         font-family:  蘋方黑體, 華康麗黑體, DFKai-SB, Helvetica, Arial, sans-serif, serif,"jsfont"; 
         font-size: 2.5vw;
-        /* font-size: 50px; */
-        /*font-family:  PingFang, serif,Arial,jsfont; 
+        font-size: 2.5vw;
+        /* 
+        font-family: Arial;
+        font-size: 50px; 
+        */
         /* width:1920px; */
         /* height: 100vh; */
         /* background-image: url(../img/hero.jpg); */
@@ -50,18 +50,16 @@
         background-repeat: no-repeat;
         background-size: cover;
         /* background-image: url('data:image/jpeg;base64,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'); */
-        background-image: url("https://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg");
+        background-image: url("http://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg");
       }
 
       .container {
+        /* 
         position: relative;
-        /* max-width: 1920px; */
+        position: relative;
+        max-width: 1920px;
+         */
         margin: 0 auto;
-      }
-
-      .container-tblk {
-        /* vertical-align: middle; */
-        position: relative;
       }
 
       .container img {
@@ -76,14 +74,29 @@
         /* background: rgb(0, 0, 0); */
         /* Fallback color */
         /* background: rgba(5, 46, 158, 0.3); */
-        /* Black background with 0.5 opacity */
+        /* Black background with 0.5 opacity 
+        font-family: 蘋方黑體, 華康麗黑體, DFKai-SB, Helvetica, Arial, sans-serif, serif;
+        */
         color: #f1f1f1;
         width: 100%;
         /* padding: 20px; */
         margin: 0%;
-        /*font-family: 蘋方黑體, 華康麗黑體, DFKai-SB, Helvetica, Arial,
-          sans-serif, serif; */
         font-size: 2.5rem;
+      }
+      #Bdate {
+        position: fixed;
+        right: 0.7em;
+        top:1.3em;
+        color: rgb(41, 188, 164);
+        /* margin: 0.7em; 
+        font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica,
+          Arial, sans-serif, serif;
+        */
+        /* letter-spacing: 10px; */
+        font-size: 0.6em;
+        text-shadow: 2px 2px 1px white;
+        text-align: right;
+        /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
       }
 
       .Header .Clock {
@@ -101,15 +114,56 @@
         font-size: larger;
       }
 
+
+      #CurTime {
+        position: absolute;
+        top: 0;
+        color: rgb(22, 7, 241);
+        margin: 0.7em;
+        /*
+        font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica,
+          Arial, sans-serif, serif;
+         letter-spacing: 10px; */
+        font-size: 0.6em;
+        text-shadow: 2px 2px 1px white;
+        text-align: left;
+        /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
+      }
+
+      .container-tblk {
+        height: 100vh;
+        /* Change values 👇 to experiment*/
+        align-items: center;
+        width: fit-content;
+        position: fixed;
+        top: 30%;
+        left: 30%;
+        /* 
+        display: flex;
+        flex-direction: column;
+        vertical-align: middle;
+        margin: auto 0 auto;
+        position: absolute;
+        top: 50%; 
+        left: 50%;
+        */
+      }
       /* Bottom right text */
       .text-block {
-        position: absolute;
-        /* top: 90%; */
-        left: 50%;
+        padding: 15px;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        /*
+        margin: 100% auto;
+          position: absolute;
+        */
+        /* 
         transform: translate(-50%, +55%);
+        */
+        white-space: nowrap;
 
         /* top: 7em; */
-        white-space: nowrap;
         /* left: 20%; */
         /* left: 50%;
         transform: translate(-50%, 0); */
@@ -131,18 +185,19 @@
         font-size: 4rem;
         text-shadow: 3px 3px 1px green;
 
-        /* font-family: 思源黑體 , 微軟正黑體 , 蘋方黑體 , 華康麗黑體 , Helvetica , Arial , sans-serif , serif; */
-        /*font-family: DFKai-SB, 蘋方黑體, 華康麗黑體, Helvetica, Arial,
-          sans-serif, serif;*/
+        /*
+        font-family: DFKai-SB, 蘋方黑體, 華康麗黑體, Helvetica, Arial,
+          sans-serif, serif;
+         font-family: 思源黑體 , 微軟正黑體 , 蘋方黑體 , 華康麗黑體 , Helvetica , Arial , sans-serif , serif; */
       }
 
       #poem {
         color: rgb(90, 14, 153);
-        font-size: 2em;
+        font-size: 2rem;
         text-shadow: 2px 2px 1px blueviolet, 3px 3px 2px white;
-       /* font-family: FangSong, SimSun, sans-serif, serif;*/
         margin: 0;
         /* position: absolute;
+        font-family: FangSong, SimSun, sans-serif, serif;
       top:65%; */
         /* font-family: "Noto Sans CJK TC", "Microsoft JhengHei", PingFang, STHeiti, sans-serif, serif; */
         /* text-shadow: 1px 1px 2px black, 0 0 25px rgb(165, 230, 13), 0 0 5px rgb(240, 240, 245); */
@@ -151,39 +206,14 @@
       #speaker {
         color: red;
         /* margin: 0,0,0,10em; */
-       /* font-family: 蘋方黑體, 華康麗黑體, 思源黑體, 微軟正黑體, Helvetica,
+        /*
+        font-family: 蘋方黑體, 華康麗黑體, 思源黑體, 微軟正黑體, Helvetica,
           Arial, sans-serif, serif;
-        /* letter-spacing: 10px; */
-        font-size: 2.5em;
+         letter-spacing: 10px; */
+        font-size: 2.5rem;
         text-shadow: 2px 2px 1px white;
         margin: 0;
 
-        /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
-      }
-
-      #Bdate {
-        color: rgb(22, 7, 241);
-        margin: 0.7em;
-      /*  font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica,
-          Arial, sans-serif, serif;
-        /* letter-spacing: 10px; */
-        font-size: 0.6em;
-        text-shadow: 2px 2px 1px white;
-        text-align: right;
-        /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
-      }
-
-      #CurTime {
-        position: absolute;
-        top: 0;
-        color: rgb(22, 7, 241);
-        margin: 0.7em;
-       /* font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica,
-          Arial, sans-serif, serif;
-        /* letter-spacing: 10px; */
-        font-size: 0.6em;
-        text-shadow: 2px 2px 1px white;
-        text-align: left;
         /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
       }
 
@@ -199,12 +229,12 @@
       }
 
       .scroll-left {
-        position: absolute;
+        position: fixed;
         /* top: 20em; */
-        bottom: 0rem;
+        bottom: 0;
         color: white;
         /* text-shadow: 5px 5px 3px black; */
-        text-shadow: 2px 3px black;
+        text-shadow: 6px 2px black;
 
         width: 100%;
         /* background: rgba(192, 130, 189, 0.8); */
@@ -306,9 +336,9 @@
     </div>
     <div class="container-tblk">
       <div class="text-block">
-        <p id="subj"></p>
-        <p id="speaker"></p>
-        <p id="poem"></p>
+        <div id="subj"></div>
+        <div id="speaker"></div>
+        <div id="poem"></div>
         <!-- <h1 id="subj">貪婪招致審判</h1>
               <h1 id="poem">雅各書 5：1-6 雅各書 5：1-6</h1>
               <h2 id="speaker">主禮：鍾主亮牧師</h2> -->
@@ -363,9 +393,9 @@
           });
           if (imageArr.length == 0) {
             imageArr = [
-              "https://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg",
-              "https://www.pctnm.tw/images/main/94ea826b6ea9923e0ba550e1b91a6c02.jpg",
-              "https://www.pctnm.tw/images/main/de0ee6118741dd3a94cdb1fc1042c995.jpg",
+              "http://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg",
+              "http://www.pctnm.tw/images/main/94ea826b6ea9923e0ba550e1b91a6c02.jpg",
+              "http://www.pctnm.tw/images/main/de0ee6118741dd3a94cdb1fc1042c995.jpg",
             ];
           }
           subj.textContent = data[1][0];
