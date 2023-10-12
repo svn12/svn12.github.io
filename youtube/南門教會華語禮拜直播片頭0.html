@@ -67,7 +67,7 @@
       }
 
       .container .Header,
-      .container h2 {
+      h2 {
         position: absolute;
         /* bottom: 0; */
         top: 2vh;
@@ -216,9 +216,8 @@
         text-shadow: 3px 2px black;
 
         width: 100%;
+        /* background: rgba(192, 130, 189, 0.8); */
         height: 2.5em;
-        /* background: rgba(192, 130, 189, 0.8); 
-        */
         overflow: hidden;
         /* position: relative; */
         margin: 0;
@@ -365,7 +364,7 @@
       });
       async function Read_SheetData() {
         //document.querySelector("#myTable1").innerHTML = '';
-        await RsheetData(fileLink, "台語禮拜").then((data) => {
+        await RsheetData(fileLink, "華語禮拜").then((data) => {
           data[1].forEach((item, index) => {
             if (index > 5 && item !== "") {
               imageArr.push(item);
