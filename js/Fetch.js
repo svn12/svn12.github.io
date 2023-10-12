@@ -292,7 +292,8 @@ function autocomplete_CH(inp, arr, callback, parent_elem) {
 				if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {  
 				mmatch=arr[i].toUpperCase().match(val.toUpperCase())*/
 
-      mmatch = arr[i].match(val);
+      // mmatch = arr[i].match(val);
+      mmatch = arr[i].toUpperCase().match(val.toUpperCase());
       //console.log(i,arr[i]);
       //console.log(mmatch);
       if (mmatch) {
