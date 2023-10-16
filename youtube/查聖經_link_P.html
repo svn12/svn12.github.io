@@ -17,6 +17,14 @@
                 src: url("../doc/jf-openhuninn-2.0.ttf");
                 /*src: url("https://github.com/justfont/open-huninn-font/blob/master/font/jf-openhuninn-2.0.ttf"); */
               }
+              *{
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            html{
+                height: 100%;
+            }
               body{
                 font-family: 蘋方黑體, 華康麗黑體, DFKai-SB, Helvetica, Arial,
                 sans-serif, serif, "jsfont";
@@ -30,6 +38,10 @@
                     text-indent: initial;
                     border-spacing: 2px;
                     }
+                    .table tbody tr:hover{
+                        background-color: #FEE;
+                        font-size: x-large;
+                      }
             form{margin:0px; display:inline;font-size:16px; }
             button{margin:0px; display:inline;font-size:16px; }
             /* label {display:inline;} */
@@ -77,7 +89,11 @@
                     padding: 5px 10px;
                     border-radius: 8px;
                 }
-            
+            .link{
+                display:flex;
+                justify-content: center;
+			align-items:center;
+            }
         </style>
     <link rel="stylesheet" href="link_P.css">
 </head>
@@ -85,29 +101,28 @@
     
 <div class="container">
 
+ <div class="link">
 
-    <br>
-    <h3> <a id="fhl_b" target="_blank"  href="https://bible.fhl.net/NUI/#/bible/gen/1">信望愛聖經</a></h3>
-    <h3> <a id="taiwan_Bible" target="_blank" href="https://bible.fhl.net/NUI/_rwd/#/bible/%E5%89%B51:3-7.Ro1:1-5">電子聖經</a></h2>
-        <!-- <h2> <a  target="_blank"  href="https://bible.fhl.net/fhl_mobile/">手機聖經</a></h2>
-            <!-- <h2> <a id="new_b2" target="_blank"  href="https://mygoodfriend.net/TCV_Big5/">現代中文</a></h2> 
-                
-                <h2> <a id="taiwan_Bible" target="_blank" href="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm">台語聖經</a></h2> -->
-                <!-- <h3> <a  target="_blank"  href="http://taiwanesebible.blogspot.com/">台漢本</a></h3> -->
-                <h3> <a  target="_blank"  href="https://svn12.github.io/%E6%9F%A5%E8%81%96%E8%A9%A9.html">聖詩啟應文</a></h3>
-                <h3> <a  target="_blank"  href="./台漢本聖經_link_P.html">台漢本掃描</a></h3>
-                <h3> <a  target="_blank"  href="https://t224568.github.io/youtube/%E5%8D%97%E9%96%80%E6%89%8B%E6%8A%84%E8%81%96%E7%B6%93.html">南門手抄聖經</a></h3>
-                <nav class="navbar fixed-bottom navbar-dark bg-dark">
-                <button class="btn btn-primary pull-right " id="previous" onclick=$(window).scrollTop(0)>Top</button>
+     <h3> <a id="fhl_b" target="_blank"  href="https://bible.fhl.net/NUI/#/bible/gen/1">信望愛聖經</a></h3>
+     <h3> <a id="taiwan_Bible" target="_blank" href="https://bible.fhl.net/NUI/_rwd/#/bible/%E5%89%B51:3-7.Ro1:1-5">電子聖經</a></h2>
+     <h3> <a  target="_blank"  href="https://svn12.github.io/%E6%9F%A5%E8%81%96%E8%A9%A9.html">聖詩啟應文</a></h3>
+     <h3> <a  target="_blank"  href="./台漢本聖經_link_P.html">台漢本掃描</a></h3>
+        <h3> <a  target="_blank"  href="https://t224568.github.io/youtube/%E5%8D%97%E9%96%80%E6%89%8B%E6%8A%84%E8%81%96%E7%B6%93.html">南門手抄聖經</a></h3>
+ </div>
+ 
+    
+    <nav class="navbar fixed-bottom navbar-dark bg-dark">
+
+        <button class="btn btn-primary pull-right " id="previous" onclick=$(window).scrollTop(0)>Top</button>
+
     <!-- <button class="btn btn-primary" id="next" onclick="readBook('next')">下一章</button>
-	<body onload="Iniload()" > 
+
+        <body onload="Iniload()" > 
 	-->
 </nav>
 
 
 
-<br>
-<br>
 <form >
         
         
@@ -122,18 +137,18 @@
         <label for="user_id">章</label>
     <select id="SelChap" onchange="fselChap()">
     </select>
-</form>
-<search>
-
+    
+    
     <button onclick="fselChap()">經文</button>
     <input type="text" class="form-inline" placeholder="關鍵字" id="location-input">
-</search>
+    
+    
+    <button onclick="query_bible_keyw3()"><i class="fa fa-search"></i></button>
+    
+    <input type="checkbox" id="brief" onchange="query_fhl_bible()"  >全 
+</form>
 
-<button onclick="query_bible_keyw3()"><i class="fa fa-search"></i></button>
-
-<input type="checkbox" id="brief" onchange="query_fhl_bible()"  >全 
 <br>
-
 <form id="plaudio" pstate="0" onclick="playaudio()">
     <label class="radio-inline">
         <input type="radio" name="optradio" checked>台語有聲聖經
@@ -680,7 +695,7 @@ function  Read_Bible(){
         
            
                 // $("#demo2").html('');
-                let txt='<br> <h1 align="center">'+ obj.v_name+'</h1>';
+                let txt='<h1 align="center">'+ obj.v_name+'</h1>';
                     // txt += '<table  class="table  table-hover "> <thead><tr>';
                      txt += '<table  class="table"> <tbody>';
 
