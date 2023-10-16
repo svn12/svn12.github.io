@@ -9,7 +9,9 @@
         <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
         <!-- <script src="https://code.jquery.com/jquery-1.9.1.js"></script> -->
         <!-- <link rel="stylesheet" href="reset.css"> -->
+        
         <style type="text/css">
+            @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css");
             @font-face {
                 font-family: "jsfont";
                 src: url("../doc/jf-openhuninn-2.0.ttf");
@@ -50,7 +52,7 @@
             .container {
                 max-width: 1920px;
             }
-            
+
             .sticky {
                 /* position: fixed; */
                 /* bottom: 0; */
@@ -58,13 +60,24 @@
                 display:inline-block;
                 /* width: 100%; */
                 /* background: rgba(0, 0, 0, 0.35); */
-                /* z-index: $zindex-fixed; */
+                /* z-index: $zindex-fixed; 
+                background-color: transparent;
+                color: #fff;
+                */
                 transition: all 1.5s ease;
 
                 }
 			input:hover ,input:focus ,select:hover {
 				  background-color: yellow;
 				}
+               
+                input,button,select 
+                {
+                    
+                    padding: 5px 10px;
+                    border-radius: 8px;
+                }
+            
         </style>
     <link rel="stylesheet" href="link_P.css">
 </head>
@@ -73,9 +86,19 @@
 <div class="container">
 
 
-<br>
-<nav class="navbar fixed-bottom navbar-dark bg-dark">
-    <button class="btn btn-primary pull-right " id="previous" onclick=$(window).scrollTop(0)>Top</button>
+    <br>
+    <h3> <a id="fhl_b" target="_blank"  href="https://bible.fhl.net/NUI/#/bible/gen/1">信望愛聖經</a></h3>
+    <h3> <a id="taiwan_Bible" target="_blank" href="https://bible.fhl.net/NUI/_rwd/#/bible/%E5%89%B51:3-7.Ro1:1-5">電子聖經</a></h2>
+        <!-- <h2> <a  target="_blank"  href="https://bible.fhl.net/fhl_mobile/">手機聖經</a></h2>
+            <!-- <h2> <a id="new_b2" target="_blank"  href="https://mygoodfriend.net/TCV_Big5/">現代中文</a></h2> 
+                
+                <h2> <a id="taiwan_Bible" target="_blank" href="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm">台語聖經</a></h2> -->
+                <!-- <h3> <a  target="_blank"  href="http://taiwanesebible.blogspot.com/">台漢本</a></h3> -->
+                <h3> <a  target="_blank"  href="https://svn12.github.io/%E6%9F%A5%E8%81%96%E8%A9%A9.html">聖詩啟應文</a></h3>
+                <h3> <a  target="_blank"  href="./台漢本聖經_link_P.html">台漢本掃描</a></h3>
+                <h3> <a  target="_blank"  href="https://t224568.github.io/youtube/%E5%8D%97%E9%96%80%E6%89%8B%E6%8A%84%E8%81%96%E7%B6%93.html">南門手抄聖經</a></h3>
+                <nav class="navbar fixed-bottom navbar-dark bg-dark">
+                <button class="btn btn-primary pull-right " id="previous" onclick=$(window).scrollTop(0)>Top</button>
     <!-- <button class="btn btn-primary" id="next" onclick="readBook('next')">下一章</button>
 	<body onload="Iniload()" > 
 	-->
@@ -83,42 +106,31 @@
 
 
 
-<h3> <a id="fhl_b" target="_blank"  href="https://bible.fhl.net/NUI/#/bible/gen/1">信望愛聖經</a></h3>
-<h3> <a id="taiwan_Bible" target="_blank" href="https://bible.fhl.net/NUI/_rwd/#/bible/%E5%89%B51:3-7.Ro1:1-5">電子聖經</a></h2>
-<!-- <h2> <a  target="_blank"  href="https://bible.fhl.net/fhl_mobile/">手機聖經</a></h2>
-<!-- <h2> <a id="new_b2" target="_blank"  href="https://mygoodfriend.net/TCV_Big5/">現代中文</a></h2> 
-
-<h2> <a id="taiwan_Bible" target="_blank" href="https://www.lingshyang.com/taiwan_Bible/mak/mak14.htm">台語聖經</a></h2> -->
-<!-- <h3> <a  target="_blank"  href="http://taiwanesebible.blogspot.com/">台漢本</a></h3> -->
-<h3> <a  target="_blank"  href="./台漢本聖經_link_P.html">台漢本掃描</a></h3>
-<h3> <a  target="_blank"  href="https://t224568.github.io/youtube/%E5%8D%97%E9%96%80%E6%89%8B%E6%8A%84%E8%81%96%E7%B6%93.html">南門手抄聖經</a></h3>
-<h3> <a  target="_blank"  href="https://svn12.github.io/%E6%9F%A5%E8%81%96%E8%A9%A9.html">聖詩啟應文</a></h3>
 <br>
 <br>
 <form >
-    
-    聖經:
-    <select id="SelTitle" onchange="fSelTitle()">
-
-    </select>
-    聖經版本:
-    <select id="SelBver" onchange="fSelBver()">
-
-    </select>
-</form>
-
-<form>
-    章:
+        
+        
+        <label for="user_id">聖經</label>
+        <select id="SelTitle" onchange="fSelTitle()">
+        </select>
+        <label for="user_id">聖經版本</label>
+        <select id="SelBver" onchange="fSelBver()">
+            
+        </select>
+        
+        <label for="user_id">章</label>
     <select id="SelChap" onchange="fselChap()">
-
-
     </select>
-
 </form>
-<button onclick="fselChap()">經文</button>
-<input type="text" class="form-inline" placeholder="關鍵字" id="location-input">
+<search>
 
-<button onclick="query_bible_keyw3()">查詢</button>
+    <button onclick="fselChap()">經文</button>
+    <input type="text" class="form-inline" placeholder="關鍵字" id="location-input">
+</search>
+
+<button onclick="query_bible_keyw3()"><i class="fa fa-search"></i></button>
+
 <input type="checkbox" id="brief" onchange="query_fhl_bible()"  >全 
 <br>
 
@@ -139,23 +151,26 @@
     </label>
     
 </form>
+<br>
+<!-- <button onclick="next_chap()"  >
+    <source id="audioSource1" src="" style='display:inline;'>
+</source>
+<source id="audioSource2" src="">
+</source>
+<source id="audioSource3" src="">
+</source>
+Your browser does not support the audio format.
+下一章</button>-->
 
 <audio id="audio1"  onended="audioendA()"   controls="controls" preload=""  style='display:inline;'>
-    
 </audio>
- <!-- <button onclick="next_chap()"  >
- <source id="audioSource1" src="" style='display:inline;'>
-    </source>
-	<source id="audioSource2" src="">
-    </source>
-	 <source id="audioSource3" src="">
-    </source>
-    Your browser does not support the audio format.
-    下一章</button>-->
+<div id="demo1">
+    
+</div>
+<div id="demo1_2021"></div>
+<div id="demo1_2021A">
 
-<div id="demo1"></div>
- <div id="demo1_2021"></div>
- <div id="demo1_2021A"></div>
+</div>
  <!-- <p id="demo2">aaa</p> -->
 <!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
 <p id="bible-2010" target="_blank" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/"></p>
@@ -298,18 +313,21 @@ function  Read_Bible(){
 					if(r.videoTitle!=""){
 						r.pauseVideo();}
 				
-				document.querySelector('#ytaudio>img').src='https://i.imgur.com/quyUPXN.png';
+				//document.querySelector('#ytaudio>img').src='https://i.imgur.com/quyUPXN.png';
+                document.querySelector('#ytaudio>img').src='https://cdn.pixabay.com/photo/2014/04/03/00/40/button-309039_640.png';
                 audio = document.getElementById('audio' + (i+1));
 				
 				//audio.oncanplaythrough = (event) => {
-					audio.play();
+                    audio.play();
 					console.log(`Play Audio  audio${i+1}`);
 					
-				document.querySelector('#ytaudio').dataset.state='0';
+                    document.querySelector('#ytaudio').dataset.state='0';
 				}else{
-					pauseaudio();
+                    pauseaudio();
 					r.playVideo();
-					document.querySelector('#ytaudio>img').src='https://i.imgur.com/IDzX9gL.png';
+					//document.querySelector('#ytaudio>img').src='https://i.imgur.com/IDzX9gL.png';
+                    document.querySelector('#ytaudio>img').src='https://cdn.pixabay.com/photo/2014/04/03/00/40/button-309039_640.png';
+                    //document.querySelector('#ytaudio>img').src='https://cdn.pixabay.com/photo/2016/02/01/12/33/play-1173551_640.png';
 					document.querySelector('#ytaudio').dataset.state='1';
 				}
                 switch (i){
@@ -972,10 +990,15 @@ function onYouTubeIframeAPIReady()
     var o= function(e, t) 
     // This function switches the imgs, you may want to change it
     {
-        var a=e?"IDzX9gL.png":"quyUPXN.png"; 
+        //var a=e?"IDzX9gL.png":"quyUPXN.png"; 
+        //https://cdn.pixabay.com/photo/2014/04/03/00/40/button-309039_640.png
+        let a=e?"2014/04/03/00/40/button-309039_640.png":"2016/02/01/12/33/play-1173551_640.png"; 
+        //https://cdn.pixabay.com/photo/2014/04/03/00/40/button-309039_640.png
+        //https://cdn.pixabay.com/photo/2016/02/01/12/33/play-1173551_640.png
         //IDzX9gL is the stopped img and quyUPXN the playing img
 
-        t.setAttribute("src","https://i.imgur.com/"+a)
+        //t.setAttribute("src","https://i.imgur.com/"+a)
+        t.setAttribute("src","https://cdn.pixabay.com/photo/"+a)
         // folder or web direction the img is in. it can be "./"+a
     };
 
@@ -997,7 +1020,8 @@ function onYouTubeIframeAPIReady()
         a.setAttribute("id","youtube-player"),
         e.appendChild(a);
 
-        t.setAttribute("src","https://i.imgur.com/quyUPXN.png");
+        //t.setAttribute("src","https://i.imgur.com/quyUPXN.png");
+        t.setAttribute("src","https://cdn.pixabay.com/photo/2014/04/03/00/40/button-309039_640.png");
 
         e.onclick=function()
         {
