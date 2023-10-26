@@ -12,7 +12,7 @@ async function Rsheet(shtUrl) {
   });
 }
 const isValidUrl = (urlString) => {
-  return RegExp("^(http|www)").test(urlString);
+  return RegExp("^(http|www|file:)").test(urlString);
 };
 const isValidDate = (buf) => {
   return buf.length >= 20 && new Date(buf) != "Invalid Date";

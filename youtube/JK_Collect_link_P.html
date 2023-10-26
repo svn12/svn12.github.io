@@ -5,38 +5,88 @@
         <meta charset="UTF-8">
         <title>JK_Collect</title>
         <link rel="stylesheet" href="reset.css">
-        <link rel="stylesheet" href="link_P.css">
+        <!-- <link rel="stylesheet" href="link_P.css"> -->
+        <style>
+            @media screen and (max-width: 700px) {
+            }
+        @import url("https://fonts.googleapis.com/css?family=Noto+Sans+TC:100,300,400,500,700,900&display=swap");
+		/* @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"); 
+        */
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			font-family: 'Noto Sans TC', sans-serif;
+		}
+            .main {
+                margin: auto;
+                width: 100%;
+                font-size: 28px;
+                padding: 5px;
+            }
+            ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-evenly;
+            }
+            li {
+                display: flex;
+                /* flex-shrink: revert; */
+                width: 9rem;
+                background-color: rgb(235, 235, 190);
+                margin: 8px 4px;
+                text-align: center;
+                line-height: 1.8;
+                justify-content: center;
+                position: relative;
+            }
+            a{
+                text-decoration: none;
+    
+            }
+            a:visited{
+                color:blue;
+            }
+            li a:hover{
+                background-color: rgba(197, 136, 227,.6);
+                
+            }
+            
+            li a:hover::before{
+                content:attr(comm) ;
+                position: absolute;
+                top:-20px;
+                right:10px;
+                display: flex;
+                color:rgb(80, 207, 142);
+            }
+        </style>
 </head>
 
 <body>
-        <div class="sidenav">
-                <a href="JK_Collect_link_P.html">JK_Collect</a>
-                <a href="信仰_link_P.html">信仰</a>
-                <a href="https://svn12.github.io/youtube/JK_Collect_link_P.html"> <img id="barcode"
-                                src="https://api.qrserver.com/v1/create-qr-code/?data=https://svn12.github.io/youtube/JK_Collect_link_P.html &amp;size=80x80"></a>
-                <a href="https://lin.ee/UeGnCfR"><img
-                                src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友"
-                                height="36" border="0"></a>
-        </div>
-        <div class="main">
-                <ul>
-                        <li class="item1"><a href="../查Sheet.html">資料庫查詢</a></li>
-                        <li class="item1"><a href="jk1_link_P.html">jk1</a> </li>
-                        <!-- 
-<a href="https://svn12.github.io/youtube/JK_Collect_link_P.html"> <img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=00700017210108282 &amp;size=80x80"></a>
-
-<li class="item1"><a href="https://a2z.fhl.net/CBOL.html">信望愛聖經工具</a></li> 
-<li class="item1"><a href="jk2_link_P.html">聽讀聖經</a> </li>
--->
-                        <li class="item1"><a href="查聖經_link_P.html">聽讀聖經</a> </li>
-                        <li class="item1"><a href="../查聖詩.html">聖詩啟應文</a></li>
-                        <li class="item1"><a href="jk2_link_Pn.html">聽讀聖經2</a> </li>
-                        <li class="item1"><a href="寬家_link_P.html">裕婷斌</a></li>
-                        <li class="item1"><a href="../youtube/影視_link_P.html">影視</a></li>
-                        <li class="item1"><a href="南門教會直播片頭.html">直播片頭</a></li>
-                        <li class="item1"><a href="../youtube/YT_AudioOnly.html">YT Auto</a></li>
-                        <li class="item1"><a href="http://www.radiotaiwan.tw/radio/taipei">收音機</a></li>
-                        <li class="item1"><a href="show_pic.html">早安圖</a></li>
+                    <div class="main">
+                        <ul>
+                            <li class="item1"><a href="信仰_link_P.html">信仰</a></li>               </li>
+                            <li class="item1"><a href="../查Sheet.html">資料庫查詢</a></li>
+                            <li class="item1"><a href="jk1_link_P.html">jk1</a> </li>
+                            <!-- 
+                                <li><a comm="說明" href="信仰_link_P.html" >信仰</a></li>               </li>
+                                <li><a href="信仰_link_P.html" comm="說明"  >信仰</a></li>               </li>
+                                <a href="https://svn12.github.io/youtube/JK_Collect_link_P.html"> <img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=00700017210108282 &amp;size=80x80"></a>
+                                
+                                <li class="item1"><a href="https://a2z.fhl.net/CBOL.html">信望愛聖經工具</a></li> 
+                                <li class="item1"><a href="jk2_link_P.html">聽讀聖經</a> </li>
+                                <li><a href="信仰_link_P.html" comm="說明">信仰</a></li>               </li>
+                            -->
+                            <li class="item1"><a href="查聖經_link_P.html">聽讀聖經</a> </li>
+                            <li class="item1"><a href="../查聖詩.html">聖詩啟應文</a></li>
+                            <li class="item1"><a href="jk2_link_Pn.html">聽讀聖經2</a> </li>
+                            <li class="item1"><a href="寬家_link_P.html">裕婷斌</a></li>
+                            <li class="item1"><a href="../youtube/影視_link_P.html">影視</a></li>
+                            <li class="item1"><a href="南門教會直播片頭.html">直播片頭</a></li>
+                            <li class="item1"><a href="../youtube/YT_AudioOnly.html">YT Auto</a></li>
+                            <li class="item1"><a href="http://www.radiotaiwan.tw/radio/taipei">收音機</a></li>
+                            <li class="item1"><a href="show_pic.html">早安圖</a></li>
                         <li class="item1"><a href="https://open.spotify.com/">Spotify</a></li>
                         <li class="item1"><a href="http://get.aca.ntu.edu.tw/getcdb/#tab7">台灣通識網</a></li>
                         <li class="item1"><a href="https://open.163.com/">網易公開課</a></li>

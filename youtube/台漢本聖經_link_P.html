@@ -263,7 +263,7 @@ $(document).ready(function() {
     } 
 	function fChgPage(){
 		sel_p=Number(document.getElementById("location-input").value);
-		if(document.getElementById("SelTitle").selectedIndex>39){
+		if(document.getElementById("SelTitle").selectedIndex>=39){
 			sel_p=sel_p+1059;
 		}
 		changePage(sel_p);
