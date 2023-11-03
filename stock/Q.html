@@ -102,6 +102,7 @@
       function Query_stk() {
         // var findString = document.getElementById('location-input').value;
         let findString = $("#location-input").val();
+        document.querySelector("#location-input").value='';
         let pt = findString.indexOf(" ");
         if (pt > 0) {
           findString = findString.substr(0, pt);
