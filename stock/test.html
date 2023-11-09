@@ -1,15 +1,38 @@
-<script src="https://pulipulichen.github.io/jieba-js/jquery.js"></script>
-<script src="https://pulipulichen.github.io/jieba-js/require-jieba-js.js"></script>
- 
-<script>
-_text = `這個布丁是在無聊的世界中找尋樂趣的一種不能吃的食物，喜愛動漫畫、遊戲、程式，以及跟世間脫節的生活步調。
-001 聖哉 聖哉 聖哉
-002 聖哉 聖哉 聖哉
-003 亞伯蘭的上帝
-004 天下萬國眾人著聽
-005 真主上帝造天地
-006 上帝創造天及地`
-call_jieba_cut(_text, function (_result) {
-  console.log(_result);
-});
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://pulipulichen.github.io/jieba-js/jquery.js"></script>
+  <script src="https://pulipulichen.github.io/jieba-js/require-jieba-js.js"></script>
+   
+</head>
+<body>
+  
+  <p>This is jieba_cut</p>
+  <!-- <button onclick="jieba_cut()">call_jieba_cut</button> -->
+  <p id="Head">
+    民眾黨立委陳琬惠昨爆料，新版「菸害防制法」今年3月上路，加熱菸受到納管，須通過健康風險評估審查，才能上市。但陸委會副主委梁文傑在一場新潮流高層的飲酒趴使用加熱菸。並請衛福部長薛瑞元說明是否要開罰。
+
+    薛瑞元今於立法院社會福利及衛生環境委員會，針對民眾黨擬具「數位醫療發展條例草案」備詢。陳琬惠一上台就說，
+  </p>
+  <p id="T"> aaa</p>
+  <script>
+  _text = `這個布丁是在無聊的世界中找尋樂趣的一種不能吃的食物，喜愛動漫畫、遊戲、程式，以及跟世間脫節的生活步調。
+  001 聖哉 聖哉 聖哉
+  002 聖哉 聖哉 聖哉
+  003 亞伯蘭的上帝
+  004 天下萬國眾人著聽
+  005 真主上帝造天地
+  006 上帝創造天及地
+  `
+  _text=document.querySelector("#Head").textContent ;
+  call_jieba_cut(_text, function (_result) {
+    console.log(_result);
+    document.querySelector("#T").textContent = _result;
+  });
+  //document.querySelector("#Head").textContent = _text;
+  </script>
+</body>
+</html>
