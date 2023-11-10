@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://svn12.github.io/js/Fetch.js"></script>
-    <title>南門教會直播片頭</title>
+    <title>南門教會華語禮拜直播片頭</title>
 
     <style>
       @font-face {
@@ -149,7 +149,6 @@
         top: 0%;
         left: 50%;
         transform: translate(-50%, 33%);
-       
       }
       /* Bottom right text */
       .text-block {
@@ -309,9 +308,11 @@
         alt="Notebook" style="width:100%;"> -->
       <div class="Header">
         <figure id="barcode">
-          <img  src="https://api.qrserver.com/v1/create-qr-code/?data=http://www.pctnm.tw/download_weekly.php &amp;size=100x100">
+          <img
+            src="https://api.qrserver.com/v1/create-qr-code/?data=http://www.pctnm.tw/download_weekly.php &amp;size=100x100"
+          />
           <!-- <img src="pic_trulli.jpg" alt="Trulli" style="width:100%"> -->
-          <figcaption>電子週報</figcaption>
+          <figcaption>教會週報</figcaption>
         </figure>
         <p id="CurTime" style="display: none"></p>
         <h2>
@@ -355,6 +356,7 @@
       // img_Src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdAtv04UT9QCuUwP8mXDB5ghw561SZiddhmw&usqp=CAU';
       const oneFrameDuration = 20;
       const img = document.querySelector("#img");
+      const barcode = document.querySelector("#barcode");
       const subj = document.querySelector("#subj");
       const poem = document.querySelector("#poem");
       const speaker = document.querySelector("#speaker");
@@ -373,7 +375,9 @@
 
       scrollText.addEventListener("animationiteration", setImage);
       scrollText.addEventListener("click", setImage);
-
+      barcode.addEventListener("click", () => {
+        window.open("http://www.pctnm.tw/download_weekly.php");
+      });
       document.querySelector(".text-block").addEventListener("click", () => {
         window.open(
           "https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit#gid=1065429392"
@@ -407,7 +411,7 @@
           //   // Dtime.textContent = ` ${data[1][3]} 10:30 `;
           // }
           //	TableShow(data,"#myTable1");`
-          church.textContent = `南門長老教會網路直播`;
+          church.textContent = `南門長老教會華語禮拜`;
           // img.src = data[1][6];
           // document.body.style.backgroundImage = `url(${data[1][6]})`;
           document.body.style.backgroundImage = `url(${imageArr[0]})`;
@@ -471,7 +475,7 @@
 
         scrollText.getAnimations()[0]["effect"].setKeyframes(kframe);
       }
-   //   setInterval(setDate, 1000);
+      //   setInterval(setDate, 1000);
       // setInterval(setImage, 115000);
       // setDate();
       // window.onload = function () {
