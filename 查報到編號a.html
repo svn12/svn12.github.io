@@ -3,207 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet1" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <title>查報到序號</title>
    
 	<script src="js/Fetch.js"></script>
-    <style> 
-
-.button {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-}
-
-	.container {  display: flex;
-			
-			}
-	table {
-	  border-collapse: collapse;
-	  border-spacing: 0;
-	  width: 100%;
-	  border: 1px solid #ddd;
-	  overflow-x:scroll;
-	  overflow-y:scroll;
-	}
-	th{
-	 background: yellow;
-	 position: sticky;
-	 top: 0; /* Don't forget this, required for the stickiness */
-	 box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
-	 }
-	tr:nth-child(even){
-		/* background-color: #f2f2f2 
-		overflow-y: scroll;
-		display: block;
-		position: fixed;
-		top: 30;
-		*/
-		 background-color: lightblue;
-		}
-	thead	{
-        background-color: orange;
-	
-			  
-      }
-			
-            </style>
+    
 </head>
-<body onload="IniTitle()">
-    <!-- <h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> 
-    <h2 >&nbsp&nbsp &nbsp查報到編號</h2> 
- <a href="https://youtu.be/oLQVo89k7L0">聖誕慶祝會直播</a>
-	
-	<div class="container ">
-	<h2>查報到序號 &nbsp&nbsp </h2> 
-	<img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=https://bit.ly/3sufNMo &amp;size=60x60"></a>
-	 
-</div>
-	--> 
-           
-         
-				
-    <div class="container1 ">
-      
-	 
-	  <input type="text" placeholder="姓名團契關鍵字" id="location-input" onclick="Query_Tel2()">
-          
-         
-        <!--  <a href="https://bit.ly/3sufNMo">
-		<p>報到編號</p> 
-		  <button onclick="Query_Tel2()" id='myBtn'>查詢</button>
-		
-		 <p id="show"></p>
-       
-    </div>
-	
-    <div class="table-responsive table-striped"">
-        
-         
-		<table id="myTable1" style="width:90%" class="table"></table>
-	</div>
--->	
+<body >
+	  <input type="text" placeholder="姓名團契關鍵字" id="location-input" >
     <script>
+    const source = "https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594";
 	const shtname='報名清單'
-	  var Btitle_ptr = ["https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594",
-				 "https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing",
-                  "https://docs.google.com/spreadsheets/d/1OmKZhMOPGhA2-OALZXqSbJ_T-l6VHeMOGIsbcofQ0cA/edit?usp=sharing"
-                // "https://docs.google.com/spreadsheets/d/1iF-7xZVu9QHYzBbCjwvxZMh0WOYVc_vwPpT5N6v4eFg/edit?usp=sharing"
-                ];
-	var input = document.getElementById('location-input');
-	input.addEventListener("keyup", function(event) {
-	if (event.keyCode === 13) {
-	   event.preventDefault();
-	 //  document.getElementById("myBtn").click();
-	
-	}
-	});
 	Read_SheetData();
 	async function  Read_SheetData(){
-		//document.querySelector("#myTable1").innerHTML = '';
-		await RsheetData(Btitle_ptr[0],shtname)
+		await RsheetData(source,shtname)
 		.then(data=> {
-				
-			//	TableShow(data,"#myTable1");
 				data.shift();
-				return data.map((e) => ` ${e[0]} ${e[1]}(${e[2]})-[${e[3]}]@${e[4]}--${e[6]}`	)
+                if(data[0].length===8)
+				return data.map((e) => ` ${e[0]} ${e[1]}(${e[2]})-[${e[3]}]@${e[4]}--${e[6]}--${e[7]}`	)
+				else return  data.map((e) => ` ${e[0]} ${e[1]}(${e[2]})-[${e[3]}]@${e[4]}--${e[6]}`	)
 				})
 		.then(arr=>{
-				autocomplete_CH(document.getElementById("location-input"), arr,Query_Tel2);	
+				autocomplete_CH(document.getElementById("location-input"), arr,Q_dummy);	
 			});
-		
-		
-
-		
 	}
-	
-           function IniTitle() {
-               
-            }
-        
-        
-         function        Query_Tel2(){
-               
-                var findString = document.getElementById('location-input').value;
-                // console.log(findString);
-                if(findString.length>0){
-                    
-                if(findString=='!' || findString=='！'){ findString = '';}
-                document.getElementById("show").innerHTML = '查詢 "*' + findString+'*" 中 ....';
-                var $show = $('#show');
-                var shURL= Btitle_ptr[0];
-                // console.log(shURL);
-                var a = {
-                    // sheetUrl: 'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing',
-                    // sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
-                    sheetUrl:shURL,
-                    sheetTag: shtname  ,//'報名清單2021',
-                    findSting: findString
-                    };
-				//const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
-				const Search_API='https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec';
-                $.get(Search_API, a, function (data) {    
-                //$.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
-                    if(data.length==2){
-                        document.getElementById("show").innerHTML = '查無資料 請重新輸入再查詢';
-                    }
-                    else  if (data.length==0){ 
-                        document.getElementById("show").innerHTML = 'sheet Name 須為 "List"';}
-                    else {
-
-                    // console.log(data.length);
-                    // console.log(data);
-                    data = JSON.parse(data);
-                    var heads=[];
-                    for(head in data[0]){
-                        heads.push(head);
-                    }
-                    // console.log(heads.length);
-
-                    var txt='';
-                    txt += '<table  class="table  table-hover "> <thead><tr>';
-                    // heads.forEach(el=>console.log(el));
-                    heads.forEach(function(e){
-                        txt += "<th>" + e + "</th>";
-
-                    })
-                    
-                    txt+="</tr></thead><tbody>";
-                    // console.log(txt);
-
-                    for (x in data) {
-                        txt += "<tr>";
-                        // console.log(x);
-                        // console.log(data[x]);
-                        heads.forEach(function(e){
-                        txt += "<td>" + data[x][e] + "</td>";
-
-                        })
-                        txt += "</tr>";
-                        // txt += "<tr><td>" + data[x].Name + "</td><td>"+ data[x].手機 +"</td></tr>";
-                    }
-                    txt += "</tbody></table>"
-                    document.getElementById("show").innerHTML = txt;
-
-
-                    var arr = [];
-                    for (var i = 0; i < (a.endRow - a.row + 1); i++) {
-                        arr[i] = d.splice(0, (a.endCol - a.col + 1));
-                        $show.append(arr[i] + '<br/>');
-                    }
-                    }
-
-                });
-            };
-        }
+         function Q_dummy() {
+         };
     </script>
 </body>
 </html>
