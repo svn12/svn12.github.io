@@ -364,9 +364,11 @@ function autocomplete_CH(inp, arr, callback, parent_elem) {
     } else if (e.keyCode == 13) {
       /*If the ENTER key is pressed, prevent the form from being submitted,*/
       e.preventDefault();
-      if (currentFocus > -1) {
+      if (x.length > 0) {
+        // if (currentFocus > -1) {
         /*and simulate a click on the "active" item:*/
-        if (x) x[currentFocus].click();
+        // if (x) x[currentFocus].click();
+        currentFocus===-1 ? x[0].click():x[currentFocus].click();
       }
     }
   });
