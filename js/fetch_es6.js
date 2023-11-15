@@ -33,7 +33,8 @@ function Array2Json(res) {
   //console.log("result",result);
   return result; // 使用 json() 可以得到 json 物件
 }
-export default async function RsheetData(shtUrl, shtName) {
+// export default async function RsheetData(shtUrl, shtName) {
+export async function RsheetData(shtUrl, shtName) {
   const RSheet2Json_APIV6 =
     "https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec";
   const RSheet2Json_APIV7 =
