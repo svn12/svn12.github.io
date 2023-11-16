@@ -4,12 +4,23 @@ export async function Rsheet(shtUrl) {
   const u = new URLSearchParams({ sheetUrl: shtUrl }).toString();
   //let urlParameters = Object.entries(a).map(e => e.join('=')).join('&');
   let url = RSheet_API + `?${u}`;
-  return fetch(url, {}).then((response) => {
-    // 這裡會得到一個 ReadableStream 的物件
-    //console.log(response);
-    // 可以透過 blob(), json(), text() 轉成可用的資訊
-    return response.json();
-  });
+  // return fetch(url, {}).then((response) => {
+  //   // 這裡會得到一個 ReadableStream 的物件
+  //   //console.log(response);
+  //   // 可以透過 blob(), json(), text() 轉成可用的資訊
+  //   return response.json();
+  // });
+  return fetch(url, {})
+    .then((response) => {
+      // 這裡會得到一個 ReadableStream 的物件
+      //console.log(response);
+      // 可以透過 blob(), json(), text() 轉成可用的資訊
+      return response.json();
+    })
+    .catch((error) => {
+      console.log("......錯誤:", error);
+      return error.message;
+    });
 }
 const isValidUrl = (urlString) => {
   return RegExp("^(http|www)").test(urlString);
@@ -35,8 +46,6 @@ function Array2Json(res) {
 }
 // export default async function RsheetData(shtUrl, shtName) {
 export async function RsheetData(shtUrl, shtName) {
-  const RSheet2Json_APIV6 =
-    "https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec";
   const RSheet2Json_APIV7 =
     "https://script.google.com/macros/s/AKfycbwW8w21yItaTo5-rrhxRkkkM2Y2g95rWV9ivbOaJBprrA-7_EbHOA2Wpdu2bN_F2FPB4Q/exec";
 
@@ -49,15 +58,26 @@ export async function RsheetData(shtUrl, shtName) {
   let url = RSheet2Json_APIV7 + `?${u}`;
   //console.log(url);
   //url='https://randomuser.me/api/';
-
   return fetch(url, {})
     .then((response) => {
+      // 這裡會得到一個 ReadableStream 的物件
+      //console.log(response);
+      // 可以透過 blob(), json(), text() 轉成可用的資訊
       return response.json();
     })
-
-    .catch((err) => {
-      console.log("錯誤:", err);
+    .catch((error) => {
+      console.log("......錯誤:", error);
+      return error.message;
     });
+
+  // return fetch(url, {})
+  //   .then((response) => {
+  //     return response.json();
+  //   })
+
+  //   .catch((err) => {
+  //     console.log("錯誤:", err);
+  //   });
 }
 async function Find_sheetData(shtUrl, shtName, findString) {
   const Search_API_V2 =
@@ -368,7 +388,7 @@ function autocomplete_CH(inp, arr, callback, parent_elem) {
         // if (currentFocus > -1) {
         /*and simulate a click on the "active" item:*/
         // if (x) x[currentFocus].click();
-        currentFocus==-1 ? x[0].click():x[currentFocus].click();
+        currentFocus == -1 ? x[0].click() : x[currentFocus].click();
       }
 
       // if (currentFocus > -1) {
