@@ -1,34 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="./favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>查報到序號</title>
-   
-	<script src="js/Fetch.js"></script>
+    <title>Vite App</title>
+    <script type="module" crossorigin src="./youtube/assets/查報到編號.js"></script>
+    <link rel="stylesheet" href="./youtube/assets/查報到編號.css">
+  </head>
+  <body>
+    <div id="app"></div>
     
-</head>
-<body >
-	  <input type="text" placeholder="姓名團契關鍵字" id="location-input" >
-    <script>
-    const source = "https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit#gid=132870594";
-	const shtname='報名清單'
-	Read_SheetData();
-	async function  Read_SheetData(){
-		await RsheetData(source,shtname)
-		.then(data=> {
-				data.shift();
-                if(data[0].length===8)
-				return data.map((e) => ` ${e[0]} ${e[1]}(${e[2]})-[${e[3]}]@${e[4]}--${e[6]}--${e[7]}`	)
-				else return  data.map((e) => ` ${e[0]} ${e[1]}(${e[2]})-[${e[3]}]@${e[4]}--${e[6]}`	)
-				})
-		.then(arr=>{
-				autocomplete_CH(document.getElementById("location-input"), arr,Q_dummy);	
-			});
-	}
-         function Q_dummy() {
-			document.getElementById("location-input").value = "";
-         };
-    </script>
-</body>
+  </body>
 </html>
