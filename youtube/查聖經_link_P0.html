@@ -1,156 +1,154 @@
 ﻿ <!DOCTYPE html><html lang="zh"">
- <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <title>聽讀聖經</title>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
-    <!-- <script src="https://code.jquery.com/jquery-1.9.1.js"></script> -->
-    <!-- <link rel="stylesheet" href="reset.css"> -->
-    
-    <style type="text/css">
-        @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css");
-        @font-face {
-            font-family: "jsfont";
-            src: url("../doc/jf-openhuninn-2.0.ttf");
-            /*src: url("https://github.com/justfont/open-huninn-font/blob/master/font/jf-openhuninn-2.0.ttf"); */
-          }
-          *{
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-        html{
-            height: 100%;
-        }
-          body{
-            font-family: 蘋方黑體, 華康麗黑體, DFKai-SB, Helvetica, Arial,
-            sans-serif, serif, "jsfont";
-          }
-        td {
-                        display: table-cell;
-                        vertical-align: inherit;
-                        }
-        table {
-                border-collapse: separate;
-                text-indent: initial;
-                border-spacing: 2px;
-                }
-        .table tbody tr:hover{
-                    background-color: #FEE;
-                    font-size: x-large;
-                  }
-        form{margin:0px; display:inline;font-size:16px; }
-        button{margin:0px; display:inline;font-size:16px; }
-        .highlight {
-            color: #e547da;
-        }
-                  /* label {display:inline;} */
-                  /* input {display:inline;} */
-                  select {font-size:18px;}
-        .fixed-bottom {
-                position: fixed;
-                right: 0;
-                /* bottom: 0; */
-                /* left: 0; */
-                display:none;
-                /* z-index: $zindex-fixed; */
-                /* bottom: 0; */
-                /* right: 0; */
-                /* border-left: 1px solid black; */
-                /* border-top: 1px solid black; */
-                /* background: red; */
-                }
-                        
-        .container {
-            max-width: 1920px;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <title>聽讀聖經</title>
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+        <!-- <script src="https://code.jquery.com/jquery-1.9.1.js"></script> -->
+        <!-- <link rel="stylesheet" href="reset.css"> -->
+        
+        <style type="text/css">
+            @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css");
+            @font-face {
+                font-family: "jsfont";
+                src: url("../doc/jf-openhuninn-2.0.ttf");
+                /*src: url("https://github.com/justfont/open-huninn-font/blob/master/font/jf-openhuninn-2.0.ttf"); */
+              }
+              *{
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            html{
+                height: 100%;
+            }
+              body{
+                font-family: 蘋方黑體, 華康麗黑體, DFKai-SB, Helvetica, Arial,
+                sans-serif, serif, "jsfont";
+              }
+            td {
+                            display: table-cell;
+                            vertical-align: inherit;
+                            }
+            table {
+                    border-collapse: separate;
+                    text-indent: initial;
+                    border-spacing: 2px;
+                    }
+                    .table tbody tr:hover{
+                        background-color: #FEE;
+                        font-size: x-large;
+                      }
+                      form{margin:0px; display:inline;font-size:16px; }
+                      button{margin:0px; display:inline;font-size:16px; }
+                      /* label {display:inline;} */
+                      /* input {display:inline;} */
+                      select {font-size:18px;}
+            .fixed-bottom {
+                    position: fixed;
+                    right: 0;
+                    /* bottom: 0; */
+                    /* left: 0; */
+                    display:none;
+                    /* z-index: $zindex-fixed; */
+                    /* bottom: 0; */
+                    /* right: 0; */
+                    /* border-left: 1px solid black; */
+                    /* border-top: 1px solid black; */
+                    /* background: red; */
+                    }
+                            
+            .container {
+                max-width: 1920px;
+            }
 
-        .sticky {
-            /* position: fixed; */
-            /* bottom: 0; */
-            /* right:0; */
-            display:inline-block;
-            /* width: 100%; */
-            /* background: rgba(0, 0, 0, 0.35); */
-            /* z-index: $zindex-fixed; 
-            background-color: transparent;
-            color: #fff;
-            */
-            transition: all 1.5s ease;
+            .sticky {
+                /* position: fixed; */
+                /* bottom: 0; */
+                /* right:0; */
+                display:inline-block;
+                /* width: 100%; */
+                /* background: rgba(0, 0, 0, 0.35); */
+                /* z-index: $zindex-fixed; 
+                background-color: transparent;
+                color: #fff;
+                */
+                transition: all 1.5s ease;
 
+                }
+			input:hover ,input:focus ,select:hover {
+				  background-color: yellow;
+				}
+               
+                input,button,select 
+                {
+                    
+                    padding: 5px 10px;
+                    border-radius: 8px;
+                }
+            .link{
+                display:flex;
+                justify-content: center;
+			align-items:center;
             }
-        input:hover ,input:focus ,select:hover {
-              background-color: yellow;
-            }
-           
-            input,button,select 
-            {
-                
-                padding: 5px 10px;
-                border-radius: 8px;
-            }
-        .link{
-            display:flex;
-            justify-content: center;
-        align-items:center;
-        }
-    </style>
-<link rel="stylesheet" href="link_P.css">
+        </style>
+    <link rel="stylesheet" href="link_P.css">
 </head>
 <body> 
     
 <div class="container">
-    <div class="link">
 
-        <h3> <a id="fhl_b" target="_blank"  href="https://bible.fhl.net/NUI/#/bible/gen/1">信望愛聖經</a></h3>
-        <h3> <a id="taiwan_Bible" target="_blank" href="https://bible.fhl.net/NUI/_rwd/#/bible/%E5%89%B51:3-7.Ro1:1-5">電子聖經</a></h2>
-        <h3> <a  target="_blank"  href="https://svn12.github.io/%E6%9F%A5%E8%81%96%E8%A9%A9.html">聖詩啟應文</a></h3>
-        <h3> <a  target="_blank"  href="./台漢本聖經_link_P.html">台漢本掃描</a></h3>
-           <h3> <a  target="_blank"  href="https://t224568.github.io/youtube/%E5%8D%97%E9%96%80%E6%89%8B%E6%8A%84%E8%81%96%E7%B6%93.html">南門手抄聖經</a></h3>
-    </div>
+ <div class="link">
+
+     <h3> <a id="fhl_b" target="_blank"  href="https://bible.fhl.net/NUI/#/bible/gen/1">信望愛聖經</a></h3>
+     <h3> <a id="taiwan_Bible" target="_blank" href="https://bible.fhl.net/NUI/_rwd/#/bible/%E5%89%B51:3-7.Ro1:1-5">電子聖經</a></h2>
+     <h3> <a  target="_blank"  href="https://svn12.github.io/%E6%9F%A5%E8%81%96%E8%A9%A9.html">聖詩啟應文</a></h3>
+     <h3> <a  target="_blank"  href="./台漢本聖經_link_P.html">台漢本掃描</a></h3>
+        <h3> <a  target="_blank"  href="https://t224568.github.io/youtube/%E5%8D%97%E9%96%80%E6%89%8B%E6%8A%84%E8%81%96%E7%B6%93.html">南門手抄聖經</a></h3>
+ </div>
+ 
     
+    <nav class="navbar fixed-bottom navbar-dark bg-dark">
 
-<br>
-<nav class="navbar fixed-bottom navbar-dark bg-dark">
-    <button class="btn btn-primary pull-right " id="previous" onclick=$(window).scrollTop(0)>Top</button>
+        <button class="btn btn-primary pull-right " id="previous" onclick=$(window).scrollTop(0)>Top</button>
+
     <!-- <button class="btn btn-primary" id="next" onclick="readBook('next')">下一章</button>
-	<body onload="Iniload()" > 
+
+        <body onload="Iniload()" > 
 	-->
 </nav>
 
 
 
-
 <form >
-    
-    聖經:
-    <select id="SelTitle" onchange="fSelTitle()">
-
-    </select>
-    聖經版本:
-    <select id="SelBver" onchange="fSelBver()">
-
-    </select>
-</form>
-
-<form>
-    章:
+        
+        
+        <label for="user_id">聖經</label>
+        <select id="SelTitle" onchange="fSelTitle()">
+        </select>
+        <label for="user_id">聖經版本</label>
+        <select id="SelBver" onchange="fSelBver()">
+            
+        </select>
+        
+        <label for="user_id">章</label>
     <select id="SelChap" onchange="fselChap()">
-
-
     </select>
-
+    
+    
+    <button onclick="fselChap()">經文</button>
+    <input type="text" class="form-inline" placeholder="關鍵字" id="location-input">
+    
+    
+    <button onclick="query_bible_keyw3()"><i class="fa fa-search"></i></button>
+    
+    <input type="checkbox" id="brief" onchange="query_fhl_bible()"  >全 
 </form>
-<button onclick="fselChap()">經文</button>
-<input type="text" class="form-inline" placeholder="關鍵字" id="location-input">
 
-<button onclick="query_bible_keyw3()">查詢</button>
-<input type="checkbox" id="brief" onchange="query_fhl_bible()"  >全 
 <br>
-
 <form id="plaudio" pstate="0" onclick="playaudio()">
     <label class="radio-inline">
         <input type="radio" name="optradio" checked>台語有聲聖經
@@ -168,23 +166,26 @@
     </label>
     
 </form>
+<br>
+<!-- <button onclick="next_chap()"  >
+    <source id="audioSource1" src="" style='display:inline;'>
+</source>
+<source id="audioSource2" src="">
+</source>
+<source id="audioSource3" src="">
+</source>
+Your browser does not support the audio format.
+下一章</button>-->
 
 <audio id="audio1"  onended="audioendA()"   controls="controls" preload=""  style='display:inline;'>
-    
 </audio>
- <!-- <button onclick="next_chap()"  >
- <source id="audioSource1" src="" style='display:inline;'>
-    </source>
-	<source id="audioSource2" src="">
-    </source>
-	 <source id="audioSource3" src="">
-    </source>
-    Your browser does not support the audio format.
-    下一章</button>-->
+<div id="demo1">
+    
+</div>
+<div id="demo1_2021"></div>
+<div id="demo1_2021A">
 
-<div id="demo1"></div>
- <div id="demo1_2021"></div>
- <div id="demo1_2021A"></div>
+</div>
  <!-- <p id="demo2">aaa</p> -->
 <!-- <audio src="http://www.lingshyang.com/bible/tw_bible_soun/041/41_014.mp3" preload="auto" controls></audio> -->
 <p id="bible-2010" target="_blank" src="http://rcuv.hkbs.org.hk/RCUV2/ECC/1/"></p>
@@ -327,18 +328,21 @@ function  Read_Bible(){
 					if(r.videoTitle!=""){
 						r.pauseVideo();}
 				
-				document.querySelector('#ytaudio>img').src='https://i.imgur.com/quyUPXN.png';
+				//document.querySelector('#ytaudio>img').src='https://i.imgur.com/quyUPXN.png';
+                document.querySelector('#ytaudio>img').src='https://cdn.pixabay.com/photo/2014/04/03/00/40/button-309039_640.png';
                 audio = document.getElementById('audio' + (i+1));
 				
 				//audio.oncanplaythrough = (event) => {
-					audio.play();
+                    audio.play();
 					console.log(`Play Audio  audio${i+1}`);
 					
-				document.querySelector('#ytaudio').dataset.state='0';
+                    document.querySelector('#ytaudio').dataset.state='0';
 				}else{
-					pauseaudio();
+                    pauseaudio();
 					r.playVideo();
-					document.querySelector('#ytaudio>img').src='https://i.imgur.com/IDzX9gL.png';
+					//document.querySelector('#ytaudio>img').src='https://i.imgur.com/IDzX9gL.png';
+                    document.querySelector('#ytaudio>img').src='https://cdn.pixabay.com/photo/2014/04/03/00/40/button-309039_640.png';
+                    //document.querySelector('#ytaudio>img').src='https://cdn.pixabay.com/photo/2016/02/01/12/33/play-1173551_640.png';
 					document.querySelector('#ytaudio').dataset.state='1';
 				}
                 switch (i){
@@ -664,17 +668,18 @@ function  Read_Bible(){
 
             query_fhl_bible();
 			
-		//  
-        if(bible_info.length > 0){ 
+		//   
+        if(bible_info.length > 0){
+
 			YTId=bible_detail[bible_info[document.getElementById("SelTitle").selectedIndex].S_ptr+document.getElementById("SelChap").selectedIndex].YTid;
 		
 				document.querySelector('#ytaudio').dataset.video=YTId;
-			const list = document.querySelector('#ytaudio');
-			while (list.hasChildNodes()) {
-				list.removeChild(list.firstChild);
-			}
-               onYouTubeIframeAPIReady();  
-        }
+                const list = document.querySelector('#ytaudio');
+                while (list.hasChildNodes()) {
+                    list.removeChild(list.firstChild);
+                }
+                onYouTubeIframeAPIReady();  
+            }
     } 
 	
 	async function getJSON(url) {
@@ -693,7 +698,7 @@ function  Read_Bible(){
         
            
                 // $("#demo2").html('');
-                let txt='<br> <h1 align="center">'+ obj.v_name+'</h1>';
+                let txt='<h1 align="center">'+ obj.v_name+'</h1>';
                     // txt += '<table  class="table  table-hover "> <thead><tr>';
                      txt += '<table  class="table"> <tbody>';
 
@@ -852,23 +857,40 @@ function  Read_Bible(){
         $("#demo4").html(qstr1);
         $("#demo5").html(qstr1);
     }
-  function q_bible_keyw(url,ptr,VerTitle){
-    $(ptr).html('');
-    let qstr=$("#location-input").val()
-        $.get(url,  function (data,status) {
-            var obj = JSON.parse(data);
+    async function QData(url) {
+        console.log(`url---:${url}`);
+        return fetch(url, {
+           
+          })
+        .then((response) => {
+              console.log(`url---:${url} response: ${response}`);
+            return response.json();
+          })
+      
+          .catch((err) => {
+            console.log("錯誤:", err);
+          });
+      }
+
+  async function q_bible_keyw(url,ptr,VerTitle){
+      $(ptr).html('');
+      //$.get(url,  function (data,status) {
+        
+            //var obj = JSON.parse(data);
+            let obj = await QData(url);
             
             var txt='<br> <h1 align="center">'+ VerTitle+" (" +obj.record_count.toString()+')</h1>';
             
             txt += '<table  class="table"> <tbody>';
-            
+            const qstr=encodeURI($("#location-input").val())
             for (x in obj.record){
                                 
                 //    url2=url2.replace("bklcl", "tghg");
                 txt += "<tr>";
                 txt += '<td valign="top"> <font size="-1">'+obj.record[x].chineses+''+                           obj.record[x].chap.toString()+":"+obj.record[x].sec.toString() + "</font> </td>";
-                //txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
-                 txt += "<td>" + String(obj.record[x]["bible_text"]).replace(new RegExp(qstr, 'g'), `<span class="highlight">${qstr}</span>`) + "</td>";
+                txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                
+                //txt += "<td>" + String(obj.record[x]["bible_text"]).replace(new RegExp(qstr, 'g'), `<span class="highlight">${qstr}</span>`) + "</td>";
                 txt += "</tr>";
 
             };
@@ -877,7 +899,7 @@ function  Read_Bible(){
                     $(ptr).html(txt);
                      
             
-        })
+        //})
   }
   function query_bible_keyw3(){
          var qstr=encodeURI($("#location-input").val());
@@ -888,13 +910,13 @@ function  Read_Bible(){
         var selectedBVer= $('#SelBver option:selected');
         
         url="https://bible.fhl.net/json/se.php?orig=0&limit=500&offset=0" + "&q=" + qstr + "&VERSION=tghg&strong=0&gb=0"
-        q_bible_keyw(url.replace('tghg',selectedBVer.val()),"#demo6",selectedBVer.text());
-        q_bible_keyw(url,"#demo1","台語漢羅");// _2021
+         q_bible_keyw(url.replace('tghg',selectedBVer.val()),"#demo6",selectedBVer.text());
+         q_bible_keyw(url,"#demo1","台語漢羅");// _2021
 		//q_bible_keyw(url.replace('tghg','ttvhl2021'),"#demo1_2021","2021台語漢羅");// _2021
-		q_bible_keyw(url.replace('tghg','ttvhl2021'),"#demo1_2021A","2021台語漢羅");// _2021
-        q_bible_keyw(url.replace('tghg','unv'),"#demo3","和合本");
-        q_bible_keyw(url.replace('tghg','tcv95'),"#demo4","現代中文譯本");
-        q_bible_keyw(url.replace('tghg','rcuv'),"#demo5","和修本");
+		 q_bible_keyw(url.replace('tghg','ttvhl2021'),"#demo1_2021A","2021台語漢羅");// _2021
+         q_bible_keyw(url.replace('tghg','unv'),"#demo3","和合本");
+         q_bible_keyw(url.replace('tghg','tcv95'),"#demo4","現代中文譯本");
+         q_bible_keyw(url.replace('tghg','rcuv'),"#demo5","和修本");
        
         
     }  
@@ -1006,11 +1028,14 @@ function onYouTubeIframeAPIReady()
     // This function switches the imgs, you may want to change it
     {
         //var a=e?"IDzX9gL.png":"quyUPXN.png"; 
+        //https://cdn.pixabay.com/photo/2014/04/03/00/40/button-309039_640.png
+        //https://cdn.pixabay.com/photo/2014/04/03/00/40/button-309039_640.png
+        //https://cdn.pixabay.com/photo/2016/02/01/12/33/play-1173551_640.png
         //IDzX9gL is the stopped img and quyUPXN the playing img
-
+        
+        //t.setAttribute("src","https://i.imgur.com/"+a)
         let a=e?"2014/04/03/00/40/button-309039_640.png":"2016/02/01/12/33/play-1173551_640.png"; 
         t.setAttribute("src","https://cdn.pixabay.com/photo/"+a)
-        //t.setAttribute("src","https://i.imgur.com/"+a)
         // folder or web direction the img is in. it can be "./"+a
     };
 
@@ -1032,10 +1057,9 @@ function onYouTubeIframeAPIReady()
         a.setAttribute("id","youtube-player"),
         e.appendChild(a);
 
-        t.setAttribute("src","https://i.imgur.com/quyUPXN.png");
+        //t.setAttribute("src","https://i.imgur.com/quyUPXN.png");
+        t.setAttribute("src","https://cdn.pixabay.com/photo/2014/04/03/00/40/button-309039_640.png");
 
-        let b=e?"2014/04/03/00/40/button-309039_640.png":"2016/02/01/12/33/play-1173551_640.png"; 
-        t.setAttribute("src","https://cdn.pixabay.com/photo/"+b)
         e.onclick=function()
         {
             r.getPlayerState()===YT.PlayerState.PLAYING||r.getPlayerState()===YT.PlayerState.BUFFERING?
