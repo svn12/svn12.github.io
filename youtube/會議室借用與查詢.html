@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>會議室借用</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+</head>
+
+<body>
+    <style>
+        body{
+            font-family: 'Microsoft JhengHei';
+        }
+        
+        h1{
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .padding-tb{
+            padding-top: 30px;
+            padding-bottom: 30px;
+        }
+        
+        .group{
+            padding-top: 30px;
+        }
+        
+        .w-10{
+            width: 10%;
+        }
+        
+        .w-15{
+            width: 15%;
+        }
+        
+        #select{
+            width: 120px;
+            height: 40px;
+        }
+        
+        @media (min-width: 768px) {
+            h1{
+                font-size: 2.4rem;
+            }
+        }
+    </style>
+    <div id="wrap">
+        <div class="container-fluid padding-tb">
+            <div class="row">
+                <div class="col-6">
+                    <h1>教室借用系統</h1>
+                </div>
+                <div class="col-3">
+                    <!-- <a href="Google表單網址" class="btn btn-danger float-right" target="_blank">申請借用</a> -->
+                    <!-- <a href="https://script.google.com/macros/s/AKfycbz3-QPl2wGss107ji0uV4o4pYVoYPWMi3q0BzZKvQhHXRN1lGF0e4NtNOL3aHBaqdn-/exec" class="btn btn-danger float-right" target="_blank">申請借用</a> -->
+                    <!-- <a href="https://docs.google.com/forms/d/e/1FAIpQLSfIkdVFesxtqgJ_nTIMzNkBM46mXosM04DQZIrUfIlxUYm4xQ/viewform" class="btn btn-danger float-right" target="_blank">申請借用</a> -->
+                    <input type="submit" id="doaction" class="btn btn-primary ml-3" value="重抓資料">
+                </div>
+                <div class="col-3">
+                    <!-- <a href="Google表單網址" class="btn btn-danger float-right" target="_blank">申請借用</a> -->
+                    <!-- <a href="https://script.google.com/macros/s/AKfycbz3-QPl2wGss107ji0uV4o4pYVoYPWMi3q0BzZKvQhHXRN1lGF0e4NtNOL3aHBaqdn-/exec" class="btn btn-danger float-right" target="_blank">申請借用</a> -->
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfIkdVFesxtqgJ_nTIMzNkBM46mXosM04DQZIrUfIlxUYm4xQ/viewform" class="btn btn-danger float-right" target="_blank">申請借用</a>
+                </div>
+                <div class="col-12 mb-3">
+                    <div class="group">
+                        <label>會議室搜尋</label>
+                        <select id="select" >
+                            <option value="" checked>All</option>
+                            <option value="A101">A101</option>
+                            <option value="A102">A102</option>
+                            <option value="A103">A103</option>
+                        </select>
+                        <!-- <input type="submit" id="doaction" class="btn btn-primary ml-3" value="重抓資料"> -->
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="table-responsive-md">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="w-15">申請日期</th>
+                                    <th scope="col" class="w-10">申請部門</th>
+                                    <th scope="col" class="w-10">申請人</th>
+                                    <th scope="col" class="w-15">會議室名稱</th>
+                                    <th scope="col" class="w-10">借用日期</th>
+                                    <th scope="col" class="w-15">借用時間（起）</th>
+                                    <th scope="col" class="w-15">借用時間（迄）</th>
+                                    <th scope="col" class="w-10">事由</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-data">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- js -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+    <!-- <script src="js/main.js"></script> -->
+    <script>
+        $(function () {
+            Retrieve();
+        });
+        
+        function Retrieve() {
+            var dataArray = [];
+            var URL = 'https://script.google.com/macros/s/AKfycbzwUIzT2oNHm3Wr4fyjcY9VNM9Zmtu5hK51a-O1elGXvQnNeDqiaZapQTExzSmlqj53/exec';
+            $.ajax({
+                url: URL,
+                type: 'POST',
+                dataType: "json",
+                error: function (xhr) {
+                    alert('發生錯誤！請重新再試一次～');
+                },
+                success: function (Jdata) {
+                    var Info = Jdata.data;
+                    for (i = 0; Info.length > i; i++) {
+                        FillTime = Info[i].FillTime;
+                        Department = Info[i].Department;
+                        Applicant = Info[i].Applicant;
+                        RoomName = Info[i].RoomName;
+                        BorrowDate = Info[i].BorrowDate;
+                        StartTime = Info[i].StartTime;
+                        EndTime = Info[i].EndTime;
+                        Reason = Info[i].Reason;
+                        // 印出資料
+                        print();
+                    };
+        
+                    //  資料列印
+                    function print() {
+                        $("#table-data").append(
+                            '<tr>' +
+                            '<td class="w-15">' + FillTime + '</td>' +
+                            '<td class="w-10">' + Department + '</td>' +
+                            '<td class="w-10">' + Applicant + '</td>' +
+                            '<td class="w-10">' + RoomName + '</td>' +
+                            '<td class="w-15">' + BorrowDate + '</td>' +
+                            '<td class="w-15">' + StartTime + '</td>' +
+                            '<td class="w-15">' + EndTime + '</td>' +
+                            '<td class="w-10">' + Reason + '</td>' +
+                            '</tr>'
+                        );
+                    };
+                    // 會議室搜尋            
+                    $("#doaction").click(function () {
+                        location.reload();
+                        // $("#table-data").empty();
+                        // dataArray = [];
+                        // Retrieve();
+                        // $("#select").prop('selectedIndex', 0);
+                        // select();
+                    });
+                    $("#select").change(function () {
+                        // Retrieve();
+                        select();
+                    });
+        
+                    function select() {
+                        var result = "";
+                        $("#select").each(function () {
+                            result = $(this).val();
+                            search_table($(this).val());
+                        });
+                    };
+        
+                    function search_table(value) {
+                        $('tbody tr').each(function () {
+                            var found = 'false';
+                            $(this).each(function () {
+                                if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                                    found = 'true';
+                                }
+                            });
+                            if (found == 'true') {
+                                $(this).show();
+                            }
+                            else {
+                                $(this).hide();
+                            }
+                        });
+                    }
+                }
+            });
+        };
+        
+    </script>
+</body>
+
+</html>
