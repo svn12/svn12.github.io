@@ -188,7 +188,12 @@
       }
       function appendText1(code, remark) {
         //const keyArray=['T','M','US','JP','F']
-        let href4 = `https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
+        
+        let regex = /^(00\d{2,3}|00\d{3}[BLR])$|^[1-9]\d{3}$/;
+
+  // 调用 test 方法检查字符串是否符合模式
+        if(!regex.test(code))return ;
+               let href4 = `https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
         //let title4='持股明細';
         $("#T2").append(code + ' ');
         let str_code = "";
@@ -420,10 +425,9 @@
           }
           else {
 
-            // console.log(data.length);
-            //console.log(data);
+           
             data = JSON.parse(data);
-            //console.log(data);
+           
             data.map(show_a);
             JSONTableShow(data, "#myTable2");
           }
