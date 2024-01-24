@@ -189,13 +189,14 @@
       function appendText1(code, remark) {
         //const keyArray=['T','M','US','JP','F']
         
-        let regex = /^(00\d{2,3}|00\d{3}[BLR])$|^[1-9]\d{3}$/;
+        let regex = /00\d{2,4}|00\d{3}[BLR]$|^[1-9]\d{3}$/;
 
   // 调用 test 方法检查字符串是否符合模式
+  console.log(code,regex.test(code));
         if(!regex.test(code))return ;
+          $("#T2").append(code + ' ');
                let href4 = `https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
         //let title4='持股明細';
-        $("#T2").append(code + ' ');
         let str_code = "";
         str_code = code;
         // if(!checkKey(keyArray, str_code)){
