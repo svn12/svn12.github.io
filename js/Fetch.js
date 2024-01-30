@@ -180,7 +180,7 @@ function TableShow(rrows, sel) {
     }
     row.appendChild(th);
   });
-
+console.log(tharr);
   rrows.map((elem, index) => {
     let row = table1.insertRow(index + 1);
     elem.map((elem, index) => {
@@ -188,19 +188,24 @@ function TableShow(rrows, sel) {
       if (typeof elem == "object") {
         cell.innerHTML = Object.values(elem)[0];
       } else {
-        if (isValidUrl(elem)) {
-          cell.innerHTML = `<a href="${elem}" target=_blank>${elem}</a>`;
-        } else {
-          if (Number.isFinite(elem) && !Number.isInteger(elem)) {
-            cell.innerHTML = elem.toLocaleString(0, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            });
+        if(tharr[index]=='fileId'){
+
+          cell.innerHTML = `<img class="thumbnail" src=https://drive.google.com/thumbnail?id=${elem} ></img>`;
+        }else{
+          if (isValidUrl(elem)) {
+            cell.innerHTML = `<a href="${elem}" target=_blank>${elem}</a>`;
           } else {
-            if (isValidDate(elem)) {
-              cell.innerHTML = new Date(elem).toLocaleDateString();
+            if (Number.isFinite(elem) && !Number.isInteger(elem)) {
+              cell.innerHTML = elem.toLocaleString(0, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              });
             } else {
-              cell.innerHTML = elem;
+              if (isValidDate(elem)) {
+                cell.innerHTML = new Date(elem).toLocaleDateString();
+              } else {
+                cell.innerHTML = elem;
+              }
             }
           }
         }
