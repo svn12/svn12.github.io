@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload file to Google Drive</title>
+    <style>
+      #img-preview,#img-webview {
+        display: none;
+        width: 155px;
+        border: 2px dashed #333;
+        margin-bottom: 20px;
+      }
+      #img-preview img,#img-webview img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      [type="file"] {
+        height: 200;
+        width: 200;
+        overflow: hidden;
+      }
+      [type="file"] + label {
+        font-family: sans-serif;
+        background: #f44336;
+        padding: 10px 30px;
+        border: 2px solid #f44336;
+        border-radius: 3px;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      [type="file"] + label:hover {
+        background-color: #fff;
+        color: #f44336;
+      }
+
+      /* -------------------------------------*/
+      body {
+        padding: 15px;
+      }
+      p1 {
+        position: fixed;
+        bottom: 0;
+        font-family: monospace;
+        font-weight: bold;
+        font-size: 12px;
+      }
+      p a {
+        color: #000;
+      }
+    </style>
+  </head>
+  <body>
+      <div id="img-preview"></div>
+      <div id="textStatus"></div>
+      <div >fileUrl:
+        <p id="fileUrl"></p>
+        <div id="img-webview"></div>
+      </div>
+      
+      <!-- <form>
+          <div>
+              <input
+              type="file"
+              id="choose-file"
+              name="choose-file"
+              accept="image/*"
+              />
+              <label2 for="choose-file2">Choose File2</label2>
+            </div>
+        </form> -->
+        
+        <form id="form">
+            <input name="file" id="uploadfile" type="file" />
+            <!-- <label for="choose-file">Choose File</label> -->
+            <input name="filename" id="filename" type="text"  />
+            <input id="submit" type="submit" />
+        </form>
+        <!-- <label for="folder">Choose a Share_Folder:</label> -->
+        <select id="Sfolder">
+            <option value=""    >--Please choose an option--</option>
+            <option value="https://drive.google.com/drive/folders/1kJ-rz9q1AzmaGEUBbsqL3NxAnvl4c7CB?usp=sharing"    >媽媽收據</option>
+            <optgroup label="JKT TAI">
+                <option
+                value="https://drive.google.com/drive/folders/1rFtldcc-361cvMQHsC21MQwFP55c2K7O?usp=sharing"
+                >
+                物品
+            </option>
+            <option
+            value="https://drive.google.com/drive/folders/1SmxK0GgcaJwk2cXzqC7dXzZtXUONa1a4?usp=sharing"
+            >
+            Chap07檔案上傳
+        </option>
+    </optgroup>
+    <optgroup label="南門長青樂活">
+        <option
+        value="https://drive.google.com/drive/folders/1eFf86wQ5nK4ssDmVBHUIhH7Zm1BMWoww?usp=sharing"
+        >
+        收據
+    </option>
+    <option
+    value="https://drive.google.com/drive/folders/17_RCJ6Qg95G7AVNavxqg9269cukaBaKp?usp=sharing"
+    >
+    pctinpic
+</option>
+</optgroup>
+</select>
+<a href="" id="folder">Link</a>
+
+    <script>
+      const form = document.getElementById("form");
+      const Sfolder = document.getElementById("Sfolder");
+      const Status = document.getElementById("textStatus");
+      const fileUrl = document.getElementById("fileUrl");
+
+      //const folderUrl='https://drive.google.com/drive/folders/1eFf86wQ5nK4ssDmVBHUIhH7Zm1BMWoww?usp=sharing';
+      //const x = Sfolder.selectedIndex;
+      
+      let folderUrl = Sfolder[Sfolder.selectedIndex].value;
+      form.addEventListener("submit", (e) => {
+        folderUrl = Sfolder[Sfolder.selectedIndex].value;
+        Status.textContent='Loading...';
+        imgWebview.style.display = "none";
+        fileUrl.textContent='';
+        e.preventDefault();
+        console.log(folderUrl);
+        const file = form.file.files[0];
+        const fr = new FileReader();
+        fr.readAsArrayBuffer(file);
+        fr.onload = (f) => {
+          
+          //const url = "https://script.google.com/macros/s/AKfycbzvUY6I83NrUePr22yYiPxnyel-BTqDRR8TninyU9u6s1OwaskuyI9qnAkIiRrbmh4tbQ/exec";  // <--- Please set the URL of Web Apps.
+          const url =
+          "https://script.google.com/macros/s/AKfycbwhjTAwi2CpX4YRhMUM6IbQ2DEpjKL-m0vfRXIo4d4fjzgI6_LUJkRzCc2X3lRgXzzfrw/exec"; // <--- Please set the URL of Web Apps.
+          
+          const qs = new URLSearchParams({
+            filename: form.filename.value || file.name,
+            mimeType: file.type,
+            folderUrl: folderUrl,
+          });
+          fetch(`${url}?${qs}`, {
+            method: "POST",
+            body: JSON.stringify([...new Int8Array(f.target.result)]),
+          })
+          .then((res) => res.json())
+          .then((e) => {
+            imgPreview.style.display = "none";
+            //fileUrl.textContent=e.fileUrl;
+            fileUrl.textContent=`=IMAGE("https://drive.google.com/uc?id=${e.fileId}")`;
+            ShowWebImg(e);
+            Status.textContent='Finish Loading...';
+                console.log(e)}) // <--- You can retrieve the returned value here.
+            .catch((err) => console.log(err));
+        };
+      });
+      
+      const chooseFile = document.getElementById("uploadfile");
+      const imgPreview = document.getElementById("img-preview");
+      const imgWebview = document.getElementById("img-webview");
+      const folder_name = document.getElementById("folder");
+
+      Sfolder.addEventListener("change", function () {
+        folder_name.href=Sfolder[Sfolder.selectedIndex].value;
+        folder_name.innerText = Sfolder[Sfolder.selectedIndex].text;
+      });
+      chooseFile.addEventListener("change", function () {
+        getImgData();
+      });
+
+      function getImgData() {
+        const files = chooseFile.files[0];
+        if (files) {
+          const fileReader = new FileReader();
+          fileReader.readAsDataURL(files);
+          fileReader.addEventListener("load", function () {
+            imgPreview.style.display = "block";
+            imgPreview.innerHTML = '<img src="' + this.result + '" />';
+          });
+        }
+      }
+      function ShowWebImg(e) {
+        
+        
+
+            imgWebview.style.display = "block";
+            imgWebview.innerHTML = `<img src="https://drive.google.com/thumbnail?id=${e.fileId}" alt="e.filename"/>`;
+         
+        
+      }
+    </script>
+  </body>
+</html>
