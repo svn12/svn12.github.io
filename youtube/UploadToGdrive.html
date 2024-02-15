@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Upload file to Google Drive</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
       #img-preview,#img-webview {
         display: none;
@@ -53,9 +54,10 @@
     </style>
   </head>
   <body>
+   
       <div id="img-preview"></div>
       <div id="textStatus"></div>
-      <div >fileUrl:
+      <div >
         <p id="fileUrl"></p>
         <div id="img-webview"></div>
       </div>
@@ -79,7 +81,7 @@
             <input id="submit" type="submit" />
         </form>
         <!-- <label for="folder">Choose a Share_Folder:</label> -->
-        <select id="Sfolder">
+        <!-- <select id="Sfolder">
             <option value=""    >--Please choose an option--</option>
             <option value="https://drive.google.com/drive/folders/1kJ-rz9q1AzmaGEUBbsqL3NxAnvl4c7CB?usp=sharing"    >媽媽收據</option>
             <optgroup label="JKT TAI">
@@ -106,20 +108,43 @@
     pctinpic
 </option>
 </optgroup>
-</select>
+</select> -->
+
 <a href="" id="folder">Link</a>
 
+		<select id="Sfolder" onchange="Google_sht_R()" > 
+		<!-- <select id="select_sh" onchange="testRD()">  -->
     <script>
       const form = document.getElementById("form");
       const Sfolder = document.getElementById("Sfolder");
       const Status = document.getElementById("textStatus");
       const fileUrl = document.getElementById("fileUrl");
+      const fileInput = document.getElementById('uploadfile');
 
+fileInput.addEventListener('change', function() {
+      const selectedFile = this.files[0];
+    // File selection has changed
+    if (selectedFile) {
+        Status.textContent='';
+        imgWebview.style.display = "none";
+        fileUrl.textContent='';
+    }else{
+
+    }
+   // const selectedFile = this.files[0];
+    //console.log('Selected file:', selectedFile);
+    // You can perform further actions here, like reading the file or validating its type/size
+});
+     // const select_sh = document.getElementById("select_sh");
+      const RSheet2Json_APIV6 = 'https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec';
       //const folderUrl='https://drive.google.com/drive/folders/1eFf86wQ5nK4ssDmVBHUIhH7Zm1BMWoww?usp=sharing';
       //const x = Sfolder.selectedIndex;
       
-      let folderUrl = Sfolder[Sfolder.selectedIndex].value;
+      //let folderUrl = Sfolder[Sfolder.selectedIndex].value;
       form.addEventListener("submit", (e) => {
+        if(form.file.files.length>0){
+
+        
         folderUrl = Sfolder[Sfolder.selectedIndex].value;
         Status.textContent='Loading...';
         imgWebview.style.display = "none";
@@ -151,9 +176,12 @@
             fileUrl.textContent=`=IMAGE("https://drive.google.com/uc?id=${e.fileId}")`;
             ShowWebImg(e);
             Status.textContent='Finish Loading...';
+            form.file.value = '';
+            form.filename.value='';
                 console.log(e)}) // <--- You can retrieve the returned value here.
             .catch((err) => console.log(err));
         };
+      }
       });
       
       const chooseFile = document.getElementById("uploadfile");
@@ -161,10 +189,11 @@
       const imgWebview = document.getElementById("img-webview");
       const folder_name = document.getElementById("folder");
 
-      Sfolder.addEventListener("change", function () {
+     /* Sfolder.addEventListener("change", function () {
         folder_name.href=Sfolder[Sfolder.selectedIndex].value;
         folder_name.innerText = Sfolder[Sfolder.selectedIndex].text;
       });
+      */
       chooseFile.addEventListener("change", function () {
         getImgData();
       });
@@ -185,9 +214,44 @@
         
 
             imgWebview.style.display = "block";
-            imgWebview.innerHTML = `<img src="https://drive.google.com/thumbnail?id=${e.fileId}" alt="e.filename"/>`;
+            imgWebview.innerHTML = `<a href="${e.fileUrl}"> <img src="https://drive.google.com/thumbnail?id=${e.fileId}" alt="${e.filename}"/> </a>`;
          
         
+      }
+      $(document).ready(function () {
+        // var shtUrl = '"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"';
+        // GSname(shtUrl);
+        R_Url();
+  
+      });
+      function R_Url() {
+        const fmain = "https://docs.google.com/spreadsheets/d/1D7DXH35QrH3um2hyAQhM4SsdVGvSHilTUTKnjvyDD40/edit?usp=sharing";
+        var a = {
+          sheetUrl: fmain,
+          sheetTag: 'Google_Drive' //'Test'
+        };
+  
+        $.get(RSheet2Json_APIV6, a, function (data) {
+  
+          //	console.log(data);
+          $("#Sfolder").empty();
+  
+          $.each(data, function (i, item) {
+            if (i != 0) {
+              $('#Sfolder').append($('<option>', {
+                value: item[1],
+                text: item[0]
+              }));
+            }
+          });
+          Google_sht_R();
+        });
+  
+      }
+      function Google_sht_R() {
+        folder_name.href=Sfolder[Sfolder.selectedIndex].value;
+       // folder_name.innerText = Sfolder[Sfolder.selectedIndex].text;
+        //fileUrl.href = document.getElementById("select_sh").value;
       }
     </script>
   </body>
