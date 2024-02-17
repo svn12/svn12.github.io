@@ -222,7 +222,7 @@ fileInput.addEventListener('change', function() {
         // var shtUrl = '"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"';
         // GSname(shtUrl);
         R_Url();
-  
+        Read_file_list();
       });
       function R_Url() {
         const fmain = "https://docs.google.com/spreadsheets/d/1D7DXH35QrH3um2hyAQhM4SsdVGvSHilTUTKnjvyDD40/edit?usp=sharing";
@@ -253,6 +253,25 @@ fileInput.addEventListener('change', function() {
        // folder_name.innerText = Sfolder[Sfolder.selectedIndex].text;
         //fileUrl.href = document.getElementById("select_sh").value;
       }
+      function Read_file_list(){
+
+        
+        
+        const url_file_list = 'https://script.google.com/macros/s/AKfycbyLM58LocpzuILFw38d2j1qdTmk_FVCxItLBSlfui83GdvEbKOh0EqQ_kDyVGGypPW-/exec'; // Example API endpoint
+       
+         const qs1 = new URLSearchParams({
+        
+            folderUrl: 'https://drive.google.com/drive/folders/1YP5z6G2qfyCKTuhIrht9wsZx72a94VB-?usp=sharing'
+            //folderUrl: Sfolder[Sfolder.selectedIndex].value
+          });
+        fetch(`${url_file_list}?${qs1}`, {
+          method: "POST"
+          
+        })
+        .then((res) => res.json())
+        .then(res => console.log(res));
+      }
+        
     </script>
   </body>
 </html>
