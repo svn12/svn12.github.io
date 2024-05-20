@@ -175,6 +175,7 @@ fileInput.addEventListener('change', function() {
             imgPreview.style.display = "none";
             //fileUrl.textContent=e.fileUrl;
             fileUrl.textContent=`=IMAGE("https://drive.google.com/uc?id=${e.fileId}")`;
+            copyContent(`${fileUrl.textContent}`);
             ShowWebImg(e);
             Status.textContent='Finish Loading...';
             form.file.value = '';
@@ -198,6 +199,19 @@ fileInput.addEventListener('change', function() {
       chooseFile.addEventListener("change", function () {
         getImgData();
       });
+      async function copyContent(text) {
+        try {
+          <!-- await navigator.clipboard.writeText('This is the text to be copied'); -->
+          await navigator.clipboard.writeText(`${text}`);
+          //console.log('Content copied to clipboard');
+          //alert(`${text} copied to clipboard`)
+          /* Resolved - text copied to clipboard successfully */
+        } catch (err) {
+          console.error('Failed to copy: ', err);
+          /* Rejected - text failed to copy to the clipboard */
+        }
+      }
+     
 
       function getImgData() {
         const files = chooseFile.files[0];
@@ -224,6 +238,8 @@ fileInput.addEventListener('change', function() {
         // GSname(shtUrl);
         R_Url();
         Read_file_list();
+
+        //copyContent("SSSS");
       });
       function R_Url() {
         //const fmain = "https://docs.google.com/spreadsheets/d/1D7DXH35QrH3um2hyAQhM4SsdVGvSHilTUTKnjvyDD40/edit?usp=sharing";
