@@ -165,6 +165,8 @@
             id="file_href" target="_blank">File</a>
           <a class="w3-hover-purple" href="https://www.publicalbum.org/blog/embedding-google-photos-albums"
             id="file_href" target="_blank">Tool</a>
+          <a class="w3-hover-purple" href="https://imgur.com/upload"
+            id="file_href" target="_blank">imgur</a>
           <a class="w3-hover-purple"
             href="https://support.awesome-table.com/hc/en-us/articles/360010324920-Display-images-from-Microsoft-OneDrive"
             target="_blank">OneDrive</a>
@@ -188,7 +190,7 @@
 
       $(document).ready(function () {
 
-        R_Url();
+       // R_Url();
         document.addEventListener("click", setSlide, true);
 
 
@@ -198,12 +200,12 @@
       const photo_text = [];//['34歲全家福','90歲全家福']
       const photo_link = [];//['34歲全家福','90歲全家福']
       function setSlide(el) {
-        if (el.y < window.innerHeight / 2) {
+        if (el.y == window.innerHeight / 2) {
 
         } else {
           // console.log(`${el.x} ${el.y}  ${window.innerWidth}`);
           if (el.x > window.innerWidth / 2) {
-            show_next_Slide();
+            show_next_Slide1();
           }
           else {
             show_pre_Slide();
