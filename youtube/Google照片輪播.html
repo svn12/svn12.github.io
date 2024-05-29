@@ -7,7 +7,7 @@
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+<!-- <script src="../js/Fetch.js"></script> -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 
@@ -223,11 +223,17 @@
       };
 
       const RSheet2Json_APIV2 = 'https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec';
-      const RSheet2Json_APIV6 = 'https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec';
-      const ArrKey = [];
-      function R_Url() {
+      //const RSheet2Json_APIV6 = 'https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec';
+      const RSheet2Json_APIV7 =
+    "https://script.google.com/macros/s/AKfycbwW8w21yItaTo5-rrhxRkkkM2Y2g95rWV9ivbOaJBprrA-7_EbHOA2Wpdu2bN_F2FPB4Q/exec";
 
-        $.get(RSheet2Json_APIV6, a, function (data) {
+      const ArrKey = [];
+      //function R_Url() {
+       // await RsheetData(fmain, sht_ptr[document.getElementById("selShurl").selectedIndex])
+			//	.then(data => {
+
+        //})
+        $.get(RSheet2Json_APIV7, a, function (data) {
 
           //$("#select_url").empty();    <div class="text">${item[0]}</div>
           let txt1;
@@ -250,7 +256,7 @@
 
 
 
-      }
+      
 
 
       function show_next_Slide() {
