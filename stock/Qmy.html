@@ -216,8 +216,11 @@
             "https://stock.capital.com.tw/rtgif/gifstkchartasp2.djgif?w=600&h=450&id=${code}"></a> </td>`;
             // "https://concords.moneydj.com/z/zc/zc0/zc08/ZC08GIF_${code}_600_450.djgif"></a> </td>`;
             // "http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
-          href2 = `https://statementdog.com/analysis/${code}`;
-          title2 = "財報狗";
+          /* href2 = `https://statementdog.com/analysis/${code}`;
+          title2 = "財報狗"; */
+
+          href2 = `https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=${code}`;
+          title2 = "群益網股利";
 
 
           if (detail) {
@@ -273,7 +276,11 @@
 
           if (detail) {
             txt1 += '<tr>';
-            txt1 += ' <td> <a id="link7" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=' + code + '" target="_blank"><img id="img7" width="100%" alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid=' + code + '"></a> </td>';
+              /* href2 = `https://statementdog.com/analysis/${code}`;
+          title2 = "財報狗"; */
+
+            //txt1 += ' <td> <a id="link7" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=' + code + '" target="_blank"><img id="img7" width="100%" alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid=' + code + '"></a> </td>';
+            txt1 += ' <td> <a id="link7" href="https://statementdog.com/analysis/' + code  + '" target="_blank"><img id="img7" width="100%" alt="財報狗" title="財報狗" src="https://stock.wearn.com/foreign_chart.asp?stockid=' + code + '"></a> </td>';
             txt1 += '<td> <a id="link8" href="http://pchome.megatime.com.tw/stock/sid' + code + '.html" target="_blank"> <img id="img8" width="100%"  alt="PChome" title="PCHome股" src="https://stock.wearn.com/zhuli_chart.asp?stockid=' + code + '"></a> </td>';
             txt1 += '</tr>';
           }

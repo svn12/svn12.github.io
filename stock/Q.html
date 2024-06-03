@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    
+
     <meta charset="UTF-8" />
     <title>General Query</title>
     <link rel="stylesheet" href="..\youtube\reset.css" />
@@ -150,12 +152,13 @@
 
           $("#link1").attr(
             "href",
-            "http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=" +
+            "http://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=" +
               findString
           );
           $("#link2").attr(
             "href",
-            "https://statementdog.com/analysis/tpe/" + findString
+            "https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=" + findString
+            
           );
           $("#link3").attr("href", "https://histock.tw/stock/" + findString);
           $("#link4").attr(
@@ -172,8 +175,8 @@
           );
           $("#link7").attr(
             "href",
-            "http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=" +
-              findString
+            "https://statementdog.com/analysis/tpe/" + findString
+            
           );
           $("#link8").attr(
             "href",
@@ -217,7 +220,7 @@
             "http://pchome.megatime.com.tw/stock/sid" + findString + ".html";
 
           document.getElementById("capital").href =
-            "http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=" +
+            "https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=" +
             findString;
 
           document.getElementById("tendy").href =
@@ -597,8 +600,8 @@
         <a
           target="_blank"
           id="capital"
-          href="https://www2.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=2356"
-          >群益網</a
+          href="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=2356"
+          >群益網(分價)</a
 		  >
           <!-- href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=2356" -->
       </li>
@@ -627,7 +630,7 @@
         <td>
           <a
             id="link1"
-            href="http://www.goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=2356"
+            href="http://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2356"
             target="_blank"
           >
             <img
@@ -642,90 +645,93 @@
         <td>
           <a
             id="link2"
-            href="https://statementdog.com/analysis/tpe/2356"
+           
+            href="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=2356"
             target="_blank"
           >
             <img
               id="img2"
               width="470"
-              alt="財報狗"
-              title="財報狗"
+              alt="群益股利"
+              title="群益股利"
               src="http://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=2356.TW"
-          /></a>
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <a
-            id="link6"
-            href="http://stock.wearn.com/income.asp?mode=search&kind=2356"
-            target="_blank"
-          >
-            <img
+              /></a>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <a
+              id="link6"
+              href="http://stock.wearn.com/income.asp?mode=search&kind=2356"
+              target="_blank"
+              >
+              <img
               id="img6"
               width="470"
               alt="聚財網"
               title="聚財網"
               src="http://stock.wearn.com/income_chart.asp?stockid=2356"
-          /></a>
-        </td>
-        <td>
-          <a
-            id="link4"
-            href="http://www.cmoney.tw/finance/f00025.aspx?s=2356"
-            target="_blank"
-          >
-            <img
+              /></a>
+            </td>
+            <td>
+              <a
+              id="link4"
+              href="http://www.cmoney.tw/finance/f00025.aspx?s=2356"
+              target="_blank"
+              >
+              <img
               id="img4"
               width="470"
               alt="Cmoney 股市分析"
               title="Cmoney 股市分析"
               src="http://stock.wearn.com/acre.asp?stockid=2356"
-          /></a>
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <a
-            id="link5"
-            href="http://www.money-link.com.tw/stxba/index5.asp?id=2356"
-            target="_blank"
-          >
-            <img
+              /></a>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <a
+              id="link5"
+              href="http://www.money-link.com.tw/stxba/index5.asp?id=2356"
+              target="_blank"
+              >
+              <img
               id="img5"
               width="470"
               alt="精誠資訊"
               title="精誠資訊"
               src="http://stock.wearn.com/sale_chart.asp?stockid=2356"
-          /></a>
-        </td>
-
-        <td>
-          <a id="link3" href="https://histock.tw/stock/2356" target="_blank">
-            <img
-              id="img3"
-              width="470"
-              alt="Hi Stock"
-              title="Hi Stock"
-              src="http://stock.wearn.com/foreign_buy.asp?stockid=2356"
-          /></a>
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <a
-            id="link7"
-            href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=2356"
-            target="_blank"
-          >
-            <img
-              id="img7"
-              width="470"
-              alt="群益網"
-              title="群益網"
+              /></a>
+            </td>
+            
+            <td>
+              <a id="link3" href="https://histock.tw/stock/2356" target="_blank">
+                <img
+                id="img3"
+                width="470"
+                alt="Hi Stock"
+                title="Hi Stock"
+                src="http://stock.wearn.com/foreign_buy.asp?stockid=2356"
+                /></a>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <a
+                id="link7"
+                
+                href="https://statementdog.com/analysis/2356"
+                target="_blank"
+                >
+                <img
+                id="img7"
+                width="470"
+                
+                alt="財報狗"
+                title="財報狗"
               src="https://stock.wearn.com/foreign_chart.asp?stockid=2356"
           /></a>
         </td>
