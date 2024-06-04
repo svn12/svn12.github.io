@@ -86,6 +86,15 @@
         color: red;
         font-weight: bold;
       }
+      .iframe {
+        height: 700px; /* 設定 iframe 的高度 */
+        /* width: calc(33.33% - 20px); /* 設定每個 iframe 的寬度，並考慮間距 */
+     /*   width: 32% ; /* 設定每個 iframe 的寬度，並考慮間距 *
+        margin: 10px; /* 設定間距 *
+        border: 1px solid #ccc; /* 加上邊框以區分 iframe */
+     
+      
+    }
     </style>
 
     <link rel="stylesheet" href="..\youtube\link_P_noside.css" />
@@ -99,7 +108,15 @@
           // alert("Submit prevented");
           Query_stk();
         });
+        appendText4('2356');
       });
+      function appendText4(code) {
+      
+        let txt1 =`<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=${code}" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=${code}" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/candlestick-chart;stockSymbol=${code}" ></iframe>`
+      $("#T4").append(txt1);   // Append new elements
+      }
 
       function Query_stk() {
         // var findString = document.getElementById('location-input').value;
@@ -112,6 +129,8 @@
         //console.log(findString);
         // console.log(findString);
         if (findString.length > 0) {
+          $("#T4").html('');
+          appendText4(findString);
           // document.getElementById("yahoo").href ="https://tw.stock.yahoo.com/q/bc?s="+findString
           $("#img1").attr(
             "src",
@@ -752,6 +771,11 @@
         </td>
       </tr>
     </table>
+    <div id="T4"  class="iframe-container"></div>
     <!-- <iframe id="histock1" src="https://www.wantgoo.com/stock" frameborder="0"allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
+    <iframe src="https://histock.tw/stock/broker8.aspx" enableviewstate="True" frameborder="no" vspace="0" hspace="0"
+      width="1250" height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
+    <iframe src="https://histock.tw/tw" enableviewstate="True" frameborder="no" vspace="0" hspace="0" width="1250"
+      height="800" marginheight="0" marginwidth="0" scrolling="Yes" name="I1"></iframe>
   </body>
 </html>

@@ -1,15 +1,61 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <script src="https://pulipulichen.github.io/jieba-js/jquery.js"></script>
-  <script src="https://pulipulichen.github.io/jieba-js/require-jieba-js.js"></script>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://pulipulichen.github.io/jieba-js/jquery.js"></script>
+    <script src="https://pulipulichen.github.io/jieba-js/require-jieba-js.js"></script>
+    
+  </head>
+  <style>
+    .iframe-container {
+      display: flex; /* 使用 flexbox 來排列 iframe */
+      flex-wrap: wrap; /* 讓 iframe 換行排列 */
+  }
+  .iframe {
+      /* width: calc(33.33% - 20px); /* 設定每個 iframe 的寬度，並考慮間距 */
+      width: 32% ; /* 設定每個 iframe 的寬度，並考慮間距 */
+      height: 700px; /* 設定 iframe 的高度 */
+      margin: 10px; /* 設定間距 */
+      border: 1px solid #ccc; /* 加上邊框以區分 iframe */
    
-</head>
-<body>
-  
+       
+    
+   
+    
+  }
+</style>
+  <body>
+    <div class="iframe-container">
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=5434" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=5434" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/basic-info;stockSymbol=5434" ></iframe>
+      
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=5434" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=5434" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/basic-info;stockSymbol=5434" ></iframe>
+
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=4938" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=4938" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/basic-info;stockSymbol=4938" ></iframe>
+      
+    
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=5434" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=4938" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=2303" ></iframe>
+      
+    
+    <iframe class="iframe" src="https://example.com/iframe1"></iframe>
+    <iframe class="iframe" src="https://example.com/iframe2"></iframe>
+    <iframe class="iframe" src="https://example.com/iframe3"></iframe>
+  </div>
+    
+    
+    <iframe src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=4938" id="app2" width="100%" height="388" frameborder="0" scrolling="no"></iframe>
+    
   <p>This is jieba_cut</p>
   <!-- <button onclick="jieba_cut()">call_jieba_cut</button> -->
   <p id="Head">

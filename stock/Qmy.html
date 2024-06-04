@@ -60,6 +60,20 @@
       }
 
       .iframe-container {
+        display: flex; /* 使用 flexbox 來排列 iframe */
+        flex-wrap: wrap; /* 讓 iframe 換行排列 */
+    }
+    .iframe {
+        /* width: calc(33.33% - 20px); /* 設定每個 iframe 的寬度，並考慮間距 */
+        width: 32% ; /* 設定每個 iframe 的寬度，並考慮間距 */
+        height: 700px; /* 設定 iframe 的高度 */
+        margin: 10px; /* 設定間距 */
+        border: 1px solid #ccc; /* 加上邊框以區分 iframe */
+     
+      
+    }
+
+      .iframe-container1 {
         /* overflow: hidden;
 	  padding-top: 56.25%;  16:9
 	  position: relative;*/
@@ -186,6 +200,15 @@
         let txt1 = `<iframe src="https://www.cmoney.tw/finance/${code}/technicalanalysis"  > </iframe> <br><br>`;
         $("#T3").append(txt1);   // Append new elements
       }
+      function appendText4(code) {
+      
+        let txt1 =`<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=${code}" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=${code}" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/candlestick-chart;stockSymbol=${code}" ></iframe>`
+      $("#T4").append(txt1);   // Append new elements
+    }
+    //<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/qoute;stockSymbol=${code}" ></iframe>`
+    //<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/basic-info;stockSymbol=${code}" ></iframe>`
       function appendText1(code, remark) {
         //const keyArray=['T','M','US','JP','F']
         
@@ -310,7 +333,9 @@
         $("#T2").html('');
 
         $("#T3").html('');
+        $("#T4").html('');
         codeA1.map(appendText1);
+        codeA1.map(appendText4);
         document.documentElement.scrollTop = 0;
         document.getElementById("T2").style.display = "none";
       }
@@ -344,6 +369,7 @@
         $("#T").html('');
         $("#T2").html('');
         $("#T3").html('');
+        $("#T4").html('');
         // appendText1('0050');
         // appendText1('0050');
         // appendText1('2412');
@@ -368,6 +394,7 @@
           , "2412",'2356', "1101", "2023", '2330', '2303', '2454', '2308','2409', '2603', '3260', '00891'
           , '6233', '3062', '3006', '3661', '6770', '3311','2492'];
         codeA.map(appendText1);
+        codeA.map(appendText4);
         document.documentElement.scrollTop = 0;
       }
       function show_a(link) {
@@ -384,6 +411,7 @@
           appendText1(link.code, link.code);
         }
         else {
+          appendText4(link.code);
           if (link.Weight == undefined) {
             appendText1(link.code, link[Object.keys(link)[1]]);
           }
@@ -401,6 +429,7 @@
         $("#T2").html('');
 
         $("#T3").html('');
+        $("#T4").html('');
         $("#T").html('');
         d3.csv("https://svn12.github.io/doc/my_自選股.csv", function (data) {
           //console.log(data);
@@ -413,6 +442,7 @@
         $("#T2").html('');
 
         $("#T3").html('');
+        $("#T4").html('');
         $("#T").html('');
         let findString = '';
         if (findString == '!') { findString = ''; }
@@ -454,6 +484,7 @@
         $("#T").html('');
 
         $("#T3").html('');
+        $("#T4").html('');
         let select_sh = $('#select_sh').val();
         let a = {
           sheetUrl: '"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"'
@@ -523,8 +554,27 @@
 
     <p id="T"> </p>
 
-    <div id="T3" class="iframe-container">
+    <div id="T4"  class="iframe-container">
+      <!-- <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=5434" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=5434" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/basic-info;stockSymbol=5434" ></iframe>
+      
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=5434" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=5434" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/basic-info;stockSymbol=5434" ></iframe>
 
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=4938" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=4938" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/basic-info;stockSymbol=4938" ></iframe>
+      
+    
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=5434" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=4938" ></iframe>
+      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=2303" ></iframe>
+       -->
+    
+  </div>
+    <div id="T3" class="iframe-container1">
     </div>
     <table class="showtable" id="myTable2" style="width:90%" style="display: none;"> </table>
     <iframe src="https://histock.tw/stock/broker8.aspx" enableviewstate="True" frameborder="no" vspace="0" hspace="0"
