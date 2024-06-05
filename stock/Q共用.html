@@ -53,7 +53,7 @@
 }
 .iframe {
     /* width: calc(33.33% - 20px); /* 設定每個 iframe 的寬度，並考慮間距 */
-    width: 32% ; /* 設定每個 iframe 的寬度，並考慮間距 */
+    width: 45% ; /* 設定每個 iframe 的寬度，並考慮間距 */
     height: 700px; /* 設定 iframe 的高度 */
     margin: 10px; /* 設定間距 */
     border: 1px solid #ccc; /* 加上邊框以區分 iframe */
@@ -547,8 +547,7 @@ function ShowT2_A() {
 function appendText4(code) {
       
   let txt1 =`<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=${code}" ></iframe>
-<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=${code}" ></iframe>
-<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/candlestick-chart;stockSymbol=${code}" ></iframe>`
+<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=${code}" ></iframe>`
 $("#T4").append(txt1);   // Append new elements
 }
 
