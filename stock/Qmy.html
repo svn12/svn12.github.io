@@ -184,6 +184,16 @@
         */
 
       });
+      function isDesktop() {
+        // Check for touch events - common in mobile devices
+        const hasTouchEvents = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      
+        // Patterns that indicate a mobile device in the user agent string
+        const mobileRegex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+      
+        // Return true for desktop, false for mobile
+        return !hasTouchEvents && !mobileRegex.test(navigator.userAgent);
+      }
       function checkKey(array, search) {
         let result = false;
         for (let key of array) {
@@ -201,9 +211,11 @@
         $("#T3").append(txt1);   // Append new elements
       }
       function appendText4(code) {
-      
-        let txt1 =`<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=${code}" ></iframe>
+        
+        let txt1 =isDesktop()?
+        `<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=${code}" ></iframe>
       <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=${code}" ></iframe>`
+      :''; //
       //<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/candlestick-chart;stockSymbol=${code}" ></iframe>`
       $("#T4").append(txt1);   // Append new elements
     }
