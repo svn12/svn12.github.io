@@ -216,6 +216,7 @@ fileInput.addEventListener('change', function() {
       function getImgData() {
         const files = chooseFile.files[0];
         if (files) {
+          document.getElementById("filename").value = files.name;
           const fileReader = new FileReader();
           fileReader.readAsDataURL(files);
           fileReader.addEventListener("load", function () {
