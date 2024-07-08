@@ -310,10 +310,11 @@
       <div class="Header">
         <!-- <a  href="https://svn12.github.io/youtube/南門教會直播片頭.html">週報 -->
         <figure id="barcode">
-          <img
+          <img 
             src="https://api.qrserver.com/v1/create-qr-code/?data=http://www.pctnm.tw/download_weekly.php &amp;size=200x200"
           />
           <!-- <img src="pic_trulli.jpg" alt="Trulli" style="width:100%"> -->
+          
           <figcaption>教會週報</figcaption>
         </figure>
         <!-- </a> -->
@@ -369,6 +370,7 @@
       const Bdate = document.querySelector("#Bdate");
       const CurTime = document.querySelector("#CurTime");
       const scrollText = document.querySelector("#scrollText");
+      //const weeklyReport = document.querySelector("#weeklyReport");
 
       // img.src=img_Src;
       const fileLink =
@@ -430,6 +432,7 @@
           setAniDuration(Math.ceil(ratio * 1000 * oneFrameDuration));
 
           Bdate.textContent = data[1][3];
+          //weeklyReport.src=`http://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data[1][4]}`
         });
       }
 
