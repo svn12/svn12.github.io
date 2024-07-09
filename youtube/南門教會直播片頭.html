@@ -110,7 +110,9 @@
         text-align: right;
         text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
       }
-
+      #qrcode > img{
+        width:200px;
+      }
       .Header .Clock {
         position: absolute;
         /* bottom: 0; */
@@ -310,11 +312,14 @@
       <div class="Header">
         <!-- <a  href="https://svn12.github.io/youtube/南門教會直播片頭.html">週報 -->
         <figure id="barcode">
-          <img 
+          <!-- <img 
             src="https://api.qrserver.com/v1/create-qr-code/?data=http://www.pctnm.tw/download_weekly.php &amp;size=200x200"
-          />
+          /> -->
           <!-- <img src="pic_trulli.jpg" alt="Trulli" style="width:100%"> -->
-          
+         
+
+            <div id="qrcode"></div>
+       
           <figcaption>教會週報</figcaption>
         </figure>
         <!-- </a> -->
@@ -341,10 +346,7 @@
         <div id="subj"></div>
         <div id="speaker"></div>
         <div id="poem"></div>
-        <!-- <h1 id="subj">貪婪招致審判</h1>
-              <h1 id="poem">雅各書 5：1-6 雅各書 5：1-6</h1>
-              <h2 id="speaker">主禮：鍾主亮牧師</h2> -->
-        <!-- <p>What a beautiful sunrise</p> -->
+        
       </div>
     </div>
     <div class="scroll-left">
@@ -356,6 +358,7 @@
       autoplay
       loop
     ></audio> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">	</script>
     <script>
       // img_Src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQja5a_9x_nigBTrMw0jI8oyUARzNMDK84LSN_GxnJAZeAKt9GqL4yJmONdu7OZG4VdOxU&usqp=CAU';
       // img_Src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdAtv04UT9QCuUwP8mXDB5ghw561SZiddhmw&usqp=CAU';
@@ -373,15 +376,16 @@
       //const weeklyReport = document.querySelector("#weeklyReport");
 
       // img.src=img_Src;
+      //var qrcode = new QRCode("qrcode", "https://pctnm.tw/files.php?m=week&file=bcb1957d5394223d4939d81656e8bb61");  
       const fileLink =
-        "https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing";
+      "https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing";
       Read_SheetData();
       let imageArr = [];
       let curImage = 0;
-
+      
       scrollText.addEventListener("animationiteration", setImage);
       scrollText.addEventListener("click", setImage);
-
+      
       Bdate.addEventListener("click", () => {
         window.open("./南門教會華語禮拜直播片頭.html");
       });
@@ -391,48 +395,51 @@
       document.querySelector(".text-block").addEventListener("click", () => {
         window.open(
           "https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit#gid=1065429392"
-        );
-      });
-      async function Read_SheetData() {
-        //document.querySelector("#myTable1").innerHTML = '';
-        await RsheetData(fileLink, "台語禮拜").then((data) => {
-          data[1].forEach((item, index) => {
-            if (index > 5 && item !== "") {
-              imageArr.push(item);
-            }
-          });
-          if (imageArr.length == 0) {
-            imageArr = [
+          );
+        });
+        
+        async function Read_SheetData() {
+          //document.querySelector("#myTable1").innerHTML = '';
+          await RsheetData(fileLink, "台語禮拜").then((data) => {
+            data[1].forEach((item, index) => {
+              if (index > 5 && item !== "") {
+                imageArr.push(item);
+              }
+            });
+            if (imageArr.length == 0) {
+              imageArr = [
               "https://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg",
               "https://www.pctnm.tw/images/main/94ea826b6ea9923e0ba550e1b91a6c02.jpg",
               "https://www.pctnm.tw/images/main/de0ee6118741dd3a94cdb1fc1042c995.jpg",
-            ];
-          }
-          subj.textContent = data[1][0];
-          speaker.textContent = data[1][2];
-          poem.textContent = data[1][1];
-          // if (data[1][4] === '') {
-
-          //   church.textContent = `南門長老教會網路直播 ${data[1][3]}`;
-          //   // Dtime.textContent = `華語禮拜 8:30  台語禮拜 10:30 `;
-
-          // } else {
-          //   church.textContent = `南門長老教會網路直播 ${data[1][4]}`;
-          //   // Dtime.textContent = ` ${data[1][3]} 10:30 `;
-          // }
-          //	TableShow(data,"#myTable1");`
-          church.textContent = `南門長老教會台語禮拜`;
-          // img.src = data[1][6];
-          // document.body.style.backgroundImage = `url(${data[1][6]})`;
-          document.body.style.backgroundImage = `url(${imageArr[0]})`;
-          // document.body.style.backgroundImage = `url(${imageArr[0]})`;
-          scrollText.textContent = data[1][5].replace(/[\r\n,\n]/g, " ");
-          ratio = scrollText.scrollWidth / scrollText.clientWidth;
-          setAniKeyFrame(Math.ceil(ratio * 100));
-          setAniDuration(Math.ceil(ratio * 1000 * oneFrameDuration));
-
-          Bdate.textContent = data[1][3];
-          //weeklyReport.src=`http://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data[1][4]}`
+              ];
+            }
+            subj.textContent = data[1][0];
+            speaker.textContent = data[1][2];
+            poem.textContent = data[1][1];
+            // if (data[1][4] === '') {
+              
+            //   church.textContent = `南門長老教會網路直播 ${data[1][3]}`;
+            //   // Dtime.textContent = `華語禮拜 8:30  台語禮拜 10:30 `;
+            
+            // } else {
+              //   church.textContent = `南門長老教會網路直播 ${data[1][4]}`;
+              //   // Dtime.textContent = ` ${data[1][3]} 10:30 `;
+              // }
+              //	TableShow(data,"#myTable1");`
+              church.textContent = `南門長老教會台語禮拜`;
+              // img.src = data[1][6];
+              // document.body.style.backgroundImage = `url(${data[1][6]})`;
+              document.body.style.backgroundImage = `url(${imageArr[0]})`;
+              // document.body.style.backgroundImage = `url(${imageArr[0]})`;
+              scrollText.textContent = data[1][5].replace(/[\r\n,\n]/g, " ");
+              ratio = scrollText.scrollWidth / scrollText.clientWidth;
+              setAniKeyFrame(Math.ceil(ratio * 100));
+              setAniDuration(Math.ceil(ratio * 1000 * oneFrameDuration));
+              
+              Bdate.textContent = data[1][3];
+              
+              //weeklyReport.src=`http://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data[1][4]}`
+             let qrcode = new QRCode("qrcode", `${data[1][4]}`);  
         });
       }
 
