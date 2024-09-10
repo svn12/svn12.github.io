@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=3.0">
-	
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-   
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=3.0" />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <!-- 
 	 
     <link rel="stylesheet" href="reset.css">
@@ -14,46 +18,66 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> -->
     <title>查詩歌啟應文</title>
-  
-    <style> 
-		
-		#parent {
-			display:flex;
-			
-			}
-		.container {
-			position: relative;
-			width: 100%;
-			height: 0;
-			padding-bottom: 56.25%;
-			}
-		.video {
-			position: absolute;
-			
-			width: 90%;
-			height: 90%;
-			
-			left: 5%
-			
-			
-		}
-		
-		table {
-		  border-collapse: collapse;
-		  border-spacing: 0;
-		  width: 100%;
-		  border: 1px solid #ddd;
-		  overflow-x:scroll;
-		  overflow-y:scroll;
-		}
-		
-		th, td {
-		  text-align: left;
-		  padding: 8px;
-		}
 
-		tr:nth-child(even){
-			/* background-color: #f2f2f2 
+    <style>
+		@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css");
+        @font-face {
+            font-family: "jsfont";
+            src: url("../doc/jf-openhuninn-2.0.ttf");
+            /*src: url("https://github.com/justfont/open-huninn-font/blob/master/font/jf-openhuninn-2.0.ttf"); */
+          }
+          *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+		html{
+            height: 100%;
+        }
+          body{
+            font-family: 蘋方黑體, 華康麗黑體, DFKai-SB, Helvetica, Arial,
+            sans-serif, serif, "jsfont";
+          }
+      #parent {
+        display: flex;
+		justify-content: center;
+		align-items: center;
+      }
+	  .link {
+        display: flex;
+      }
+      .container {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 56.25%; 
+      }
+      .video {
+        position: absolute;
+
+        width: 90%;
+        height: 90%;
+
+        left: 5%;
+      }
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+        overflow-x: scroll;
+        overflow-y: scroll;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        /* background-color: #f2f2f2 
 			overflow-y: scroll;
 			display: block;
 			position: absolute;
@@ -61,112 +85,130 @@
 			left: 0;
 			.container {  max-width: 1000px;}
 			*/
-			 background-color: lightblue;
-			}
-		table thead {
-			background-color: orange;
-		  }
-		  
-		/*the container must be positioned relative:*/
-		.autocomplete {
-		  position: relative;
-		  display: inline-block;
-		}
+        background-color: lightblue;
+      }
+      table thead {
+        background-color: orange;
+      }
 
-		input {
-		  border: 1px solid transparent;
-		  background-color: #f1f1f1;
-		  padding: 10px;
-		  font-size: 16px;
-		}
+      /*the container must be positioned relative:*/
+      .autocomplete {
+        position: relative;
+        display: inline-block;
+      }
 
-		input[type=text] {
-		  background-color: #f1f1f1;
-		  width: 100%;
-		}
+      input {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        padding: 10px;
+        font-size: 16px;
+      }
 
-		input[type=submit] {
-		  background-color: DodgerBlue;
-		  color: #fff;
-		  cursor: pointer;
-		}
+      input[type="text"] {
+        background-color: #f1f1f1;
+        width: 100%;
+      }
 
-		.autocomplete-items {
-		  position: absolute;
-		  border: 1px solid #d4d4d4;
-		  border-bottom: none;
-		  border-top: none;
-		  z-index: 99;
-		  /*position the autocomplete items to be the same width as the container:*/
-		  top: 100%;
-		  left: 0;
-		  right: 0;
-		}
+      input[type="submit"] {
+        background-color: DodgerBlue;
+        color: #fff;
+        cursor: pointer;
+      }
 
-		.autocomplete-items div {
-		  padding: 10px;
-		  cursor: pointer;
-		  background-color: #fff; 
-		  border-bottom: 1px solid #d4d4d4; 
-		}
+      .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+      }
 
-		/*when hovering an item:*/
-		.autocomplete-items div:hover {
-		  background-color: #e9e9e9; 
-		}
+      .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+      }
 
-		/*when navigating through the items using the arrow keys:*/
-		.autocomplete-active {
-		  background-color: DodgerBlue !important; 
-		  color: #ffffff; 
-		}  
-		
-	</style>
-</head>
-<body >
+      /*when hovering an item:*/
+      .autocomplete-items div:hover {
+        background-color: #e9e9e9;
+      }
 
+      /*when navigating through the items using the arrow keys:*/
+      .autocomplete-active {
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+      }
+    
+    </style>
+  </head>
+  <body>
     <div class="container">
-    <div id="parent">
-    <!-- <h2 >&nbsp&nbsp &nbsp聖詩與啟應文&nbsp&nbsp &nbsp</h2> -->
-    <a href="https://svn12.github.io/%E6%9F%A5%E8%81%96%E8%A9%A9.html"><img width="80" height="80" src="https://chart.googleapis.com/chart?cht=qr&amp;chl=https%3A%2F%2Ftinyurl.com%2Fyzvshjn4&amp;chld=L|0&amp;chs=150" border="0"></a>
-    <h3>&nbsp&nbsp &nbsp</h3>
-    <h3><a href="https://www.dropbox.com/sh/q6uxx8wsajjzt17/AAD7pxz5-Xmmu8BZbX2BgekDa?dl=0&fbclid=IwAR2fJdygOWikE3EqA5u9y2scv2-MK1e_MUI-D-hGkCCQwU0YOKdRw7uS2HU">新聖詩</a></h3>
-    <h3>&nbsp&nbsp &nbsp</h3>
-    <h3><a href="https://www.dropbox.com/sh/co16udpz9hj9db2/AADnezX7loz1cvr6l75W9-Yka?dl=0">帶譜PPT</a></h3>
-    <h3>&nbsp&nbsp &nbsp</h3>
-    <h3><a href="https://www.dropbox.com/sh/625wgq90om6vx2m/AABJNxt_kPhZnBJM_pO3-62Ya?dl=0&fbclid=IwAR2Q6aXAPtMepu7ckVk8ejFi8Y-liPadNvYDY9RM82VipsiXWSMwm5YEK4U">帶譜PPT2</a></h3>
-     <h3>&nbsp&nbsp &nbsp</h3>
-    <h3><a href="https://www.dropbox.com/sh/8zmxs65lb0ui657/AAD-GV1mLcvnqliyVr_kovSja">啟應文</a></h3>
-    <h3>&nbsp&nbsp &nbsp</h3>
-    <h3><a href="https://www.facebook.com/groups/1717506455171469/permalink/1874744572780989
-">臉書源頭</a></h3>
-    <h3>&nbsp&nbsp &nbsp</h3>
-    <h3><a href="youtube/查聖經_link_P.html">聽讀聖經</a></h3>
-    <h3>&nbsp&nbsp &nbsp</h3>
+		
+      <div id="parent">
+        <!-- <h2 >&nbsp&nbsp &nbsp聖詩與啟應文&nbsp&nbsp &nbsp</h2> -->
 
-	</div>
-	<!--
-	<br>
-	 <div id="parent">
-	 <h3><a href="https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing">新聖詩聖歌隊</a></h3>
-	 <h3>&nbsp&nbsp &nbsp</h3>
-	 <h3><a href="https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit#gid=0">讚美之泉約書亞</a></h3>
-	 </div>
-	 -->
-    <br>
-        <select id='selectTle' onchange="testRD()">
+        <!-- <a href="https://svn12.github.io/%E6%9F%A5%E8%81%96%E8%A9%A9.html"
+          ><div id="qrcode"></div
+        ></a>
+        <h3>&nbsp&nbsp &nbsp</h3> -->
+        <h4>
+          <a
+            href="https://www.dropbox.com/sh/q6uxx8wsajjzt17/AAD7pxz5-Xmmu8BZbX2BgekDa?dl=0&fbclid=IwAR2fJdygOWikE3EqA5u9y2scv2-MK1e_MUI-D-hGkCCQwU0YOKdRw7uS2HU"
+            >新聖詩</a
+          >
+        </h4>
+        <h4>&nbsp&nbsp &nbsp</h4>
+        <h4>
+          <a
+            href="https://www.dropbox.com/sh/co16udpz9hj9db2/AADnezX7loz1cvr6l75W9-Yka?dl=0"
+            >帶譜PPT</a
+          >
+        </h4>
+        <h4>&nbsp&nbsp &nbsp</h4>
+        <h4>
+          <a
+            href="https://www.dropbox.com/sh/625wgq90om6vx2m/AABJNxt_kPhZnBJM_pO3-62Ya?dl=0&fbclid=IwAR2Q6aXAPtMepu7ckVk8ejFi8Y-liPadNvYDY9RM82VipsiXWSMwm5YEK4U"
+            >帶譜PPT2</a
+          >
+        </h4>
+        <h4>&nbsp&nbsp &nbsp</h4>
+        <h4>
+          <a
+            href="https://www.dropbox.com/sh/8zmxs65lb0ui657/AAD-GV1mLcvnqliyVr_kovSja"
+            >啟應文</a
+          >
+        </h4>
+        <h4>&nbsp&nbsp &nbsp</h4>
+        <h4>
+          <a
+            href="https://www.facebook.com/groups/1717506455171469/permalink/1874744572780989
+"
+            >臉書源頭</a
+          >
+        </h4>
+        <h4>&nbsp&nbsp &nbsp</h4>
+        <h4><a href="youtube/查聖經_link_P.html">聽讀聖經</a></h4>
+        <h4>&nbsp&nbsp &nbsp</h4>
+      </div>
+      <br />
+      <select id="selectTle" onchange="testRD()">
         <option value="List">聖歌隊雅音</option>
-		<option value="聖歌隊2">聖歌隊自動</option>
-		<option selected="selected" value="新聖詩">新聖詩</option>
-		<option value="啟應文">啟應文</option>
-		<option value="聖詩">聖詩</option>
-		<option value="讚美之泉">讚美之泉</option>
+        <option value="聖歌隊2">聖歌隊自動</option>
+        <option selected="selected" value="新聖詩">新聖詩</option>
+        <option value="啟應文">啟應文</option>
+        <option value="聖詩">聖詩</option>
+        <option value="讚美之泉">讚美之泉</option>
         <option value="讚美詩網">讚美之泉約書亞</option>
-        
-		</select>
-        
-		<select id='selectSub' onchange="qTelSub()">
-		<!-- <option value="UK">UK</option> 
+      </select>
+
+      <select id="selectSub" onchange="qTelSub()">
+        <!-- <option value="UK">UK</option> 
 		聖詩001~650 啟應文01~66 &nbsp: 
 		  <option selected="selected" value="List">聖詩啟應文聖歌隊</option>
 		<option value="新聖詩">新聖詩</option>
@@ -175,360 +217,385 @@
 		<option value="讚美之泉">讚美之泉</option>
         <option value="讚美詩網">讚美之泉約書亞</option>
 		<input id="location-input1" type="text" name="myCountry" placeholder="Country">
-		-->
-		</select><br>
-	     <div  class="autocomplete" style="width:50%;">
-			
-			<input autocomplete="off" type="text"  class="form-control" placeholder="歌名或首別關鍵字" id="location-input" />
-		 </div>
-		 
-		<input id="btnClickMe" type="button" value="查詢" />
-		
-		
-   
-    <!-- <input type="submit" value="查詢" /> 
-	<iframe id="Doc" src="https://www.dropbox.com/sh/q6uxx8wsajjzt17/AACVq1zx_hxS1M2PW3_N6Uz7a/1-100/11-20/12.pdf" frameborder="0"></iframe>
-	-->
-       
-        <div class="table-responsive">
+		--></select
+      ><br />
+      <div class="autocomplete" style="width: 50%">
+        <input
+          autocomplete="off"
+          type="text"
+          class="form-control"
+          placeholder="歌名或首別關鍵字"
+          id="location-input"
+        />
+      </div>
+
+      <input id="btnClickMe" type="button" value="查詢" />
+
+      <div class="table-responsive">
         <div id="show"></div>
-         </div>
-		 <iframe id="YT" src="" frameborder="0" 
-			allowfullscreen class="video" ></iframe>
-		 <div id='ytaudio' data-video="y990k6j4ErE" data-state="0" data-autoplay="0" data-loop="1" class="youtube-audio"></div>
-		
-		
-	 </div>
-	
+      </div>
+      <iframe
+        id="YT"
+        src=""
+        frameborder="0"
+        allowfullscreen
+        class="video"
+      ></iframe>
+      <div
+        id="ytaudio"
+        data-video="y990k6j4ErE"
+        data-state="0"
+        data-autoplay="0"
+        data-loop="1"
+        class="youtube-audio"
+      ></div>
+    </div>
+
     <script>
+      const shURL =
+        "https://docs.google.com/spreadsheets/d/1NrE6Ib8sE2z1P5-ey2EwvBVGb7KAJ-lZ0vOM4wwZ0H0/edit?usp=sharing"; //聖詩聖經連結 祖台詞
 
-       const shURL='https://docs.google.com/spreadsheets/d/1yt3EfSIVBi-NOvoeqwEtp-DcnIODM9LK84alJLh9JJI/edit?usp=sharing'
-        $(document).ready(function () {
-            testRD();
-            $(':input').change(function () {
-                //  alert(this.value);
-                // qTel();
-                })
-            
-            $('#btnClickMe').click(function () {
-                // alert($(this).val()+ '  ---' + txtptr.val());
-                 qTel();
-            })
-            
-           
+      $(document).ready(function () {
+        testRD();
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+          text: encodeURI("https://svn12.github.io/查聖詩.html"),
+          width: 128,
+          height: 128,
         });
-		
-          function qTel(){
-                var txtptr=$('input[type="text"]');
-                var selectedTle= $('#selectTle option:selected');
-                if(txtptr.val().length==0){
-                    alert ('請輸入關鍵字再查詢');
-                    return
-                }
-                else{
-                    // alert (txtptr.val()+ ' option--' + selectedTle.text() +' --' + selectedTle.val());
-                    Query_Tel2();
-                }
-            } 
-			function qTelSub(){
-                document.getElementById("location-input").value=$('#selectSub option:selected').val();
-                    Query_Tel2();
-                
-            }
-			
-			
-         function        Query_Tel2(){
-                // var txtptr=$('input[type="text"]');
-                var selectedTle= $('#selectTle option:selected');
+        $(":input").change(function () {
+          //  alert(this.value);
+          // qTel();
+        });
 
-                var findString =$('input[type="text"]').val();
-                // var findString = document.getElementById('location-input').value;
-                // console.log(findString);
-                if(findString.length>0){
-                    
-                if(findString=='!'){ findString = '';}
-              //  document.getElementById("show").innerHTML = '查詢 "*' + findString+'*" 中 ....';
-                var $show = $('#show');
-                var shTag= selectedTle.val();
-                var a = {
-                    sheetUrl:shURL,
-                    sheetTag: shTag,
-                    findSting: findString
-                    };
-                    //https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec
-              //  const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
-				const Search_API='https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec';
-                $.get(Search_API, a, function (data) {
-                    if(data.length==2){
-                        document.getElementById("show").innerHTML = '查無資料 請重新輸入再查詢';
-                    }
-                    else  if (data.length==0){ 
-                        document.getElementById("show").innerHTML = 'sheet Name 須為 "List"';}
-                    else {
+        $("#btnClickMe").click(function () {
+          // alert($(this).val()+ '  ---' + txtptr.val());
+          qTel();
+        });
+      });
 
-                    // console.log(data.length);
-                    // console.log(data);
-                    data = JSON.parse(data);
-                    var heads=[];
-                    for(head in data[0]){
-                        heads.push(head);
-						if(head=="YT"){
-							document.getElementById("YT").src = data[0].YT;
-							//
-							
-							document.querySelector('#ytaudio').dataset.video=get_video_id(data[0].YT);
-							const list = document.querySelector('#ytaudio');
-							while (list.hasChildNodes()) {
-									list.removeChild(list.firstChild);
-								}
-								   onYouTubeIframeAPIReady();   
-						//	document.getElementById("youtube-player").src=
-						//	`${data[0].YT}?autoplay=0&loop=1&enablejsapi=1&widgetid=1` //.dataset.video =data[0].YT
-						}
-                    }
-                    // console.log(heads.length);
-
-   
-                    var txt='';
-                    // txt += '<table  class="table  table-hover "> <thead><tr>';
-                     txt += '<table  class="table"> <thead><tr>';
-                    // heads.forEach(el=>console.log(el));
-                    heads.forEach(function(e){
-                        txt += "<th>" + e + "</th>";
-
-                    })
-                    
-                    txt+="</tr></thead><tbody>";
-                    // console.log(txt);
-
-                    for (x in data) {
-                        // console.log(x);
-                        // console.log(data[x][heads[0]]);
-                        if(data[x][heads[0]].indexOf(findString)>=0){
-                            txt += "<tr>";
-                             
-                            //  console.log(data[x]);
-                            heads.forEach(function(e){
-                                if(e==heads[0]){
-                                    txt += "<td>" + data[x][e] + "</td>";
-                                } 
-    
-
-                                else {
-                                    if(data[x][e]!=""){
-										//if(data[x][e].includes('you')||data[x][e].includes('http')){
-										if(/you|http/gi.test(data[x][e])){
-												txt +='<td><a href="' + data[x][e] + '" target="_blank">連結</a></td>';
-											}else{
-												txt += "<td>" + data[x][e] + "</td>";
-											}
-										}
-                                }
-                            })
-                            txt += "</tr>";
-                        }
-                        // txt += "<tr><td>" + data[x].Name + "</td><td>"+ data[x].手機 +"</td></tr>";
-                    }
-                    txt += "</tbody></table>"
-                    document.getElementById("show").innerHTML = txt;
-
-
-                    var arr = [];
-                    for (var i = 0; i < (a.endRow - a.row + 1); i++) {
-                        arr[i] = d.splice(0, (a.endCol - a.col + 1));
-                        $show.append(arr[i] + '<br/>');
-                    }
-                    }
-
-                });
-				document.getElementById("location-input").value='';
-            };
+      function qTel() {
+        var txtptr = $('input[type="text"]');
+        var selectedTle = $("#selectTle option:selected");
+        if (txtptr.val().length == 0) {
+          alert("請輸入關鍵字再查詢");
+          return;
+        } else {
+          // alert (txtptr.val()+ ' option--' + selectedTle.text() +' --' + selectedTle.val());
+          Query_Tel2();
         }
-		
-		//---------------
-		function autocomplete_CH(inp, arr) {
-		// -----------------------
-		  /*the autocomplete function takes two arguments,
+      }
+      function qTelSub() {
+        document.getElementById("location-input").value = $(
+          "#selectSub option:selected"
+        ).val();
+        Query_Tel2();
+      }
+
+      function Query_Tel2() {
+        // var txtptr=$('input[type="text"]');
+        var selectedTle = $("#selectTle option:selected");
+
+        var findString = $('input[type="text"]').val();
+        // var findString = document.getElementById('location-input').value;
+        // console.log(findString);
+        if (findString.length > 0) {
+          if (findString == "!") {
+            findString = "";
+          }
+          //  document.getElementById("show").innerHTML = '查詢 "*' + findString+'*" 中 ....';
+          var $show = $("#show");
+          var shTag = selectedTle.val();
+          var a = {
+            sheetUrl: shURL,
+            sheetTag: shTag,
+            findSting: findString,
+          };
+          //https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec
+          //  const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
+          const Search_API =
+            "https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec";
+          $.get(Search_API, a, function (data) {
+            if (data.length == 2) {
+              document.getElementById("show").innerHTML =
+                "查無資料 請重新輸入再查詢";
+            } else if (data.length == 0) {
+              document.getElementById("show").innerHTML =
+                'sheet Name 須為 "List"';
+            } else {
+              // console.log(data.length);
+              // console.log(data);
+              data = JSON.parse(data);
+              var heads = [];
+              for (head in data[0]) {
+                heads.push(head);
+                if (head == "YT") {
+                  document.getElementById("YT").src = data[0].YT;
+                  //
+
+                  document.querySelector("#ytaudio").dataset.video =
+                    get_video_id(data[0].YT);
+                  const list = document.querySelector("#ytaudio");
+                  while (list.hasChildNodes()) {
+                    list.removeChild(list.firstChild);
+                  }
+                  onYouTubeIframeAPIReady();
+                  //	document.getElementById("youtube-player").src=
+                  //	`${data[0].YT}?autoplay=0&loop=1&enablejsapi=1&widgetid=1` //.dataset.video =data[0].YT
+                }
+              }
+              // console.log(heads.length);
+
+              var txt = "";
+              // txt += '<table  class="table  table-hover "> <thead><tr>';
+              txt += '<table  class="table"> <thead><tr>';
+              // heads.forEach(el=>console.log(el));
+              heads.forEach(function (e) {
+                txt += "<th>" + e + "</th>";
+              });
+
+              txt += "</tr></thead><tbody>";
+              // console.log(txt);
+
+              for (x in data) {
+                // console.log(x);
+                // console.log(data[x][heads[0]]);
+                if (data[x][heads[0]].indexOf(findString) >= 0) {
+                  txt += "<tr>";
+
+                  //  console.log(data[x]);
+                  heads.forEach(function (e) {
+                    if (e == heads[0]) {
+                      txt += "<td>" + data[x][e] + "</td>";
+                    } else {
+                      if (data[x][e] != "") {
+                        //if(data[x][e].includes('you')||data[x][e].includes('http')){
+                        if (/you|http/gi.test(data[x][e])) {
+                          txt +=
+                            '<td><a href="' +
+                            data[x][e] +
+                            '" target="_blank">連結</a></td>';
+                        } else {
+                          txt += "<td>" + data[x][e] + "</td>";
+                        }
+                      }
+                    }
+                  });
+                  txt += "</tr>";
+                }
+                // txt += "<tr><td>" + data[x].Name + "</td><td>"+ data[x].手機 +"</td></tr>";
+              }
+              txt += "</tbody></table>";
+              document.getElementById("show").innerHTML = txt;
+
+              var arr = [];
+              for (var i = 0; i < a.endRow - a.row + 1; i++) {
+                arr[i] = d.splice(0, a.endCol - a.col + 1);
+                $show.append(arr[i] + "<br/>");
+              }
+            }
+          });
+          document.getElementById("location-input").value = "";
+        }
+      }
+
+      //---------------
+      function autocomplete_CH(inp, arr) {
+        // -----------------------
+        /*the autocomplete function takes two arguments,
 		  the text field element and an array of possible autocompleted values:*/
-		  var currentFocus;
-		  /*execute a function when someone writes in the text field:*/
-		  inp.addEventListener("input", function(e) {
-			  let start_pos,mmatch,a, b, i, val = this.value;
-			  /*close any already open lists of autocompleted values*/
-			  closeAllLists();
-			  if (!val) { return false;}
-			  currentFocus = -1;
-			  /*create a DIV element that will contain the items (values):*/
-			  a = document.createElement("DIV");
-			  a.setAttribute("id", this.id + "autocomplete-list");
-			  a.setAttribute("class", "autocomplete-items");
-			  /*append the DIV element as a child of the autocomplete container:*/
-			  this.parentNode.appendChild(a);
-			  /*for each item in the array...*/
-			  for (i = 0; i < arr.length; i++) {
-				/*check if the item starts with the same letters as the text field value:
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function (e) {
+          let start_pos,
+            mmatch,
+            a,
+            b,
+            i,
+            val = this.value;
+          /*close any already open lists of autocompleted values*/
+          closeAllLists();
+          if (!val) {
+            return false;
+          }
+          currentFocus = -1;
+          /*create a DIV element that will contain the items (values):*/
+          a = document.createElement("DIV");
+          a.setAttribute("id", this.id + "autocomplete-list");
+          a.setAttribute("class", "autocomplete-items");
+          /*append the DIV element as a child of the autocomplete container:*/
+          this.parentNode.appendChild(a);
+          /*for each item in the array...*/
+          for (i = 0; i < arr.length; i++) {
+            /*check if the item starts with the same letters as the text field value:
 				if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {  
 				mmatch=arr[i].toUpperCase().match(val.toUpperCase())*/
-				mmatch=arr[i].match(val)
-				if (mmatch ) {
-				  start_pos=mmatch?.index;
-				  /*create a DIV element for each matching element:*/
-				  b = document.createElement("DIV");
-				  /*make the matching letters bold:*/
-				  if(start_pos==0){
-					b.innerHTML = "<strong>" + arr[i].substr(start_pos, val.length) + "</strong>";
-					b.innerHTML += arr[i].substr(val.length);
-				  }else
-				  {
-					b.innerHTML = arr[i].substr(0,start_pos);
-					b.innerHTML += "<strong>" + arr[i].substr(start_pos, val.length) + "</strong>";
-					b.innerHTML += arr[i].substr(start_pos+val.length);
-				  }
-				  
-				  /*insert a input field that will hold the current array item's value:*/
-				  b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-				 // b.innerHTML = arr[i]+"<input type='hidden' value='" + arr[i] + "'>";
-				  /*execute a function when someone clicks on the item value (DIV element):*/
-				  b.addEventListener("click", function(e) {
-					  /*insert the value for the autocomplete text field:*/
-					  inp.value = this.getElementsByTagName("input")[0].value;
-					  
-					  /*close the list of autocompleted values,
+            mmatch = arr[i].match(val);
+            if (mmatch) {
+              start_pos = mmatch?.index;
+              /*create a DIV element for each matching element:*/
+              b = document.createElement("DIV");
+              /*make the matching letters bold:*/
+              if (start_pos == 0) {
+                b.innerHTML =
+                  "<strong>" +
+                  arr[i].substr(start_pos, val.length) +
+                  "</strong>";
+                b.innerHTML += arr[i].substr(val.length);
+              } else {
+                b.innerHTML = arr[i].substr(0, start_pos);
+                b.innerHTML +=
+                  "<strong>" +
+                  arr[i].substr(start_pos, val.length) +
+                  "</strong>";
+                b.innerHTML += arr[i].substr(start_pos + val.length);
+              }
+
+              /*insert a input field that will hold the current array item's value:*/
+              b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+              // b.innerHTML = arr[i]+"<input type='hidden' value='" + arr[i] + "'>";
+              /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function (e) {
+                /*insert the value for the autocomplete text field:*/
+                inp.value = this.getElementsByTagName("input")[0].value;
+
+                /*close the list of autocompleted values,
 					  (or any other open lists of autocompleted values:*/
-					  closeAllLists();
-					  qTel();
-				  });
-				  a.appendChild(b);
-				}
-			  }
-		  });
-		  /*execute a function presses a key on the keyboard:*/
-		  inp.addEventListener("keydown", function(e) {
-			  var x = document.getElementById(this.id + "autocomplete-list");
-			  if (x) x = x.getElementsByTagName("div");
-			  if (e.keyCode == 40) {
-				/*If the arrow DOWN key is pressed,
+                closeAllLists();
+                qTel();
+              });
+              a.appendChild(b);
+            }
+          }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function (e) {
+          var x = document.getElementById(this.id + "autocomplete-list");
+          if (x) x = x.getElementsByTagName("div");
+          if (e.keyCode == 40) {
+            /*If the arrow DOWN key is pressed,
 				increase the currentFocus variable:*/
-				currentFocus++;
-				/*and and make the current item more visible:*/
-				addActive(x);
-			  } else if (e.keyCode == 38) { //up
-				/*If the arrow UP key is pressed,
+            currentFocus++;
+            /*and and make the current item more visible:*/
+            addActive(x);
+          } else if (e.keyCode == 38) {
+            //up
+            /*If the arrow UP key is pressed,
 				decrease the currentFocus variable:*/
-				currentFocus--;
-				/*and and make the current item more visible:*/
-				addActive(x);
-			  } else if (e.keyCode == 13) {
-				/*If the ENTER key is pressed, prevent the form from being submitted,*/
-				e.preventDefault();
-				if (currentFocus > -1) {
-				  /*and simulate a click on the "active" item:*/
-				  if (x) x[currentFocus].click();
-				}
-			  }
-		  });
-		  
+            currentFocus--;
+            /*and and make the current item more visible:*/
+            addActive(x);
+          } else if (e.keyCode == 13) {
+            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+            e.preventDefault();
+            if (currentFocus > -1) {
+              /*and simulate a click on the "active" item:*/
+              if (x) x[currentFocus].click();
+            }
+          }
+        });
 
-		  function addActive(x) {
-			/*a function to classify an item as "active":*/
-			if (!x) return false;
-			/*start by removing the "active" class on all items:*/
-			removeActive(x);
-			if (currentFocus >= x.length) currentFocus = 0;
-			if (currentFocus < 0) currentFocus = (x.length - 1);
-			/*add class "autocomplete-active":*/
-			x[currentFocus].classList.add("autocomplete-active");
-		  }
-		  function removeActive(x) {
-			/*a function to remove the "active" class from all autocomplete items:*/
-			for (var i = 0; i < x.length; i++) {
-			  x[i].classList.remove("autocomplete-active");
-			}
-		  }
-		  function closeAllLists(elmnt) {
-			/*close all autocomplete lists in the document,
+        function addActive(x) {
+          /*a function to classify an item as "active":*/
+          if (!x) return false;
+          /*start by removing the "active" class on all items:*/
+          removeActive(x);
+          if (currentFocus >= x.length) currentFocus = 0;
+          if (currentFocus < 0) currentFocus = x.length - 1;
+          /*add class "autocomplete-active":*/
+          x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+          /*a function to remove the "active" class from all autocomplete items:*/
+          for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+          }
+        }
+        function closeAllLists(elmnt) {
+          /*close all autocomplete lists in the document,
 			except the one passed as an argument:*/
-			var x = document.getElementsByClassName("autocomplete-items");
-			for (var i = 0; i < x.length; i++) {
-			  if (elmnt != x[i] && elmnt != inp) {
-				x[i].parentNode.removeChild(x[i]);
-			  }
-			}
-		  }
-		  /*execute a function when someone clicks in the document:*/
-		  document.addEventListener("click", function (e) {
-			  closeAllLists(e.target);
-		  });
-		}
-		async function testRD(){
-			document.getElementById("selectSub").style.display = "none";
-			document.getElementById("YT").src = "";
-			document.getElementById("show").innerHTML = "";
-			$('input[type="text"]').val('');
-			const shTag=$('#selectTle option:selected').val();//'https://docs.google.com/spreadsheets/d/1q_UJy2TzT3Iy5WlPSMCp-JpYEj7Y3f6kT6fTacOn3vc/edit?usp=sharing';
-			
-			const a = {
-				
-				sheetUrl:shURL,
-				sheetTag: shTag,
-				key:0
-				};
-			const RSheet2Json_APIV2='https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec'
-			const RSheet2Json_APIV5='https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec'
-			const RSheet2Json_APIV6='https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec'
+          var x = document.getElementsByClassName("autocomplete-items");
+          for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+              x[i].parentNode.removeChild(x[i]);
+            }
+          }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function (e) {
+          closeAllLists(e.target);
+        });
+      }
+      async function testRD() {
+        document.getElementById("selectSub").style.display = "none";
+        document.getElementById("YT").src = "";
+        document.getElementById("show").innerHTML = "";
+        $('input[type="text"]').val("");
+        const shTag = $("#selectTle option:selected").val();
 
-			tt= await getJSON(	RSheet2Json_APIV6,a).then(function(data) {
-						//console.log(data);
-						return  data;
-						})
-			//console.log(tt);
-			let arr=[];
-				for(t in tt){
-					arr.push(tt[t][0]);
-				}
-			arr.shift();
-			arr.sort();
-// add option 2022.9.13
-			
-			$("#selectSub").empty();
-			$.each(arr, function (i, item) {
-                    $('#selectSub').append($('<option>', { 
-                      value: item,
-                      text : item.substr(0,32) 
-					}));
-				
-				});
-			document.getElementById("selectSub").style.display = "inline";
-			autocomplete_CH(document.getElementById("location-input"), arr);
-			document.getElementById("location-input").value=$('#selectSub option:selected').val();
-            Query_Tel2();
-			//return tt;	
-		};
+        const a = {
+          sheetUrl: shURL,
+          sheetTag: shTag,
+          key: 0,
+        };
 
-		async function getJSON(urlptr,para) {
-			try {
-				  var url = new URL(urlptr);
-				  for (let k in para) { url.searchParams.append(k, para[k]); }
-				  
-				 
-				  const response = await fetch(url);
-				  //let myText = await response.json();//JSON.parse(myObject);// myObject.text();JSON.parse(data)
-				  return response.json();// myObject.text();JSON.parse(data)
-				} catch (error) {
-				   return(error);
-				}
-		  
-			}
-			
-	// 2. This code loads the IFrame Player API code asynchronously.
-var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-// 3. This function creates an <iframe> (and YouTube player)
-//    after the API code downloads.
-	 
-	 /* 
+        const RSheet2Json_APIV6 =
+          "https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec";
+
+        tt = await getJSON(RSheet2Json_APIV6, a).then(function (data) {
+          //console.log(data);
+          return data;
+        });
+        //console.log(tt);
+        let arr = [];
+        for (t in tt) {
+          arr.push(tt[t][0]);
+        }
+        arr.shift();
+        arr.sort();
+        // add option 2022.9.13
+
+        $("#selectSub").empty();
+        $.each(arr, function (i, item) {
+          $("#selectSub").append(
+            $("<option>", {
+              value: item,
+              text: item.substr(0, 32),
+            })
+          );
+        });
+        document.getElementById("selectSub").style.display = "inline";
+        autocomplete_CH(document.getElementById("location-input"), arr);
+        document.getElementById("location-input").value = $(
+          "#selectSub option:selected"
+        ).val();
+        Query_Tel2();
+        //return tt;
+      }
+
+      async function getJSON(urlptr, para) {
+        try {
+          var url = new URL(urlptr);
+          for (let k in para) {
+            url.searchParams.append(k, para[k]);
+          }
+
+          const response = await fetch(url);
+          //let myText = await response.json();//JSON.parse(myObject);// myObject.text();JSON.parse(data)
+          return response.json(); // myObject.text();JSON.parse(data)
+        } catch (error) {
+          return error;
+        }
+      }
+
+      // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName("script")[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+
+      /* 
  YouTube Audio Embed 
  --------------------
 
@@ -537,29 +604,30 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
  edited by Anton Chinaev
 */
-var r;
-document.querySelector('#YT').style.display='none';
-// ---------------------------------------------
-function ChangeAudio(){
-			document.getElementById("location-input").value=$('#selectSub option:selected').val();
-            Query_Tel2();
-			
-			//const select=document.querySelector('#selectSub')
-			//	YTId=select.options[select.selectedIndex].value;
-			//	document.querySelector('#selectSub').options[document.querySelector('#selectSub').selectedIndex].value
-				document.querySelector('#ytaudio').dataset.video=YTId;
-			/*
+      var r;
+      document.querySelector("#YT").style.display = "none";
+      // ---------------------------------------------
+      function ChangeAudio() {
+        document.getElementById("location-input").value = $(
+          "#selectSub option:selected"
+        ).val();
+        Query_Tel2();
+
+        //const select=document.querySelector('#selectSub')
+        //	YTId=select.options[select.selectedIndex].value;
+        //	document.querySelector('#selectSub').options[document.querySelector('#selectSub').selectedIndex].value
+        document.querySelector("#ytaudio").dataset.video = YTId;
+        /*
 			const list = document.querySelector('#ytaudio');
 			while (list.hasChildNodes()) {
 				list.removeChild(list.firstChild);
 			}
                onYouTubeIframeAPIReady();   
-*/			   
-            }
-			
-function onYouTubeIframeAPIReady()
-{
-	/*
+*/
+      }
+
+      function onYouTubeIframeAPIReady() {
+        /*
     var o= function(e, t) 
     // This function switches the imgs, you may want to change it
     {
@@ -570,10 +638,10 @@ function onYouTubeIframeAPIReady()
         // folder or web direction the img is in. it can be "./"+a
     };
   */
-  
-		e = document.querySelector("#ytaudio");
 
-     /*
+        e = document.querySelector("#ytaudio");
+
+        /*
         var t=document.createElement("img");
 
        // t.setAttribute("id","youtube-icon"),
@@ -582,78 +650,67 @@ function onYouTubeIframeAPIReady()
 	//	t.style.height="30px",
         e.appendChild(t);
   */
-        var a=document.createElement("div");
+        var a = document.createElement("div");
 
-        a.setAttribute("id","youtube-player"),
-        e.appendChild(a);
+        a.setAttribute("id", "youtube-player"), e.appendChild(a);
 
-    /*    t.setAttribute("src","https://i.imgur.com/quyUPXN.png");
+        /*    t.setAttribute("src","https://i.imgur.com/quyUPXN.png");
 
         e.onclick=function()
         {
             r.getPlayerState()===YT.PlayerState.PLAYING||r.getPlayerState()===YT.PlayerState.BUFFERING?
 			(r.pauseVideo(),o(!1, t),e.dataset.state="0"):(r.playVideo(),o(!0, t),e.dataset.state="1")};
 */
-        r= new YT.Player("youtube-player",
-        {
+        r = new YT.Player("youtube-player", {
+          height: "100%",
+          width: "100%",
+          videoId: e.dataset.video,
+          frameborder: "0",
 
-            height:"100%",
-            width:"100%", 
-            videoId:e.dataset.video,
-			frameborder: "0" ,
-			
-            playerVars:
-            {
-                autoplay:e.dataset.autoplay,
-				loop:e.dataset.loop,
-				
+          playerVars: {
+            autoplay: e.dataset.autoplay,
+            loop: e.dataset.loop,
+          },
+          events: {
+            onReady: function (e) {
+              // r.setPlaybackQuality("small");
+              //  o(r.getPlayerState()!==YT.PlayerState.CUED, t)
+              //console.log(` Ready state e.data: ${e.data} r.getPlayerState():${r.getPlayerState()}`);
+              if (document.querySelector("#ytaudio").dataset.state == "1") {
+                r.playVideo();
+
+                //o(1, t);
+                document.querySelector("#ytaudio").dataset.state = "0";
+              }
             },
-            events:
-            {
-                onReady:function(e)
-                {
-                   // r.setPlaybackQuality("small");
-                  //  o(r.getPlayerState()!==YT.PlayerState.CUED, t)
-					//console.log(` Ready state e.data: ${e.data} r.getPlayerState():${r.getPlayerState()}`);
-					if(document.querySelector('#ytaudio').dataset.state=='1'){
-					r.playVideo();
-					
-					//o(1, t);
-					document.querySelector('#ytaudio').dataset.state='0';
-					}
-                },
-                onStateChange:function(e)
-                {
-					
-                   
-				//	e.data===YT.PlayerState.ENDED&&o(!1, t);
-				
-					console.log(` change state e.data: ${e.data} r.getPlayerState():${r.getPlayerState()}`);
-					if(e.data===YT.PlayerState.ENDED){
-						
-						console.log('End');
-						//document.querySelector('#selectSub').options[document.querySelector('#selectSub').selectedIndex].value
-						const sele=document.getElementById("selectSub")
-						sele.selectedIndex++
-						if(sele.selectedIndex<0){
-							sele.selectedIndex=0;
-						}
-						document.querySelector('#ytaudio').dataset.state='1';
-						ChangeAudio();
-						
-					}
-                }
-            }
-        })
-		document.querySelector('#ytaudio').setAttribute("class","video")
+            onStateChange: function (e) {
+              //	e.data===YT.PlayerState.ENDED&&o(!1, t);
 
-        
-    
-}
-function get_video_id(url) {
-    url = url.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
-    return (url[2] !== undefined) ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
-}
+              console.log(
+                ` change state e.data: ${
+                  e.data
+                } r.getPlayerState():${r.getPlayerState()}`
+              );
+              if (e.data === YT.PlayerState.ENDED) {
+                console.log("End");
+                //document.querySelector('#selectSub').options[document.querySelector('#selectSub').selectedIndex].value
+                const sele = document.getElementById("selectSub");
+                sele.selectedIndex++;
+                if (sele.selectedIndex < 0) {
+                  sele.selectedIndex = 0;
+                }
+                document.querySelector("#ytaudio").dataset.state = "1";
+                ChangeAudio();
+              }
+            },
+          },
+        });
+        document.querySelector("#ytaudio").setAttribute("class", "video");
+      }
+      function get_video_id(url) {
+        url = url.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+        return url[2] !== undefined ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
+      }
     </script>
-</body>
+  </body>
 </html>
