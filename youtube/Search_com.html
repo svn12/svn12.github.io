@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多功能搜索工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            /* max-width: 800px; */
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #f5f5f5;
+        }
+        .search-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .buttons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .search-engine-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .ai-tool-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        h2, h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .history-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+        .history-text {
+            flex-grow: 1;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+        .history-text:hover {
+            color: #2196F3;
+        }
+        .history-time {
+            color: #666;
+            font-size: 0.8em;
+            margin-right: 10px;
+        }
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .clear-history-btn {
+            background-color: #ff4444;
+            color: white;
+            margin-top: 10px;
+        }
+        .no-history {
+            color: #666;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h2>多功能搜索工具</h2>
+        <div class="input-group">
+            <input type="text" id="searchInput" placeholder="請輸入搜索內容..." autocomplete="off">
+        </div>
+        
+        <div class="section">
+            <h3>搜索引擎</h3>
+            <div class="buttons-container">
+                <button onclick="search('google')" class="search-engine-btn">Google搜索</button>
+                <button onclick="search('bing')" class="search-engine-btn">Bing搜索</button>
+                <button onclick="search('yahoo')" class="search-engine-btn">Yahoo</button>
+                <button onclick="search('duckduckgo')" class="search-engine-btn">DuckDuckGo</button>
+                <button onclick="search('baidu')" class="search-engine-btn">百度搜索</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>AI工具</h3>
+            <div class="buttons-container">
+                <button onclick="search('perplexity')" class="ai-tool-btn">Perplexity</button>
+                <button onclick="search('chatgpt')" class="ai-tool-btn">ChatGPT</button>
+                <button onclick="search('bard')" class="ai-tool-btn">Gemini</button>
+                <button onclick="search('claude')" class="ai-tool-btn">Claude</button>
+            </div>
+        </div>
+
+        <div class="history-container">
+            <h3>搜索歷史</h3>
+            <div id="historyList"></div>
+            <button onclick="clearHistory()" class="clear-history-btn">清空歷史記錄</button>
+        </div>
+    </div>
+
+    <script>
+        // 初始化歷史記錄
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+        // 顯示歷史記錄
+        function displayHistory() {
+            const historyList = document.getElementById('historyList');
+            if (searchHistory.length === 0) {
+                historyList.innerHTML = '<div class="no-history">暫無搜索記錄</div>';
+                return;
+            }
+
+            historyList.innerHTML = searchHistory
+                .map((item, index) => `
+                    <div class="history-item">
+                        <span class="history-time">${new Date(item.time).toLocaleString()}</span>
+                        <span class="history-text" onclick="useHistoryItem('${item.text}')">${item.text}</span>
+                        <button class="delete-btn" onclick="deleteHistoryItem(${index})">刪除</button>
+                    </div>
+                `)
+                .join('');
+        }
+
+        // 使用歷史記錄項
+        function useHistoryItem(text) {
+            document.getElementById('searchInput').value = text;
+        }
+
+        // 刪除單個歷史記錄
+        function deleteHistoryItem(index) {
+            searchHistory.splice(index, 1);
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            displayHistory();
+        }
+
+        // 清空所有歷史記錄
+        function clearHistory() {
+            if (confirm('確定要清空所有搜索歷史嗎？')) {
+                searchHistory = [];
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                displayHistory();
+            }
+        }
+
+        // 搜索功能
+        function search(platform) {
+            const searchInput = document.getElementById('searchInput');
+            const searchText = searchInput.value.trim();
+            
+            if (!searchText) {
+                alert('請輸入搜索內容');
+                return;
+            }
+
+            // 添加到歷史記錄
+            const newHistoryItem = {
+                text: searchText,
+                time: new Date().toISOString()
+            };
+
+            // 檢查是否已存在相同的搜索內容
+            const existingIndex = searchHistory.findIndex(item => item.text === searchText);
+            if (existingIndex !== -1) {
+                // 如果存在，更新時間並移到最前
+                searchHistory.splice(existingIndex, 1);
+            }
+            
+            // 添加新記錄到開頭
+            searchHistory.unshift(newHistoryItem);
+            
+            // 限制歷史記錄數量（保留最近20條）
+            if (searchHistory.length > 20) {
+                searchHistory.pop();
+            }
+
+            // 保存到localStorage
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            
+            // 更新顯示
+            displayHistory();
+
+            const urls = {
+                google: `https://www.google.com/search?q=${encodeURIComponent(searchText)}`,
+                bing: `https://www.bing.com/search?q=${encodeURIComponent(searchText)}`,
+                duckduckgo: `https://duckduckgo.com/?q=${encodeURIComponent(searchText)}`,
+                yahoo: `https://tw.search.yahoo.com/search?p=${encodeURIComponent(searchText)}`,
+                baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(searchText)}`,
+                chatgpt: 'https://chat.openai.com/',
+                bard: 'https://bard.google.com/',
+                claude: 'https://claude.ai/',
+                perplexity: `https://www.perplexity.ai/?q=${encodeURIComponent(searchText)}`
+            };
+
+            window.open(urls[platform], '_blank');
+        }
+
+        // 添加键盘事件监听器
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                search('google');
+            }
+        });
+
+        // 初始顯示歷史記錄
+        displayHistory();
+    </script>
+</body>
+</html>
