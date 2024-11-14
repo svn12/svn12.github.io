@@ -51,6 +51,10 @@
             background-color: #2196F3;
             color: white;
         }
+        .ai-pic-btn {
+            background-color: #994584;
+            color: white;
+        }
         button:hover {
             opacity: 0.9;
         }
@@ -135,6 +139,21 @@
                 <button onclick="search('claude')" class="ai-tool-btn">Claude</button>
             </div>
         </div>
+        <div class="section">
+            <h3>AI生成圖工具</h3>
+            <div class="buttons-container">
+                <button onclick="search('Artguru')" class="ai-pic-btn">Artguru</button>
+                <button onclick="search('NightCafe_Creator')" class="ai-pic-btn">NightCafe Creator</button>
+                <button onclick="search('Magic_Studio')" class="ai-pic-btn">Magic Studio</button>
+                <button onclick="search('Craiyon')" class="ai-pic-btn">Craiyon</button>
+                <button onclick="search('Hotpot_AI')" class="ai-pic-btn">Hotpot AI</button>
+                <button onclick="search('DeepAI')" class="ai-pic-btn">DeepAI</button>
+                <button onclick="search('Fotor')" class="ai-pic-btn">Fotor</button>
+                <button onclick="search('Midjourney')" class="ai-pic-btn">Midjourney</button>
+                <button onclick="search('OpenArt')" class="ai-pic-btn">OpenArt</button>
+                <button onclick="search('Adobe_Firefly')" class="ai-pic-btn">Adobe Firefly</button>
+            </div>
+        </div>
 
         <div class="history-container">
             <h3>搜索歷史</h3>
@@ -196,7 +215,7 @@
                 alert('請輸入搜索內容');
                 return;
             }
-
+            navigator.clipboard.writeText(`${searchText}`);
             // 添加到歷史記錄
             const newHistoryItem = {
                 text: searchText,
@@ -233,7 +252,17 @@
                 chatgpt: 'https://chat.openai.com/',
                 bard: 'https://bard.google.com/',
                 claude: 'https://claude.ai/',
-                perplexity: `https://www.perplexity.ai/?q=${encodeURIComponent(searchText)}`
+                perplexity: `https://www.perplexity.ai/?q=${encodeURIComponent(searchText)}`,
+                Artguru: 'https://artguru.ai',
+                NightCafe_Creator: 'https://creator.nightcafe.studio',
+                Magic_Studio: 'https://magicstudio.com',
+                Hotpot_AI: 'https://hotpot.ai',
+                Craiyon: 'https://www.craiyon.com',
+                DeepAI: 'https://deepai.org/',
+                Fotor: 'https://www.fotor.com',
+                Midjourney: 'https://www.midjourney.com',
+                OpenArt: 'https://www.openart.ai',
+                Adobe_Firefly: 'https://www.adobe.com/sensei/generative-ai/firefly.html'
             };
 
             window.open(urls[platform], '_blank');
