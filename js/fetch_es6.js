@@ -50,7 +50,8 @@ function Array2Json(res) {
 // export default async function RsheetData(shtUrl, shtName) {
 export async function RsheetData(shtUrl, shtName) {
   const RSheet2Json_APIV7 =
-    "https://script.google.com/macros/s/AKfycbxUrfFBZ4-KfEYHXreE6UmFXbHqNwps3Tf_vaY0tAFfl5Qz4HhPdauAjcMox3tKq3Ia1Q/exec" // 20241126
+    "https://script.google.com/macros/s/AKfycbwHEV0Wa8IBd9oL4yEoEdg4CSmx1Ry3FVTcgm93TU-89Ns8C_kQD6jqR2EW-2tESgKkEA/exec" // 20241126 v2
+    // "https://script.google.com/macros/s/AKfycbxUrfFBZ4-KfEYHXreE6UmFXbHqNwps3Tf_vaY0tAFfl5Qz4HhPdauAjcMox3tKq3Ia1Q/exec" // 20241126
     //"https://script.google.com/macros/s/AKfycbwe7cYA5VIRcy45k5mce8iR6agZchMDpMwKYD65UmdKUYVwQREORq4v6w_WHew-613t3Q/exec"; //jktai123@gmail.com
     // "https://script.google.com/macros/s/AKfycbwW8w21yItaTo5-rrhxRkkkM2Y2g95rWV9ivbOaJBprrA-7_EbHOA2Wpdu2bN_F2FPB4Q/exec";
     // "https://script.google.com/macros/s/AKfycbwb3S-FvnZLSWLRkYsdgU4A6BFg7SpgyS7S9GCp6ofszWXaJKvWp3NIi7XJzkUEs8AVWQ/exec"; //jktai123jkt@gmail.com
