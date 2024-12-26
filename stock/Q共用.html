@@ -311,7 +311,9 @@ function appendText1(code, remark) {
     }
 
 
-    txt1 += `<td>  <a id="link4" href=${href4} target="_blank"><img id="img4" width="100%" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_${code}.gif"></a> </td>`;
+    // <img id="img4" width="100%" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_${code}.gif"></a> </td>`;
+    txt1 += `<td>  <a id="link4" href=${href4} target="_blank">
+      <img id="img4" width="100%" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://stock.wearn.com/acre.asp?stockid=${code}"></a> </td>`;
     txt1 += ' <td> <a id="link3" href="https://histock.tw/stock/' + code + '" target="_blank"> <img id="img3" width="100%"  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid=' + code + '"></a> </td>';
     txt1 += '</tr>';
 
