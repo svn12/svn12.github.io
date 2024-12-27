@@ -51,6 +51,10 @@
             background-color: #2196F3;
             color: white;
         }
+        .ai-music-btn {
+            background-color: #431bb1;
+            color: white;
+        }
         .ai-pic-btn {
             background-color: #994584;
             color: white;
@@ -141,11 +145,20 @@
             </div>
         </div>
         <div class="section">
+            <h3>AI Music</h3>
+            <div class="buttons-container">
+                <button onclick="search('Suno')" class="ai-music-btn">Suno</button>
+                <button onclick="search('Genape')" class="ai-music-btn">歌詞Genape</button>
+                <button onclick="search('Aiva')" class="ai-music-btn">Aiva</button>
+                <button onclick="search('Veedio')" class="ai-music-btn">Veed.io</button>
+               
+            </div>
+        </div>
+        <div class="section">
             <h3>AI生成圖工具</h3>
             <div class="buttons-container">
                 <button onclick="search('Leonardo')" class="ai-pic-btn">Leonardo</button>
                 <button onclick="search('Writesonic')" class="ai-pic-btn">Writesonic</button>
-                <button onclick="search('Veedio')" class="ai-pic-btn">Veed.io</button>
                 <button onclick="search('Simplified')" class="ai-pic-btn">Simplified</button>
                 <button onclick="search('LovoAI')" class="ai-pic-btn">LovoAI</button>
                 <button onclick="search('Artguru')" class="ai-pic-btn">Artguru</button>
@@ -255,11 +268,14 @@
                 duckduckgo: `https://duckduckgo.com/?q=${encodeURIComponent(searchText)}`,
                 yahoo: `https://tw.search.yahoo.com/search?p=${encodeURIComponent(searchText)}`,
                 baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(searchText)}`,
+                perplexity: `https://www.perplexity.ai/?q=${encodeURIComponent(searchText)}`,
+                colpilot: `https://copilot.microsoft.com/?q=${encodeURIComponent(searchText)}`,
                 chatgpt: 'https://chat.openai.com/',
-                colpilot: 'https://copilot.microsoft.com/',
                 bard: 'https://bard.google.com/',
                 claude: 'https://claude.ai/',
-                perplexity: `https://www.perplexity.ai/?q=${encodeURIComponent(searchText)}`,
+                Suno: 'https://suno.com/create',
+                Genape: 'https://app.genape.ai/chatApe',
+                Aiva: 'https://creators.aiva.ai/',
                 Leonardo: 'https://leonardo.ai/',
                 Writesonic: 'https://app.writesonic.com/?utm_source=writesonic.com&utm_medium=website',
                 Veedio: 'https://www.veed.io/tools/ai-video/text-to-video',
