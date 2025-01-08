@@ -47,6 +47,10 @@
             background-color: #4CAF50;
             color: white;
         }
+        .news-btn {
+            background-color: #FF5722;
+            color: white;
+        }
         .ai-tool-btn {
             background-color: #2196F3;
             color: white;
@@ -122,7 +126,17 @@
         <div class="input-group">
             <input type="text" id="searchInput" placeholder="請輸入搜索內容..." autocomplete="off">
         </div>
-        
+        <div class="section">
+            <a href="https://www.imyfone.com/ai-collection/"><h3>AI工具</h3></a>
+            <div class="buttons-container">
+                <button onclick="search('perplexity')" class="ai-tool-btn">Perplexity</button>
+                <button onclick="search('colpilot')" class="ai-tool-btn">Colpilot</button>
+                <button onclick="search('chatgpt')" class="ai-tool-btn">ChatGPT</button>
+                <button onclick="search('bard')" class="ai-tool-btn">Gemini</button>
+                <button onclick="search('claude')" class="ai-tool-btn">Claude</button>
+                <button onclick="search('grok')" class="ai-tool-btn">Grok</button>
+            </div>
+        </div>
         <div class="section">
             <h3>搜索引擎</h3>
             <div class="buttons-container">
@@ -135,15 +149,19 @@
         </div>
 
         <div class="section">
-            <a href="https://www.imyfone.com/ai-collection/"><h3>AI工具</h3></a>
+            <h3>新聞網站</h3>
             <div class="buttons-container">
-                <button onclick="search('perplexity')" class="ai-tool-btn">Perplexity</button>
-                <button onclick="search('colpilot')" class="ai-tool-btn">Colpilot</button>
-                <button onclick="search('chatgpt')" class="ai-tool-btn">ChatGPT</button>
-                <button onclick="search('bard')" class="ai-tool-btn">Gemini</button>
-                <button onclick="search('claude')" class="ai-tool-btn">Claude</button>
+                <button onclick="search('udn')" class="news-btn">聯合新聞網</button>
+                <button onclick="search('chinatimes')" class="news-btn">中時新聞網</button>
+                <button onclick="search('ltn')" class="news-btn">自由時報</button>
+                <button onclick="search('ettoday')" class="news-btn">ETtoday</button>
+                <button onclick="search('yahoo_news')" class="news-btn">Yahoo新聞</button>
+                <button onclick="search('cna')" class="news-btn">中央通訊社</button>
+                <button onclick="search('google_news')" class="news-btn">Google新聞</button>
             </div>
         </div>
+
+        
         <div class="section">
             <h3>AI Music</h3>
             <div class="buttons-container">
@@ -268,11 +286,19 @@
                 duckduckgo: `https://duckduckgo.com/?q=${encodeURIComponent(searchText)}`,
                 yahoo: `https://tw.search.yahoo.com/search?p=${encodeURIComponent(searchText)}`,
                 baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(searchText)}`,
+                udn: `https://udn.com/search/word/2/${encodeURIComponent(searchText)}`,
+                chinatimes: `https://www.chinatimes.com/search/${encodeURIComponent(searchText)}`,
+                ltn: `https://search.ltn.com.tw/list?keyword=${encodeURIComponent(searchText)}`,
+                ettoday: `https://www.ettoday.net/news_search/doSearch.php?keywords=${encodeURIComponent(searchText)}`,
+                google_news: `https://news.google.com/search?q=${encodeURIComponent(searchText)}`,
+                cna: `https://www.cna.com.tw/search/hysearchws.aspx?q=${encodeURIComponent(searchText)}`,
+                yahoo_news: `https://tw.news.yahoo.com/search?p=${encodeURIComponent(searchText)}`,
                 perplexity: `https://www.perplexity.ai/?q=${encodeURIComponent(searchText)}`,
                 colpilot: `https://copilot.microsoft.com/?q=${encodeURIComponent(searchText)}`,
                 chatgpt: 'https://chat.openai.com/',
                 bard: 'https://bard.google.com/',
                 claude: 'https://claude.ai/',
+                grok: 'https://grok.x.ai/',
                 Suno: 'https://suno.com/create',
                 Genape: 'https://app.genape.ai/chatApe',
                 Aiva: 'https://creators.aiva.ai/',
