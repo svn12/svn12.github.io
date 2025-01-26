@@ -429,7 +429,7 @@
               //   // Dtime.textContent = ` ${data[1][3]} 10:30 `;
               // }
               //	TableShow(data,"#myTable1");`
-              church.textContent = `台北南門教會新春禮拜`;
+              church.textContent = `台北南門教會台語禮拜`;
               // img.src = data[1][6];
               // document.body.style.backgroundImage = `url(${data[1][6]})`;
               document.body.style.backgroundImage = `url(${imageArr[0]})`;
@@ -439,8 +439,7 @@
               setAniKeyFrame(Math.ceil(ratio * 100));
               setAniDuration(Math.ceil(ratio * 1000 * oneFrameDuration));
               
-              //Bdate.textContent = data[1][3];
-              Bdate.textContent = '20250129 10:30';
+              Bdate.textContent = data[1][3];
               
               //weeklyReport.src=`http://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data[1][4]}`
              let qrcode = new QRCode("qrcode", `${data[1][4]}`);  
