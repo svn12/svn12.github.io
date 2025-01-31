@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常用詞彙複製工具</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        select, button, input { font-size: 16px; margin: 10px; padding: 5px; }
+        table { width: 50%; margin: 20px auto; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        input.editable { width: 90%; font-size: 16px; border: none; text-align: center; }
+    </style>
+</head>
+<body>
+    <h2>管理常用詞彙</h2>
+    <input type="text" id="newWord" placeholder="輸入新詞彙">
+    <button onclick="addNewWord()">新增</button>
+    <button onclick="pasteFromClipboard()">從剪貼簿新增</button>
+    <p id="message" style="color: green;"></p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>詞彙</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="wordTable">
+        </tbody>
+    </table>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", loadWords);
+
+        function copyWord(button) {
+            var word = button.parentElement.parentElement.cells[0].querySelector("input").value;
+            navigator.clipboard.writeText(word).then(function() {
+                document.getElementById("message").innerText = "已複製: " + word;
+            }).catch(function() {
+                document.getElementById("message").innerText = "複製失敗！";
+            });
+        }
+
+        function deleteWord(button) {
+            var row = button.parentElement.parentElement;
+            row.parentElement.removeChild(row);
+            saveWords();
+        }
+
+        function addNewWord() {
+            var newWord = document.getElementById("newWord").value.trim();
+            if (newWord !== "") {
+                addWordToTable(newWord);
+                document.getElementById("newWord").value = "";
+                document.getElementById("message").innerText = "已新增: " + newWord;
+                saveWords();
+            }
+        }
+
+        function pasteFromClipboard() {
+            navigator.clipboard.readText().then(function(clipboardText) {
+                clipboardText.split(/\r?\n/).forEach(line => {
+                    let trimmedLine = line.trim();
+                    if (trimmedLine !== "") {
+                        addWordToTable(trimmedLine);
+                    }
+                });
+                document.getElementById("message").innerText = "已從剪貼簿新增內容";
+                saveWords();
+            }).catch(function() {
+                document.getElementById("message").innerText = "無法從剪貼簿讀取！";
+            });
+        }
+
+        function addWordToTable(word) {
+            var table = document.getElementById("wordTable");
+            var row = table.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.innerHTML = '<input type="text" class="editable" value="' + word + '" oninput="checkAndSaveWords(this)" />';
+            cell2.innerHTML = '<button onclick="copyWord(this)">複製</button> <button onclick="deleteWord(this)">刪除</button>';
+        }
+
+        function checkAndSaveWords(input) {
+            if (input.value.trim() === "") {
+                deleteWord(input.parentElement.parentElement.querySelector("button"));
+            } else {
+                saveWords();
+            }
+        }
+
+        function saveWords() {
+            var words = [];
+            var rows = document.getElementById("wordTable").rows;
+            for (var i = 0; i < rows.length; i++) {
+                var word = rows[i].cells[0].querySelector("input").value.trim();
+                if (word !== "") {
+                    words.push(word);
+                }
+            }
+            localStorage.setItem("wordList", JSON.stringify(words));
+        }
+
+        function loadWords() {
+            var savedWords = localStorage.getItem("wordList");
+            if (savedWords) {
+                var words = JSON.parse(savedWords);
+                words.forEach(word => addWordToTable(word));
+            } else {
+                let defaultWords = ["你好", "謝謝", "請問", "再見", "祝你有美好的一天"];
+                defaultWords.forEach(word => addWordToTable(word));
+                saveWords();
+            }
+        }
+    </script>
+</body>
+</html>
