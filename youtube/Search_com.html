@@ -1,350 +1,459 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>多功能搜索工具</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            /* max-width: 800px; */
-            margin: 20px auto;
-            padding: 0 20px;
-            background-color: #f5f5f5;
-        }
-        .search-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .input-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        .buttons-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-        }
-        button {
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
-        .search-engine-btn {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .news-btn {
-            background-color: #FF5722;
-            color: white;
-        }
-        .ai-tool-btn {
-            background-color: #2196F3;
-            color: white;
-        }
-        .ai-music-btn {
-            background-color: #431bb1;
-            color: white;
-        }
-        .ai-pic-btn {
-            background-color: #994584;
-            color: white;
-        }
-        button:hover {
-            opacity: 0.9;
-        }
-        h2, h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-        .section {
-            margin-bottom: 20px;
-        }
-        .history-container {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 4px;
-        }
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            margin: 5px 0;
-            background: white;
-            border-radius: 4px;
-            border: 1px solid #eee;
-        }
-        .history-text {
-            flex-grow: 1;
-            cursor: pointer;
-            padding: 0 10px;
-        }
-        .history-text:hover {
-            color: #2196F3;
-        }
-        .history-time {
-            color: #666;
-            font-size: 0.8em;
-            margin-right: 10px;
-        }
-        .delete-btn {
-            background-color: #ff4444;
-            color: white;
-            padding: 5px 10px;
-            font-size: 12px;
-        }
-        .clear-history-btn {
-            background-color: #ff4444;
-            color: white;
-            margin-top: 10px;
-        }
-        .no-history {
-            color: #666;
-            text-align: center;
-            padding: 10px;
-        }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        /* max-width: 800px; */
+        margin: 20px auto;
+        padding: 0 20px;
+        background-color: #f5f5f5;
+      }
+      .search-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .input-group {
+        margin-bottom: 20px;
+        position: relative;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+      .buttons-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+      }
+      button {
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+      }
+      .search-engine-btn {
+        background-color: #4caf50;
+        color: white;
+      }
+      .news-btn {
+        background-color: #ff5722;
+        color: white;
+      }
+      .ai-tool-btn {
+        background-color: #2196f3;
+        color: white;
+      }
+      .ai-music-btn {
+        background-color: #431bb1;
+        color: white;
+      }
+      .ai-pic-btn {
+        background-color: #994584;
+        color: white;
+      }
+      button:hover {
+        opacity: 0.9;
+      }
+      h2,
+      h3 {
+        color: #333;
+        margin-bottom: 15px;
+      }
+      .section {
+        margin-bottom: 20px;
+      }
+      .history-container {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 4px;
+      }
+      .history-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px;
+        margin: 5px 0;
+        background: white;
+        border-radius: 4px;
+        border: 1px solid #eee;
+      }
+      .history-text {
+        flex-grow: 1;
+        cursor: pointer;
+        padding: 0 10px;
+      }
+      .history-text:hover {
+        color: #2196f3;
+      }
+      .history-time {
+        color: #666;
+        font-size: 0.8em;
+        margin-right: 10px;
+      }
+      .delete-btn {
+        background-color: #ff4444;
+        color: white;
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+      .clear-history-btn {
+        background-color: #ff4444;
+        color: white;
+        margin-top: 10px;
+      }
+      .no-history {
+        color: #666;
+        text-align: center;
+        padding: 10px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 20px; /* 链接之间的间距 */
+        align-items: center;
+      }
+      .nav-links a {
+        text-decoration: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="search-container">
-        <h2>多功能搜索工具
+      <div class="nav-links">
+        <h2>多功能搜索工具</h2>
+        <a href="./G_buffer.html"><h3>G_Buf</h3></a>
+      </div>
+      <div class="input-group">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="請輸入搜索內容..."
+          autocomplete="off"
+        />
+      </div>
+      <div class="section">
+        <a href="https://www.imyfone.com/ai-collection/"><h3>AI工具</h3></a>
+        <div class="buttons-container">
+          <button onclick="search('perplexity')" class="ai-tool-btn">
+            Perplexity
+          </button>
+          <button onclick="search('colpilot')" class="ai-tool-btn">
+            Colpilot
+          </button>
+          <button onclick="search('chatgpt')" class="ai-tool-btn">
+            ChatGPT
+          </button>
+          <button onclick="search('bard')" class="ai-tool-btn">Gemini</button>
+          <button onclick="search('claude')" class="ai-tool-btn">Claude</button>
+          <button onclick="search('grok')" class="ai-tool-btn">Grok</button>
+          <button onclick="search('studio_global')" class="ai-tool-btn">
+            Studio Global
+          </button>
+          <button onclick="search('poe')" class="ai-tool-btn">Poe</button>
+          <button onclick="search('huggingface')" class="ai-tool-btn">
+            Hugging Face
+          </button>
+          <button onclick="search('notegpt')" class="ai-tool-btn">
+            NoteGPT
+          </button>
+          <button onclick="search('deepseek')" class="ai-tool-btn">
+            DeepSeek
+          </button>
+        </div>
+      </div>
+      <div class="section">
+        <h3>搜索引擎</h3>
+        <div class="buttons-container">
+          <button onclick="search('google')" class="search-engine-btn">
+            Google搜索
+          </button>
+          <button onclick="search('bing')" class="search-engine-btn">
+            Bing搜索
+          </button>
+          <button onclick="search('yahoo')" class="search-engine-btn">
+            Yahoo
+          </button>
+          <button onclick="search('duckduckgo')" class="search-engine-btn">
+            DuckDuckGo
+          </button>
+          <button onclick="search('baidu')" class="search-engine-btn">
+            百度搜索
+          </button>
+        </div>
+      </div>
 
-           
-        </h2>
-        <div class="input-group">
-            <input type="text" id="searchInput" placeholder="請輸入搜索內容..." autocomplete="off">
+      <div class="section">
+        <h3>新聞網站</h3>
+        <div class="buttons-container">
+          <button onclick="search('udn')" class="news-btn">聯合新聞網</button>
+          <button onclick="search('chinatimes')" class="news-btn">
+            中時新聞網
+          </button>
+          <button onclick="search('ltn')" class="news-btn">自由時報</button>
+          <button onclick="search('ettoday')" class="news-btn">ETtoday</button>
+          <button onclick="search('yahoo_news')" class="news-btn">
+            Yahoo新聞
+          </button>
+          <button onclick="search('cna')" class="news-btn">中央通訊社</button>
+          <button onclick="search('google_news')" class="news-btn">
+            Google新聞
+          </button>
         </div>
-        <div class="section">
-            <a href="https://www.imyfone.com/ai-collection/"><h3>AI工具</h3></a> 
-            <a href="./G_buffer.html"><h3>G_Buf</h3></a>
-            <div class="buttons-container">
-                <button onclick="search('perplexity')" class="ai-tool-btn">Perplexity</button>
-                <button onclick="search('colpilot')" class="ai-tool-btn">Colpilot</button>
-                <button onclick="search('chatgpt')" class="ai-tool-btn">ChatGPT</button>
-                <button onclick="search('bard')" class="ai-tool-btn">Gemini</button>
-                <button onclick="search('claude')" class="ai-tool-btn">Claude</button>
-                <button onclick="search('grok')" class="ai-tool-btn">Grok</button>
-                <button onclick="search('studio_global')" class="ai-tool-btn">Studio Global</button>
-                <button onclick="search('poe')" class="ai-tool-btn">Poe</button>
-                <button onclick="search('huggingface')" class="ai-tool-btn">Hugging Face</button>
-                <button onclick="search('notegpt')" class="ai-tool-btn">NoteGPT</button>
-                <button onclick="search('deepseek')" class="ai-tool-btn">DeepSeek</button>
-            </div>
-        </div>
-        <div class="section">
-            <h3>搜索引擎</h3>
-            <div class="buttons-container">
-                <button onclick="search('google')" class="search-engine-btn">Google搜索</button>
-                <button onclick="search('bing')" class="search-engine-btn">Bing搜索</button>
-                <button onclick="search('yahoo')" class="search-engine-btn">Yahoo</button>
-                <button onclick="search('duckduckgo')" class="search-engine-btn">DuckDuckGo</button>
-                <button onclick="search('baidu')" class="search-engine-btn">百度搜索</button>
-            </div>
-        </div>
+      </div>
 
-        <div class="section">
-            <h3>新聞網站</h3>
-            <div class="buttons-container">
-                <button onclick="search('udn')" class="news-btn">聯合新聞網</button>
-                <button onclick="search('chinatimes')" class="news-btn">中時新聞網</button>
-                <button onclick="search('ltn')" class="news-btn">自由時報</button>
-                <button onclick="search('ettoday')" class="news-btn">ETtoday</button>
-                <button onclick="search('yahoo_news')" class="news-btn">Yahoo新聞</button>
-                <button onclick="search('cna')" class="news-btn">中央通訊社</button>
-                <button onclick="search('google_news')" class="news-btn">Google新聞</button>
-            </div>
+      <div class="section">
+        <h3>AI Music</h3>
+        <div class="buttons-container">
+          <button onclick="search('Suno')" class="ai-music-btn">Suno</button>
+          <button onclick="search('Genape')" class="ai-music-btn">
+            歌詞Genape
+          </button>
+          <button onclick="search('Aiva')" class="ai-music-btn">Aiva</button>
+          <button onclick="search('Veedio')" class="ai-music-btn">
+            Veed.io
+          </button>
         </div>
+      </div>
+      <div class="section">
+        <h3>AI生成圖工具</h3>
+        <div class="buttons-container">
+          <button onclick="search('Leonardo')" class="ai-pic-btn">
+            Leonardo
+          </button>
+          <button onclick="search('Writesonic')" class="ai-pic-btn">
+            Writesonic
+          </button>
+          <button onclick="search('Simplified')" class="ai-pic-btn">
+            Simplified
+          </button>
+          <button onclick="search('LovoAI')" class="ai-pic-btn">LovoAI</button>
+          <button onclick="search('Artguru')" class="ai-pic-btn">
+            Artguru
+          </button>
+          <button onclick="search('NightCafe_Creator')" class="ai-pic-btn">
+            NightCafe Creator
+          </button>
+          <button onclick="search('Magic_Studio')" class="ai-pic-btn">
+            Magic Studio
+          </button>
+          <button onclick="search('Craiyon')" class="ai-pic-btn">
+            Craiyon
+          </button>
+          <button onclick="search('Hotpot_AI')" class="ai-pic-btn">
+            Hotpot AI
+          </button>
+          <button onclick="search('DeepAI')" class="ai-pic-btn">DeepAI</button>
+          <button onclick="search('Fotor')" class="ai-pic-btn">Fotor</button>
+          <button onclick="search('Midjourney')" class="ai-pic-btn">
+            Midjourney
+          </button>
+          <button onclick="search('OpenArt')" class="ai-pic-btn">
+            OpenArt
+          </button>
+          <button onclick="search('Adobe_Firefly')" class="ai-pic-btn">
+            Adobe Firefly
+          </button>
+        </div>
+      </div>
 
-        
-        <div class="section">
-            <h3>AI Music</h3>
-            <div class="buttons-container">
-                <button onclick="search('Suno')" class="ai-music-btn">Suno</button>
-                <button onclick="search('Genape')" class="ai-music-btn">歌詞Genape</button>
-                <button onclick="search('Aiva')" class="ai-music-btn">Aiva</button>
-                <button onclick="search('Veedio')" class="ai-music-btn">Veed.io</button>
-               
-            </div>
-        </div>
-        <div class="section">
-            <h3>AI生成圖工具</h3>
-            <div class="buttons-container">
-                <button onclick="search('Leonardo')" class="ai-pic-btn">Leonardo</button>
-                <button onclick="search('Writesonic')" class="ai-pic-btn">Writesonic</button>
-                <button onclick="search('Simplified')" class="ai-pic-btn">Simplified</button>
-                <button onclick="search('LovoAI')" class="ai-pic-btn">LovoAI</button>
-                <button onclick="search('Artguru')" class="ai-pic-btn">Artguru</button>
-                <button onclick="search('NightCafe_Creator')" class="ai-pic-btn">NightCafe Creator</button>
-                <button onclick="search('Magic_Studio')" class="ai-pic-btn">Magic Studio</button>
-                <button onclick="search('Craiyon')" class="ai-pic-btn">Craiyon</button>
-                <button onclick="search('Hotpot_AI')" class="ai-pic-btn">Hotpot AI</button>
-                <button onclick="search('DeepAI')" class="ai-pic-btn">DeepAI</button>
-                <button onclick="search('Fotor')" class="ai-pic-btn">Fotor</button>
-                <button onclick="search('Midjourney')" class="ai-pic-btn">Midjourney</button>
-                <button onclick="search('OpenArt')" class="ai-pic-btn">OpenArt</button>
-                <button onclick="search('Adobe_Firefly')" class="ai-pic-btn">Adobe Firefly</button>
-            </div>
-        </div>
-
-        <div class="history-container">
-            <h3>搜索歷史</h3>
-            <div id="historyList"></div>
-            <button onclick="clearHistory()" class="clear-history-btn">清空歷史記錄</button>
-        </div>
+      <div class="history-container">
+        <h3>搜索歷史</h3>
+        <div id="historyList"></div>
+        <button onclick="clearHistory()" class="clear-history-btn">
+          清空歷史記錄
+        </button>
+      </div>
     </div>
 
     <script>
-        // 初始化歷史記錄
-        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+      // 初始化歷史記錄
+      let searchHistory =
+        JSON.parse(localStorage.getItem("searchHistory")) || [];
 
-        // 顯示歷史記錄
-        function displayHistory() {
-            const historyList = document.getElementById('historyList');
-            if (searchHistory.length === 0) {
-                historyList.innerHTML = '<div class="no-history">暫無搜索記錄</div>';
-                return;
-            }
+      // 顯示歷史記錄
+      function displayHistory() {
+        const historyList = document.getElementById("historyList");
+        if (searchHistory.length === 0) {
+          historyList.innerHTML = '<div class="no-history">暫無搜索記錄</div>';
+          return;
+        }
 
-            historyList.innerHTML = searchHistory
-                .map((item, index) => `
+        historyList.innerHTML = searchHistory
+          .map(
+            (item, index) => `
                     <div class="history-item">
-                        <span class="history-time">${new Date(item.time).toLocaleString()}</span>
-                        <span class="history-text" onclick="useHistoryItem('${item.text}')">${item.text}</span>
+                        <span class="history-time">${new Date(
+                          item.time
+                        ).toLocaleString()}</span>
+                        <span class="history-text" onclick="useHistoryItem('${
+                          item.text
+                        }')">${item.text}</span>
                         <button class="delete-btn" onclick="deleteHistoryItem(${index})">刪除</button>
                     </div>
-                `)
-                .join('');
+                `
+          )
+          .join("");
+      }
+
+      // 使用歷史記錄項
+      function useHistoryItem(text) {
+        document.getElementById("searchInput").value = text;
+      }
+
+      // 刪除單個歷史記錄
+      function deleteHistoryItem(index) {
+        searchHistory.splice(index, 1);
+        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+        displayHistory();
+      }
+
+      // 清空所有歷史記錄
+      function clearHistory() {
+        if (confirm("確定要清空所有搜索歷史嗎？")) {
+          searchHistory = [];
+          localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+          displayHistory();
+        }
+      }
+
+      // 搜索功能
+      function search(platform) {
+        const searchInput = document.getElementById("searchInput");
+        const searchText = searchInput.value.trim();
+
+        if (!searchText) {
+          alert("請輸入搜索內容");
+          return;
+        }
+        navigator.clipboard.writeText(`${searchText}`);
+        // 添加到歷史記錄
+        const newHistoryItem = {
+          text: searchText,
+          time: new Date().toISOString(),
+        };
+
+        // 檢查是否已存在相同的搜索內容
+        const existingIndex = searchHistory.findIndex(
+          (item) => item.text === searchText
+        );
+        if (existingIndex !== -1) {
+          // 如果存在，更新時間並移到最前
+          searchHistory.splice(existingIndex, 1);
         }
 
-        // 使用歷史記錄項
-        function useHistoryItem(text) {
-            document.getElementById('searchInput').value = text;
+        // 添加新記錄到開頭
+        searchHistory.unshift(newHistoryItem);
+
+        // 限制歷史記錄數量（保留最近20條）
+        if (searchHistory.length > 20) {
+          searchHistory.pop();
         }
 
-        // 刪除單個歷史記錄
-        function deleteHistoryItem(index) {
-            searchHistory.splice(index, 1);
-            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            displayHistory();
-        }
+        // 保存到localStorage
+        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
 
-        // 清空所有歷史記錄
-        function clearHistory() {
-            if (confirm('確定要清空所有搜索歷史嗎？')) {
-                searchHistory = [];
-                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-                displayHistory();
-            }
-        }
+        // 更新顯示
+        displayHistory();
 
-        // 搜索功能
-        function search(platform) {
-            const searchInput = document.getElementById('searchInput');
-            const searchText = searchInput.value.trim();
-            
-            if (!searchText) {
-                alert('請輸入搜索內容');
-                return;
-            }
-            navigator.clipboard.writeText(`${searchText}`);
-            // 添加到歷史記錄
-            const newHistoryItem = {
-                text: searchText,
-                time: new Date().toISOString()
-            };
+        const urls = {
+          google: `https://www.google.com/search?q=${encodeURIComponent(
+            searchText
+          )}`,
+          bing: `https://www.bing.com/search?q=${encodeURIComponent(
+            searchText
+          )}`,
+          duckduckgo: `https://duckduckgo.com/?q=${encodeURIComponent(
+            searchText
+          )}`,
+          yahoo: `https://tw.search.yahoo.com/search?p=${encodeURIComponent(
+            searchText
+          )}`,
+          baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(searchText)}`,
+          udn: `https://udn.com/search/word/2/${encodeURIComponent(
+            searchText
+          )}`,
+          chinatimes: `https://www.chinatimes.com/search/${encodeURIComponent(
+            searchText
+          )}`,
+          ltn: `https://search.ltn.com.tw/list?keyword=${encodeURIComponent(
+            searchText
+          )}`,
+          ettoday: `https://www.ettoday.net/news_search/doSearch.php?keywords=${encodeURIComponent(
+            searchText
+          )}`,
+          google_news: `https://news.google.com/search?q=${encodeURIComponent(
+            searchText
+          )}`,
+          cna: `https://www.cna.com.tw/search/hysearchws.aspx?q=${encodeURIComponent(
+            searchText
+          )}`,
+          yahoo_news: `https://tw.news.yahoo.com/search?p=${encodeURIComponent(
+            searchText
+          )}`,
+          perplexity: `https://www.perplexity.ai/?q=${encodeURIComponent(
+            searchText
+          )}`,
+          colpilot: `https://copilot.microsoft.com/?q=${encodeURIComponent(
+            searchText
+          )}`,
+          chatgpt: "https://chat.openai.com/",
+          bard: "https://bard.google.com/",
+          claude: "https://claude.ai/",
+          grok: "https://grok.x.ai/",
+          studio_global: "https://app.studioglobal.ai",
+          Suno: "https://suno.com/create",
+          Genape: "https://app.genape.ai/chatApe",
+          Aiva: "https://creators.aiva.ai/",
+          Leonardo: "https://leonardo.ai/",
+          Writesonic:
+            "https://app.writesonic.com/?utm_source=writesonic.com&utm_medium=website",
+          Veedio: "https://www.veed.io/tools/ai-video/text-to-video",
+          Simplified: "https://simplified.com/",
+          LovoAI: "https://lovo.ai/?ref=tina88&gad_source=1/",
+          Artguru: "https://artguru.ai",
+          NightCafe_Creator: "https://creator.nightcafe.studio",
+          Magic_Studio: "https://magicstudio.com",
+          Hotpot_AI: "https://hotpot.ai",
+          Craiyon: "https://www.craiyon.com",
+          DeepAI: "https://deepai.org/",
+          Fotor: "https://www.fotor.com",
+          Midjourney: "https://www.midjourney.com",
+          OpenArt: "https://www.openart.ai",
+          Adobe_Firefly:
+            "https://www.adobe.com/sensei/generative-ai/firefly.html",
+          poe: "https://poe.com",
+          huggingface: "https://huggingface.co/chat/",
+          notegpt: "https://notegpt.io/workspace/create",
+          deepseek: "https://chat.deepseek.com/chat",
+        };
 
-            // 檢查是否已存在相同的搜索內容
-            const existingIndex = searchHistory.findIndex(item => item.text === searchText);
-            if (existingIndex !== -1) {
-                // 如果存在，更新時間並移到最前
-                searchHistory.splice(existingIndex, 1);
-            }
-            
-            // 添加新記錄到開頭
-            searchHistory.unshift(newHistoryItem);
-            
-            // 限制歷史記錄數量（保留最近20條）
-            if (searchHistory.length > 20) {
-                searchHistory.pop();
-            }
+        window.open(urls[platform], "_blank");
+      }
 
-            // 保存到localStorage
-            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            
-            // 更新顯示
-            displayHistory();
-
-            const urls = {
-                google: `https://www.google.com/search?q=${encodeURIComponent(searchText)}`,
-                bing: `https://www.bing.com/search?q=${encodeURIComponent(searchText)}`,
-                duckduckgo: `https://duckduckgo.com/?q=${encodeURIComponent(searchText)}`,
-                yahoo: `https://tw.search.yahoo.com/search?p=${encodeURIComponent(searchText)}`,
-                baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(searchText)}`,
-                udn: `https://udn.com/search/word/2/${encodeURIComponent(searchText)}`,
-                chinatimes: `https://www.chinatimes.com/search/${encodeURIComponent(searchText)}`,
-                ltn: `https://search.ltn.com.tw/list?keyword=${encodeURIComponent(searchText)}`,
-                ettoday: `https://www.ettoday.net/news_search/doSearch.php?keywords=${encodeURIComponent(searchText)}`,
-                google_news: `https://news.google.com/search?q=${encodeURIComponent(searchText)}`,
-                cna: `https://www.cna.com.tw/search/hysearchws.aspx?q=${encodeURIComponent(searchText)}`,
-                yahoo_news: `https://tw.news.yahoo.com/search?p=${encodeURIComponent(searchText)}`,
-                perplexity: `https://www.perplexity.ai/?q=${encodeURIComponent(searchText)}`,
-                colpilot: `https://copilot.microsoft.com/?q=${encodeURIComponent(searchText)}`,
-                chatgpt: 'https://chat.openai.com/',
-                bard: 'https://bard.google.com/',
-                claude: 'https://claude.ai/',
-                grok: 'https://grok.x.ai/',
-                studio_global: 'https://app.studioglobal.ai',
-                Suno: 'https://suno.com/create',
-                Genape: 'https://app.genape.ai/chatApe',
-                Aiva: 'https://creators.aiva.ai/',
-                Leonardo: 'https://leonardo.ai/',
-                Writesonic: 'https://app.writesonic.com/?utm_source=writesonic.com&utm_medium=website',
-                Veedio: 'https://www.veed.io/tools/ai-video/text-to-video',
-                Simplified: 'https://simplified.com/',
-                LovoAI: 'https://lovo.ai/?ref=tina88&gad_source=1/',
-                Artguru: 'https://artguru.ai',
-                NightCafe_Creator: 'https://creator.nightcafe.studio',
-                Magic_Studio: 'https://magicstudio.com',
-                Hotpot_AI: 'https://hotpot.ai',
-                Craiyon: 'https://www.craiyon.com',
-                DeepAI: 'https://deepai.org/',
-                Fotor: 'https://www.fotor.com',
-                Midjourney: 'https://www.midjourney.com',
-                OpenArt: 'https://www.openart.ai',
-                Adobe_Firefly: 'https://www.adobe.com/sensei/generative-ai/firefly.html',
-                poe: 'https://poe.com',
-                huggingface: 'https://huggingface.co/chat/',
-                notegpt: 'https://notegpt.io/workspace/create',
-                deepseek: 'https://chat.deepseek.com/chat'
-            };
-
-            window.open(urls[platform], '_blank');
-        }
-
-        // 添加键盘事件监听器
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                search('google');
-            }
+      // 添加键盘事件监听器
+      document
+        .getElementById("searchInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            search("google");
+          }
         });
 
-        // 初始顯示歷史記錄
-        displayHistory();
+      // 初始顯示歷史記錄
+      displayHistory();
     </script>
-</body>
+  </body>
 </html>

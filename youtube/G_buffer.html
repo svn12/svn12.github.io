@@ -15,15 +15,16 @@
 </head>
 <body>
     <h2>管理常用詞彙</h2>
-    <input type="text" id="newWord" placeholder="輸入新詞彙">
+    <input type="text" id="newWord" placeholder="輸入新詞彙" style="width: 40%;">
     <button onclick="addNewWord()">新增</button>
     <button onclick="pasteFromClipboard()">從剪貼簿新增</button>
+    <button onclick="resetToDefault()">重置預設值</button>
     <p id="message" style="color: green;"></p>
     
-    <table>
+    <table style="width: 70%;">
         <thead>
             <tr>
-                <th>詞彙</th>
+                <th style="width: 70%">詞彙</th>
                 <th>操作</th>
             </tr>
         </thead>
@@ -56,19 +57,26 @@
                 document.getElementById("newWord").value = "";
                 document.getElementById("message").innerText = "已新增: " + newWord;
                 saveWords();
+            } else {
+                document.getElementById("message").innerText = "請輸入有效的詞彙！";
             }
         }
 
         function pasteFromClipboard() {
             navigator.clipboard.readText().then(function(clipboardText) {
+                let addedCount = 0;
                 clipboardText.split(/\r?\n/).forEach(line => {
                     let trimmedLine = line.trim();
                     if (trimmedLine !== "") {
                         addWordToTable(trimmedLine);
+                        addedCount++;
                     }
                 });
-                document.getElementById("message").innerText = "已從剪貼簿新增內容";
-                saveWords();
+                document.getElementById("message").innerText = 
+                    addedCount > 0 ? `已從剪貼簿新增 ${addedCount} 個詞彙` : "沒有有效的詞彙可新增";
+                if (addedCount > 0) {
+                    saveWords();
+                }
             }).catch(function() {
                 document.getElementById("message").innerText = "無法從剪貼簿讀取！";
             });
@@ -109,9 +117,20 @@
                 var words = JSON.parse(savedWords);
                 words.forEach(word => addWordToTable(word));
             } else {
-                let defaultWords = ["你好", "謝謝", "請問", "再見", "祝你有美好的一天"];
+                let defaultWords = [ "請問", "再見","請以表格的方式顯示 並可將表格貼到Google Sheet", "謝謝", "祝你有美好的一天"];
                 defaultWords.forEach(word => addWordToTable(word));
                 saveWords();
+            }
+        }
+
+        function resetToDefault() {
+            if (confirm('確定要重置為預設值嗎？這將清除所有現有的詞彙。')) {
+                localStorage.removeItem("wordList");
+                document.getElementById("wordTable").innerHTML = "";
+                let defaultWords = ["將 https://www.socialchamp.io/blog/ai-prompt-examples/ 內的所有 prompts 中英文列表 類型 編號序 並轉存成可存到google sheet 的格式", "再見", "請以表格的方式顯示 並可將表格貼到Google Sheet", "謝謝", "祝你有美好的一天"];
+                defaultWords.forEach(word => addWordToTable(word));
+                saveWords();
+                document.getElementById("message").innerText = "已重置為預設值";
             }
         }
     </script>
