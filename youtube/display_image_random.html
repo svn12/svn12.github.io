@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<script src="../../../svn12.github.io/js/Fetch.js"></script>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <title>隨機聖經經文圖片</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <style>
+      body1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        text-align: center;
+       /* padding: 20px; */
+        cursor: pointer;
+      }
+      img {
+        vertical-align: middle;
+        width: 100%;
+        /* height: 300px;
+        max-width: 800px;
+        max-height: 600px;
+        margin: 20px 0;
+         */
+        object-fit: cover;
+        object-position: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+      .title {
+        font-size: 24px;
+        margin: 10px 0;
+        color: #333;
+      }
+      .instruction {
+        color: #666;
+        margin: 20px 0;
+      }
+      .controls {
+        margin: 20px 0;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+      input[type="number"] {
+        width: 60px;
+        padding: 5px;
+        margin: 0 10px;
+      }
+      button {
+        padding: 5px 10px;
+        margin: 0 5px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      button.stop {
+        background-color: #f44336;
+      }
+      button.stop:hover {
+        background-color: #da190b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- <h1>聖經經文圖片
+    </h1> -->
+
+      <!-- 
+      <h1 class="title" id="imageTitle"></h1>
+      <div class="instruction">按任意鍵或點擊圖片顯示下一張</div> -->
+      <img id="displayImage" src="" alt="經文圖片" />
+      <div class="w3-light-green w3-hover-purple w3-display-topleft">
+        <h4 id="imageTitle">aaa</h4>
+      </div>
+        <div class="w3-display-topright w3-amber w3-hover-blue">
+          <!-- <label>自動切換間隔：</label>
+          <input type="number" id="intervalInput" min="1" value="1" step="1" />
+          <label>秒</label> -->
+          <button id="startButton"  >開始自動切換</button>
+          <button id="stopButton"  class="stop " style="display: none">
+            停止自動切換
+          </button>
+      </div>
+    </div>
+
+    <script>
+      let imageData = [
+        {
+          title: "人際關係",
+          imgsrc:
+            "https://dailyverses.net/images/tc/cuv/ecclesiastes-4-12-2.jpg",
+        },
+        {
+          title: "八卦",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/proverbs-16-28.jpg",
+        },
+        {
+          title: "力量",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/isaiah-41-10-2.jpg",
+        },
+        {
+          title: "上癮",
+          imgsrc:
+            "https://dailyverses.net/images/tc/cuv/1-corinthians-6-12.jpg",
+        },
+        {
+          title: "工作",
+          imgsrc:
+            "https://dailyverses.net/images/tc/cuv/colossians-3-23-24-3.jpg",
+        },
+        {
+          title: "中保",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/1-timothy-2-5.jpg",
+        },
+        {
+          title: "五旬節",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/acts-2-1-2-2.jpg",
+        },
+        {
+          title: "公義",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/proverbs-21-21-2.jpg",
+        },
+        {
+          title: "友誼",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/proverbs-17-17.jpg",
+        },
+        {
+          title: "天父",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/psalms-103-13-3.jpg",
+        },
+        {
+          title: "天使",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/matthew-26-53.jpg",
+        },
+        {
+          title: "天堂",
+          imgsrc:
+            "https://dailyverses.net/images/tc/cuv/1-thessalonians-4-16-17.jpg",
+        },
+        {
+          title: "心",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/proverbs-4-23.jpg",
+        },
+        {
+          title: "世界",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/1-john-2-15.jpg",
+        },
+        {
+          title: "召命",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/john-15-16.jpg",
+        },
+        {
+          title: "可靠性",
+          imgsrc:
+            "https://dailyverses.net/images/tc/cuv/2-thessalonians-3-3-2.jpg",
+        },
+        {
+          title: "奴隸",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/galatians-5-1-2.jpg",
+        },
+        {
+          title: "永生",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/john-10-28-30-3.jpg",
+        },
+        {
+          title: "生命改變",
+          imgsrc:
+            "https://dailyverses.net/images/tc/cuv/2-corinthians-3-18-3.jpg",
+        },
+        {
+          title: "生活",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/psalms-121-7-8-2.jpg",
+        },
+        {
+          title: "休息",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/matthew-11-28-3.jpg",
+        },
+        {
+          title: "光",
+          imgsrc: "https://dailyverses.net/images/tc/cuv/isaiah-60-1.jpg",
+        },
+        {
+          title: "全能的",
+          imgsrc:
+            "https://dailyverses.net/images/tc/cuv/1-chronicles-29-11-3.jpg",
+        },
+      ];
+
+      let usedIndices = [];
+      let autoChangeInterval = null;
+
+      const imageElement = document.getElementById("displayImage");
+      const titleElement = document.getElementById("imageTitle");
+      const container = document.querySelector(".container");
+      const intervalInput = document.getElementById("intervalInput");
+      const startButton = document.getElementById("startButton");
+      const stopButton = document.getElementById("stopButton");
+
+      function displayNewImage() {
+        if (!imageData || imageData.length === 0) {
+          console.log("等待數據加載...");
+          return;
+        }
+
+        try {
+          let index;
+          do {
+            index = Math.floor(Math.random() * imageData.length);
+          } while (
+            usedIndices.includes(index) &&
+            usedIndices.length < imageData.length
+          );
+
+          if (usedIndices.length >= imageData.length) {
+            usedIndices = [];
+          }
+
+          usedIndices.push(index);
+          const item = imageData[index];
+
+          if (item) {
+            imageElement.src = item.imgsrc || "";
+            titleElement.textContent = item.title || "";
+          } else {
+            console.error("無效的數據項");
+          }
+        } catch (error) {
+          console.error("顯示圖片時發生錯誤:", error);
+        }
+      }
+
+      // 改進錯誤處理
+      async function initializeData() {
+        try {
+          const data = await RsheetData(
+            "https://docs.google.com/spreadsheets/d/1H0LF--8V1lRtE3tyUP1XJ29e0jLwDeLm-k7Whfxj86Y/edit?usp=sharing",
+            "每日經文圖"
+          );
+          if (data && Array.isArray(data)) {
+            imageData = Array2Json(data);
+            //imageData = [...data];
+            console.log("數據加載成功，總共", imageData.length, "項");
+            displayNewImage();
+          } else {
+            console.error("獲取到的數據格式不正確");
+          }
+        } catch (error) {
+          console.error("加載數據時發生錯誤:", error);
+        }
+      }
+
+      // 確保頁面加載完成後再初始化
+      document.addEventListener("DOMContentLoaded", () => {
+        initializeData();
+      });
+
+      function getRandomImage() {
+        if (usedIndices.length === imageData.length) {
+          usedIndices = [];
+        }
+
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * imageData.length);
+        } while (usedIndices.includes(randomIndex));
+
+        usedIndices.push(randomIndex);
+        return imageData[randomIndex];
+      }
+
+      function startAutoChange() {
+        //const interval = Math.max(1, parseInt(intervalInput.value)) * 1000;
+        const interval = 4 * 1000;
+        stopAutoChange(); // Clear any existing interval
+        autoChangeInterval = setInterval(displayNewImage, interval);
+        startButton.style.display = "none";
+        stopButton.style.display = "inline-block";
+      }
+
+      function stopAutoChange() {
+        if (autoChangeInterval) {
+          clearInterval(autoChangeInterval);
+          autoChangeInterval = null;
+        }
+        startButton.style.display = "inline-block";
+        stopButton.style.display = "none";
+      }
+
+      // Display first image when page loads
+      displayNewImage();
+
+      // Event listeners
+      document.addEventListener("keydown", displayNewImage);
+      container.addEventListener("click", displayNewImage);
+      startButton.addEventListener("click", startAutoChange);
+      stopButton.addEventListener("click", stopAutoChange);
+
+      // Validate input to prevent negative numbers
+      intervalInput.addEventListener("change", function () {
+        if (this.value < 1) this.value = 1;
+      });
+    </script>
+  </body>
+</html>

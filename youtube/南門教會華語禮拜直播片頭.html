@@ -83,6 +83,24 @@
         margin: 0%;
         font-size: 2.5rem;
       }
+      #CurTime {
+        position: absolute;
+        top: -1em;
+        left: 0.7em;
+        color: rgb(54, 185, 199);
+        margin: 1.4em;
+        font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica Arial,
+          sans-serif, serif;
+        /*
+        font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica,
+          Arial, sans-serif, serif;
+          text-shadow: 2px 2px 1px white;
+         letter-spacing: 10px; */
+        font-size: 0.7em;
+        text-shadow: 2px 1px 1px black;
+        text-align: left;
+        /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
+      }
       #Bdate {
         position: fixed;
         right: 0.7em;
@@ -90,16 +108,14 @@
         color: white;
         /* text-shadow: 5px 5px 3px black; */
         text-shadow: 2px 1px 1px black;
-        text-shadow: 2px 2px 1px rgb(12, 1, 1);
         /* margin: 0.7em; 
         color: rgb(94, 147, 208);
-        color: rgb(41, 188, 164);
-        text-shadow: 2px 2px 1px white;
         font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica,
           Arial, sans-serif, serif;
         */
         /* letter-spacing: 10px; */
         font-size: 0.6em;
+        text-shadow: 2px 2px 1px rgb(12, 1, 1);
         text-align: right;
         /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
       }
@@ -107,19 +123,16 @@
         position: fixed;
         left: 8%;
         text-align: center;
-        top: 1.em;
-        color: rgb(85, 41, 188); 
-        text-shadow: 2px 2px 1px white;
-        /*
-           */
-        
+        top: 1em;
+        color: rgb(85, 41, 188);
         font-size: 0.8rem;
+        text-shadow: 2px 2px 1px white;
         /* 
         text-align: right;
         text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
       }
-      #qrcode > img{
-        width:200px;
+      #qrcode > img {
+        width: 200px;
       }
       .Header .Clock {
         position: absolute;
@@ -136,23 +149,6 @@
         font-size: larger;
       }
 
-      #CurTime {
-        position: absolute;
-        top: -1em;
-        left: 0.7em;
-        color: rgb(54, 185, 199);
-        margin: 1.4em;
-        font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica,
-          Arial, sans-serif, serif;
-        /*
-         letter-spacing: 10px; */
-        font-size: 0.6em;
-        text-shadow: 2px 2px 1px white;
-        text-align: left;
-        /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
-      }
-      
-
       .container-tblk {
         height: 100vh;
         /* Change values 👇 to experiment*/
@@ -161,7 +157,7 @@
         position: fixed;
         top: 0%;
         left: 50%;
-        transform: translate(-50%, 33%);
+        transform: translate(-50%, 35%);
       }
       /* Bottom right text */
       .text-block {
@@ -236,10 +232,10 @@
         bottom: 0;
         color: white;
         /* text-shadow: 5px 5px 3px black; */
-        text-shadow: 3px 2px black;
+        text-shadow: 2px 3px 5px black;
 
         width: 100%;
-        height: 2em;
+        height: 2.5em;
         /* background: rgba(192, 130, 189, 0.8); 
         */
         overflow: hidden;
@@ -320,19 +316,23 @@
         src="data:image/jpeg;base64,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"
         alt="Notebook" style="width:100%;"> -->
       <div class="Header">
+        <!-- <a  href="https://svn12.github.io/youtube/南門教會直播片頭.html">週報 -->
         <figure id="barcode" style="display: none">
           <!-- <img 
             src="https://api.qrserver.com/v1/create-qr-code/?data=http://www.pctnm.tw/download_weekly.php &amp;size=200x200"
-          /> -->
+            /> -->
           <!-- <img src="pic_trulli.jpg" alt="Trulli" style="width:100%"> -->
-         
 
-            <div id="qrcode"></div>
-       
+          <div id="qrcode"></div>
+
           <figcaption>教會週報</figcaption>
         </figure>
+        <!-- </a> 
+        <p id="CurTime" style="display: none"></p>
+        -->
+
         <h2>
-          <p id="CurTime" ></p>
+          <p id="CurTime"></p>
           <a
             href="https://www.youtube.com/channel/UCdBgZC0GhG7uEdn9oEx1L8g"
             id="church"
@@ -353,10 +353,6 @@
         <div id="subj"></div>
         <div id="speaker"></div>
         <div id="poem"></div>
-        <!-- <h1 id="subj">貪婪招致審判</h1>
-              <h1 id="poem">雅各書 5：1-6 雅各書 5：1-6</h1>
-              <h2 id="speaker">主禮：鍾主亮牧師</h2> -->
-        <!-- <p>What a beautiful sunrise</p> -->
       </div>
     </div>
     <div class="scroll-left">
@@ -368,7 +364,7 @@
       autoplay
       loop
     ></audio> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">	</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
       // img_Src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQja5a_9x_nigBTrMw0jI8oyUARzNMDK84LSN_GxnJAZeAKt9GqL4yJmONdu7OZG4VdOxU&usqp=CAU';
       // img_Src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdAtv04UT9QCuUwP8mXDB5ghw561SZiddhmw&usqp=CAU';
@@ -383,8 +379,10 @@
       const Bdate = document.querySelector("#Bdate");
       const CurTime = document.querySelector("#CurTime");
       const scrollText = document.querySelector("#scrollText");
+      //const weeklyReport = document.querySelector("#weeklyReport");
 
       // img.src=img_Src;
+      //var qrcode = new QRCode("qrcode", "https://pctnm.tw/files.php?m=week&file=bcb1957d5394223d4939d81656e8bb61");
       const fileLink =
         "https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing";
       Read_SheetData();
@@ -393,8 +391,9 @@
 
       scrollText.addEventListener("animationiteration", setImage);
       scrollText.addEventListener("click", setImage);
+
       Bdate.addEventListener("click", () => {
-        window.open("./南門教會直播片頭.html");
+        window.open("./南門教會華語禮拜直播片頭.html");
       });
       barcode.addEventListener("click", () => {
         window.open("http://www.pctnm.tw/download_weekly.php");
@@ -407,6 +406,7 @@
           "https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit#gid=1065429392"
         );
       });
+
       async function Read_SheetData() {
         //document.querySelector("#myTable1").innerHTML = '';
         await RsheetData(fileLink, "華語禮拜").then((data) => {
@@ -446,7 +446,9 @@
           setAniDuration(Math.ceil(ratio * 1000 * oneFrameDuration));
 
           Bdate.textContent = data[1][3];
-          let qrcode = new QRCode("qrcode", `${data[1][4]}`);  
+
+          //weeklyReport.src=`http://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data[1][4]}`
+          let qrcode = new QRCode("qrcode", `${data[1][4]}`);
         });
       }
 
@@ -459,7 +461,8 @@
         let mins = now.getMinutes();
         mins = mins < 10 ? "0" + mins : mins;
         const hour = now.getHours();
-        CurTime.innerText = ` ${hour}:${mins}:${seconds}`;
+       // CurTime.innerText = ` ${hour}:${mins}:${seconds}`;
+        CurTime.innerText = ` ${hour}:${mins}`;
       }
       function setImage() {
         if (++curImage == imageArr.length) {
@@ -500,7 +503,8 @@
 
         scrollText.getAnimations()[0]["effect"].setKeyframes(kframe);
       }
-         setInterval(setDate, 1000);
+      //setInterval(setDate, 1000);
+      setInterval(setDate, 2000);
       // setInterval(setImage, 115000);
       // setDate();
       // window.onload = function () {
