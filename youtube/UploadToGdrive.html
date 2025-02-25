@@ -6,13 +6,13 @@
     <title>Upload file to Google Drive</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
-      #img-preview,#img-webview {
+      #img-preview, #img-webview, #clipboard-preview {
         display: none;
         width: 155px;
         border: 2px dashed #333;
         margin-bottom: 20px;
       }
-      #img-preview img,#img-webview img {
+      #img-preview img, #img-webview img, #clipboard-preview img {
         width: 100%;
         height: auto;
         display: block;
@@ -36,6 +36,47 @@
         background-color: #fff;
         color: #f44336;
       }
+      
+      .paste-area {
+        width: 300px;
+        height: 100px;
+        border: 2px dashed #ccc;
+        padding: 10px;
+        margin: 20px 0;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .paste-area:hover {
+        border-color: #f44336;
+      }
+      
+      button {
+        font-family: sans-serif;
+        background: #4CAF50;
+        padding: 10px 20px;
+        border: 2px solid #4CAF50;
+        border-radius: 3px;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 10px;
+      }
+      
+      button:hover {
+        background-color: #fff;
+        color: #4CAF50;
+      }
+      
+      button:disabled {
+        background-color: #cccccc;
+        border-color: #cccccc;
+        color: #666666;
+        cursor: not-allowed;
+      }
 
       /* -------------------------------------*/
       body {
@@ -54,90 +95,125 @@
     </style>
   </head>
   <body>
-   
       <div id="img-preview"></div>
+      <div id="clipboard-preview"></div>
       <div id="textStatus"></div>
-      <div >
+      <div>
         <p id="fileUrl"></p>
         <div id="img-webview"></div>
       </div>
       
-      <!-- <form>
-          <div>
-              <input
-              type="file"
-              id="choose-file"
-              name="choose-file"
-              accept="image/*"
-              />
-              <label2 for="choose-file2">Choose File2</label2>
-            </div>
-        </form> -->
-        
-        <form id="form">
-            <input name="file" id="uploadfile" type="file" />
-            <!-- <label for="choose-file">Choose File</label> -->
-            <input name="filename" id="filename" type="text"  />
-            <input id="submit" type="submit" />
-        </form>
+      <!-- File upload form -->
+      <form id="form">
+        <h3>Option 1: Select a file</h3>
+        <input name="file" id="uploadfile" type="file" />
+        <input name="filename" id="filename" type="text" placeholder="Custom filename (optional)" />
+        <input id="submit" type="submit" />
+      </form>
+      
+      <!-- Clipboard paste area -->
+      <h3>Option 2: Paste image from clipboard</h3>
+      <div class="paste-area" id="pasteArea">
+        Click here and press Ctrl+V to paste an image
+      </div>
+      <input type="text" id="clipboard-filename" placeholder="Custom filename (optional)" />
+      <button id="upload-clipboard" disabled>Upload Clipboard Image</button>
      
+      <a href="https://docs.google.com/spreadsheets/d/1BfUgNB-5ZDS1eUIIu1XoyafN1NPFo470h0vjAHyyPIs/edit?usp=sharing">Main</a>
+      <a href="" id="folder">Link</a>
 
-<a href="https://docs.google.com/spreadsheets/d/1BfUgNB-5ZDS1eUIIu1XoyafN1NPFo470h0vjAHyyPIs/edit?usp=sharing" >Main</a>
-<a href="" id="folder">Link</a>
-
-		<select id="Sfolder" onchange="Google_sht_R()" > 
-		<!-- <select id="select_sh" onchange="testRD()">  -->
+      <select id="Sfolder" onchange="Google_sht_R()"> 
+      
     <script>
       const form = document.getElementById("form");
       const Sfolder = document.getElementById("Sfolder");
       const Status = document.getElementById("textStatus");
       const fileUrl = document.getElementById("fileUrl");
       const fileInput = document.getElementById('uploadfile');
-
-fileInput.addEventListener('change', function() {
-      const selectedFile = this.files[0];
-    // File selection has changed
-    if (selectedFile) {
-        Status.textContent='';
-        imgWebview.style.display = "none";
-        fileUrl.textContent='';
-    }else{
-
-    }
-   // const selectedFile = this.files[0];
-    //console.log('Selected file:', selectedFile);
-    // You can perform further actions here, like reading the file or validating its type/size
-});
-     // const select_sh = document.getElementById("select_sh");
-      const RSheet2Json_APIV6 = 'https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec';
-      //const folderUrl='https://drive.google.com/drive/folders/1eFf86wQ5nK4ssDmVBHUIhH7Zm1BMWoww?usp=sharing';
-      //const x = Sfolder.selectedIndex;
+      const pasteArea = document.getElementById('pasteArea');
+      const clipboardPreview = document.getElementById('clipboard-preview');
+      const uploadClipboardBtn = document.getElementById('upload-clipboard');
+      const clipboardFilename = document.getElementById('clipboard-filename');
       
-      //let folderUrl = Sfolder[Sfolder.selectedIndex].value;
-      form.addEventListener("submit", (e) => {
-        if(form.file.files.length>0){
+      // Variable to store clipboard image data
+      let clipboardFile = null;
 
+      // Listen for paste events on the paste area
+      pasteArea.addEventListener('click', function() {
+        this.focus();
+      });
+      
+      // Add paste event listeners to both document and paste area
+      document.addEventListener('paste', handlePaste);
+      pasteArea.addEventListener('paste', handlePaste);
+      
+      // Function to handle paste events
+      function handlePaste(e) {
+        // Get items from clipboard
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
         
+        // Find the first image item
+        let blob = null;
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") === 0) {
+            blob = items[i].getAsFile();
+            break;
+          }
+        }
+        
+        // If we found an image, process it
+        if (blob) {
+          clipboardFile = blob;
+          
+          // Generate a default filename with timestamp
+          const defaultFilename = 'clipboard_image_' + new Date().getTime() + '.png';
+          
+          // Read and display the image
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            clipboardPreview.style.display = "block";
+            clipboardPreview.innerHTML = '<img src="' + event.target.result + '" />';
+            
+            // Enable the upload button
+            uploadClipboardBtn.disabled = false;
+            
+            // Set a default filename
+            if (!clipboardFilename.value) {
+              clipboardFilename.value = defaultFilename;
+            }
+          };
+          reader.readAsDataURL(blob);
+        }
+      }
+      
+      // Upload clipboard image when button is clicked
+      uploadClipboardBtn.addEventListener('click', function() {
+        if (clipboardFile) {
+          uploadFile(clipboardFile, clipboardFilename.value || ('clipboard_image_' + new Date().getTime() + '.png'));
+          
+          // Reset clipboard preview after upload
+          uploadClipboardBtn.disabled = true;
+        }
+      });
+      
+      // Function to upload a file (used by both methods)
+      function uploadFile(file, filename) {
         folderUrl = Sfolder[Sfolder.selectedIndex].value;
-        Status.textContent='Loading...';
+        Status.textContent = 'Loading...';
         imgWebview.style.display = "none";
-        fileUrl.textContent='';
-        e.preventDefault();
-        console.log(folderUrl);
-        const file = form.file.files[0];
+        fileUrl.textContent = '';
+        
         const fr = new FileReader();
         fr.readAsArrayBuffer(file);
         fr.onload = (f) => {
-          
-          //const url = "https://script.google.com/macros/s/AKfycbzvUY6I83NrUePr22yYiPxnyel-BTqDRR8TninyU9u6s1OwaskuyI9qnAkIiRrbmh4tbQ/exec";  // <--- Please set the URL of Web Apps.
-          const url =
-          "https://script.google.com/macros/s/AKfycbwhjTAwi2CpX4YRhMUM6IbQ2DEpjKL-m0vfRXIo4d4fjzgI6_LUJkRzCc2X3lRgXzzfrw/exec"; // <--- Please set the URL of Web Apps.
+          const url = "https://script.google.com/macros/s/AKfycbwhjTAwi2CpX4YRhMUM6IbQ2DEpjKL-m0vfRXIo4d4fjzgI6_LUJkRzCc2X3lRgXzzfrw/exec";
           
           const qs = new URLSearchParams({
-            filename: form.filename.value || file.name,
+            filename: filename,
             mimeType: file.type,
             folderUrl: folderUrl,
           });
+          
           fetch(`${url}?${qs}`, {
             method: "POST",
             body: JSON.stringify([...new Int8Array(f.target.result)]),
@@ -145,89 +221,90 @@ fileInput.addEventListener('change', function() {
           .then((res) => res.json())
           .then((e) => {
             imgPreview.style.display = "none";
-            //fileUrl.textContent=e.fileUrl;
-            fileUrl.textContent=`=IMAGE("https://drive.google.com/uc?id=${e.fileId}")`;
+            clipboardPreview.style.display = "none";
+            fileUrl.textContent = `=IMAGE("https://drive.google.com/uc?id=${e.fileId}")`;
             copyContent(`${fileUrl.textContent}`);
             ShowWebImg(e);
-            Status.textContent='Finish Loading...';
+            Status.textContent = 'Finish Loading...';
             form.file.value = '';
-            form.filename.value='';
-                console.log(e)}) // <--- You can retrieve the returned value here.
-            .catch((err) => console.log(err));
+            form.filename.value = '';
+            clipboardFilename.value = '';
+            console.log(e);
+          })
+          .catch((err) => console.log(err));
         };
       }
+
+      fileInput.addEventListener('change', function() {
+        const selectedFile = this.files[0];
+        // File selection has changed
+        if (selectedFile) {
+          Status.textContent = '';
+          imgWebview.style.display = "none";
+          fileUrl.textContent = '';
+        }
+      });
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (form.file.files.length > 0) {
+          const file = form.file.files[0];
+          uploadFile(file, form.filename.value || file.name);
+        }
       });
       
-      const chooseFile = document.getElementById("uploadfile");
       const imgPreview = document.getElementById("img-preview");
       const imgWebview = document.getElementById("img-webview");
       const folder_name = document.getElementById("folder");
+      
+      const RSheet2Json_APIV6 = 'https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec';
 
-     /* Sfolder.addEventListener("change", function () {
-        folder_name.href=Sfolder[Sfolder.selectedIndex].value;
-        folder_name.innerText = Sfolder[Sfolder.selectedIndex].text;
-      });
-      */
-      chooseFile.addEventListener("change", function () {
+      fileInput.addEventListener("change", function() {
         getImgData();
       });
+      
       async function copyContent(text) {
         try {
-          <!-- await navigator.clipboard.writeText('This is the text to be copied'); -->
           await navigator.clipboard.writeText(`${text}`);
-          //console.log('Content copied to clipboard');
-          //alert(`${text} copied to clipboard`)
-          /* Resolved - text copied to clipboard successfully */
         } catch (err) {
           console.error('Failed to copy: ', err);
-          /* Rejected - text failed to copy to the clipboard */
         }
       }
      
-
       function getImgData() {
-        const files = chooseFile.files[0];
+        const files = fileInput.files[0];
         if (files) {
           document.getElementById("filename").value = files.name;
           const fileReader = new FileReader();
           fileReader.readAsDataURL(files);
-          fileReader.addEventListener("load", function () {
+          fileReader.addEventListener("load", function() {
             imgPreview.style.display = "block";
             imgPreview.innerHTML = '<img src="' + this.result + '" />';
           });
         }
       }
+      
       function ShowWebImg(e) {
-        
-        
-
-            imgWebview.style.display = "block";
-            imgWebview.innerHTML = `<a href="${e.fileUrl}"> <img src="https://drive.google.com/thumbnail?id=${e.fileId}" alt="${e.filename}"/> </a>`;
-         
-        
+        imgWebview.style.display = "block";
+        imgWebview.innerHTML = `<a href="${e.fileUrl}"> <img src="https://drive.google.com/thumbnail?id=${e.fileId}" alt="${e.filename}"/> </a>`;
       }
-      $(document).ready(function () {
-        // var shtUrl = '"https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing"';
-        // GSname(shtUrl);
+      
+      $(document).ready(function() {
         R_Url();
         Read_file_list();
-
-        //copyContent("SSSS");
       });
+      
       function R_Url() {
-        //const fmain = "https://docs.google.com/spreadsheets/d/1D7DXH35QrH3um2hyAQhM4SsdVGvSHilTUTKnjvyDD40/edit?usp=sharing";
         const fmain = "https://docs.google.com/spreadsheets/d/1BfUgNB-5ZDS1eUIIu1XoyafN1NPFo470h0vjAHyyPIs/edit?usp=sharing";
         var a = {
           sheetUrl: fmain,
-          sheetTag: 'Google_Drive' //'Test'
+          sheetTag: 'Google_Drive'
         };
   
-        $.get(RSheet2Json_APIV6, a, function (data) {
-  
-          //	console.log(data);
+        $.get(RSheet2Json_APIV6, a, function(data) {
           $("#Sfolder").empty();
   
-          $.each(data, function (i, item) {
+          $.each(data, function(i, item) {
             if (i != 0) {
               $('#Sfolder').append($('<option>', {
                 value: item[1],
@@ -237,32 +314,25 @@ fileInput.addEventListener('change', function() {
           });
           Google_sht_R();
         });
-  
       }
+      
       function Google_sht_R() {
-        folder_name.href=Sfolder[Sfolder.selectedIndex].value;
-       // folder_name.innerText = Sfolder[Sfolder.selectedIndex].text;
-        //fileUrl.href = document.getElementById("select_sh").value;
+        folder_name.href = Sfolder[Sfolder.selectedIndex].value;
       }
-      function Read_file_list(){
-
-        
-        
-        const url_file_list = 'https://script.google.com/macros/s/AKfycbyLM58LocpzuILFw38d2j1qdTmk_FVCxItLBSlfui83GdvEbKOh0EqQ_kDyVGGypPW-/exec'; // Example API endpoint
+      
+      function Read_file_list() {
+        const url_file_list = 'https://script.google.com/macros/s/AKfycbyLM58LocpzuILFw38d2j1qdTmk_FVCxItLBSlfui83GdvEbKOh0EqQ_kDyVGGypPW-/exec';
        
-         const qs1 = new URLSearchParams({
+        const qs1 = new URLSearchParams({
+          folderUrl: 'https://drive.google.com/drive/folders/1YP5z6G2qfyCKTuhIrht9wsZx72a94VB-?usp=sharing'
+        });
         
-            folderUrl: 'https://drive.google.com/drive/folders/1YP5z6G2qfyCKTuhIrht9wsZx72a94VB-?usp=sharing'
-            //folderUrl: Sfolder[Sfolder.selectedIndex].value
-          });
         fetch(`${url_file_list}?${qs1}`, {
           method: "POST"
-          
         })
         .then((res) => res.json())
         .then(res => console.log(res));
       }
-        
     </script>
   </body>
 </html>
