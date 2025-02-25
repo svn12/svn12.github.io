@@ -102,36 +102,6 @@
         border-left: 4px solid #1e90ff;
       }
 
-      /* Loading Overlay */
-      .loading-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 50%;
-        height: 50%;
-        background-color: rgba(255, 255, 255, 0.8);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
-      
-      .spinner {
-        border: 6px solid #f3f3f3;
-        border-top: 6px solid #4CAF50;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
-        margin-bottom: 20px;
-      }
-      
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-
       /* -------------------------------------*/
       body {
         padding: 15px;
@@ -150,12 +120,6 @@
     </style>
   </head>
   <body>
-      <!-- Loading Overlay -->
-      <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
-        <div id="loadingText">Uploading file...</div>
-      </div>
-      
       <!-- Shared Preview Section -->
       <div class="preview-section">
         <h3>Image Preview</h3>
@@ -177,7 +141,11 @@
         </form>
       </div>
       
-      <!-- Clipboard paste area -->
+      <!-- Clipboard paste area - One-click 
+      <div class="paste-button" >
+        Click here to paste image from clipboard
+      </div>
+       -->
       <div class="section" id="pasteButton">
         <h3>Option 2: Click and Paste image from clipboard</h3>
         <input type="text" id="clipboard-filename" placeholder="Custom filename (optional)" />
@@ -201,46 +169,13 @@
       const uploadClipboardBtn = document.getElementById('upload-clipboard');
       const clipboardFilename = document.getElementById('clipboard-filename');
       const folder_name = document.getElementById("folder");
-      const loadingOverlay = document.getElementById("loadingOverlay");
-      const loadingText = document.getElementById("loadingText");
-      const submitButton = document.getElementById("submit");
       
       // Variables to store file data
       let currentFile = null;
       let currentSource = null; // 'file' or 'clipboard'
-      let isUploading = false; // Flag to track upload status
-      
-      // Function to set loading state
-      function setLoadingState(loading, message) {
-        isUploading = loading;
-        
-        // Update loading overlay
-        if (loading) {
-          loadingOverlay.style.display = "flex";
-          loadingText.textContent = message || "Uploading file...";
-        } else {
-          loadingOverlay.style.display = "none";
-        }
-        
-        // Disable/enable interactive elements
-        submitButton.disabled = loading;
-        uploadClipboardBtn.disabled = loading || (currentSource !== 'clipboard');
-        fileInput.disabled = loading;
-        clipboardFilename.disabled = loading;
-        document.getElementById("filename").disabled = loading;
-        document.getElementById("Sfolder").disabled = loading;
-        
-        // Update cursor style on the whole page
-        document.body.style.cursor = loading ? 'wait' : 'default';
-      }
 
       // Function to read clipboard data
       async function readClipboardImage() {
-        if (isUploading) {
-          Status.textContent = 'Upload in progress. Please wait...';
-          return false;
-        }
-        
         try {
           // Show loading status
           Status.textContent = 'Reading clipboard...';
@@ -301,11 +236,6 @@
       
       // Function to process clipboard image once obtained
       function processClipboardImage(blob, imageType) {
-        if (isUploading) {
-          Status.textContent = 'Upload in progress. Please wait...';
-          return;
-        }
-        
         // Create a File object from the blob
         const clipboardFile = new File([blob], `clipboard_image.${imageType.split('/')[1]}`, { type: imageType });
         
@@ -321,7 +251,8 @@
 
             // Format the date and time as YYYYMMDD_HHSS
             const formattedDateTime = `${year}${month}${day}_${hours}${seconds}`;
-            const defaultFilename = 'Img' + formattedDateTime + '.' + imageType.split('/')[1];
+           // const defaultFilename = 'CBimage_' + new Date().getTime() + '.' + imageType.split('/')[1];
+          const defaultFilename = 'CBimage' + formattedDateTime + '.' + imageType.split('/')[1];
         
         // Set as current file
         currentFile = clipboardFile;
@@ -339,7 +270,7 @@
           imgPreview.innerHTML = '<img src="' + event.target.result + '" />';
           
           // Enable the upload button
-          uploadClipboardBtn.disabled = isUploading;
+          uploadClipboardBtn.disabled = false;
           
           // Set a default filename
           if (!clipboardFilename.value) {
@@ -352,13 +283,8 @@
         reader.readAsDataURL(blob);
       }
       
-      // Add click event to the paste button
+      // Add click event to the paste button - Automatically reads clipboard
       pasteButton.addEventListener('click', function() {
-        if (isUploading) {
-          Status.textContent = 'Upload in progress. Please wait...';
-          return;
-        }
-        
         // Clear previous data
         imgPreview.style.display = "none";
         imgWebview.style.display = "none";
@@ -372,14 +298,8 @@
         });
       });
       
-      // Listen for paste events globally
+      // Listen for paste events globally (as backup or convenience)
       document.addEventListener('paste', function(e) {
-        if (isUploading) {
-          e.preventDefault();
-          Status.textContent = 'Upload in progress. Please wait...';
-          return;
-        }
-        
         // Get items from clipboard
         const items = (e.clipboardData || e.originalEvent.clipboardData).items;
         
@@ -396,30 +316,18 @@
       
       // Upload clipboard image when button is clicked
       uploadClipboardBtn.addEventListener('click', function() {
-        if (isUploading) {
-          Status.textContent = 'Upload in progress. Please wait...';
-          return;
-        }
-        
         if (currentFile && currentSource === 'clipboard') {
           uploadFile(currentFile, clipboardFilename.value || ('clipboard_image_' + new Date().getTime() + '.png'));
           
-          // Reset button state is handled in uploadFile
+          // Reset after upload
+          uploadClipboardBtn.disabled = true;
         }
       });
       
       // Function to upload a file (used by both methods)
       function uploadFile(file, filename) {
-        if (isUploading) {
-          Status.textContent = 'Upload already in progress. Please wait...';
-          return;
-        }
-        
-        // Set loading state
-        setLoadingState(true, "Uploading file...");
-        
         folderUrl = Sfolder[Sfolder.selectedIndex].value;
-        Status.textContent = 'Uploading...';
+        Status.textContent = 'Loading...';
         imgWebview.style.display = "none";
         fileUrl.textContent = '';
         
@@ -444,34 +352,22 @@
             fileUrl.textContent = `=IMAGE("https://drive.google.com/uc?id=${e.fileId}")`;
             copyContent(`${fileUrl.textContent}`);
             ShowWebImg(e);
-            Status.textContent = 'File uploaded successfully!';
+            Status.textContent = 'Finish Loading...';
             form.file.value = '';
             form.filename.value = '';
             clipboardFilename.value = '';
             currentFile = null;
             currentSource = null;
             console.log(e);
-            
-            // Reset loading state
-            setLoadingState(false);
           })
           .catch((err) => {
             console.log(err);
             Status.textContent = 'Upload failed. Please try again.';
-            
-            // Reset loading state
-            setLoadingState(false);
           });
         };
       }
 
       fileInput.addEventListener('change', function() {
-        if (isUploading) {
-          Status.textContent = 'Upload in progress. Please wait...';
-          this.value = ''; // Reset file input
-          return;
-        }
-        
         const selectedFile = this.files[0];
         // File selection has changed
         if (selectedFile) {
@@ -495,12 +391,6 @@
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
-        
-        if (isUploading) {
-          Status.textContent = 'Upload in progress. Please wait...';
-          return;
-        }
-        
         if (currentFile && currentSource === 'file') {
           uploadFile(currentFile, form.filename.value || currentFile.name);
         } else {
@@ -534,15 +424,9 @@
       function ShowWebImg(e) {
         imgWebview.style.display = "block";
         imgWebview.innerHTML = `<a href="${e.fileUrl}"> <img src="https://drive.google.com/thumbnail?id=${e.fileId}" alt="${e.filename}"/> </a>`;
-        //imgWebview.innerHTML = `<a href="${e.fileUrl}"> <img src="https://drive.google.com/uc?export=view&id=${e.fileId}" alt="${e.filename}"/> </a>`;
-        //imgWebview.innerHTML = `<a href="${e.fileUrl}"> <img src="${e.fileUrl}" alt="${e.filename}"/> </a>`;
       }
       
       $(document).ready(function() {
-        // Initialize loading state
-        setLoadingState(false);
-        
-        // Load data
         R_Url();
         Read_file_list();
       });
