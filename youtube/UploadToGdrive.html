@@ -317,10 +317,10 @@
             const month = String(currentTime.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
             const day = String(currentTime.getDate()).padStart(2, '0');
             const hours = String(currentTime.getHours()).padStart(2, '0');
-            const seconds = String(currentTime.getSeconds()).padStart(2, '0');
+            const miniutes = String(currentTime.getMinutes()).padStart(2, '0');
 
             // Format the date and time as YYYYMMDD_HHSS
-            const formattedDateTime = `${year}${month}${day}_${hours}${seconds}`;
+            const formattedDateTime = `${year}${month}${day}_${hours}${miniutes}`;
             const defaultFilename = 'Img' + formattedDateTime + '.' + imageType.split('/')[1];
         
         // Set as current file
