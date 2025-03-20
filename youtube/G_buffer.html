@@ -22,22 +22,27 @@
         margin: 20px auto;
         border-collapse: collapse;
       }
-      th,td
-       {
+      th,
+      td {
         border: 1px solid #ddd;
         padding: 8px;
         text-align: center;
-        
       }
-      
       th {
         background-color: #f2f2f2;
+      }
+      td {
+        text-align: left;
+        background-color: #e7aaaa;
       }
       input.editable {
         width: 90%;
         font-size: 16px;
         border: none;
         text-align: center;
+      }
+      td {
+        cursor: pointer; /* 讓詞彙看起來可以點擊 */
       }
     </style>
   </head>
@@ -57,8 +62,7 @@
     <table style="width: 70%">
       <thead>
         <tr>
-          <th style="width: 70%">詞彙</th>
-          <th>操作</th>
+          <th style="width: 100%">詞彙</th>
         </tr>
       </thead>
       <tbody id="wordTable"></tbody>
@@ -67,160 +71,170 @@
     <script>
       document.addEventListener("DOMContentLoaded", loadWords);
 
-      function copyWord(button) {
-          var word = button.parentElement.parentElement.cells[0].querySelector("input").value;
-          navigator.clipboard.writeText(word).then(function() {
-              document.getElementById("message").innerText = "已複製: " + word;
-          }).catch(function() {
-              document.getElementById("message").innerText = "複製失敗！";
+      // 點擊詞彙時複製內容
+      function copyWord(event) {
+        var word = event.target.textContent.trim();
+        navigator.clipboard
+          .writeText(word)
+          .then(function () {
+            document.getElementById("message").innerText = "已複製: " + word;
+          })
+          .catch(function () {
+            document.getElementById("message").innerText = "複製失敗！";
           });
-      }
-
-      function deleteWord(button) {
-          var row = button.parentElement.parentElement;
-          row.parentElement.removeChild(row);
-          saveWords();
       }
 
       function addNewWord() {
         var newWord = document.getElementById("newWord").value.trim();
         if (newWord !== "") {
-            // 檢查詞彙是否已經存在於表格中
-            var rows = document.getElementById("wordTable").rows;
-            var exists = false;
-            for (var i = 0; i < rows.length; i++) {
-                var word = rows[i].cells[0].querySelector("input").value.trim();
-                if (word === newWord) {
-                    exists = true;
-                    break;
-                }
-            }
-            
-            if (!exists) {
-                addWordToTable(newWord);
-                document.getElementById("newWord").value = "";
-                document.getElementById("message").innerText = "已新增: " + newWord;
-                saveWords();
-            } else {
-                document.getElementById("message").innerText = `新增詞彙已經存在: 『${newWord}』`;
-            }
-        } else {
-            document.getElementById("message").innerText = "請輸入有效的詞彙！";
-        }
-    }
-    
-
-    function pasteFromClipboard() {
-      navigator.clipboard.readText().then(function(clipboardText) {
-          let addedCount = 0;
-          let existingWords = new Set();
-          
-          // 先取得目前表格中的詞彙
+          // 檢查詞彙是否已經存在於表格中
           var rows = document.getElementById("wordTable").rows;
+          var exists = false;
           for (var i = 0; i < rows.length; i++) {
-              var word = rows[i].cells[0].querySelector("input").value.trim();
-              existingWords.add(word);
+            var word = rows[i].cells[0].textContent.trim();
+            if (word === newWord) {
+              exists = true;
+              break;
+            }
           }
-          
-          clipboardText.split(/\r?\n/).forEach(line => {
+
+          if (!exists) {
+            addWordToTable(newWord);
+            document.getElementById("newWord").value = "";
+            document.getElementById("message").innerText = "已新增: " + newWord;
+            saveWords();
+          } else {
+            document.getElementById("message").innerText =
+              `新增詞彙已經存在: 『${newWord}』`;
+          }
+        } else {
+          document.getElementById("message").innerText = "請輸入有效的詞彙！";
+        }
+      }
+
+      function pasteFromClipboard() {
+        navigator.clipboard
+          .readText()
+          .then(function (clipboardText) {
+            let addedCount = 0;
+            let existingWords = new Set();
+
+            // 先取得目前表格中的詞彙
+            var rows = document.getElementById("wordTable").rows;
+            for (var i = 0; i < rows.length; i++) {
+              var word = rows[i].cells[0].textContent.trim();
+              existingWords.add(word);
+            }
+
+            clipboardText.split(/\r?\n/).forEach((line) => {
               let trimmedLine = line.trim();
               if (trimmedLine !== "" && !existingWords.has(trimmedLine)) {
-                  addWordToTable(trimmedLine);
-                  existingWords.add(trimmedLine); // 更新已存在的詞彙集合
-                  addedCount++;
+                addWordToTable(trimmedLine);
+                existingWords.add(trimmedLine); // 更新已存在的詞彙集合
+                addedCount++;
               }
-          });
-          
-          document.getElementById("message").innerText =
-              addedCount > 0 ? `已從剪貼簿新增 ${addedCount} 個詞彙` : `剪貼簿詞彙已存在：『${clipboardText}』`;
-          if (addedCount > 0) {
+            });
+
+            document.getElementById("message").innerText =
+              addedCount > 0
+                ? `已從剪貼簿新增 ${addedCount} 個詞彙`
+                : `剪貼簿詞彙已存在：『${clipboardText}』`;
+            if (addedCount > 0) {
               saveWords();
-          }
-      }).catch(function() {
-          document.getElementById("message").innerText = "無法從剪貼簿讀取！";
-      });
-  }
-  
+            }
+          })
+          .catch(function () {
+            document.getElementById("message").innerText = "無法從剪貼簿讀取！";
+          });
+      }
 
       function addWordToTable(word) {
-          var table = document.getElementById("wordTable");
-          var row = table.insertRow();
-          var cell1 = row.insertCell(0);
-          var cell2 = row.insertCell(1);
-          cell1.innerHTML = '<input type="text" class="editable" value="' + word + '" oninput="checkAndSaveWords(this)" />';
-          cell2.innerHTML = '<button onclick="copyWord(this)">複製</button> <button onclick="deleteWord(this)">刪除</button>';
+        var table = document.getElementById("wordTable");
+        var row = table.insertRow();
+        var cell = row.insertCell(0);
+        cell.textContent = word; // 直接顯示詞彙
+        cell.addEventListener("click", copyWord); // 點擊詞彙時觸發複製功能
       }
 
-      function checkAndSaveWords(input) {
-          if (input.value.trim() === "") {
-              deleteWord(input.parentElement.parentElement.querySelector("button"));
-          } else {
-              saveWords();
-          }
-      }
       function saveWords() {
         var words = new Set(); // 使用Set來自動去除重複元素
         var rows = document.getElementById("wordTable").rows;
         for (var i = 0; i < rows.length; i++) {
-            var word = rows[i].cells[0].querySelector("input").value.trim();
-            if (word !== "") {
-                words.add(word); // 將詞彙加入Set
-            }
+          var word = rows[i].cells[0].textContent.trim();
+          if (word !== "") {
+            words.add(word); // 將詞彙加入Set
+          }
         }
         localStorage.setItem("wordList", JSON.stringify([...words])); // 將Set轉回陣列並儲存
-    }
-      function saveWords1() {
-          var words = [];
-          var rows = document.getElementById("wordTable").rows;
-          for (var i = 0; i < rows.length; i++) {
-              var word = rows[i].cells[0].querySelector("input").value.trim();
-              if (word !== "") {
-                  words.push(word);
-              }
-          }
-          localStorage.setItem("wordList", JSON.stringify(words));
       }
 
       function loadWords() {
-          var savedWords = localStorage.getItem("wordList");
-          if (savedWords) {
-              var words = JSON.parse(savedWords);
-              words.forEach(word => addWordToTable(word));
-          } else {
-              let defaultWords = []
-             
-              defaultWords.forEach(word => addWordToTable(word));
-              saveWords();
-          }
+        var savedWords = localStorage.getItem("wordList");
+        if (savedWords) {
+          var words = JSON.parse(savedWords);
+          words.forEach((word) => addWordToTable(word));
+        } else {
+          let defaultWords = [
+            "將 https://www.socialchamp.io/blog/ai-prompt-examples/ 內的所有 prompts 中英文列表 類型 編號序 並轉存成可存到google sheet 的格式",
+            "請用繁體中文回答",
+            "請以可將表格貼到Google Sheet 的方式回答",
+            "請以html 的方式呈現",
+            "請用HTML創建一個可互動的簡報的方式呈現",
+            "請翻譯下列英文為繁體中文",
+            "請提供一篇教會詩班星期五晚上練習結束的閉會禱告",
+            "請提供一篇教會詩班在主日崇拜前練習結束時的禱告",
+            "我想寫一本<AI的未來>的書，請幫建議內容大綱",
+            "請用簡報大綱方式呈現 ",
+            "請規劃宜蘭自由行用大眾運輸工具的3天兩夜行程",
+            "請幫我準備3頁  手機line APP  使用的教學資料",
+            "請參考圖片做一首七言絕句詩",
+            "請幫我撰寫 推銷 『隔週捷運出發健行』的行銷文案",
+            "請用300個字 描述『漂亮女孩遊火星的故事』",
+            "請用300個字 描述『漂亮女孩遊火星的故事』描述內容請適度加上emoji 符號",
+            "請摘要 上述『漂亮女孩遊火星的故事』",
+            "請用上述『漂亮女孩遊火星的故事』 撰寫心得",
+            "教會詩班缺人 請以適合emoji方式撰寫推廣文招人",
+            "請建立教會資產管理準則",
+            "你現在是『英文學習機』 當我輸入中文時 你需翻譯成英文  包含ｋｋ音標 並以該英文造句 同時輸出相關的英文單字 與例句 右邊並需都加注中文。",
+          ];
+
+          defaultWords.forEach((word) => addWordToTable(word));
+          saveWords();
+        }
       }
 
       function resetToDefault() {
-          if (confirm('確定要重置為預設值嗎？這將清除所有現有的詞彙。')) {
-              localStorage.removeItem("wordList");
-              document.getElementById("wordTable").innerHTML = "";
-              let defaultWords = ["將 https://www.socialchamp.io/blog/ai-prompt-examples/ 內的所有 prompts 中英文列表 類型 編號序 並轉存成可存到google sheet 的格式", 
-              "請用繁體中文回答",
-              "請以可將表格貼到Google Sheet 的方式回答",
-              "請以html 的方式呈現",
-              "請用HTML創建一個可互動的簡報的方式呈現",
-              "請翻譯下列英文為繁體中文",
-              "請提供一篇教會詩班星期五晚上練習結束的閉會禱告",
-              "請提供一篇教會詩班在主日崇拜前練習結束時的禱告",
-              "我想寫一本<AI的未來>的書，請幫建議內容大綱",
-               "請用簡報大綱方式呈現 ",
-               "請規劃宜蘭自由行用大眾運輸工具的3天兩夜行程",
-               "請幫我準備3頁  手機line APP  使用的教學資料",
-               "請用300個字 描述『漂亮女孩遊火星的故事』",
-               "請用300個字 描述『漂亮女孩遊火星的故事』描述內容請適度加上emoji 符號",
-               "請摘要 上述『漂亮女孩遊火星的故事』",
-               "請用上述『漂亮女孩遊火星的故事』 撰寫心得",
-               "你現在是『英文學習機』 當我輸入中文時 你需翻譯成英文  包含ｋｋ音標 並以該英文造句 同時輸出相關的英文單字 與例句 右邊並需都加注中文。",
-               ];
-              
-              defaultWords.forEach(word => addWordToTable(word));
-              saveWords();
-              document.getElementById("message").innerText = "已重置為預設值";
-          }
+        if (confirm("確定要重置為預設值嗎？這將清除所有現有的詞彙。")) {
+          localStorage.removeItem("wordList");
+          document.getElementById("wordTable").innerHTML = "";
+          let defaultWords = [
+            "將 https://www.socialchamp.io/blog/ai-prompt-examples/ 內的所有 prompts 中英文列表 類型 編號序 並轉存成可存到google sheet 的格式",
+            "請用繁體中文回答",
+            "請以可將表格貼到Google Sheet 的方式回答",
+            "請以html 的方式呈現",
+            "請用HTML創建一個可互動的簡報的方式呈現",
+            "請翻譯下列英文為繁體中文",
+            "請提供一篇教會詩班星期五晚上練習結束的閉會禱告",
+            "請提供一篇教會詩班在主日崇拜前練習結束時的禱告",
+            "我想寫一本<AI的未來>的書，請幫建議內容大綱",
+            "請用簡報大綱方式呈現 ",
+            "請規劃宜蘭自由行用大眾運輸工具的3天兩夜行程",
+            "請幫我準備3頁  手機line APP  使用的教學資料",
+            "請參考圖片做一首七言絕句詩",
+            "請幫我撰寫 推銷 『隔週捷運出發健行』的行銷文案",
+            "請用300個字 描述『漂亮女孩遊火星的故事』",
+            "請用300個字 描述『漂亮女孩遊火星的故事』描述內容請適度加上emoji 符號",
+            "請摘要 上述『漂亮女孩遊火星的故事』",
+            "請用上述『漂亮女孩遊火星的故事』 撰寫心得",
+            "教會詩班缺人 請以適合emoji方式撰寫推廣文招人",
+            "請建立教會資產管理準則",
+            "你現在是『英文學習機』 當我輸入中文時 你需翻譯成英文  包含ｋｋ音標 並以該英文造句 同時輸出相關的英文單字 與例句 右邊並需都加注中文。",
+          ];
+
+          defaultWords.forEach((word) => addWordToTable(word));
+          saveWords();
+          document.getElementById("message").innerText = "已重置為預設值";
+        }
       }
     </script>
   </body>
