@@ -135,9 +135,13 @@
       <div class="nav-links">
         <h2>多功能搜索工具</h2>
         <a href="./G_buffer.html" target="_blank"><h3>G_Buf</h3></a>
-        <a href="https://www.explainthis.io/zh-hant/chatgpt" target="_blank"><h3>指令大全</h3></a>
+        <a href="https://www.explainthis.io/zh-hant/chatgpt" target="_blank"
+          ><h3>指令大全</h3></a
+        >
         <a href="https://reurl.cc/geLaxV" target="_blank"><h3>AI提示語</h3></a>
-        <a href="https://quickref.me/chatgpt" target="_blank"><h3>Quit_Ref</h3></a>
+        <a href="https://quickref.me/chatgpt" target="_blank"
+          ><h3>Quit_Ref</h3></a
+        >
       </div>
       <div class="input-group">
         <input
@@ -147,8 +151,11 @@
           autocomplete="off"
         />
       </div>
-      <div class="section">
+      <div class="nav-links">
         <a href="https://www.imyfone.com/ai-collection/"><h3>AI工具</h3></a>
+        <a href="./ai_2025.html"><h3>2025 AI tool</h3></a>
+      </div>
+      <div class="section">
         <div class="buttons-container">
           <button onclick="search('perplexity')" class="ai-tool-btn">
             Perplexity
@@ -175,11 +182,13 @@
           <button onclick="search('deepseek')" class="ai-tool-btn">
             DeepSeek
           </button>
-          <button onclick="search('max_ai')" class="ai-tool-btn">
-            Max Ai
+          <button onclick="search('max_ai')" class="ai-tool-btn">Max Ai</button>
+          <button onclick="search('felo_ai')" class="ai-tool-btn">
+            Felo AI
           </button>
-          <button onclick="search('felo_ai')" class="ai-tool-btn">Felo AI</button>
-          <button onclick="search('ChatGLM')" class="ai-tool-btn">智譜清言 AI</button>
+          <button onclick="search('ChatGLM')" class="ai-tool-btn">
+            智譜清言 AI
+          </button>
         </div>
       </div>
       <div class="section">
@@ -212,7 +221,6 @@
           <button onclick="search('freepik')" class="search-engine-btn">
             Freepik
           </button>
-        
         </div>
       </div>
 
@@ -409,13 +417,17 @@
           udn: `https://udn.com/search/word/2/${encodeURIComponent(
             searchText
           )}`,
-          Unsplash: `https://unsplash.com/s/photos/${encodeURIComponent(searchText
+          Unsplash: `https://unsplash.com/s/photos/${encodeURIComponent(
+            searchText
           )}`,
-          Pixabay: `https://pixabay.com/images/search/${encodeURIComponent(searchText
+          Pixabay: `https://pixabay.com/images/search/${encodeURIComponent(
+            searchText
           )}`,
-          Pexels: `https://www.pexels.com/zh-tw/search/${encodeURIComponent(searchText
+          Pexels: `https://www.pexels.com/zh-tw/search/${encodeURIComponent(
+            searchText
           )}`,
-          freepik: `https://www.freepik.com/search?query=${encodeURIComponent(searchText
+          freepik: `https://www.freepik.com/search?query=${encodeURIComponent(
+            searchText
           )}`,
           chinatimes: `https://www.chinatimes.com/search/${encodeURIComponent(
             searchText
@@ -473,7 +485,7 @@
           deepseek: "https://chat.deepseek.com/chat",
           felo_ai: "https://felo.ai",
           max_ai: "https://www.maxai.co/app",
-          ChatGLM: "https://chatglm.cn/main/alltoolsdetail?lang=zh"
+          ChatGLM: "https://chatglm.cn/main/alltoolsdetail?lang=zh",
         };
 
         window.open(urls[platform], "_blank");
