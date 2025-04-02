@@ -212,6 +212,7 @@
           <button onclick="search('找台語')" class="search-engine-btn">
             找台語
           </button>
+          <button onclick="search('itaigi')" class="search-engine-btn">愛台語</button>
           <button onclick="search('台語辭典')" class="search-engine-btn">台語辭典</button>
           <button onclick="search('客語辭典')" class="search-engine-btn">客語辭典</button>
 
@@ -428,6 +429,9 @@
           )}`,
           萌典: `https://www.moedict.tw/`,
           找台語: `https://chhoe.taigi.info/`,
+          itaigi: `https://itaigi.tw/k/${encodeURIComponent(
+            searchText
+          )}`,
           台語辭典: `https://sutian.moe.edu.tw/und-hani/`,
           客語辭典: `https://hakkadict.moe.edu.tw/`,
           baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(searchText)}`,
