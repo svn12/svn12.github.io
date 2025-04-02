@@ -203,6 +203,15 @@
           <button onclick="search('yahoo')" class="search-engine-btn">
             Yahoo
           </button>
+          <button onclick="search('萌典')" class="search-engine-btn">
+            萌典
+          </button>
+          <button onclick="search('找台語')" class="search-engine-btn">
+            找台語
+          </button>
+          <button onclick="search('台語辭典')" class="search-engine-btn">台語辭典</button>
+          <button onclick="search('客語辭典')" class="search-engine-btn">客語辭典</button>
+
           <button onclick="search('duckduckgo')" class="search-engine-btn">
             DuckDuckGo
           </button>
@@ -414,6 +423,10 @@
           yahoo: `https://tw.search.yahoo.com/search?p=${encodeURIComponent(
             searchText
           )}`,
+          萌典: `https://www.moedict.tw/`,
+          找台語: `https://chhoe.taigi.info/`,
+          台語辭典: `https://sutian.moe.edu.tw/und-hani/`,
+          客語辭典: `https://hakkadict.moe.edu.tw/`,
           baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(searchText)}`,
           udn: `https://udn.com/search/word/2/${encodeURIComponent(
             searchText
