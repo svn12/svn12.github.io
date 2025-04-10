@@ -211,14 +211,17 @@
         $("#T3").append(txt1);   // Append new elements
       }
       function appendText4(code) {
-        
-        let txt1 =isDesktop()?
-        `<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=${code}" ></iframe>
-      <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=${code}" ></iframe>`
-      :''; //
-      //<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/candlestick-chart;stockSymbol=${code}" ></iframe>`
-      $("#T4").append(txt1);   // Append new elements
-    }
+        let txt1 = '';
+        if (isDesktop()) {
+            txt1 = `
+            <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/dividend;stockSymbol=${code}" ></iframe>
+            <iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/volume-profile;stockSymbol=${code}" ></iframe>`;
+        } else {
+            txt1 = `
+            <p>Mobile view is not supported for this feature. Please use a desktop device to view the analysis for stock code: ${code}.</p>`;
+        }
+        $("#T4").append(txt1); // Append new elements
+      }
     //<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/qoute;stockSymbol=${code}" ></iframe>`
     //<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/basic-info;stockSymbol=${code}" ></iframe>`
       function appendText1(code, remark) {
@@ -407,8 +410,11 @@
          '00878','2882','2891','00919',  '00687B', '00679B','3045','00751B','4919','2002'
           , "2412",'2356', "1101", "2023", '2330', '2303', '2454', '2308','2409', '2603', '3260', '00891'
           , '6233', '3062', '3006', '3661', '6770', '3311','2492'];
+
+
         codeA.map(appendText1);
         codeA.map(appendText4);
+        G_sht_R("寬")
         document.documentElement.scrollTop = 0;
       }
       function show_a(link) {
@@ -452,6 +458,24 @@
         //   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
         // data - 家戶所得.csv
       }
+      function G_sht_R(shtname) {
+        $("#T2").html('');
+        $("#T3").html('');
+        $("#T4").html('');
+        $("#T").html('');    
+        let a = {
+          sheetUrl: 'https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing',
+          sheetTag: shtname,
+          findSting: ''
+        };
+        const Search_API = 'https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec';
+        $.get(Search_API, a, function (data) {          
+            data = JSON.parse(data); 
+            data.map(show_a);
+            JSONTableShow(data, "#myTable2");
+          }
+        );
+        }
       function Google_sht_R() {
         $("#T2").html('');
 
@@ -601,3 +625,4 @@
   </body>
 
 </html>
+``` 
