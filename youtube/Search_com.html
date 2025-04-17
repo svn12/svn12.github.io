@@ -128,6 +128,26 @@
       .nav-links a {
         text-decoration: none;
       }
+      .clear-btn {
+        position: absolute;
+        right: -20px;
+        top: 20%;
+        transform: translateY(-20%);
+        background: #ccc;
+        border: none;
+        border-radius: 50%; 
+        width: 34px;
+        height: 34px;
+        font-size: 24px;
+        line-height: 0px;
+        text-align: center; /*center; */
+        cursor: pointer;
+        display: none; /* 預設隱藏 */
+      }
+
+      .clear-btn:hover {
+        background: #999;
+      }
     </style>
   </head>
   <body>
@@ -139,6 +159,7 @@
           ><h3>指令大全</h3></a
         >
         <a href="https://reurl.cc/geLaxV" target="_blank"><h3>AI提示語</h3></a>
+        <a href="https://huggingface.co/datasets/fka/awesome-chatgpt-prompts/" target="_blank"><h3>Awesome提示語</h3></a>
         <a href="https://quickref.me/chatgpt" target="_blank"
           ><h3>Quit_Ref</h3></a
         >
@@ -149,7 +170,9 @@
           id="searchInput"
           placeholder="請輸入搜索內容..."
           autocomplete="off"
+          oninput="toggleClearButton()"
         />
+        <button id="clearButton" class="clear-btn" onclick="clearInput()">X</button>
       </div>
       <div class="nav-links">
         <a href="https://www.imyfone.com/ai-collection/"><h3>AI工具</h3></a>
@@ -329,23 +352,24 @@
         historyList.innerHTML = searchHistory
           .map(
             (item, index) => `
-                    <div class="history-item">
-                        <span class="history-time">${new Date(
-                          item.time
-                        ).toLocaleString()}</span>
-                        <span class="history-text" onclick="useHistoryItem('${
-                          item.text
-                        }')">${item.text}</span>
-                        <button class="delete-btn" onclick="deleteHistoryItem(${index})">刪除</button>
-                    </div>
-                `
+              <div class="history-item">
+                <span class="history-time">${new Date(item.time).toLocaleString()}</span>
+                <span class="history-text" onclick="useHistoryItem('${encodeURIComponent(
+                  item.text
+                )}')">${item.text}</span>
+                <button class="delete-btn" onclick="deleteHistoryItem(${index})">刪除</button>
+              </div>
+            `
           )
           .join("");
       }
 
       // 使用歷史記錄項
-      function useHistoryItem(text) {
-        document.getElementById("searchInput").value = text;
+      function useHistoryItem(encodedText) {
+        const searchInput = document.getElementById("searchInput");
+        const text = decodeURIComponent(encodedText); // 解碼傳遞的參數
+        searchInput.value = text; // 將解碼後的文字填入輸入框
+        toggleClearButton(); // 更新清除按鈕的顯示狀態
       }
 
       // 刪除單個歷史記錄
@@ -506,6 +530,24 @@
         };
 
         window.open(urls[platform], "_blank");
+      }
+
+      // 清除輸入框內容
+      function clearInput() {
+        const searchInput = document.getElementById("searchInput");
+        searchInput.value = "";
+        toggleClearButton(); // 更新按鈕顯示狀態
+      }
+
+      // 切換清除按鈕的顯示狀態
+      function toggleClearButton() {
+        const searchInput = document.getElementById("searchInput");
+        const clearButton = document.getElementById("clearButton");
+        if (searchInput.value.trim() !== "") {
+          clearButton.style.display = "block"; // 顯示按鈕
+        } else {
+          clearButton.style.display = "none"; // 隱藏按鈕
+        }
       }
 
       // 添加键盘事件监听器
