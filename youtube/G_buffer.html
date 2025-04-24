@@ -197,6 +197,9 @@
                 "請用HTML創建一個可互動的簡報的方式呈現",
                 "請翻譯下列英文為繁體中文",
                 "請翻譯下列英文為#zh-tw",
+                "根據這張圖片的主題和場景，撰寫一段要透過 AI 產生類似圖片的中英文提示詞",
+                "請協助分析這張圖片所描述的內容，並用中文進行重點整理描述",
+                "請將這個網頁進行 100 字的重點整理：網址",
                 `請根據以下規則幫我整理下方文章製作成懶人包
                 1. 每個懶人包只講 1 個主題，總字數 150 以下，可適當搭配 emoji 增加閱讀舒適度，若資訊無法在 1 個主題講完，請拆分成多個懶人包
                 2. 每個主題會先顯示 3 個重點，以列點呈現
@@ -230,11 +233,22 @@
                 "請說明下列網址內容,請以可將表格貼到Google Sheet 的方式回答",
                 "請說明下列網址內容,請以簡報大綱的方式回答",
                 "請搜索新竹交大校園圖片",
+                "請撰寫一篇約 500 字，介紹「XXXX」的文章，需要包含前言、內文和段落。",
                 "Please give me a summary of the key points and the apropriate audience of the book [] .And I want you to act as traditional Chinese translator",
                 "你現在是『英文學習機』 當我輸入中文時 你需翻譯成英文  包含ｋｋ音標 並以該英文造句 同時輸出相關的英文單字 與例句 右邊並需都加注中文。",
                 "Please explain [decorator pattern use example with node.js] in detail.And I want you to act as traditional Chinese translator",
                 "如果想請你幫忙[寫一份電競筆電行銷文案]，請告訴我我提供怎麼樣的Prompt可以得到較好回答請說明為什麼並在最後舉出實際的Prompt範例",
-                "如果想請你幫忙[將上傳的照片去背加上海邊渡假的圖]，請告訴我我提供怎麼樣的Prompt可以得到較好回答請說明為什麼並在最後舉出實際的Prompt範例三則 請一律增加繁體中文的Prompt example"
+                "如果想請你幫忙[將上傳的照片去背加上海邊渡假的圖]，請告訴我我提供怎麼樣的Prompt可以得到較好回答請說明為什麼並在最後舉出實際的Prompt範例三則 請一律增加繁體中文的Prompt example",
+                "一個可愛的機器人感到驚訝，旁邊有尖叫或大叫的空白對話泡泡，並有一些驚訝的放射狀線條，背景在圖書館裡，日本漫畫風格",
+                '請你參考這個網頁內容，產生並提供我可以在社群分享的「分享縮圖」，風格使用超現實主義達利的插畫風格，並且包含這些關鍵字：AI、藝術、創造力、未來、科技。這個縮圖應該要引人注目，並且能夠吸引觀眾的注意力。請確保它具有強烈的視覺衝擊力和獨特的設計元素。',
+                `你現在是一個擅長寫「產生圖片提示詞」的 AI 繪圖專家，我會傳送給你要生成影像的提示詞或參考圖，你會按照下列規則進行回應：
+1、我不會跟你聊天，傳送給你的所有文字都是我要產生圖片的提示詞
+2、以我的提示詞為主軸，擴展成更具有想像力、畫面更好的的提示詞
+3、你修改後的提示詞適合用於 Meijourney 或 Image Creator 使用
+4、提供我兩種不同內容的繁體中文和英文提示詞
+5、如果我提供你圖片，請提供我可以產生類似影像的繁體中文和英文提示詞 ( 50 字以內 )
+下方是範例，例如我傳送了「A hand holding a counter and counting numbers with many numbers on the background, illustration, painting, poster」
+你會美化成：「A vibrant and intricate illustration of a hand skillfully holding a traditional abacus counter, with beads sliding gracefully back and forth. The background is filled with a myriad of numbers in various fonts and colors, creating a dynamic visual experience. The overall ambiance of the piece is both educational and artistic, with a sense of movement and life. illustration, painting, poster」`
               ];
 
                 defaultWords.forEach((word) => addWordToTable(word));
