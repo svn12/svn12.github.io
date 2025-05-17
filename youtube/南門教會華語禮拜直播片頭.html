@@ -53,13 +53,18 @@
         background-image: url("https://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg");
       }
 
-      .container {
+       .container {
         /* 
         position: relative;
         position: relative;
         max-width: 1920px;
-         */
         margin: 0 auto;
+         */
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         margin: 0 auto;
+         height: 100vh;
       }
 
       .container img {
@@ -89,6 +94,7 @@
         left: 0.7em;
         color: rgb(54, 185, 199);
         margin: 1.4em;
+         z-index: 5;
         font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica Arial,
           sans-serif, serif;
         /*
@@ -242,6 +248,7 @@
         /* position: relative; */
         margin: 0;
         white-space: nowrap;
+        z-index: 10;
       }
 
       .scroll-left h2 {
@@ -393,7 +400,7 @@
       scrollText.addEventListener("click", setImage);
 
       Bdate.addEventListener("click", () => {
-        window.open("./南門教會華語禮拜直播片頭.html");
+        window.open("./南門教會直播片頭.html");
       });
       barcode.addEventListener("click", () => {
         window.open("http://www.pctnm.tw/download_weekly.php");
