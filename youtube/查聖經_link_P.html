@@ -513,27 +513,30 @@ function  Read_Bible(){
             // alert(select.options[i-1].value);
         }
         var Bver=["KJV","BBE","ASV","WEB","Darby","ERV",
-            "紅皮聖經全羅","紅皮聖經漢羅","巴克禮漢羅","現代台語2021全羅","現代台語2021漢字","現代臺語2013全羅",
-			"現代臺語2013漢字","馬雅各全羅","全民台語聖經全羅",
-            "全民台語聖經漢羅","恢復本","深文理和合本","新遺詔聖經","現代客語全羅","汕頭客語聖經",
+            "巴克禮全羅","現代台語2021全羅","馬雅各全羅","全民台語聖經全羅","現代客語全羅",
+            "巴克禮漢羅","現代台語2021漢字",
+            "全民台語聖經漢羅","恢復本","深文理和合本","新遺詔聖經","汕頭客語聖經",
             "中文標準譯本","NET聖經中譯本","四福音書共同譯本","現代中文譯本2019版","呂振中譯本","思高譯本",
             "官話和合本","北京官話譯本","文理和合本","淺文理和合本","王元德官話譯本","俄羅斯正教文理譯本",
             "白日昇徐約翰文理譯本","神天聖書","文理委辦譯本","施約瑟淺文理譯本","馬殊曼譯本","高德譯本",
             "胡德邁譯本","粦為仁譯本","日語聖經","舊約馬索拉原文","新約原文","越南聖經",
             "俄文聖經","韓文聖經","鄒語聖經","魯凱語聖經","阿美語1997","阿美語2019",
             "賽德克語","達悟語新約聖經","藏語聖經"
+            //"紅皮聖經全羅","紅皮聖經漢羅","現代臺語2013漢字"
 ];
 
         var Bver_ptr=["kjv","bbe","asv","web","darby","erv",
-            "apskcl","apskhl","bklhl","ttvcl2021","ttvhl2021","tte",
-			"ttvh","prebklcl","sgebklcl",
-            "sgebklhl","recover","wlunv","nt1864","thv2e","hakka",
+            "bklcl","ttvcl2021","prebklcl","sgebklcl","thv2e",
+            "bklhl","ttvhl2021",
+            "sgebklhl","recover","wlunv","nt1864","hakka",
             "csb","cnet","cccbst","tcv2019","lcc","ofm",
             "cumv","pmb","cuwv","cuwve","cwang","orthdox",
             "basset","mormil","wdv","ssewb","marwb","goddwb",
             "hudsonwb","deanwb","jp","bhs","fhlwh","vietnamese",
             "russian","korean","tsou","rukai","ams","amis2",
             "sed","ttnt94","tibet"
+            //"apskcl","apskhl","ttvh"
+
 ];
         var select = document.getElementById("SelBver");
         // var options = ["10", "11", "12", "13", "14","15","16"];
@@ -856,7 +859,8 @@ function  Read_Bible(){
     $(ptr).html('');
     let qstr=$("#location-input").val()
         $.get(url,  function (data,status) {
-            var obj = JSON.parse(data);
+            var obj=data;
+            //var obj = JSON.parse(data);
             
             var txt='<br> <h1 align="center">'+ VerTitle+" (" +obj.record_count.toString()+')</h1>';
             

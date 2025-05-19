@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>聖經搜尋結果</title>
+  <style>
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    #count {
+      margin-top: 10px;
+      font-size: 1.1em;
+      color: #555;
+    }
+    #results {
+      margin-top: 20px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .verse {
+      margin-bottom: 10px;
+      padding: 5px 0;
+      border-bottom: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+
+<h1>搜尋「起頭」的聖經經文</h1>
+<div id="count">載入中...</div>
+<div id="results"></div>
+
+<script>
+  const url = 'https://bible.fhl.net/json/se.php?orig=0&limit=500&offset=0&q=起頭&VERSION=ttvhl2021&strong=0&gb=0';
+
+  fetch(url)
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP 錯誤: ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      const records = data.record;
+      const resultsDiv = document.getElementById('results');
+      const countDiv = document.getElementById('count');
+      resultsDiv.innerHTML = '';
+      
+      if (Array.isArray(records) && records.length > 0) {
+        countDiv.textContent = `共找到 ${records.length} 筆經文結果：`;
+
+        records.forEach(entry => {
+          const verse = document.createElement('div');
+          verse.className = 'verse';
+          verse.innerHTML = `<strong>${entry.chineses} ${entry.chap}:${entry.sec}</strong> - ${entry.bible_text}`;
+          resultsDiv.appendChild(verse);
+        });
+      } else {
+        countDiv.textContent = '找不到相關經文。';
+      }
+    })
+    .catch(error => {
+      document.getElementById('count').textContent = `發生錯誤：${error.message}`;
+    });
+</script>
+
+</body>
+</html>
