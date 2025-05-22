@@ -444,13 +444,14 @@
           yahoo: `https://tw.search.yahoo.com/search?p=${encodeURIComponent(
             searchText
           )}`,
-          萌典: `https://www.moedict.tw/`,
-          找台語: `https://chhoe.taigi.info/`,
+          萌典: `https://www.moedict.tw/${encodeURIComponent(searchText)}`,
+          找台語: `https://chhoe.taigi.info/search.jsp?keyword=${encodeURIComponent(searchText)}`,
           itaigi: `https://itaigi.tw/k/${encodeURIComponent(
             searchText
           )}`,
-          台語辭典: `https://sutian.moe.edu.tw/und-hani/`,
-          客語辭典: `https://hakkadict.moe.edu.tw/`,
+          //台語辭典: `https://sutian.moe.edu.tw/und-hani/search?keyword=${encodeURIComponent(searchText)}`,
+          台語辭典: `https://sutian.moe.edu.tw/und-hani/tshiau/?lui=tai_su&tsha=${encodeURIComponent(searchText)}`,
+          客語辭典: `https://hakkadict.moe.edu.tw/search?q=${encodeURIComponent(searchText)}`,
           baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(searchText)}`,
           udn: `https://udn.com/search/word/2/${encodeURIComponent(
             searchText
@@ -495,7 +496,7 @@
           bard: "https://bard.google.com/",
           claude: "https://claude.ai/",
           grok: "https://grok.x.ai/",
-          studio_global: "https://app.studioglobal.ai",
+          studio_global: "https://app.studioglobal.ai/search?q=${encodeURIComponent(searchText)}",
           kimi: "https://kimi.moonshot.cn/",
           yiyan: "https://yiyan.baidu.com/",
           NBklm: "https://notebooklm.google.com/",
