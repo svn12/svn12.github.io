@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 網站快速搜尋器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .search-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-all-btn {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 140px;
+        }
+
+        .search-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .sites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .site-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .site-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .site-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .site-button:hover::before {
+            left: 100%;
+        }
+
+        .site-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .pchome { border-left: 4px solid #ff6b35; }
+        .momo { border-left: 4px solid #ff1744; }
+        .shopee { border-left: 4px solid #ee4d2d; }
+        .yahoo { border-left: 4px solid #720e9e; }
+        .ruten { border-left: 4px solid #0066cc; }
+        .books { border-left: 4px solid #2196f3; }
+        .momoshop { border-left: 4px solid #c2185b; }
+        .etmall { border-left: 4px solid #4caf50; }
+
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .instructions ul {
+            color: #666;
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+
+        .popup-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .sites-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+
+        .clipboard-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #155724;
+            display: none;
+        }
+
+        .clipboard-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #721c24;
+            display: none;
+        }
+
+        .example-searches {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .example-tag {
+            background: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            color: #5f6368;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .example-tag:hover {
+            background: #e8f0fe;
+            border-color: #4285f4;
+            color: #1a73e8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI 網站快搜器</h1>
+            <p>一鍵同時搜尋多個 AI 網站<br>輸入問題或關鍵字，快速獲得多個 AI 助手的回答</p>
+        </div>
+
+        <div class="search-section">
+            <div class="search-form">
+                <input type="text" class="search-input" id="searchInput" placeholder="請輸入您的問題或關鍵字，例如：如何學習 Python、AI 的未來發展...">
+                <button class="search-all-btn" onclick="searchAllSites()">🚀 搜尋所有 AI</button>
+            </div>
+
+            <div class="example-searches">
+                <span class="example-tag" onclick="setSearchTerm('如何學習 Python')">如何學習 Python</span>
+                <span class="example-tag" onclick="setSearchTerm('AI 的未來發展')">AI 的未來發展</span>
+                <span class="example-tag" onclick="setSearchTerm('寫一首詩')">寫一首詩</span>
+                <span class="example-tag" onclick="setSearchTerm('解釋量子計算')">解釋量子計算</span>
+                <span class="example-tag" onclick="setSearchTerm('健康飲食建議')">健康飲食建議</span>
+            </div>
+
+            <div class="popup-info">
+                💡 提示：點擊「搜尋所有 AI」會同時開啟多個分頁並複製問題到剪貼簿，請確保瀏覽器允許彈出視窗
+            </div>
+
+            <div id="clipboardSuccess" class="clipboard-success">
+                ✅ 問題已複製到剪貼簿！可直接貼到各個 AI 網站
+            </div>
+
+            <div id="clipboardError" class="clipboard-error">
+                ❌ 無法複製到剪貼簿，請手動複製問題文字
+            </div>
+        </div>
+
+        <div class="sites-grid">
+            <div class="site-button pchome" onclick="searchSite('chatgpt')">
+                <span>🧠</span>
+                <span>ChatGPT</span>
+            </div>
+            
+            <div class="site-button momo" onclick="searchSite('claude')">
+                <span>🤖</span>
+                <span>Claude</span>
+            </div>
+            
+            <div class="site-button shopee" onclick="searchSite('gemini')">
+                <span>💎</span>
+                <span>Google Gemini</span>
+            </div>
+            
+            <div class="site-button yahoo" onclick="searchSite('copilot')">
+                <span>🔍</span>
+                <span>Microsoft Copilot</span>
+            </div>
+            
+            <div class="site-button ruten" onclick="searchSite('perplexity')">
+                <span>🔮</span>
+                <span>Perplexity AI</span>
+            </div>
+            
+            <div class="site-button books" onclick="searchSite('poe')">
+                <span>🎭</span>
+                <span>Poe by Quora</span>
+            </div>
+            
+            <div class="site-button momoshop" onclick="searchSite('character')">
+                <span>🎪</span>
+                <span>Character.AI</span>
+            </div>
+            
+            <div class="site-button etmall" onclick="searchSite('huggingface')">
+                <span>🤗</span>
+                <span>Hugging Face</span>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用說明</h3>
+            <ul>
+                <li>在搜尋欄輸入您想詢問的問題或關鍵字</li>
+                <li>點擊「搜尋所有 AI」同時開啟多個 AI 網站</li>
+                <li>或點擊個別 AI 按鈕只使用特定的 AI 助手</li>
+                <li>各 AI 網站會自動帶入您的問題，方便您比較不同的回答</li>
+                <li>建議使用清楚具體的問題獲得更精準的 AI 回答</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 複製文字到剪貼簿的函數
+        async function copyToClipboard(text) {
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } else {
+                    // 備用方法：使用舊的 document.execCommand
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-999999px';
+                    textArea.style.top = '-999999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    const result = document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    return result;
+                }
+            } catch (err) {
+                console.error('複製失敗:', err);
+                return false;
+            }
+        }
+
+        // 顯示複製結果訊息
+        function showClipboardMessage(success) {
+            const successMsg = document.getElementById('clipboardSuccess');
+            const errorMsg = document.getElementById('clipboardError');
+            
+            if (success) {
+                successMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 3000);
+            } else {
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+                setTimeout(() => {
+                    errorMsg.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // 各 AI 網站的搜尋URL模板
+        const siteUrls = {
+            chatgpt: 'https://chat.openai.com/?q=',
+            claude: 'https://claude.ai/chat?q=',
+            gemini: 'https://gemini.google.com/app?q=',
+            copilot: 'https://copilot.microsoft.com/?q=',
+            perplexity: 'https://www.perplexity.ai/?q=',
+            poe: 'https://poe.com/chat?q=',
+            character: 'https://character.ai/?q=',
+            huggingface: 'https://huggingface.co/chat?q='
+        };
+
+        function getSearchTerm() {
+            return document.getElementById('searchInput').value.trim();
+        }
+
+        function setSearchTerm(term) {
+            document.getElementById('searchInput').value = term;
+            document.getElementById('searchInput').focus();
+        }
+
+        async function searchSite(site) {
+            const searchTerm = getSearchTerm();
+            if (!searchTerm) {
+                alert('請先輸入要詢問的問題或關鍵字');
+                document.getElementById('searchInput').focus();
+                return;
+            }
+
+            // 複製到剪貼簿
+            const copySuccess = await copyToClipboard(searchTerm);
+            showClipboardMessage(copySuccess);
+
+            const url = siteUrls[site] + encodeURIComponent(searchTerm);
+            window.open(url, '_blank');
+        }
+
+        async function searchAllSites() {
+            const searchTerm = getSearchTerm();
+            if (!searchTerm) {
+                alert('請先輸入要詢問的問題或關鍵字');
+                document.getElementById('searchInput').focus();
+                return;
+            }
+
+            // 詢問是否要開啟所有網站
+            if (!confirm('即將開啟 8 個 AI 網站分頁並複製問題到剪貼簿，確定要繼續嗎？')) {
+                return;
+            }
+
+            // 複製到剪貼簿
+            const copySuccess = await copyToClipboard(searchTerm);
+            showClipboardMessage(copySuccess);
+
+            // 延遲開啟每個網站，避免瀏覽器阻擋太多彈出視窗
+            Object.keys(siteUrls).forEach((site, index) => {
+                setTimeout(() => {
+                    const url = siteUrls[site] + encodeURIComponent(searchTerm);
+                    window.open(url, '_blank');
+                }, index * 300); // 每個網站間隔300毫秒
+            });
+        }
+
+        // Enter鍵搜尋
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchAllSites();
+            }
+        });
+
+        // 頁面載入時聚焦搜尋框
+        window.addEventListener('load', function() {
+            document.getElementById('searchInput').focus();
+        });
+
+        // 阻止表單提交
+        document.querySelector('.search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            searchAllSites();
+        });
+    </script>
+</body>
+</html>
