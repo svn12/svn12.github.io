@@ -38,46 +38,28 @@
         color: #f44336;
       }
       
-      .paste-area {
+      .paste-button {
         width: 100%;
-        max-width: 500px;
-        min-height: 150px;
-        border: 3px dashed #ccc;
-        padding: 20px;
+        max-width: 300px;
+        height: 100px;
+        border: 2px dashed #ccc;
+        padding: 10px;
         margin: 20px 0;
         text-align: center;
         cursor: pointer;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
         background-color: #f9f9f9;
-        border-radius: 10px;
+        border-radius: 5px;
         font-family: sans-serif;
         font-size: 16px;
         transition: all 0.3s;
-        position: relative;
       }
       
-      .paste-area:hover, .paste-area.drag-over {
-        border-color: #4CAF50;
-        background-color: #f0fff0;
-      }
-      
-      .paste-area.active {
-        border-color: #2196F3;
-        background-color: #e3f2fd;
-      }
-      
-      .paste-instructions {
-        color: #666;
-        margin-bottom: 10px;
-      }
-      
-      .paste-status {
-        font-weight: bold;
-        margin-top: 10px;
-        min-height: 20px;
+      .paste-button:hover, .paste-button:active {
+        border-color: #f44336;
+        background-color: #f5f5f5;
       }
       
       button {
@@ -126,8 +108,8 @@
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        width: 50%;
+        height: 50%;
         background-color: rgba(255, 255, 255, 0.8);
         z-index: 1000;
         justify-content: center;
@@ -165,18 +147,6 @@
       p a {
         color: #000;
       }
-      
-      .error {
-        color: #f44336;
-      }
-      
-      .success {
-        color: #4CAF50;
-      }
-      
-      .warning {
-        color: #ff9800;
-      }
     </style>
   </head>
   <body>
@@ -208,15 +178,8 @@
       </div>
       
       <!-- Clipboard paste area -->
-      <div class="section">
-        <h3>Option 2: Paste image from clipboard</h3>
-        <div class="paste-area" id="pasteArea" tabindex="0">
-          <div class="paste-instructions">
-            📋 Click here and press Ctrl+V to paste an image<br>
-            or drag and drop an image file here
-          </div>
-          <div class="paste-status" id="pasteStatus"></div>
-        </div>
+      <div class="section" id="pasteButton">
+        <h3>Option 2: Click and Paste image from clipboard</h3>
         <input type="text" id="clipboard-filename" placeholder="Custom filename (optional)" />
         <button id="upload-clipboard" disabled>Upload Clipboard Image</button>
       </div>
@@ -225,7 +188,6 @@
       <a href="" id="folder">Link</a>
 
       <select id="Sfolder" onchange="Google_sht_R()"> 
-      </select>
       
     <script>
       const form = document.getElementById("form");
@@ -233,8 +195,7 @@
       const Status = document.getElementById("textStatus");
       const fileUrl = document.getElementById("fileUrl");
       const fileInput = document.getElementById('uploadfile');
-      const pasteArea = document.getElementById('pasteArea');
-      const pasteStatus = document.getElementById('pasteStatus');
+      const pasteButton = document.getElementById('pasteButton');
       const imgPreview = document.getElementById("img-preview");
       const imgWebview = document.getElementById("img-webview");
       const uploadClipboardBtn = document.getElementById('upload-clipboard');
@@ -273,53 +234,105 @@
         document.body.style.cursor = loading ? 'wait' : 'default';
       }
 
-      // Function to update paste status
-      function updatePasteStatus(message, type = 'info') {
-        pasteStatus.textContent = message;
-        pasteStatus.className = `paste-status ${type}`;
-      }
-
-      // Function to generate filename with timestamp
-      function generateTimestampFilename(extension = 'png') {
-        const currentTime = new Date();
-        const year = currentTime.getFullYear();
-        const month = String(currentTime.getMonth() + 1).padStart(2, '0');
-        const day = String(currentTime.getDate()).padStart(2, '0');
-        const hours = String(currentTime.getHours()).padStart(2, '0');
-        const minutes = String(currentTime.getMinutes()).padStart(2, '0');
-        const formattedDateTime = `${year}${month}${day}_${hours}${minutes}`;
-        return `Img${formattedDateTime}.${extension}`;
-      }
-
-      // Function to process clipboard or dropped image
-      function processImageFile(file, source = 'clipboard') {
+      // Function to read clipboard data
+      async function readClipboardImage() {
         if (isUploading) {
-          updatePasteStatus('Upload in progress. Please wait...', 'warning');
+          Status.textContent = 'Upload in progress. Please wait...';
+          return false;
+        }
+        
+        try {
+          // Show loading status
+          Status.textContent = 'Reading clipboard...';
+          
+          // Get clipboard items
+          const clipboardItems = await navigator.clipboard.read();
+          
+          for (const clipboardItem of clipboardItems) {
+            // Check if there's an image in the clipboard
+            if (clipboardItem.types.includes('image/png') || 
+                clipboardItem.types.includes('image/jpeg') || 
+                clipboardItem.types.includes('image/gif')) {
+                
+              // Get the image type
+              const imageType = clipboardItem.types.find(type => type.startsWith('image/'));
+              
+              // Get the blob
+              const blob = await clipboardItem.getType(imageType);
+              
+              // Process the image
+              processClipboardImage(blob, imageType);
+              return true;
+            }
+          }
+          
+          // Show message if no image found
+          Status.textContent = 'No image found in clipboard';
+          setTimeout(() => {
+            Status.textContent = '';
+          }, 3000);
+          return false;
+        } catch (err) {
+          console.error('Error reading from clipboard:', err);
+          
+          // Fallback method
+          Status.textContent = 'Trying alternative method...';
+          
+          try {
+            // Try to create an input and trigger paste programmatically
+            const tempInput = document.createElement('textarea');
+            document.body.appendChild(tempInput);
+            tempInput.focus();
+            const result = document.execCommand('paste');
+            document.body.removeChild(tempInput);
+            
+            if (!result) {
+              throw new Error('execCommand paste failed');
+            }
+            
+            return true;
+          } catch (fallbackErr) {
+            console.error('Fallback method failed:', fallbackErr);
+            Status.textContent = 'Cannot access clipboard. Please use file upload option or try copying an image first.';
+            return false;
+          }
+        }
+      }
+      
+      // Function to process clipboard image once obtained
+      function processClipboardImage(blob, imageType) {
+        if (isUploading) {
+          Status.textContent = 'Upload in progress. Please wait...';
           return;
         }
         
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-          updatePasteStatus('Please paste or drop an image file', 'error');
-          return;
-        }
+        // Create a File object from the blob
+        const clipboardFile = new File([blob], `clipboard_image.${imageType.split('/')[1]}`, { type: imageType });
+        
+        // Generate a default filename with timestamp
+        const currentTime = new Date();
+
+            // Get year, month, day, hours, and seconds
+            const year = currentTime.getFullYear();
+            const month = String(currentTime.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+            const day = String(currentTime.getDate()).padStart(2, '0');
+            const hours = String(currentTime.getHours()).padStart(2, '0');
+            const miniutes = String(currentTime.getMinutes()).padStart(2, '0');
+
+            // Format the date and time as YYYYMMDD_HHSS
+            const formattedDateTime = `${year}${month}${day}_${hours}${miniutes}`;
+            const defaultFilename = 'Img' + formattedDateTime + '.' + imageType.split('/')[1];
         
         // Set as current file
-        currentFile = file;
-        currentSource = source;
-        
-        // Generate default filename
-        const extension = file.type.split('/')[1] || 'png';
-        const defaultFilename = generateTimestampFilename(extension);
+        currentFile = clipboardFile;
+        currentSource = 'clipboard';
         
         // Read and display the image
         const reader = new FileReader();
         reader.onload = function(event) {
           // Clear file input to avoid confusion
-          if (source === 'clipboard') {
-            form.file.value = '';
-            form.filename.value = '';
-          }
+          form.file.value = '';
+          form.filename.value = '';
           
           // Show preview
           imgPreview.style.display = "block";
@@ -328,97 +341,23 @@
           // Enable the upload button
           uploadClipboardBtn.disabled = isUploading;
           
-          // Set a default filename if empty
+          // Set a default filename
           if (!clipboardFilename.value) {
             clipboardFilename.value = defaultFilename;
           }
           
           // Update status
-          updatePasteStatus(`Image ready: ${file.name || 'clipboard image'}`, 'success');
-          Status.textContent = `Image loaded from ${source}`;
+          Status.textContent = 'Image ready from clipboard';
         };
-        
-        reader.onerror = function() {
-          updatePasteStatus('Error reading image file', 'error');
-        };
-        
-        reader.readAsDataURL(file);
-      }
-
-      // Enhanced clipboard reading with better error handling
-      async function readClipboardImage() {
-        if (isUploading) {
-          updatePasteStatus('Upload in progress. Please wait...', 'warning');
-          return false;
-        }
-        
-        try {
-          updatePasteStatus('Reading clipboard...', 'info');
-          
-          // Check if clipboard API is available
-          if (!navigator.clipboard || !navigator.clipboard.read) {
-            throw new Error('Clipboard API not supported');
-          }
-          
-          // Request clipboard permission
-          const permission = await navigator.permissions.query({ name: 'clipboard-read' });
-          if (permission.state === 'denied') {
-            throw new Error('Clipboard access denied');
-          }
-          
-          // Get clipboard items
-          const clipboardItems = await navigator.clipboard.read();
-          
-          for (const clipboardItem of clipboardItems) {
-            // Check for image types
-            const imageTypes = clipboardItem.types.filter(type => type.startsWith('image/'));
-            
-            if (imageTypes.length > 0) {
-              const imageType = imageTypes[0];
-              const blob = await clipboardItem.getType(imageType);
-              
-              // Create a File object from the blob
-              const clipboardFile = new File([blob], `clipboard_image.${imageType.split('/')[1]}`, { type: imageType });
-              
-              // Process the image
-              processImageFile(clipboardFile, 'clipboard');
-              return true;
-            }
-          }
-          
-          // No image found
-          updatePasteStatus('No image found in clipboard', 'warning');
-          setTimeout(() => updatePasteStatus(''), 3000);
-          return false;
-          
-        } catch (err) {
-          console.error('Clipboard error:', err);
-          
-          // Provide user-friendly error messages
-          let errorMessage = 'Cannot access clipboard. ';
-          if (err.message.includes('denied')) {
-            errorMessage += 'Please allow clipboard access or use Ctrl+V.';
-          } else if (err.message.includes('not supported')) {
-            errorMessage += 'Please use Ctrl+V to paste.';
-          } else {
-            errorMessage += 'Try copying an image first, then use Ctrl+V.';
-          }
-          
-          updatePasteStatus(errorMessage, 'error');
-          return false;
-        }
+        reader.readAsDataURL(blob);
       }
       
-      // Click handler for paste area
-      pasteArea.addEventListener('click', function() {
+      // Add click event to the paste button
+      pasteButton.addEventListener('click', function() {
         if (isUploading) {
-          updatePasteStatus('Upload in progress. Please wait...', 'warning');
+          Status.textContent = 'Upload in progress. Please wait...';
           return;
         }
-        
-        // Focus the paste area and clear previous data
-        this.focus();
-        this.classList.add('active');
         
         // Clear previous data
         imgPreview.style.display = "none";
@@ -426,97 +365,31 @@
         fileUrl.textContent = '';
         uploadClipboardBtn.disabled = true;
         
-        updatePasteStatus('Click here and press Ctrl+V to paste', 'info');
-        
-        // Try to read from clipboard automatically (if supported)
-        readClipboardImage().catch(() => {
-          // Silent fail - user will use Ctrl+V
+        // Try to read from clipboard automatically
+        readClipboardImage().catch(err => {
+          console.error('Failed to read clipboard:', err);
+          Status.textContent = 'Could not access clipboard. Try copying an image first.';
         });
       });
       
-      // Focus and blur events for paste area
-      pasteArea.addEventListener('focus', function() {
-        this.classList.add('active');
-      });
-      
-      pasteArea.addEventListener('blur', function() {
-        this.classList.remove('active');
-      });
-      
-      // Enhanced paste event listener
-      pasteArea.addEventListener('paste', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
+      // Listen for paste events globally
+      document.addEventListener('paste', function(e) {
         if (isUploading) {
-          updatePasteStatus('Upload in progress. Please wait...', 'warning');
+          e.preventDefault();
+          Status.textContent = 'Upload in progress. Please wait...';
           return;
         }
-        
-        updatePasteStatus('Processing pasted content...', 'info');
         
         // Get items from clipboard
         const items = (e.clipboardData || e.originalEvent.clipboardData).items;
         
         // Find the first image item
-        let imageFound = false;
+        let blob = null;
         for (let i = 0; i < items.length; i++) {
           if (items[i].type.indexOf("image") === 0) {
-            const blob = items[i].getAsFile();
-            if (blob) {
-              processImageFile(blob, 'clipboard');
-              imageFound = true;
-              break;
-            }
-          }
-        }
-        
-        if (!imageFound) {
-          updatePasteStatus('No image found in clipboard', 'warning');
-          setTimeout(() => updatePasteStatus(''), 3000);
-        }
-      });
-      
-      // Global paste event listener (fallback)
-      document.addEventListener('paste', function(e) {
-        // Only handle if paste area is focused or no other input is focused
-        const activeElement = document.activeElement;
-        if (activeElement === pasteArea || activeElement.tagName === 'BODY') {
-          pasteArea.focus();
-          // Let the pasteArea handler deal with it
-        }
-      });
-      
-      // Drag and drop functionality
-      pasteArea.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.classList.add('drag-over');
-      });
-      
-      pasteArea.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.classList.remove('drag-over');
-      });
-      
-      pasteArea.addEventListener('drop', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.classList.remove('drag-over');
-        
-        if (isUploading) {
-          updatePasteStatus('Upload in progress. Please wait...', 'warning');
-          return;
-        }
-        
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-          const file = files[0];
-          if (file.type.startsWith('image/')) {
-            processImageFile(file, 'drag-drop');
-          } else {
-            updatePasteStatus('Please drop an image file', 'error');
+            blob = items[i].getAsFile();
+            processClipboardImage(blob, items[i].type);
+            break;
           }
         }
       });
@@ -524,15 +397,14 @@
       // Upload clipboard image when button is clicked
       uploadClipboardBtn.addEventListener('click', function() {
         if (isUploading) {
-          updatePasteStatus('Upload in progress. Please wait...', 'warning');
+          Status.textContent = 'Upload in progress. Please wait...';
           return;
         }
         
         if (currentFile && currentSource === 'clipboard') {
-          const filename = clipboardFilename.value || generateTimestampFilename();
-          uploadFile(currentFile, filename);
-        } else {
-          updatePasteStatus('No image ready for upload', 'error');
+          uploadFile(currentFile, clipboardFilename.value || ('clipboard_image_' + new Date().getTime() + '.png'));
+          
+          // Reset button state is handled in uploadFile
         }
       });
       
@@ -548,7 +420,6 @@
         
         folderUrl = Sfolder[Sfolder.selectedIndex].value;
         Status.textContent = 'Uploading...';
-        updatePasteStatus('Uploading...', 'info');
         imgWebview.style.display = "none";
         fileUrl.textContent = '';
         
@@ -574,9 +445,6 @@
             copyContent(`${fileUrl.textContent}`);
             ShowWebImg(e);
             Status.textContent = 'File uploaded successfully!';
-            updatePasteStatus('Upload successful!', 'success');
-            
-            // Clear form data
             form.file.value = '';
             form.filename.value = '';
             clipboardFilename.value = '';
@@ -590,7 +458,6 @@
           .catch((err) => {
             console.log(err);
             Status.textContent = 'Upload failed. Please try again.';
-            updatePasteStatus('Upload failed. Please try again.', 'error');
             
             // Reset loading state
             setLoadingState(false);
@@ -615,7 +482,6 @@
           // Clear clipboard data
           uploadClipboardBtn.disabled = true;
           clipboardFilename.value = '';
-          updatePasteStatus('');
           
           // Clear previous status
           Status.textContent = '';
@@ -668,6 +534,8 @@
       function ShowWebImg(e) {
         imgWebview.style.display = "block";
         imgWebview.innerHTML = `<a href="${e.fileUrl}"> <img src="https://drive.google.com/thumbnail?id=${e.fileId}" alt="${e.filename}"/> </a>`;
+        //imgWebview.innerHTML = `<a href="${e.fileUrl}"> <img src="https://drive.google.com/uc?export=view&id=${e.fileId}" alt="${e.filename}"/> </a>`;
+        //imgWebview.innerHTML = `<a href="${e.fileUrl}"> <img src="${e.fileUrl}" alt="${e.filename}"/> </a>`;
       }
       
       $(document).ready(function() {
@@ -677,9 +545,6 @@
         // Load data
         R_Url();
         Read_file_list();
-        
-        // Initialize paste area
-        updatePasteStatus('Click here and press Ctrl+V to paste an image');
       });
       
       function R_Url() {
