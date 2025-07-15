@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互動式閃卡遊戲</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            text-align: center;
+            max-width: 800px;
+            width: 90%;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 2rem;
+            background: rgba(255,255,255,0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+            color: #ffd700;
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-success {
+            background: rgba(46, 204, 113, 0.8);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: rgba(46, 204, 113, 1);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: rgba(231, 76, 60, 0.8);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: rgba(231, 76, 60, 1);
+            transform: translateY(-2px);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffed4a);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+
+        .add-card-form {
+            background: rgba(255,255,255,0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255,215,0,0.3);
+        }
+
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            animation: confetti-fall 3s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .flashcard {
+                height: 250px;
+            }
+            
+            .card-face {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎯 互動式閃卡遊戲</h1>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number" id="currentCard">1</span>
+                <span>當前卡片</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="totalCards">5</span>
+                <span>總卡片數</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="correctCount">0</span>
+                <span>答對數</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="accuracy">0%</span>
+                <span>正確率</span>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="flashcard-container">
+            <div class="flashcard" id="flashcard">
+                <div class="card-face card-front" id="cardFront">
+                    點擊卡片查看答案
+                </div>
+                <div class="card-face card-back" id="cardBack">
+                    答案將顯示在這裡
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="flipCard()">🔄 翻轉卡片</button>
+            <button class="btn btn-success" onclick="markCorrect()">✅ 答對了</button>
+            <button class="btn btn-danger" onclick="markIncorrect()">❌ 答錯了</button>
+            <button class="btn btn-primary" onclick="nextCard()">➡️ 下一張</button>
+            <button class="btn btn-primary" onclick="prevCard()">⬅️ 上一張</button>
+            <button class="btn btn-primary" onclick="shuffleCards()">🎲 隨機排序</button>
+            <button class="btn btn-primary" onclick="resetGame()">🔄 重新開始</button>
+        </div>
+
+        <div class="add-card-form">
+            <h3>📊 Google Sheets 設定</h3>
+            <div class="form-group">
+                <label for="sheetUrlInput">Google Sheets URL:</label>
+                <input type="text" id="sheetUrlInput" placeholder="貼上你的 Google Sheets 分享連結..." onchange="fetchSheetNames()" />
+                <small style="display: block; margin-top: 5px; opacity: 0.8;">
+                    ⚠️ 請確保 Google Sheets 已設為「知道連結的使用者」可檢視
+                </small>
+            </div>
+            <div class="form-group" id="sheetSelectContainer" style="display: none;">
+                <label for="sheetSelect">選擇工作表:</label>
+                <select id="sheetSelect" class="form-control">
+                    <option value="">-- 請選擇工作表 --</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="loadFromGoogleSheets()">📥 載入題庫</button>
+            <button class="btn btn-primary" onclick="useDefaultCards()">🔄 使用預設題庫</button>
+            
+            <h3 style="margin-top: 2rem;">📝 手動新增閃卡</h3>
+            <div class="form-group">
+                <label for="questionInput">問題:</label>
+                <textarea id="questionInput" placeholder="輸入問題..." rows="2"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="answerInput">答案:</label>
+                <textarea id="answerInput" placeholder="輸入答案..." rows="2"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="addCard()">➕ 新增卡片</button>
+            
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                <h4>📋 Google Sheets 格式說明：</h4>
+                <p>請在 Google Sheets 中建立兩欄：</p>
+                <ul style="text-align: left; margin: 0.5rem 0;">
+                    <li><strong>A欄：</strong>問題 (Question)</li>
+                    <li><strong>B欄：</strong>答案 (Answer)</li>
+                </ul>
+                <p>第一列可以是標題列，程式會自動跳過。</p>
+                <p>使用方法：</p>
+                <ol style="text-align: left; margin: 0.5rem 0;">
+                    <li>輸入 Google Sheets 網址</li>
+                    <li>從下拉式選單中選擇要載入的工作表</li>
+                    <li>點擊「載入題庫」按鈕</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration"></div>
+
+    <script>
+        // 預設題庫（作為備用）
+        let defaultFlashcards = [
+            { question: "什麼是 Stable Diffusion？", answer: "一種開源的文字轉圖像 AI 模型，能根據文字描述生成高品質圖像" },
+            { question: "什麼是 Prompt Engineering？", answer: "提示詞工程，指設計和優化輸入文字來獲得更好的 AI 生圖結果的技術" },
+            { question: "什麼是 ControlNet？", answer: "一種控制生成圖像構圖和姿態的技術，可根據邊緣、深度圖等條件精確控制輸出" }
+        ];
+
+        let flashcards = [...defaultFlashcards];
+
+        let currentIndex = 0;
+        let correctAnswers = 0;
+        let totalAttempts = 0;
+        let isFlipped = false;
+
+        function updateStats() {
+            document.getElementById('currentCard').textContent = currentIndex + 1;
+            document.getElementById('totalCards').textContent = flashcards.length;
+            document.getElementById('correctCount').textContent = correctAnswers;
+            
+            const accuracy = totalAttempts > 0 ? Math.round((correctAnswers / totalAttempts) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            
+            const progress = ((currentIndex + 1) / flashcards.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function displayCard() {
+            const card = flashcards[currentIndex];
+            document.getElementById('cardFront').textContent = card.question;
+            document.getElementById('cardBack').textContent = card.answer;
+            
+            // Reset flip state
+            document.getElementById('flashcard').classList.remove('flipped');
+            isFlipped = false;
+            
+            updateStats();
+        }
+
+        function flipCard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        }
+
+        function nextCard() {
+            if (currentIndex < flashcards.length - 1) {
+                currentIndex++;
+                displayCard();
+            } else {
+                showCelebration();
+                alert('🎉 恭喜！你已經完成所有卡片！');
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                displayCard();
+            }
+        }
+
+        function markCorrect() {
+            correctAnswers++;
+            totalAttempts++;
+            updateStats();
+            showMiniCelebration();
+            setTimeout(nextCard, 500);
+        }
+
+        function markIncorrect() {
+            totalAttempts++;
+            updateStats();
+            setTimeout(nextCard, 500);
+        }
+
+        function shuffleCards() {
+            for (let i = flashcards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+            }
+            currentIndex = 0;
+            displayCard();
+        }
+
+        function resetGame() {
+            currentIndex = 0;
+            correctAnswers = 0;
+            totalAttempts = 0;
+            displayCard();
+        }
+
+        function addCard() {
+            const question = document.getElementById('questionInput').value.trim();
+            const answer = document.getElementById('answerInput').value.trim();
+            
+            if (question && answer) {
+                flashcards.push({ question, answer });
+                document.getElementById('questionInput').value = '';
+                document.getElementById('answerInput').value = '';
+                updateStats();
+                alert('✅ 新卡片已新增！');
+            } else {
+                alert('⚠️ 請填寫問題和答案！');
+            }
+        }
+
+        function showCelebration() {
+            const celebration = document.getElementById('celebration');
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'][Math.floor(Math.random() * 5)];
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    celebration.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+
+        function showMiniCelebration() {
+            const celebration = document.getElementById('celebration');
+            
+            for (let i = 0; i < 10; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = '#ffd700';
+                celebration.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+
+        // Google Sheets 相關函數
+        function fetchSheetNames() {
+            const sheetUrl = document.getElementById('sheetUrlInput').value.trim();
+            
+            if (!sheetUrl) {
+                return;
+            }
+
+            let sheetId = extractSheetId(sheetUrl);
+            
+            if (!sheetId) {
+                return;
+            }
+
+            // 顯示載入狀態
+            const sheetSelectContainer = document.getElementById('sheetSelectContainer');
+            const sheetSelect = document.getElementById('sheetSelect');
+            
+            // 清空現有選項，只保留預設選項
+            sheetSelect.innerHTML = '<option value="">-- 請選擇工作表 --</option>';
+            
+            // 使用 Google Sheets API 獲取工作表列表
+            const sheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=AIzaSyDrzDh0qPrA2c9ZS1ufH1vwNO0bWLBgP0c`;
+            
+            fetch(sheetsApiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('無法存取 Google Sheets，請檢查分享權限');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.sheets && data.sheets.length > 0) {
+                        // 填充下拉選單
+                        data.sheets.forEach(sheet => {
+                            const option = document.createElement('option');
+                            option.value = sheet.properties.sheetId;
+                            option.textContent = sheet.properties.title;
+                            sheetSelect.appendChild(option);
+                        });
+                        
+                        // 顯示下拉選單
+                        sheetSelectContainer.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('獲取工作表列表錯誤:', error);
+                    alert(`❌ 獲取工作表列表失敗：${error.message}\n\n請確保：\n1. Google Sheets 已設為公開或「知道連結的使用者」可檢視\n2. URL 格式正確\n3. 網路連線正常`);
+                });
+        }
+
+        function loadFromGoogleSheets() {
+            const sheetUrl = document.getElementById('sheetUrlInput').value.trim();
+            const sheetSelect = document.getElementById('sheetSelect');
+            const selectedSheetId = sheetSelect.value;
+            
+            if (!sheetUrl) {
+                alert('⚠️ 請輸入 Google Sheets URL！');
+                return;
+            }
+            
+            if (!selectedSheetId) {
+                alert('⚠️ 請選擇一個工作表！');
+                return;
+            }
+
+            // 將 Google Sheets URL 轉換為 CSV 匯出格式，使用選定的工作表 ID
+            const csvUrl = convertToCSVUrl(sheetUrl, selectedSheetId);
+            
+            if (!csvUrl) {
+                alert('⚠️ 無效的 Google Sheets URL！請確保連結格式正確。');
+                return;
+            }
+
+            // 顯示載入狀態
+            const loadButton = event.target;
+            const originalText = loadButton.textContent;
+            loadButton.textContent = '⏳ 載入中...';
+            loadButton.disabled = true;
+
+            fetch(csvUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('無法存取 Google Sheets，請檢查分享權限');
+                    }
+                    return response.text();
+                })
+                .then(csvData => {
+                    const newCards = parseCSVData(csvData);
+                    if (newCards.length > 0) {
+                        flashcards = newCards;
+                        currentIndex = 0;
+                        correctAnswers = 0;
+                        totalAttempts = 0;
+                        displayCard();
+                        alert(`✅ 成功載入 ${newCards.length} 張閃卡！`);
+                    } else {
+                        alert('⚠️ 沒有找到有效的題目資料，請檢查表格格式。');
+                    }
+                })
+                .catch(error => {
+                    console.error('載入錯誤:', error);
+                    alert(`❌ 載入失敗：${error.message}\n\n請確保：\n1. Google Sheets 已設為公開或「知道連結的使用者」可檢視\n2. URL 格式正確\n3. 網路連線正常`);
+                })
+                .finally(() => {
+                    loadButton.textContent = originalText;
+                    loadButton.disabled = false;
+                });
+        }
+
+        function extractSheetId(sheetUrl) {
+            try {
+                // 處理不同格式的 Google Sheets URL
+                let match = sheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+                if (match) {
+                    return match[1];
+                } else {
+                    return null;
+                }
+            } catch (error) {
+                console.error('URL 解析錯誤:', error);
+                return null;
+            }
+        }
+
+        function convertToCSVUrl(sheetUrl, gid) {
+            try {
+                // 處理不同格式的 Google Sheets URL
+                let sheetId = extractSheetId(sheetUrl);
+                
+                if (!sheetId) {
+                    return null;
+                }
+
+                // 轉換為 CSV 匯出 URL，使用指定的 gid
+                return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+            } catch (error) {
+                console.error('URL 轉換錯誤:', error);
+                return null;
+            }
+        }
+
+        function parseCSVData(csvData) {
+            const lines = csvData.split('\n');
+            const cards = [];
+            
+            // 跳過第一行（標題列）
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                // 簡單的 CSV 解析（處理含逗號的情況）
+                const columns = parseCSVLine(line);
+                
+                if (columns.length >= 2 && columns[0].trim() && columns[1].trim()) {
+                    cards.push({
+                        question: columns[0].trim(),
+                        answer: columns[1].trim()
+                    });
+                }
+            }
+            
+            return cards;
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current);
+            return result;
+        }
+
+        function useDefaultCards() {
+            flashcards = [...defaultFlashcards];
+            currentIndex = 0;
+            correctAnswers = 0;
+            totalAttempts = 0;
+            displayCard();
+            alert('✅ 已載入預設題庫！');
+        }
+        document.getElementById('flashcard').addEventListener('click', flipCard);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case ' ':
+                case 'Enter':
+                    e.preventDefault();
+                    flipCard();
+                    break;
+                case 'ArrowRight':
+                    nextCard();
+                    break;
+                case 'ArrowLeft':
+                    prevCard();
+                    break;
+                case '1':
+                    markCorrect();
+                    break;
+                case '2':
+                    markIncorrect();
+                    break;
+            }
+        });
+
+        // Initialize game
+        displayCard();
+    </script>
+</body>
+</html>
