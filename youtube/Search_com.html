@@ -152,25 +152,30 @@
     <div class="search-container">
       <div class="nav-links">
         <h2>多功能搜索工具</h2>
-        <a href="./G_buffer.html" target="_blank"><h3>G_Buf</h3></a>
-        <a href="https://www.explainthis.io/zh-hant/chatgpt" target="_blank"
+        <!-- 第 1 處：G_Buf 連結 -->
+        <a href="./G_buffer.html" target="_blank" rel="noopener noreferrer"><h3>G_Buf</h3></a>
+
+        <!-- 第 2 處：指令大全 -->
+        <a href="https://www.explainthis.io/zh-hant/chatgpt" target="_blank" rel="noopener noreferrer"
           ><h3>指令大全</h3></a
-        >
-        <a href="https://reurl.cc/geLaxV" target="_blank"><h3>AI提示語</h3></a>
-        <a
-          href="https://huggingface.co/datasets/fka/awesome-chatgpt-prompts/"
-          target="_blank"
+
+        <!-- 第 3 處：AI提示語 -->
+        <a href="https://reurl.cc/geLaxV" target="_blank" rel="noopener noreferrer"><h3>AI提示語</h3></a>
+
+        <!-- 第 4 處：Awesome提示語 -->
+        <a href="https://huggingface.co/datasets/fka/awesome-chatgpt-prompts/" target="_blank" rel="noopener noreferrer"
           ><h3>Awesome提示語</h3></a
-        >
-        <a href="https://quickref.me/chatgpt" target="_blank"
+
+        <!-- 第 5 處：Quit_Ref -->
+        <a href="https://quickref.me/chatgpt" target="_blank" rel="noopener noreferrer"
           ><h3>Quit_Ref</h3></a
-        >
-        <a href="https://learnai.tw/prompt/" target="_blank"
+
+        <!-- 第 6 處：指令手冊 -->
+        <a href="https://learnai.tw/prompt/" target="_blank" rel="noopener noreferrer"
           ><h3>指令手冊</h3></a
-        >
-        <a
-          href="https://github.com/songguoxs/gpt4o-image-prompts"
-          target="_blank"
+
+        <!-- 第 7 處：NanoBanana -->
+        <a href="https://github.com/songguoxs/gpt4o-image-prompts" target="_blank" rel="noopener noreferrer"
           ><h3>NanoBanana</h3></a
         >
       </div>
@@ -187,7 +192,8 @@
         </button>
       </div>
       <div class="nav-links">
-        <a href="https://www.imyfone.com/ai-collection/"><h3>AI工具</h3></a>
+        <!-- 第 8 處：AI工具連結 -->
+        <a href="https://www.imyfone.com/ai-collection/" target="_blank" rel="noopener noreferrer"><h3>AI工具</h3></a>
         <a href="./ai_2025.html"><h3>2025 AI tool</h3></a>
       </div>
       <div class="section">
@@ -391,6 +397,9 @@
           </button>
           <button onclick="search('Adobe_Firefly')" class="ai-pic-btn">
             Adobe Firefly
+          </button><!-- 新增：Photo to Anime Converter -->
+          <button onclick="search('photo_to_anime')" class="ai-pic-btn">
+            Photo to Anime Converter
           </button>
         </div>
       </div>
@@ -689,6 +698,10 @@
           Adobe_Firefly: {
             search: "https://www.adobe.com/sensei/generative-ai/firefly.html",
             home: "https://www.adobe.com/sensei/generative-ai/firefly.html",
+          },
+          photo_to_anime: {
+            search:"https://aienhancer.ai/photo-to-anime-converter",
+            home: "https://aienhancer.ai/photo-to-anime-converter",
           },
           poe: {
             search: "https://poe.com",
