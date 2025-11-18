@@ -205,9 +205,11 @@
           <button onclick="search('claude')" class="ai-tool-btn">Claude</button>
           <button onclick="search('grok')" class="ai-tool-btn">Grok</button>
           <button onclick="search('deepseek')" class="ai-tool-btn">
-            DeepSeek
+            #DeepSeek
           </button>
-          <button onclick="search('doubao')" class="ai-tool-btn">Doubao</button>
+          <button onclick="search('doubao')" class="ai-tool-btn">
+            #Doubao
+          </button>
           <button onclick="search('felo_ai')" class="ai-tool-btn">
             Felo AI
           </button>
@@ -221,12 +223,16 @@
           <button onclick="search('notegpt')" class="ai-tool-btn">
             NoteGPT
           </button>
+          <!-- 新增 Google AI Studio 按鈕 -->
+          <button onclick="search('google_ai_studio')" class="ai-tool-btn">
+            Google AI Studio
+          </button>
           <button onclick="search('max_ai')" class="ai-tool-btn">Max Ai</button>
           <button onclick="search('ChatGLM')" class="ai-tool-btn">
             智譜清言 AI
           </button>
           <button onclick="search('yiyan')" class="ai-tool-btn">
-            文心一言 AI
+            #文心一言 AI
           </button>
           <button onclick="search('kimi')" class="ai-tool-btn">Kimi AI</button>
           <button onclick="search('NBklm')" class="ai-tool-btn">
@@ -461,275 +467,281 @@
         const platformUrls = {
           google: {
             search: `https://www.google.com/search?q=`,
-            home: 'https://www.google.com'
+            home: "https://www.google.com",
           },
           bing: {
             search: `https://www.bing.com/search?q=`,
-            home: 'https://www.bing.com'
+            home: "https://www.bing.com",
           },
           duckduckgo: {
             search: `https://duckduckgo.com/?q=`,
-            home: 'https://duckduckgo.com'
+            home: "https://duckduckgo.com",
           },
           yahoo: {
             search: `https://tw.search.yahoo.com/search?p=`,
-            home: 'https://tw.yahoo.com'
+            home: "https://tw.yahoo.com",
           },
           萌典: {
             search: `https://www.moedict.tw/`,
-            home: 'https://www.moedict.tw'
+            home: "https://www.moedict.tw",
           },
           找台語: {
             search: `https://chhoe.taigi.info/search.jsp?keyword=`,
-            home: 'https://chhoe.taigi.info'
+            home: "https://chhoe.taigi.info",
           },
           itaigi: {
             search: `https://itaigi.tw/k/`,
-            home: 'https://itaigi.tw'
+            home: "https://itaigi.tw",
           },
           台語辭典: {
             search: `https://sutian.moe.edu.tw/und-hani/tshiau/?lui=tai_su&tsha=`,
-            home: 'https://sutian.moe.edu.tw'
+            home: "https://sutian.moe.edu.tw",
           },
           客語辭典: {
             search: `https://hakkadict.moe.edu.tw/search?q=`,
-            home: 'https://hakkadict.moe.edu.tw'
+            home: "https://hakkadict.moe.edu.tw",
           },
           baidu: {
             search: `https://www.baidu.com/s?wd=`,
-            home: 'https://www.baidu.com'
+            home: "https://www.baidu.com",
           },
           udn: {
             search: `https://udn.com/search/word/2/`,
-            home: 'https://udn.com'
+            home: "https://udn.com",
           },
           Unsplash: {
             search: `https://unsplash.com/s/photos/`,
-            home: 'https://unsplash.com'
+            home: "https://unsplash.com",
           },
           Pixabay: {
             search: `https://pixabay.com/images/search/`,
-            home: 'https://pixabay.com'
+            home: "https://pixabay.com",
           },
           Pexels: {
             search: `https://www.pexels.com/zh-tw/search/`,
-            home: 'https://www.pexels.com'
+            home: "https://www.pexels.com",
           },
           freepik: {
             search: `https://www.freepik.com/search?query=`,
-            home: 'https://www.freepik.com'
+            home: "https://www.freepik.com",
           },
           chinatimes: {
             search: `https://www.chinatimes.com/search/`,
-            home: 'https://www.chinatimes.com'
+            home: "https://www.chinatimes.com",
           },
           ltn: {
             search: `https://search.ltn.com.tw/list?keyword=`,
-            home: 'https://www.ltn.com.tw'
+            home: "https://www.ltn.com.tw",
           },
           ettoday: {
             search: `https://www.ettoday.net/news_search/doSearch.php?keywords=`,
-            home: 'https://www.ettoday.net'
+            home: "https://www.ettoday.net",
           },
           google_news: {
             search: `https://news.google.com/search?q=`,
-            home: 'https://news.google.com'
+            home: "https://news.google.com",
           },
           cna: {
             search: `https://www.cna.com.tw/search/hysearchws.aspx?q=`,
-            home: 'https://www.cna.com.tw'
+            home: "https://www.cna.com.tw",
           },
           yahoo_news: {
             search: `https://tw.news.yahoo.com/search?p=`,
-            home: 'https://tw.news.yahoo.com'
+            home: "https://tw.news.yahoo.com",
           },
           perplexity: {
             search: `https://www.perplexity.ai/?q=`,
-            home: 'https://www.perplexity.ai'
+            home: "https://www.perplexity.ai",
           },
           grok: {
             search: `https://grok.com/?q=`,
-            home: 'https://grok.com'
+            home: "https://grok.com",
           },
           colpilot: {
             search: `https://copilot.microsoft.com/?q=`,
-            home: 'https://copilot.microsoft.com'
+            home: "https://copilot.microsoft.com",
           },
           chatgpt: {
-            search: 'https://chat.openai.com/',
-            home: 'https://chat.openai.com/'
+            search: "https://chat.openai.com/",
+            home: "https://chat.openai.com/",
           },
           bard: {
-            search: 'https://gemini.google.com/',
-            home: 'https://gemini.google.com/'
+            search: "https://gemini.google.com/app/search?q=",
+            home: "https://gemini.google.com/",
           },
           claude: {
-            search: 'https://claude.ai/',
-            home: 'https://claude.ai/'
+            search: "https://claude.ai/search?q=",
+            home: "https://claude.ai/new",
           },
           studio_global: {
-            search: 'https://app.studioglobal.ai/search?q=',
-            home: 'https://app.studioglobal.ai'
+            search: "https://app.studioglobal.ai/search?q=",
+            home: "https://app.studioglobal.ai",
           },
           kimi: {
-            search: 'https://kimi.moonshot.cn/',
-            home: 'https://kimi.moonshot.cn/'
+            search: "https://kimi.moonshot.cn/",
+            home: "https://kimi.moonshot.cn/",
           },
           yiyan: {
-            search: 'https://yiyan.baidu.com/',
-            home: 'https://yiyan.baidu.com/'
+            search: "https://yiyan.baidu.com/",
+            home: "https://yiyan.baidu.com/",
           },
           NBklm: {
-            search: 'https://notebooklm.google.com/',
-            home: 'https://notebooklm.google.com/'
+            search: "https://notebooklm.google.com/",
+            home: "https://notebooklm.google.com/",
           },
           klingai: {
-            search: 'https://www.klingai.com/global/',
-            home: 'https://www.klingai.com/global/'
+            search: "https://www.klingai.com/global/",
+            home: "https://www.klingai.com/global/",
           },
           dreamina: {
-            search: 'https://dreamina.capcut.com/zh-tw/',
-            home: 'https://dreamina.capcut.com/zh-tw/'
+            search: "https://dreamina.capcut.com/zh-tw/",
+            home: "https://dreamina.capcut.com/zh-tw/",
           },
           Suno: {
-            search: 'https://suno.com/create',
-            home: 'https://suno.com/create'
+            search: "https://suno.com/create",
+            home: "https://suno.com/create",
           },
           Genape: {
-            search: 'https://app.genape.ai/chatApe',
-            home: 'https://app.genape.ai/chatApe'
+            search: "https://app.genape.ai/chatApe",
+            home: "https://app.genape.ai/chatApe",
           },
           Aiva: {
-            search: 'https://creators.aiva.ai/',
-            home: 'https://creators.aiva.ai/'
+            search: "https://creators.aiva.ai/",
+            home: "https://creators.aiva.ai/",
           },
           Leonardo: {
-            search: 'https://leonardo.ai/',
-            home: 'https://leonardo.ai/'
+            search: "https://leonardo.ai/",
+            home: "https://leonardo.ai/",
           },
           Playground: {
-            search: 'https://playground.com/design',
-            home: 'https://playground.com/design'
+            search: "https://playground.com/design",
+            home: "https://playground.com/design",
           },
           Writesonic: {
-            search: 'https://app.writesonic.com/?utm_source=writesonic.com&utm_medium=website',
-            home: 'https://app.writesonic.com/?utm_source=writesonic.com&utm_medium=website'
+            search:
+              "https://app.writesonic.com/?utm_source=writesonic.com&utm_medium=website",
+            home: "https://app.writesonic.com/?utm_source=writesonic.com&utm_medium=website",
           },
           Veedio: {
-            search: 'https://www.veed.io/tools/ai-video/text-to-video',
-            home: 'https://www.veed.io/tools/ai-video/text-to-video'
+            search: "https://www.veed.io/tools/ai-video/text-to-video",
+            home: "https://www.veed.io/tools/ai-video/text-to-video",
           },
           Simplified: {
-            search: 'https://simplified.com/',
-            home: 'https://simplified.com/'
+            search: "https://simplified.com/",
+            home: "https://simplified.com/",
           },
           LovoAI: {
-            search: 'https://lovo.ai/?ref=tina88&gad_source=1/',
-            home: 'https://lovo.ai/?ref=tina88&gad_source=1/'
+            search: "https://lovo.ai/?ref=tina88&gad_source=1/",
+            home: "https://lovo.ai/?ref=tina88&gad_source=1/",
           },
           Artguru: {
-            search: 'https://artguru.ai',
-            home: 'https://artguru.ai'
+            search: "https://artguru.ai",
+            home: "https://artguru.ai",
           },
           NightCafe_Creator: {
-            search: 'https://creator.nightcafe.studio',
-            home: 'https://creator.nightcafe.studio'
+            search: "https://creator.nightcafe.studio",
+            home: "https://creator.nightcafe.studio",
           },
           Magic_Studio: {
-            search: 'https://magicstudio.com',
-            home: 'https://magicstudio.com'
+            search: "https://magicstudio.com",
+            home: "https://magicstudio.com",
           },
           Hotpot_AI: {
-            search: 'https://hotpot.ai',
-            home: 'https://hotpot.ai'
+            search: "https://hotpot.ai",
+            home: "https://hotpot.ai",
           },
           Craiyon: {
-            search: 'https://www.craiyon.com',
-            home: 'https://www.craiyon.com'
+            search: "https://www.craiyon.com",
+            home: "https://www.craiyon.com",
           },
           DeepAI: {
-            search: 'https://deepai.org/',
-            home: 'https://deepai.org/'
+            search: "https://deepai.org/",
+            home: "https://deepai.org/",
           },
           Fotor: {
-            search: 'https://www.fotor.com',
-            home: 'https://www.fotor.com'
+            search: "https://www.fotor.com",
+            home: "https://www.fotor.com",
           },
           Midjourney: {
-            search: 'https://www.midjourney.com',
-            home: 'https://www.midjourney.com'
+            search: "https://www.midjourney.com",
+            home: "https://www.midjourney.com",
           },
           BingArt: {
-            search: 'https://www.bing.com/images',
-            home: 'https://www.bing.com/images'
+            search: "https://www.bing.com/images",
+            home: "https://www.bing.com/images",
           },
           OpenArt: {
-            search: 'https://www.openart.ai',
-            home: 'https://www.openart.ai'
+            search: "https://www.openart.ai",
+            home: "https://www.openart.ai",
           },
           Pixverse: {
-            search: 'https://app.pixverse.ai/home',
-            home: 'https://app.pixverse.ai/home'
+            search: "https://app.pixverse.ai/home",
+            home: "https://app.pixverse.ai/home",
           },
           ideogram: {
-            search: 'https://ideogram.ai',
-            home: 'https://ideogram.ai'
+            search: "https://ideogram.ai",
+            home: "https://ideogram.ai",
           },
           clipdrop: {
-            search: 'https://clipdrop.co/',
-            home: 'https://clipdrop.co/'
+            search: "https://clipdrop.co/",
+            home: "https://clipdrop.co/",
           },
           Adobe_Firefly: {
-            search: 'https://www.adobe.com/sensei/generative-ai/firefly.html',
-            home: 'https://www.adobe.com/sensei/generative-ai/firefly.html'
+            search: "https://www.adobe.com/sensei/generative-ai/firefly.html",
+            home: "https://www.adobe.com/sensei/generative-ai/firefly.html",
           },
           poe: {
-            search: 'https://poe.com',
-            home: 'https://poe.com'
+            search: "https://poe.com",
+            home: "https://poe.com",
           },
           huggingface: {
-            search: 'https://huggingface.co/chat/',
-            home: 'https://huggingface.co/chat/'
+            search: "https://huggingface.co/chat/",
+            home: "https://huggingface.co/chat/",
           },
           notegpt: {
-            search: 'https://notegpt.io/workspace/create',
-            home: 'https://notegpt.io/workspace/create'
+            search: "https://notegpt.io/workspace/create",
+            home: "https://notegpt.io/workspace/create",
           },
           deepseek: {
-            search: 'https://chat.deepseek.com/chat',
-            home: 'https://chat.deepseek.com/chat'
+            search: "https://chat.deepseek.com/chat",
+            home: "https://chat.deepseek.com/chat",
           },
           doubao: {
-            search: 'https://www.doubao.com/chat',
-            home: 'https://www.doubao.com/chat'
+            search: "https://www.doubao.com/chat",
+            home: "https://www.doubao.com/chat",
           },
           felo_ai: {
-            search: 'https://felo.ai',
-            home: 'https://felo.ai'
+            search: "https://felo.ai/search/",
+            home: "https://felo.ai",
           },
           max_ai: {
-            search: 'https://www.maxai.co/app',
-            home: 'https://www.maxai.co/app'
+            search: "https://www.maxai.co/app",
+            home: "https://www.maxai.co/app",
           },
           ChatGLM: {
-            search: 'https://chatglm.cn/main/alltoolsdetail?lang=zh',
-            home: 'https://chatglm.cn/main/alltoolsdetail?lang=zh'
+            search: "https://chatglm.cn/main/alltoolsdetail?lang=zh",
+            home: "https://chatglm.cn/main/alltoolsdetail?lang=zh",
           },
           lovable: {
-            search: 'https://lovable.dev/',
-            home: 'https://lovable.dev/'
+            search: "https://lovable.dev/",
+            home: "https://lovable.dev/",
           },
           Napkin: {
-            search: 'https://www.napkin.ai/',
-            home: 'https://www.napkin.ai/'
+            search: "https://www.napkin.ai/",
+            home: "https://www.napkin.ai/",
           },
           Raphael: {
-            search: 'https://raphael.app/zh-Hant',
-            home: 'https://raphael.app/zh-Hant'
+            search: "https://raphael.app/zh-Hant",
+            home: "https://raphael.app/zh-Hant",
           },
           Recraft: {
-            search: 'https://www.recraft.ai/projects',
-            home: 'https://www.recraft.ai/projects'
+            search: "https://www.recraft.ai/projects",
+            home: "https://www.recraft.ai/projects",
+          },
+          // 新增 Google AI Studio
+          google_ai_studio: {
+            search: "https://aistudio.google.com/",
+            home: "https://aistudio.google.com/",
           }
         };
 
@@ -762,7 +774,8 @@
           localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
           displayHistory();
 
-          finalUrl = platformUrls[platform].search + encodeURIComponent(searchText);
+          finalUrl =
+            platformUrls[platform].search + encodeURIComponent(searchText);
         } else {
           // 如果沒有搜索內容，直接訪問官網
           finalUrl = platformUrls[platform].home;
