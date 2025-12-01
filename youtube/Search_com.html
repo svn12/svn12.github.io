@@ -146,6 +146,10 @@
       .clear-btn:hover {
         background: #999;
       }
+      .shopping-btn {
+        background-color: #ff9800;
+        color: white;
+      }
     </style>
   </head>
   <body>
@@ -258,8 +262,14 @@
           <button onclick="search('bing')" class="search-engine-btn">
             Bing搜索
           </button>
+          <button onclick="search('duckduckgo')" class="search-engine-btn">
+            DuckDuckGo
+          </button>
           <button onclick="search('yahoo')" class="search-engine-btn">
             Yahoo
+          </button>
+          <button onclick="search('baidu')" class="search-engine-btn">
+            百度搜索
           </button>
           <button onclick="search('萌典')" class="search-engine-btn">
             萌典
@@ -276,27 +286,8 @@
           <button onclick="search('客語辭典')" class="search-engine-btn">
             客語辭典
           </button>
-          <button onclick="search('duckduckgo')" class="search-engine-btn">
-            DuckDuckGo
-          </button>
-          <button onclick="search('baidu')" class="search-engine-btn">
-            百度搜索
-          </button>
-          <button onclick="search('Unsplash')" class="search-engine-btn">
-            Unsplash
-          </button>
-          <button onclick="search('Pexels')" class="search-engine-btn">
-            Pexels
-          </button>
-          <button onclick="search('Pixabay')" class="search-engine-btn">
-            Pixabay
-          </button>
-          <button onclick="search('freepik')" class="search-engine-btn">
-            Freepik
-          </button>
         </div>
       </div>
-
       <div class="section">
         <h3>新聞網站</h3>
         <div class="buttons-container">
@@ -316,6 +307,47 @@
         </div>
       </div>
 
+      <!-- 新增：購物網購物網站 -->
+      <div class="section">
+        <h3>購物網站</h3>
+        <div class="buttons-container">
+          <button onclick="search('momo')" class="shopping-btn">momo購物網</button>
+          <button onclick="search('pchome24')" class="shopping-btn">PChome 24h購物</button>
+          <button onclick="search('yahoo_shop')" class="shopping-btn">Yahoo奇摩購物中心</button>
+          <button onclick="search('shopee')" class="shopping-btn">蝦皮市集</button>
+          <button onclick="search('ruten')" class="shopping-btn">露天購物</button>
+          <button onclick="search('coupang')" class="shopping-btn">Coupang 酷澎</button>
+          <button onclick="search('rakuten')" class="shopping-btn">樂天市場</button>
+          <button onclick="search('blogger')" class="shopping-btn">博客來</button>
+          <button onclick="search('fridays')" class="shopping-btn">friDay購物</button>
+          
+          <!-- 新增：從搜索引擎移過來的 14 個網站 -->
+          <button onclick="search('findprice')" class="shopping-btn">
+            FindPrice 比價
+          </button>
+          <button onclick="search('priceTW')" class="shopping-btn">
+            BigGo 比價
+          </button>
+          <button onclick="search('ezprice')" class="shopping-btn">
+            Feebee 比價
+          </button>
+          <button onclick="search('sogi')" class="shopping-btn">Sogi 手機王</button>
+          <button onclick="search('eprice')" class="shopping-btn">Eprice 手機比價</button>
+          <button onclick="search('findbook')" class="shopping-btn">Findbook</button>
+          <button onclick="search('funtime')" class="shopping-btn">Fun Time 玩時間</button>
+          <button onclick="search('taiwango')" class="shopping-btn">TaiwanGo 輕鬆比</button>
+          <button onclick="search('backpackers')" class="shopping-btn">背包客棧 旅行論壇</button>
+          <button onclick="search('agoda')" class="shopping-btn">
+            Agoda
+          </button>
+          <button onclick="search('booking')" class="shopping-btn">
+            Booking.com
+          </button>
+          <button onclick="search('trip')" class="shopping-btn">
+            Trip.com
+          </button>
+        </div>
+      </div>
       <div class="section">
         <h3>AI Music 與 資料整理</h3>
         <div class="buttons-container">
@@ -562,6 +594,10 @@
             search: `https://www.perplexity.ai/?q=`,
             home: "https://www.perplexity.ai",
           },
+          yahoo_shop: {
+            search: `https://tw.buy.yahoo.com/search/product?p=`,
+            home: "https://tw.buy.yahoo.com/",
+          },
           grok: {
             search: `https://grok.com/?q=`,
             home: "https://grok.com",
@@ -703,6 +739,44 @@
             search:"https://aienhancer.ai/photo-to-anime-converter",
             home: "https://aienhancer.ai/photo-to-anime-converter",
           },
+          // 新增比價 / 購物比對網站 mappings（若搜尋參數不精準，將導向官網）
+          sogi: {
+            search: "http://www.sogi.com.tw/price/?q=",
+            home: "http://www.sogi.com.tw/price/"
+          },
+          eprice: {
+            search: "http://www.eprice.com.tw/?q=",
+            home: "http://www.eprice.com.tw/"
+          },
+          findbook: {
+            search: "http://findbook.tw/search?query=",
+            home: "http://findbook.tw/"
+          },
+          funtime: {
+            search: "http://www.funtime.com.tw/search?keyword=",
+            home: "http://www.funtime.com.tw/"
+          },
+          taiwango: {
+            search: "http://www.taiwango.com.tw/ez/ez.asp?q=",
+            home: "http://www.taiwango.com.tw/ez/ez.asp"
+          },
+          backpackers: {
+            search: "http://www.backpackers.com.tw/forum/search.php?srch=",
+            home: "http://www.backpackers.com.tw/forum/airfare.php"
+          },
+          // 新增：旅遊預訂網站
+          agoda: {
+            search: "https://www.agoda.com/search?ss=",
+            home: "https://www.agoda.com/"
+          },
+          booking: {
+            search: "https://www.booking.com/searchresults.html?ss=",
+            home: "https://www.booking.com/"
+          },
+          trip: {
+            search: "https://www.trip.com/flights/?dcity=&acity=&ddate=&rdate=",
+            home: "https://www.trip.com/"
+          },
           poe: {
             search: "https://poe.com",
             home: "https://poe.com",
@@ -755,6 +829,39 @@
           google_ai_studio: {
             search: "https://aistudio.google.com/",
             home: "https://aistudio.google.com/",
+          },
+          // 新增：購物網購物網站
+          ruten: {
+            search: "https://www.ruten.com.tw/find?q=",
+            home: "https://www.ruten.com.tw"
+          },
+          momo: {
+            search: "https://www.momoshop.com.tw/search/searchShop.jsp?keyword=",
+            home: "https://www.momoshop.com.tw"
+          },
+          pchome24: {
+            search: "https://24h.pchome.com.tw/search/?q=",
+            home: "https://24h.pchome.com.tw"
+          },
+          shopee: {
+            search: "https://shopee.tw/search?keyword=",
+            home: "https://shopee.tw"
+          },
+          rakuten: {
+            search: "https://www.rakuten.com.tw/search/?q=",
+            home: "https://www.rakuten.com.tw"
+          },
+          coupang: {
+            search: "https://www.tw.coupang.com/search?q=",
+            home: "https://www.tw.coupang.com/"
+          },
+          blogger: {
+            search: "https://search.books.com.tw/exSearch.php?key=",
+            home: "https://www.books.com.tw"
+          },
+          fridays: {
+            search: "https://ec-w.shopping.friday.tw/aisearch?keyword=",
+            home: "https://ec-w.shopping.friday.tw/"
           }
         };
 
