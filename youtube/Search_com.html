@@ -199,6 +199,7 @@
         <!-- 第 8 處：AI工具連結 -->
         <a href="https://www.imyfone.com/ai-collection/" target="_blank" rel="noopener noreferrer"><h3>AI工具</h3></a>
         <a href="./ai_2025.html"><h3>2025 AI tool</h3></a>
+        <a href="https://poe.com/explore?category=Official"><h3>AI tool(Poe)</h3></a>
       </div>
       <div class="section">
         <div class="buttons-container">
@@ -311,14 +312,15 @@
       <div class="section">
         <h3>購物網站</h3>
         <div class="buttons-container">
-          <button onclick="search('momo')" class="shopping-btn">momo購物網</button>
           <button onclick="search('pchome24')" class="shopping-btn">PChome 24h購物</button>
+          <button onclick="search('momo')" class="shopping-btn">momo購物網</button>
+          <button onclick="search('shopee')" class="shopping-btn">蝦皮購物</button>
           <button onclick="search('yahoo_shop')" class="shopping-btn">Yahoo奇摩購物中心</button>
-          <button onclick="search('shopee')" class="shopping-btn">蝦皮市集</button>
           <button onclick="search('ruten')" class="shopping-btn">露天購物</button>
-          <button onclick="search('coupang')" class="shopping-btn">Coupang 酷澎</button>
+          <button onclick="search('books')" class="shopping-btn">博客來</button>
+          <button onclick="search('etmall')" class="shopping-btn">東森購物</button>
           <button onclick="search('rakuten')" class="shopping-btn">樂天市場</button>
-          <button onclick="search('blogger')" class="shopping-btn">博客來</button>
+          <button onclick="search('coupang')" class="shopping-btn">Coupang 酷澎</button>
           <button onclick="search('fridays')" class="shopping-btn">friDay購物</button>
           
           <!-- 新增：從搜索引擎移過來的 14 個網站 -->
@@ -874,6 +876,15 @@
           fridays: {
             search: "https://ec-w.shopping.friday.tw/aisearch?keyword=",
             home: "https://ec-w.shopping.friday.tw/"
+          },
+          // 新增：Search_購物網站.html 中的購物網站
+          books: {
+            search: "https://search.books.com.tw/search/query/key/",
+            home: "https://www.books.com.tw"
+          },
+          etmall: {
+            search: "https://www.etmall.com.tw/Search?keyword=",
+            home: "https://www.etmall.com.tw"
           }
         };
 
