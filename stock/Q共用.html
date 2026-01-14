@@ -234,11 +234,12 @@ function appendText1(code, remark) {
   //const keyArray=['T','M','US','JP','F']
   
   
-  let regex = /^(0\d{3,5}|0\d{4}[BLRSTU])$|^[1-9]\d{3,5}$/;
+  let regex = /^(0\d{3,5}|0\d{4}[BLRSTUA])$|^[1-9]\d{3,5}$/;
 
 // 调用 test 方法检查字符串是否符合模式
   if(!regex.test(code))return ;
-         let href4 = `https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
+         //let href4 = `https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
+         let href4 = `https://www.cmoney.tw/forum/stock/${code}`;
   //let title4='持股明細';
   $("#T2").append(code + ' ');
   let str_code = "";
@@ -292,6 +293,7 @@ function appendText1(code, remark) {
       }
     }
 
+    1
     if (detail) {
       txt1 += '<tr>';
       //txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> 
@@ -343,7 +345,8 @@ function appendText1(code, remark) {
 }
 function appendText1_oo(code,remark) {
   //const keyArray=['T','M','US','JP','F']
-  let href4=`https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
+ //let href4=`https://www.cmoney.tw/etf/e210.aspx?key=${code}`;
+  let href4=`https://www.cmoney.tw/forum/stock/${code}`;
   //let title4='持股明細';
   $("#T2").append(code +' '); 
   let str_code="";
