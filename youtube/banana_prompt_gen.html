@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 圖像提示詞生成器</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Noto+Serif+TC:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0c0a;
+    --paper: #f5f0e8;
+    --warm: #c8a96e;
+    --accent: #d4432a;
+    --muted: #8a7f72;
+    --border: #d4ccc0;
+    --card: #ffffff;
+    --code-bg: #1a1714;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Serif TC', serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    border-bottom: 1px solid #2a2420;
+  }
+  .issue-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--warm);
+    text-transform: uppercase;
+  }
+  .header-main {
+    padding: 40px 40px 32px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: end;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 7vw, 84px);
+    line-height: 0.9;
+    font-weight: 700;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--warm);
+    display: block;
+  }
+  .header-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    line-height: 2;
+    text-align: right;
+    max-width: 200px;
+  }
+  .header-bar {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid #2a2420;
+  }
+  .header-bar-item {
+    padding: 10px 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    border-right: 1px solid #2a2420;
+  }
+  .header-bar-item.accent { color: var(--warm); }
+
+  /* MAIN LAYOUT */
+  .container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* STEP SECTIONS */
+  .step-area {
+    padding: 40px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--border);
+    line-height: 1;
+  }
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  /* STYLE GRID */
+  .style-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .style-card {
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    padding: 16px 14px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .style-card:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .style-card.selected {
+    border-color: var(--accent);
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+  .style-card.selected .style-icon { filter: grayscale(0); }
+  .style-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .style-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+  .style-desc {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .style-card.selected .style-desc { color: #a09080; }
+
+  /* MODIFIER TAGS */
+  .modifier-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .modifier-group { margin-bottom: 20px; }
+  .modifier-group-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .tag {
+    cursor: pointer;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    color: var(--ink);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tag:hover { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+  .tag.selected { border-color: var(--warm); background: var(--warm); color: var(--ink); }
+
+  /* SUBJECT INPUT */
+  .subject-area {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus { border-color: var(--ink); }
+  input[type="text"]::placeholder { color: var(--muted); }
+
+  /* LANG TOGGLE */
+  .lang-toggle {
+    display: flex;
+    gap: 0;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    align-self: start;
+    margin-top: 8px;
+  }
+  .lang-btn {
+    cursor: pointer;
+    padding: 8px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .lang-btn.active { background: var(--ink); color: var(--paper); }
+
+  /* GENERATE BUTTON */
+  .generate-btn {
+    cursor: pointer;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .generate-btn:hover:not(:disabled) {
+    background: var(--ink);
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .generate-btn .spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+  }
+  .generate-btn.loading .spinner { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .action-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  /* OUTPUT */
+  .output-area {
+    padding: 40px 0 60px;
+  }
+  .output-card {
+    background: var(--code-bg);
+    color: #e8dfd0;
+    padding: 0;
+    position: relative;
+    border: 1px solid #2a2420;
+    display: none;
+  }
+  .output-card.visible { display: block; }
+  .output-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid #2a2420;
+  }
+  .output-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--warm);
+  }
+  .copy-btn {
+    cursor: pointer;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid #3a3028;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #8a7f72;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover { border-color: var(--warm); color: var(--warm); }
+  .copy-btn.copied { border-color: #4caf6e; color: #4caf6e; }
+  .output-text {
+    padding: 28px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .output-text .keyword { color: var(--warm); }
+  .output-text .style-kw { color: #89b4fa; }
+  .output-text .number { color: #a6e3a1; }
+
+  /* LOADING SKELETON */
+  .skeleton {
+    display: none;
+    padding: 28px;
+  }
+  .skeleton.visible { display: block; }
+  .skel-line {
+    height: 12px;
+    background: linear-gradient(90deg, #2a2420 25%, #3a3028 50%, #2a2420 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    margin-bottom: 12px;
+    border-radius: 2px;
+  }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+
+  /* EXAMPLES STRIP */
+  .examples-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 40px;
+    border: 1px solid var(--border);
+  }
+  .example-item {
+    background: var(--card);
+    padding: 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .example-item:hover { background: #f0ebe0; }
+  .example-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .example-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--accent);
+  }
+  .example-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .example-title {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .example-preview {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.5;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-bottom: 12px;
+  }
+  .example-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .example-use-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    text-transform: uppercase;
+    padding: 4px 0;
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+  .example-gh-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
+    transition: color 0.15s;
+  }
+  .example-gh-link:hover { color: var(--ink); }
+
+  @media (max-width: 1024px) {
+    .examples-strip { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .examples-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .examples-strip { grid-template-columns: 1fr; }
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: var(--muted);
+    padding: 20px 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer a { color: var(--warm); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    .header-main { padding: 24px 20px; grid-template-columns: 1fr; }
+    .header-sub { text-align: left; }
+    .header-bar-item { padding: 10px 20px; }
+    .header-top { padding: 14px 20px; }
+    h1 { font-size: 48px; }
+    .examples-strip { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+    .action-row { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <span class="issue-label">Vol. 04 · 2025 — AI 圖像提示詞生成器</span>
+    <span class="issue-label">GPT-4o · Nano Banana · DALL·E</span>
+  </div>
+  <div class="header-main">
+    <h1>PROMPT<br><em>STUDIO</em></h1>
+    <div class="header-sub">
+      選擇風格<br>
+      調整參數<br>
+      一鍵生成<br>
+      AI 圖像指令
+    </div>
+  </div>
+  <div class="header-bar">
+    <div class="header-bar-item accent">選圖生 Prompt</div>
+    <div class="header-bar-item">700+ 精選案例</div>
+    <div class="header-bar-item">中英雙語輸出</div>
+    <div class="header-bar-item">Claude AI 驅動</div>
+    <a class="header-bar-item" href="https://github.com/songguoxs/gpt4o-image-prompts" target="_blank" style="color:var(--warm);text-decoration:none;display:flex;align-items:center;gap:8px;margin-left:auto;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      原始來源
+    </a>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <!-- STEP 1: STYLE -->
+    <div class="step-area">
+      <div class="section-label">Step 01</div>
+      <div class="step-header">
+        <span class="step-num">01</span>
+        <div>
+          <div class="step-title">選擇圖像風格</div>
+          <div style="color:var(--muted);font-size:13px;margin-top:4px;">可複選，組合搭配效果更佳</div>
+        </div>
+      </div>
+      <div class="style-grid" id="styleGrid"></div>
+    </div>
+
+    <!-- STEP 2: MODIFIERS -->
+    <div class="step-area">
+      <div class="section-label">Step 02</div>
+      <div class="step-header">
+        <span class="step-num">02</span>
+        <div>
+          <div class="step-title">細節調整</div>
+          <div style="color:var(--muted);font-size:13px;margin-top:4px;">光線、氛圍、色調、拍攝角度</div>
+        </div>
+      </div>
+
+      <div class="modifier-group">
+        <div class="modifier-group-label">☀ 光線與氛圍</div>
+        <div class="modifier-row" id="lightingTags"></div>
+      </div>
+      <div class="modifier-group">
+        <div class="modifier-group-label">🎨 色彩風格</div>
+        <div class="modifier-row" id="colorTags"></div>
+      </div>
+      <div class="modifier-group">
+        <div class="modifier-group-label">📷 構圖視角</div>
+        <div class="modifier-row" id="compositionTags"></div>
+      </div>
+      <div class="modifier-group">
+        <div class="modifier-group-label">✨ 渲染品質</div>
+        <div class="modifier-row" id="qualityTags"></div>
+      </div>
+    </div>
+
+    <!-- STEP 3: SUBJECT -->
+    <div class="step-area">
+      <div class="section-label">Step 03</div>
+      <div class="step-header">
+        <span class="step-num">03</span>
+        <div>
+          <div class="step-title">描述主體內容</div>
+          <div style="color:var(--muted);font-size:13px;margin-top:4px;">輸入你想生成的主角、場景、物件</div>
+        </div>
+      </div>
+
+      <div class="subject-area">
+        <input type="text" id="subjectInput" placeholder="例如：坐在咖啡廳窗邊的年輕女子、古典建築正面、可愛的貓咪…">
+      </div>
+
+      <div style="margin-top:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;">輸出語言</span>
+        <div class="lang-toggle">
+          <button class="lang-btn active" data-lang="zh" onclick="setLang('zh')">中文</button>
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+          <button class="lang-btn" data-lang="both" onclick="setLang('both')">雙語</button>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="generate-btn" id="generateBtn" onclick="generatePrompt()">
+          <span class="spinner"></span>
+          <span class="btn-text">✦ 生成提示詞</span>
+        </button>
+        <button onclick="resetAll()" style="cursor:pointer;background:transparent;border:1px solid var(--border);padding:18px 24px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--ink)';this.style.color='var(--ink)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+          ↺ 重置
+        </button>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="output-area">
+      <div class="section-label">Output</div>
+      
+      <div class="output-card" id="outputCard">
+        <div class="output-toolbar">
+          <span class="output-label">✦ Generated Prompt</span>
+          <div style="display:flex;gap:8px;">
+            <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">⎘ 複製全部</button>
+          </div>
+        </div>
+        <div class="skeleton" id="loadingSkeleton">
+          <div class="skel-line" style="width:90%"></div>
+          <div class="skel-line" style="width:70%"></div>
+          <div class="skel-line" style="width:85%"></div>
+          <div class="skel-line" style="width:60%"></div>
+          <div class="skel-line" style="width:75%"></div>
+        </div>
+        <div class="output-text" id="outputText"></div>
+      </div>
+
+      <!-- QUICK EXAMPLES -->
+      <div style="margin-top:48px;">
+        <div class="section-label">精選案例參考</div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:20px;">精選 20 則 — 靈感來自 <a href="https://github.com/songguoxs/gpt4o-image-prompts" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:2px solid var(--accent);">GPT-4o Prompt 社群</a></div>
+        <div class="examples-strip" id="examplesStrip"></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <span>PROMPT STUDIO — AI 圖像指令生成器</span>
+  <span>靈感來源 <a href="https://github.com/songguoxs/gpt4o-image-prompts" target="_blank">songguoxs/gpt4o-image-prompts</a></span>
+</footer>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────
+const STYLES = [
+  { id:'portrait', icon:'👤', name:'人像寫真', desc:'真實人物肖像、街拍風格' },
+  { id:'fashion', icon:'👗', name:'時尚攝影', desc:'雜誌封面、OOTD拼貼' },
+  { id:'anime', icon:'🌸', name:'動漫插畫', desc:'日系動畫、漫畫風格' },
+  { id:'3d', icon:'🧊', name:'3D 渲染', desc:'皮克斯風、等距視角、黏土感' },
+  { id:'concept', icon:'🎨', name:'概念藝術', desc:'超現實、混合媒介' },
+  { id:'product', icon:'📦', name:'產品攝影', desc:'商業廣告、電商展示' },
+  { id:'landscape', icon:'🏔', name:'風景場景', desc:'城市、自然、建築' },
+  { id:'vintage', icon:'📷', name:'復古膠片', desc:'底片質感、Saul Leiter風' },
+  { id:'miniature', icon:'🔬', name:'微縮模型', desc:'微距、等比縮小世界' },
+  { id:'collage', icon:'✂️', name:'拼貼藝術', desc:'剪貼簿、混貼式設計' },
+  { id:'poster', icon:'🗓', name:'海報設計', desc:'廣告牌、電影宣傳海報' },
+  { id:'sketch', icon:'✏️', name:'手繪素描', desc:'鉛筆素描、漫畫插圖' },
+  { id:'food', icon:'🍜', name:'美食攝影', desc:'料理展示、餐廳風格' },
+  { id:'neon', icon:'🌃', name:'霓虹賽博', desc:'賽博朋克、夜景氛圍' },
+  { id:'watercolor', icon:'🌊', name:'水彩插畫', desc:'柔和透明感、水彩紙質' },
+  { id:'macro', icon:'🔍', name:'微距特寫', desc:'極近景、超細節質感' },
+];
+
+const MODIFIERS = {
+  lighting: [
+    '柔和自然光','影棚燈光','黃金時刻','魔幻時刻','霓虹夜光',
+    'Rembrandt 光','逆光剪影','雨天漫射光','電影感燈光','閃光燈'
+  ],
+  color: [
+    '暖橙棕色調','冷藍綠色調','黑白單色','復古膠片色','低飽和淡雅',
+    '高飽和鮮豔','粉彩色系','深色暗調','奶油米白','莫蘭迪色調'
+  ],
+  composition: [
+    '正面特寫','三分之一構圖','俯視鳥瞰','仰視低角','對稱構圖',
+    '對角線構圖','淺景深虛化','廣角全景','正方形構圖','電影2.39:1'
+  ],
+  quality: [
+    '8K 超高清','電影質感','照片寫實','超精細細節','膠片顆粒感',
+    '商業廣告品質','社群媒體美學','雜誌封面','Octane 渲染','RAW 攝影'
+  ]
+};
+
+const EXAMPLES = [
+  {
+    num:'案例 771', tag:'拼貼',
+    title:'俏皮時尚肖像拼貼畫',
+    preview:'韓國時尚雜誌風格，軟木板背景，可愛貼紙裝飾，9:16 豎版',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-771',
+    prompt:'Recreate the character from the uploaded photo as a bright, fresh fashion portrait collage in 9:16 format. She wears trendy clothing, holds a red lollipop, and her face is decorated with cute stickers (hearts, strawberries, stars). Background features a corkboard with colorful sticky notes. Surrounding are 4 scrapbook-style photo frames. Soft studio lighting, Korean fashion-magazine style, vibrant colors.'
+  },
+  {
+    num:'案例 770', tag:'混合媒介',
+    title:'插畫貼紙疊加逼真照片',
+    preview:'溫馨自拍 + 卡通向日葵塗鴉，Instagram 美學，相機道具',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-770',
+    prompt:'Aesthetic cozy mirror selfie of a young woman sitting on a chair, wearing a dark oversized hoodie and blue jeans, holding a professional camera with a soft dreamy smile. Cute cartoon-style doodles float around her: a smiling sunflower, a hand-drawn yellow sun, white sketch lines around the camera. Warm beige background, soft studio lighting. A handwritten quote on the wall. Ultra-realistic with illustrated sticker overlays. 3:4 ratio.'
+  },
+  {
+    num:'案例 769', tag:'UI 截圖',
+    title:'Photo Booth 九格濾鏡介面',
+    preview:'MacOS Photo Booth 介面，9 種滑稽濾鏡效果，含中文字幕',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-769',
+    prompt:'A complete MacOS Photo Booth application interface screenshot. Top title bar shows "Photo Booth". Main window has a 9-grid layout showing a person with different funny effects. Bottom labels in Chinese: Row 1: 外星人, 歪鼻子, 花栗鼠. Row 2: 熱戀, 正常, 頭暈. Row 3: 笨蛋, 大眼睛, 青蛙. Bottom gray control bar with arrows, navigation dots (first one blue), and "效果" button. Dark blurred background.'
+  },
+  {
+    num:'案例 768', tag:'手繪漫畫',
+    title:'黑白素描手繪漫畫肖像',
+    preview:'交叉陰影線技法，鋼筆線稿，誇張面部特徵，政治漫畫風',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-768',
+    prompt:'A hand-drawn caricature portrait in black and white ink sketch. Cross-hatching technique with fine ink lines. Middle-aged male figure, short tightly curled hair with dense linework, narrow expressive eyes slightly squinting, furrowed brows showing intensity, long defined nose with accentuated shading, exaggerated downward mouth curve, large prominent ears, elongated jawline with sharp lines. Formal suit, clean white background. Editorial political-cartoon style.'
+  },
+  {
+    num:'案例 767', tag:'混合媒介',
+    title:'照片與素描的完美融合',
+    preview:'俯視睡眠女子 + 白色手繪潛水塗鴉，混合媒介夢境',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-767',
+    prompt:'Top-down view of a young woman sleeping on her side on teal/aquamarine sheets, wearing a pink bikini. Superimposed white line-art doodles drawn over the photo: scuba diving gear on her body (mask, tank, fins), surrounding fish, coral reefs, rising bubbles, a starfish. The doodles look hand-drawn on the photo surface. Cool nocturnal blue palette, soft overhead lighting. Seamless blend of photorealism and white chalk illustration. 1:1 ratio.'
+  },
+  {
+    num:'案例 766', tag:'隱藏圖像',
+    title:'隱藏單詞的照片',
+    preview:'用一群獅子組成隱藏文字，發現前難以察覺的視覺謎題',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-766',
+    prompt:'A photo with a hidden word embedded into it, making the word hard to see until you spot it, then you cannot unsee it. Form the word "LOVE" out of a pride of lions arranged naturally in a savanna landscape. The lions body positions, shadows and groupings form the letters organically. Golden hour photography, ultra-realistic wildlife photography style.'
+  },
+  {
+    num:'案例 765', tag:'人像',
+    title:'可愛少女咖啡廳肖像照',
+    preview:'老鼠帽、粉彩條紋針織衫，軟閃光燈，Kawaii 咖啡廳氛圍',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-765',
+    prompt:'High-quality cute portrait photo of a young girl in a cozy café, bright soft-flash lighting. Cute youthful face, fair skin, soft glam makeup with pink blush, one eye winking playfully. Wearing an oversized blue plush mouse hat with huge round ears and pink lining. Pastel striped knit zip-up cardigan in baby blue, soft yellow, pale pink. Blue tray with layered pastel cake and whipped cream drink in foreground. Kawaii café snapshot vibe, 3:4 vertical.'
+  },
+  {
+    num:'案例 764', tag:'混合媒介',
+    title:'橱窗裡出現動畫版自己',
+    preview:'真人站在玩具店橱窗外，窗內是可愛大眼睛動畫人偶版本',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-764',
+    prompt:'Bright high-end street fashion photograph of a woman standing outside a luxury toy shop window, gently touching the glass. Inside the window display, a full-height cartoon-style doll designed to resemble her — same features, hair, and outfit — transformed into a cute, big-eyed, stylized animated character. Crisp lighting, premium street-fashion look, realistic reflections, photorealistic, face unchanged.'
+  },
+  {
+    num:'案例 763', tag:'靜物畫',
+    title:'維多利亞時代外科醫療箱',
+    preview:'古典荷蘭黃金時代靜物畫風格，骨鋸、玻璃注射器、天鵝絨',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-763',
+    prompt:'A Victorian surgeon medical kit laid open on aged leather, featuring antique bone saws, glass syringes with brass fittings, faded anatomical sketches, and a pocket watch. Arranged on burgundy velvet with dried medicinal herbs scattered around. Painted in classical Dutch Golden Age still life style with rich shadows, meticulous detail, dramatic chiaroscuro lighting.'
+  },
+  {
+    num:'案例 761', tag:'特效',
+    title:'近視人的視角特寫',
+    preview:'眼鏡鏡片超近距離特寫，鏡片內呈現清晰世界，背景虛化',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-761',
+    prompt:'Ultra close-up view with edges of eyeglasses nearly touching the viewer, lenses filling most of the frame. The glasses reveal a detailed forest landscape within the lenses, showcasing lush green trees and sunlight. Background is completely out of focus, enhancing the impression that the viewer is peering into an enchanted world. Macro lens, shallow depth of field, photorealistic.'
+  },
+  {
+    num:'案例 754', tag:'信息圖',
+    title:'浮世繪×茶杯頭風格信息圖',
+    preview:'將知識內容轉化為浮世繪與茶杯頭混合風格的精美信息圖表',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-754',
+    prompt:'An infographic about the history of tea, illustrated in a fusion style combining Japanese ukiyo-e woodblock print aesthetics with 1930s Cuphead rubber hose animation. Bold black outlines, flat cel-shaded colors, dramatic ukiyo-e wave patterns as backgrounds. Characters have rubberhose limbs and large cartoon eyes. Text in decorative Art Deco frames. Vintage color palette of deep navy, gold, vermillion, and cream.'
+  },
+  {
+    num:'案例 753', tag:'超現實',
+    title:'微型人修眉 — 微距超現實',
+    preview:'微型小人推割草機修眉毛，超現實概念攝影，極近景微距',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-753',
+    prompt:'A photorealistic living miniature man (Lilliputian size, not a plastic figure) in casual gardening clothes — blue jeans, white t-shirt — pushing a tiny realistic red push-lawnmower over a giant human eyebrow, trimming the long eyebrow hairs as if mowing a lawn. Extreme close-up macro view of human forehead. Giant-scale skin texture, visible pores and coarse eyebrow hair. Surreal conceptual photography, hyper-realistic, hard direct lighting mimicking sunlight, sharp shadows, 8K ultra-detailed.'
+  },
+  {
+    num:'案例 752', tag:'舞台',
+    title:'人物放入逼格滿滿大會現場',
+    preview:'廣角紀實照，主角在科技峰會舞台演講，巨型LED背景板',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-752',
+    prompt:'A wide-angle candid documentary photograph capturing a speaker mid-speech on a large professionally lit stage at a major technology summit. They hold a microphone, gesturing naturally. Behind them, an immense wall-sized LED screen displays a crisp full-screen presentation slide about AI innovation (no software interface visible). Audience heads blurred in foreground. Blue and white spotlights on speaker. High-resolution camera, sharp focus on both speaker and screen, realistic film grain.'
+  },
+  {
+    num:'案例 748', tag:'廣告牌',
+    title:'巨大時尚弧形3D廣告牌',
+    preview:'城市裸眼3D弧形廣告牌，時尚女性破框而出，電影感夜景',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-748',
+    prompt:'A massive curved ultra-high-definition 3D anamorphic LED billboard in a rainy futuristic city. A stunning fashion model appears to burst out of the screen in a dramatic pose, defying the flat surface. The billboard is 10 stories tall, mounted on a skyscraper corner. Cinematic night photography, reflections of neon lights on wet cobblestone streets, ultra-wide angle lens, dramatic upward perspective, 8K advertising quality.'
+  },
+  {
+    num:'案例 745', tag:'3D',
+    title:'樂高風格迷你3D人偶',
+    preview:'將人物轉換為樂高積木人偶，忠實還原服裝與面部特徵',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-745',
+    prompt:'Transform the person from the reference photo into a hyper-detailed LEGO minifigure. Accurately recreate their hairstyle, clothing, skin tone, and facial expression in LEGO brick style. The minifigure stands on a small LEGO baseplate. Studio lighting with soft shadows, macro photography style, photorealistic plastic texture with subtle light reflections, white background, 4K resolution.'
+  },
+  {
+    num:'案例 741', tag:'技術圖',
+    title:'超逼真爆炸式技術分解圖',
+    preview:'物件所有零件懸浮分解，工業設計視覺化，白底精準排列',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-741',
+    prompt:'A hyper-realistic exploded technical diagram of a vintage mechanical wristwatch, showing every internal component — gears, springs, hands, crystal, crown, case — floating apart in precise isometric alignment with thin technical guide lines. Clean white background, technical illustration style meeting photorealistic rendering. Each part casts a subtle shadow. Ultra-sharp, 8K commercial product visualization, no labels needed.'
+  },
+  {
+    num:'案例 737', tag:'角色轉換',
+    title:'人物轉風格化3D漫畫角色',
+    preview:'真實人物轉換為風格化3D卡通渲染角色，保留面部特徵',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-737',
+    prompt:'Convert the person from the reference photo into a stylized 3D cartoon character in the style of modern animated films (Pixar/Disney blend). Maintain their core facial features, hairstyle, and expression but transform into a slightly exaggerated, big-eyed, smooth-skinned 3D render. Bright studio lighting, clean gradient background, ultra-high detail, expressive and charming. 4K render.'
+  },
+  {
+    num:'案例 723', tag:'微縮',
+    title:'手心托著城市3D立體模型',
+    preview:'手輕輕捧著一個精緻城市等比縮小立體模型，收藏品級質感',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-723',
+    prompt:'A pair of hands gently cradling a breathtakingly detailed 3D collectible miniature model of a city skyline — tiny skyscrapers, bridges, parks, and streets all perfectly to scale. The city fits within cupped palms. Macro photography, shallow depth of field blurring the background, warm studio lighting highlighting the architectural details, realistic skin texture on the hands, premium collectible toy aesthetic, 8K.'
+  },
+  {
+    num:'案例 717', tag:'圖標',
+    title:'城市冰箱貼設計',
+    preview:'各城市標誌性景點製作成圓形扁平化冰箱貼插畫，鮮豔配色',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-717',
+    prompt:'A collection of 6 colorful travel refrigerator magnets for Tokyo, each featuring a different iconic landmark — Senso-ji, Shibuya crossing, Mount Fuji, Tokyo Tower, Harajuku, Shinkansen. Rounded rectangular shape with slightly raised 3D look and glossy finish. Flat illustration style with bold outlines, vibrant saturated colors, white background. Souvenir shop display layout.'
+  },
+  {
+    num:'案例 707', tag:'AI 網紅',
+    title:'生成超逼真 AI 網紅',
+    preview:'創建一位不存在但極度逼真的 AI 虛擬網紅，社群媒體風格',
+    link:'https://github.com/songguoxs/gpt4o-image-prompts#prompt-707',
+    prompt:'Generate an ultra-photorealistic AI influencer portrait. Young woman in her mid-20s, mixed East Asian and European features, flawless skin with natural subtle imperfections, expressive almond eyes, confident warm smile. Wearing contemporary streetwear in a modern café setting. Shot with 85mm lens, f/1.8 shallow depth of field, golden hour window light, Instagram editorial aesthetic. She should look completely real, not CGI. 4K, natural skin texture, real hair strands.'
+  },
+];
+
+// ── STATE ────────────────────────────────────────────────────
+let selectedStyles = new Set();
+let selectedModifiers = { lighting: new Set(), color: new Set(), composition: new Set(), quality: new Set() };
+let currentLang = 'zh';
+
+// ── INIT ────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  renderStyleGrid();
+  renderModifiers();
+  renderExamples();
+});
+
+function renderStyleGrid() {
+  const grid = document.getElementById('styleGrid');
+  grid.innerHTML = STYLES.map(s => `
+    <div class="style-card" id="style-${s.id}" onclick="toggleStyle('${s.id}')">
+      <span class="style-icon">${s.icon}</span>
+      <div class="style-name">${s.name}</div>
+      <div class="style-desc">${s.desc}</div>
+    </div>
+  `).join('');
+}
+
+function renderModifiers() {
+  const groups = { lighting: '光線氛圍', color: '色彩風格', composition: '構圖視角', quality: '渲染品質' };
+  for (const [key, _] of Object.entries(groups)) {
+    const container = document.getElementById(key + 'Tags');
+    container.innerHTML = MODIFIERS[key].map(m => `
+      <button class="tag" onclick="toggleModifier('${key}', this, '${m}')">${m}</button>
+    `).join('');
+  }
+}
+
+function renderExamples() {
+  const strip = document.getElementById('examplesStrip');
+  strip.innerHTML = EXAMPLES.map(e => `
+    <div class="example-item">
+      <div class="example-item-top">
+        <div class="example-num">${e.num}</div>
+        <div class="example-tag">${e.tag}</div>
+      </div>
+      <div class="example-title">${e.title}</div>
+      <div class="example-preview">${e.preview}</div>
+      <div class="example-footer">
+        <button class="example-use-btn" onclick="useExample('${e.num}', \`${e.prompt.replace(/`/g,"'")}\`)">← 套用此提示詞</button>
+        <a class="example-gh-link" href="${e.link}" target="_blank" onclick="event.stopPropagation()">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          原始來源
+        </a>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── INTERACTIONS ────────────────────────────────────────────
+function toggleStyle(id) {
+  const card = document.getElementById('style-' + id);
+  if (selectedStyles.has(id)) { selectedStyles.delete(id); card.classList.remove('selected'); }
+  else { selectedStyles.add(id); card.classList.add('selected'); }
+}
+
+function toggleModifier(group, el, value) {
+  if (selectedModifiers[group].has(value)) {
+    selectedModifiers[group].delete(value);
+    el.classList.remove('selected');
+  } else {
+    selectedModifiers[group].add(value);
+    el.classList.add('selected');
+  }
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+}
+
+function resetAll() {
+  selectedStyles.clear();
+  selectedModifiers = { lighting: new Set(), color: new Set(), composition: new Set(), quality: new Set() };
+  document.querySelectorAll('.style-card.selected').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.tag.selected').forEach(el => el.classList.remove('selected'));
+  document.getElementById('subjectInput').value = '';
+  document.getElementById('outputCard').classList.remove('visible');
+  document.getElementById('outputText').textContent = '';
+}
+
+function useExample(num, prompt) {
+  document.getElementById('outputText').textContent = prompt;
+  document.getElementById('outputCard').classList.add('visible');
+  document.getElementById('loadingSkeleton').classList.remove('visible');
+  document.getElementById('outputCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function copyPrompt() {
+  const text = document.getElementById('outputText').textContent;
+  if (!text) return;
+  await navigator.clipboard.writeText(text);
+  const btn = document.getElementById('copyBtn');
+  btn.textContent = '✓ 已複製!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = '⎘ 複製全部'; btn.classList.remove('copied'); }, 2000);
+}
+
+// ── GENERATE ────────────────────────────────────────────────
+async function generatePrompt() {
+  if (selectedStyles.size === 0) {
+    alert('請先選擇至少一種圖像風格！');
+    return;
+  }
+
+  const subject = document.getElementById('subjectInput').value.trim();
+  const btn = document.getElementById('generateBtn');
+  const card = document.getElementById('outputCard');
+  const skeleton = document.getElementById('loadingSkeleton');
+  const outputText = document.getElementById('outputText');
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.querySelector('.btn-text').textContent = '生成中...';
+
+  card.classList.add('visible');
+  skeleton.classList.add('visible');
+  outputText.textContent = '';
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Build context
+  const styleNames = [...selectedStyles].map(id => STYLES.find(s => s.id === id)?.name).join('、');
+  const lightingMods = [...selectedModifiers.lighting].join('、') || '無特別指定';
+  const colorMods = [...selectedModifiers.color].join('、') || '無特別指定';
+  const compositionMods = [...selectedModifiers.composition].join('、') || '無特別指定';
+  const qualityMods = [...selectedModifiers.quality].join('、') || '無特別指定';
+
+  const langInstruction = currentLang === 'zh'
+    ? '請只用中文輸出提示詞。'
+    : currentLang === 'en'
+    ? 'Output the prompt in English only.'
+    : '請先輸出英文提示詞，再輸出中文翻譯版本，中間用 "---中文版---" 分隔。';
+
+  const systemPrompt = `你是一位專業的 AI 圖像提示詞（Prompt）工程師，精通 GPT-4o、Nano Banana、DALL·E 等圖像生成模型。
+你的任務是根據用戶選擇的風格和參數，生成高品質、詳細、可直接使用的圖像提示詞。
+
+提示詞應包含：
+1. 主體描述（subject）
+2. 風格關鍵詞（style keywords）
+3. 光線與氛圍（lighting & mood）
+4. 色彩設定（color palette）
+5. 構圖與視角（composition & angle）
+6. 渲染品質（quality & technical specs）
+7. 長寬比建議（aspect ratio）
+
+${langInstruction}
+
+格式要求：直接輸出提示詞本身，不需要任何前言或解釋。提示詞要詳細具體，長度約 150-300 字。`;
+
+  const userMessage = `請生成一個 AI 圖像提示詞，條件如下：
+- 圖像風格：${styleNames}
+- 主體內容：${subject || '請自由發揮合適的主體'}
+- 光線氛圍：${lightingMods}
+- 色彩風格：${colorMods}
+- 構圖視角：${compositionMods}
+- 渲染品質：${qualityMods}
+
+請生成一個專業、詳細、可直接用於圖像生成的提示詞。`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userMessage }]
+      })
+    });
+
+    const data = await response.json();
+    const result = data.content?.map(c => c.text || '').join('') || '生成失敗，請稍後再試';
+
+    skeleton.classList.remove('visible');
+    outputText.textContent = result;
+
+    // Typewriter effect
+    outputText.style.opacity = '0';
+    setTimeout(() => {
+      outputText.style.transition = 'opacity 0.4s';
+      outputText.style.opacity = '1';
+    }, 50);
+
+  } catch (err) {
+    skeleton.classList.remove('visible');
+    outputText.textContent = '⚠ 生成失敗：' + err.message + '\n\n請確認網路連線或稍後重試。';
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.querySelector('.btn-text').textContent = '✦ 生成提示詞';
+  }
+}
+</script>
+</body>
+</html>
