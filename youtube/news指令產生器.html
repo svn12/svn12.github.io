@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>世界新聞指令產生器</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --amber: #d4780a;
+    --red: #c0392b;
+    --muted: #7a7065;
+    --rule: #2a2a2a;
+    --tag-bg: #1a1a1a;
+    --tag-fg: #f5f0e8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif TC', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Masthead */
+  .masthead {
+    border-bottom: 3px solid var(--rule);
+    padding: 18px 40px 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    z-index: 100;
+  }
+  .masthead-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+  .masthead-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .masthead-date {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* Hero strip */
+  .hero-strip {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 48px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-strip::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .hero-strip::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .hero-kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .hero-headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.1;
+    max-width: 680px;
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--amber);
+  }
+  .hero-desc {
+    margin-top: 16px;
+    font-size: 14px;
+    color: rgba(245,240,232,0.6);
+    max-width: 500px;
+    line-height: 1.7;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* Main layout */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+  }
+
+  /* Section labels */
+  .section-rule {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    margin-top: 48px;
+  }
+  .section-rule:first-child { margin-top: 0; }
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .section-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #d0c8bc;
+  }
+
+  /* Control bar */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 32px;
+    padding: 20px 22px;
+    background: #eee8dc;
+    border: 1px solid #d0c8bc;
+  }
+
+  .ctrl-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .ctrl-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  select, input[type="text"] {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    background: var(--paper);
+    border: 1px solid #b0a898;
+    color: var(--ink);
+    padding: 7px 10px;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+  }
+  select { cursor: pointer; min-width: 160px; }
+  input[type="text"] { min-width: 220px; }
+  select:focus, input:focus { border-color: var(--amber); }
+
+  .keyword-input { flex: 1; min-width: 200px; }
+
+  .gen-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 8px 22px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    align-self: flex-end;
+  }
+  .gen-btn:hover { background: var(--amber); }
+  .gen-btn:active { transform: scale(0.97); }
+
+  /* Command cards */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1px;
+    background: #c8c0b4;
+    border: 1px solid #c8c0b4;
+  }
+
+  .card {
+    background: var(--paper);
+    padding: 22px 24px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s;
+    animation: fadeSlide 0.35s ease both;
+  }
+  .card:hover { background: #ece6da; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-type {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+  .card-command {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink);
+    word-break: break-all;
+  }
+  .card-command strong {
+    color: var(--red);
+    font-weight: 600;
+  }
+  .card-desc {
+    margin-top: 10px;
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .card-copy {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--tag-bg);
+    color: var(--tag-fg);
+    border: none;
+    padding: 4px 10px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s;
+  }
+  .card-copy.card-copy-url { right: 120px; }
+  .card-copy.card-copy-chatgpt { right: 224px; }
+  .card:hover .card-copy { opacity: 1; }
+  .card-copy:hover { background: var(--amber); color: var(--ink); }
+  .card-copy.copied { background: #2e7d32; color: white; opacity: 1; }
+
+  /* Table section */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid #c8c0b4;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 500;
+  }
+  td {
+    padding: 13px 16px;
+    border-bottom: 1px solid #ddd7cc;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #ede8de; }
+  td:nth-child(1) { font-weight: 700; font-size: 12px; white-space: nowrap; }
+  td:nth-child(2) {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--red);
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  td:nth-child(2):hover { color: var(--amber); }
+  td:nth-child(3) { color: var(--muted); font-size: 12px; }
+
+  /* Tips */
+  .tips-box {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 28px 30px;
+    margin-top: 0;
+  }
+  .tips-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+  .tips-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .tips-list li {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: rgba(245,240,232,0.75);
+    line-height: 1.6;
+    padding-left: 18px;
+    position: relative;
+  }
+  .tips-list li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--amber);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 12px 20px;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+    z-index: 999;
+  }
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  @media (max-width: 600px) {
+    .masthead { padding: 14px 20px; }
+    .hero-strip { padding: 32px 20px; }
+    .main { padding: 24px 20px 60px; }
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-title">NewsOps</div>
+  <div class="masthead-sub">指令產生器 · Command Generator</div>
+  <div class="masthead-date" id="live-date"></div>
+</header>
+
+<div class="hero-strip">
+  <div class="hero-kicker">⚡ Real-time · 即時查詢工具</div>
+  <h1 class="hero-headline">24小時<br><em>世界新聞</em><br>精準指令</h1>
+  <p class="hero-desc">設定條件，即時產生可直接複製的搜尋指令與對話提示詞。</p>
+</div>
+
+<div class="main">
+
+  <!-- Controls -->
+  <div class="section-rule"><span class="section-label">設定篩選條件</span></div>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <span class="ctrl-label">類別</span>
+      <select id="category">
+        <option value="">全方位（All）</option>
+        <option value="AI 技術">🤖 AI 技術</option>
+        <option value="地緣政治">🌍 地緣政治</option>
+        <option value="金融市場">📈 金融市場</option>
+        <option value="氣候環境">🌿 氣候環境</option>
+        <option value="科技產業">💻 科技產業</option>
+        <option value="衝突戰爭">⚔️ 衝突與戰爭</option>
+        <option value="健康醫療">🏥 健康醫療</option>
+        <option value="體育新聞">⚽ 體育新聞</option>
+        <option value="娛樂新聞">🎬 娛樂新聞</option>
+      </select>
+    </div>
+
+    <div class="ctrl-group">
+      <span class="ctrl-label">時間範圍</span>
+      <select id="timerange">
+        <option value="24小時">過去 24 小時</option>
+        <option value="12小時">過去 12 小時</option>
+        <option value="48小時">過去 48 小時</option>
+        <option value="一週">過去一週</option>
+      </select>
+    </div>
+
+    <div class="ctrl-group">
+      <span class="ctrl-label">新聞來源</span>
+      <select id="source">
+        <option value="">所有來源</option>
+        <option value="site:bbc.com">BBC</option>
+        <option value="site:reuters.com">Reuters 路透社</option>
+        <option value="site:apnews.com">AP News 美聯社</option>
+        <option value="site:nytimes.com">NY Times</option>
+        <option value="site:theguardian.com">The Guardian</option>
+        <option value="site:cna.com.tw">中央社 (CNA)</option>
+        <option value="site:udn.com">聯合新聞網 (UDN)</option>
+        <option value="site:ltn.com.tw">自由時報 (Liberty Times)</option>
+        <option value="site:cnyes.com">鉅亨網 (cnyes)</option>
+      </select>
+    </div>
+
+    <div class="ctrl-group keyword-input">
+      <span class="ctrl-label">關鍵字（選填）</span>
+      <input type="text" id="keyword" placeholder="例：Nvidia / 台灣 / 聯準會" />
+    </div>
+
+    <div class="ctrl-group">
+      <span class="ctrl-label">排除</span>
+      <input type="text" id="exclude" placeholder="例：sports / 娛樂" style="width:140px"/>
+    </div>
+
+    <button class="gen-btn" onclick="generate()">▶ 產生指令</button>
+  </div>
+
+  <!-- Command cards -->
+  <div class="section-rule"><span class="section-label">隨選產生的指令</span></div>
+  <div class="cards-grid" id="cards-output"></div>
+
+  <!-- Static quick-reference table -->
+  <div class="section-rule" style="margin-top:52px"><span class="section-label">常用指令速查表</span></div>
+  <div class="table-wrap">
+    <table id="ref-table">
+      <thead>
+        <tr>
+          <th>需求類型</th>
+          <th>指令範例（點擊複製）</th>
+          <th>說明</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Tips -->
+  <div class="section-rule" style="margin-top:52px"><span class="section-label">進階技巧</span></div>
+  <div class="tips-box">
+    <h3>讓指令更精準的 4 個訣竅</h3>
+    <ul class="tips-list">
+      <li>使用 <strong>after:YYYY-MM-DD</strong> 時間運算子，確保只取特定日期後的結果。</li>
+      <li>加上 <strong>site:</strong> 限定媒體（如 site:reuters.com）可大幅提升可信度。</li>
+      <li>用 <strong>-</strong> 減號排除雜訊，例如 <code>-sports -entertainment</code>。</li>
+      <li>Google Trends Real-time 可看到過去 24 小時搜尋量 <em>Breakout</em> 的話題，通常是最新爆點。</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">✓ 已複製到剪貼簿</div>
+
+<script>
+  // --- Date ---
+  const now = new Date();
+  document.getElementById('live-date').textContent =
+    now.toLocaleDateString('zh-TW', { year:'numeric', month:'long', day:'numeric', weekday:'short' });
+
+  const yesterday = new Date(now - 86400000);
+  const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const todayStr = ymd(now);
+  const ydayStr  = ymd(yesterday);
+
+  // --- Reference table data ---
+  const refRows = [
+    {need:'全方位懶人包', cmd:`總結最近 24 小時全球發生的大事，包含政治、科技與經濟各一則。`, desc:'適合每日晨間快速掌握'},
+    {need:'特定領域追蹤', cmd:`搜尋過去 24 小時內與 Nvidia 或 OpenAI 相關的最新國際新聞。`, desc:'替換公司/人物名稱即可'},
+    {need:'多角度對比', cmd:`針對 [某國際事件]，請列出過去一天內路透社與美聯社的不同報導重點。`, desc:'比較媒體立場差異'},
+    {need:'數據與股市', cmd:`過去 24 小時內，全球金融市場最顯著的變動與相關新聞為何？`, desc:'適合盤前盤後研究'},
+    {need:'Google 搜尋', cmd:`world news after:${ydayStr}`, desc:'直接貼入 Google 搜尋列'},
+    {need:'指定媒體', cmd:`world news site:bbc.com after:${ydayStr}`, desc:'限定 BBC 報導'},
+    {need:'排除雜訊', cmd:`world news -sports after:${ydayStr}`, desc:'去除體育相關報導'},
+    {need:'Google Trends', cmd:`Google Trends Global Real-time`, desc:'看 24h 搜尋量爆升話題'},
+  ];
+
+  const tbody = document.querySelector('#ref-table tbody');
+  refRows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.need}</td><td title="點擊複製">${r.cmd}</td><td>${r.desc}</td>`;
+    tr.querySelector('td:nth-child(2)').onclick = () => copyText(r.cmd);
+    tbody.appendChild(tr);
+  });
+
+  // --- Generate ---
+  function generate() {
+    const cat     = document.getElementById('category').value;
+    const time    = document.getElementById('timerange').value;
+    const source  = document.getElementById('source').value;
+    const kw      = document.getElementById('keyword').value.trim();
+    const exclude = document.getElementById('exclude').value.trim();
+
+    const catLabel = cat || '全球';
+    const kwPart   = kw  ? `與「${kw}」相關的` : '';
+    const excPart  = exclude ? `（排除 ${exclude}）` : '';
+    const srcLabel = source ? source.replace('site:','').replace('.com','') : '';
+    const srcNote  = srcLabel ? `，來源限定 ${srcLabel}` : '';
+
+    const dateOp = source ? `${source} ` : '';
+    const kwOp   = kw ? `"${kw}" ` : '';
+    const exOp   = exclude ? exclude.split(/[\s,，]+/).map(e => `-${e}`).join(' ') + ' ' : '';
+    const catOp  = cat ? `${cat} ` : 'world news ';
+
+    // Build commands
+    const cmds = [
+      {
+        type: '💬 對話提示詞（推薦）',
+        cmd: `請幫我整理過去${time}內${catLabel}最重要的 10 則${kwPart}頭條新聞${srcNote}${excPart}，並提供每則的一句摘要。`,
+        desc: '直接對 AI 使用，最省力'
+      },
+      {
+        type: '🔍 Google 搜尋指令',
+        cmd: `${catOp}${kwOp}after:${ydayStr} ${dateOp}${exOp}`.trim(),
+        desc: `貼入 Google 搜尋列，精確過濾 ${time}內的新聞`
+      },
+      {
+        type: '📰 多角度分析提示',
+        cmd: `針對過去${time}內${kwPart || '全球重要'}${catLabel}新聞，請分別整理：① 事件摘要 ② 各方立場 ③ 可能影響${excPart}。`,
+        desc: '用於深度理解事件脈絡'
+      },
+      {
+        type: '📊 數據摘要提示',
+        cmd: `過去${time}內，${catLabel}領域${kwPart}最重要的數字、統計或市場變動是什麼？請列出 3 個關鍵數據並說明其意義。`,
+        desc: '快速掌握量化資訊'
+      },
+      {
+        type: '⚡ 速報格式提示',
+        cmd: `以「速報」格式整理過去${time}的${catLabel}新聞${kwPart}，每則不超過 30 字，列出最多 15 則${excPart}。`,
+        desc: '適合碎片時間瀏覽'
+      },
+      {
+        type: '🌐 RSS / Trends 指令',
+        cmd: `Google Trends Global Real-time — 搜尋 "${cat || 'world'} ${kw || 'news'}" 並篩選過去 24 小時 Breakout 話題`,
+        desc: '用於發現社群熱門爆點'
+      },
+    ];
+
+    const container = document.getElementById('cards-output');
+    container.innerHTML = '';
+
+    cmds.forEach((c, i) => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.style.animationDelay = `${i * 0.06}s`;
+      div.innerHTML = `
+        <div class="card-type">${c.type}</div>
+        <div class="card-command">${highlight(c.cmd)}</div>
+        <div class="card-desc">${c.desc}</div>
+        <button class="card-copy" onclick="event.stopPropagation(); copyCard(this, \`${c.cmd.replace(/`/g,'\\`')}\`)">複製</button>
+        <button class="card-copy card-copy-url" onclick="event.stopPropagation(); copyUrlCard(this, \`${c.cmd.replace(/`/g,'\\`')}\`)">複製（URL-safe）</button>
+        <button class="card-copy card-copy-chatgpt" onclick="event.stopPropagation(); copyChatGPTUrl(this, \`${c.cmd.replace(/`/g,'\\`')}\`)">複製（帶 ChatGPT）</button>
+      `;
+      div.onclick = () => copyCard(div.querySelector('.card-copy'), c.cmd);
+      container.appendChild(div);
+    });
+  }
+
+  function highlight(str) {
+    return str
+      .replace(/after:\d{4}-\d{2}-\d{2}/g, m => `<strong>${m}</strong>`)
+      .replace(/"[^"]+"/g, m => `<strong>${m}</strong>`)
+      .replace(/site:\S+/g, m => `<strong>${m}</strong>`);
+  }
+
+  function copyCard(btn, text) {
+    copyText(text);
+    const orig = btn.textContent;
+    btn.textContent = '✓ 已複製';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1800);
+  }
+
+  function copyText(text) {
+    navigator.clipboard.writeText(text).catch(() => {
+      const el = document.createElement('textarea');
+      el.value = text; document.body.appendChild(el);
+      el.select(); document.execCommand('copy');
+      document.body.removeChild(el);
+    });
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  function copyUrlCard(btn, text) {
+    const encoded = encodeURIComponent(text);
+    navigator.clipboard.writeText(encoded).catch(() => {
+      const el = document.createElement('textarea');
+      el.value = encoded; document.body.appendChild(el);
+      el.select(); document.execCommand('copy');
+      document.body.removeChild(el);
+    });
+    const orig = btn.textContent;
+    btn.textContent = '✓ 已複製';
+    btn.classList.add('copied');
+    const t = document.getElementById('toast');
+    const origToast = t.textContent;
+    t.textContent = '✓ 已複製（URL-safe）';
+    t.classList.add('show');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); t.classList.remove('show'); t.textContent = origToast; }, 1800);
+  }
+
+  function copyChatGPTUrl(btn, text) {
+    const encoded = encodeURIComponent(text);
+    const full = `https://chat.openai.com/?q=${encoded}`;
+    navigator.clipboard.writeText(full).catch(() => {
+      const el = document.createElement('textarea');
+      el.value = full; document.body.appendChild(el);
+      el.select(); document.execCommand('copy');
+      document.body.removeChild(el);
+    });
+    const orig = btn.textContent;
+    btn.textContent = '✓ 已複製';
+    btn.classList.add('copied');
+    const t = document.getElementById('toast');
+    const origToast = t.textContent;
+    t.textContent = '✓ 已複製（帶 ChatGPT）';
+    t.classList.add('show');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); t.classList.remove('show'); t.textContent = origToast; }, 1800);
+  }
+
+  // Auto-generate on load
+  generate();
+</script>
+</body>
+</html>
