@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-TW">
   <head>
     <meta charset="UTF-8" />
@@ -6,7 +6,8 @@
     <title>多功能搜索工具</title>
     <style>
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "Helvetica Neue", Arial, sans-serif;
         margin: 20px auto;
         padding: 0 20px;
@@ -157,35 +158,72 @@
       <div class="nav-links">
         <h2>多功能搜索工具</h2>
         <!-- 第 1 處：G_Buf 連結 -->
-        <a href="./G_buffer.html" target="_blank" rel="noopener noreferrer"><h3>G_Buf</h3></a>
-
-        <!-- 第 2 處：指令大全 -->
-        <a href="https://www.explainthis.io/zh-hant/chatgpt" target="_blank" rel="noopener noreferrer"
-          ><h3>指令大全</h3></a
-
-        <!-- 第 3 處：AI提示語 -->
-        <a href="https://reurl.cc/geLaxV" target="_blank" rel="noopener noreferrer"><h3>AI提示語</h3></a>
-
-        <!-- 第 4 處：Awesome提示語 -->
-        <a href="https://huggingface.co/datasets/fka/awesome-chatgpt-prompts/" target="_blank" rel="noopener noreferrer"
-          ><h3>Awesome提示語</h3></a
-
-        <!-- 第 5 處：Quit_Ref -->
-        <a href="https://quickref.me/chatgpt" target="_blank" rel="noopener noreferrer"
-          ><h3>Quit_Ref</h3></a
-
-        <!-- 第 6 處：指令手冊 -->
-        <a href="https://learnai.tw/prompt/" target="_blank" rel="noopener noreferrer"
-          ><h3>指令手冊</h3></a
-
-        <!-- 第 7 處：NanoBanana -->
-        <a href="./banana_prompt_gen.html" target="_blank" rel="noopener noreferrer"
-          ><h3>NanoBanana</h3></a
+        <a href="./G_buffer.html" target="_blank" rel="noopener noreferrer"
+          ><h3>G_Buf</h3></a
         >
 
+        
+       
+
+        <!-- 第 7 處：NanoBanana -->
+        <a href="./ai-prompt.html" target="_blank" rel="noopener noreferrer"
+          ><h3>Ai_prompt</h3></a
+        >
+ <!-- 第 7 處：NanoBanana -->
+        <a
+          href="./banana_prompt_gen.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><h3>生圖Banana</h3></a
+        >
+        
         <!-- 第 8 處：NanoBanana -->
-        <a href="./news指令產生器.html" target="_blank" rel="noopener noreferrer"
+        <a
+          href="./news指令產生器.html"
+          target="_blank"
+          rel="noopener noreferrer"
           ><h3>新聞指令</h3></a
+        >
+
+        <!-- 第 2 處：指令大全 -->
+        <a
+          href="https://www.explainthis.io/zh-hant/chatgpt"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><h3>指令大全</h3></a
+        >
+
+
+        <!-- 第 3 處：AI提示語 -->
+        <a
+          href="https://reurl.cc/geLaxV"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><h3>AI提示語</h3></a
+        >
+
+        <!-- 第 4 處：Awesome提示語 -->
+        <a
+          href="https://huggingface.co/datasets/fka/awesome-chatgpt-prompts/"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><h3>Awesome提示語</h3></a
+        >
+
+        <!-- 第 5 處：Quit_Ref -->
+        <a
+          href="https://quickref.me/chatgpt"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><h3>Quit_Ref</h3></a
+        >
+
+        <!-- 第 6 處：指令手冊 -->
+        <a
+          href="https://learnai.tw/prompt/"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><h3>指令手冊</h3></a
         >
       </div>
       <div class="input-group">
@@ -202,9 +240,16 @@
       </div>
       <div class="nav-links">
         <!-- 第 8 處：AI工具連結 -->
-        <a href="https://www.imyfone.com/ai-collection/" target="_blank" rel="noopener noreferrer"><h3>AI工具</h3></a>
+        <a
+          href="https://www.imyfone.com/ai-collection/"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><h3>AI工具</h3></a
+        >
         <a href="./ai_2025.html"><h3>2025 AI tool</h3></a>
-        <a href="https://poe.com/explore?category=Official"><h3>AI tool(Poe)</h3></a>
+        <a href="https://poe.com/explore?category=Official"
+          ><h3>AI tool(Poe)</h3></a
+        >
       </div>
       <div class="section">
         <div class="buttons-container">
@@ -313,39 +358,75 @@
         </div>
       </div>
 
-        <div class="section">
-          <h3>網路 Free 圖檔</h3>
-          <div class="buttons-container">
-            <button onclick="search('freepik')" class="ai-pic-btn">Freepik</button>
-            <button onclick="search('Pexels')" class="ai-pic-btn">Pexels</button>
-            <button onclick="search('Adobe_Firefly')" class="ai-pic-btn">Adobe</button>
-            <button onclick="search('FreeImages')" class="ai-pic-btn">FreeImages</button>
-            <button onclick="search('Pixabay')" class="ai-pic-btn">Pixabay</button>
-            <button onclick="search('cc0_fengjing')" class="ai-pic-btn">風景圖片</button>
-            <button onclick="search('NASA_APOD')" class="ai-pic-btn">NASA 圖</button>
-            <button onclick="search('wiki_daily')" class="ai-pic-btn">Wiki 每日圖片</button>
-            <button onclick="search('photo_ac')" class="ai-pic-btn">Photo ac 免費圖片</button>
-          </div>
+      <div class="section">
+        <h3>網路 Free 圖檔</h3>
+        <div class="buttons-container">
+          <button onclick="search('freepik')" class="ai-pic-btn">
+            Freepik
+          </button>
+          <button onclick="search('Pexels')" class="ai-pic-btn">Pexels</button>
+          <button onclick="search('Adobe_Firefly')" class="ai-pic-btn">
+            Adobe
+          </button>
+          <button onclick="search('FreeImages')" class="ai-pic-btn">
+            FreeImages
+          </button>
+          <button onclick="search('Pixabay')" class="ai-pic-btn">
+            Pixabay
+          </button>
+          <button onclick="search('cc0_fengjing')" class="ai-pic-btn">
+            風景圖片
+          </button>
+          <button onclick="search('NASA_APOD')" class="ai-pic-btn">
+            NASA 圖
+          </button>
+          <button onclick="search('wiki_daily')" class="ai-pic-btn">
+            Wiki 每日圖片
+          </button>
+          <button onclick="search('photo_ac')" class="ai-pic-btn">
+            Photo ac 免費圖片
+          </button>
         </div>
+      </div>
 
       <!-- 新增：購物網購物網站 -->
       <div class="section">
         <h3>購物網站</h3>
         <div class="buttons-container">
-          <button onclick="search('pchome24')" class="shopping-btn">PChome 24h購物</button>
-          <button onclick="search('momo')" class="shopping-btn">momo購物網</button>
-          <button onclick="search('shopee')" class="shopping-btn">蝦皮購物</button>
-          <button onclick="search('yahoo_shop')" class="shopping-btn">Yahoo奇摩購物中心</button>
-          <button onclick="search('ruten')" class="shopping-btn">露天購物</button>
+          <button onclick="search('pchome24')" class="shopping-btn">
+            PChome 24h購物
+          </button>
+          <button onclick="search('momo')" class="shopping-btn">
+            momo購物網
+          </button>
+          <button onclick="search('shopee')" class="shopping-btn">
+            蝦皮購物
+          </button>
+          <button onclick="search('yahoo_shop')" class="shopping-btn">
+            Yahoo奇摩購物中心
+          </button>
+          <button onclick="search('ruten')" class="shopping-btn">
+            露天購物
+          </button>
           <button onclick="search('books')" class="shopping-btn">博客來</button>
-          <button onclick="search('etmall')" class="shopping-btn">東森購物</button>
-          <button onclick="search('rakuten')" class="shopping-btn">樂天市場</button>
-          <button onclick="search('coupang')" class="shopping-btn">Coupang 酷澎</button>
-          <button onclick="search('fridays')" class="shopping-btn">friDay購物</button>
+          <button onclick="search('etmall')" class="shopping-btn">
+            東森購物
+          </button>
+          <button onclick="search('rakuten')" class="shopping-btn">
+            樂天市場
+          </button>
+          <button onclick="search('coupang')" class="shopping-btn">
+            Coupang 酷澎
+          </button>
+          <button onclick="search('fridays')" class="shopping-btn">
+            friDay購物
+          </button>
           <!-- 新增：鮮拾和信源電器 -->
           <button onclick="search('鮮拾')" class="shopping-btn">鮮拾</button>
-          <button onclick="search('信源電器')" class="shopping-btn">信源電器</button>
-          
+          <button onclick="search('信源電器')" class="shopping-btn">
+            信源電器
+          </button>
+
           <!-- 新增：從搜索引擎移過來的 14 個網站 -->
           <button onclick="search('findprice')" class="shopping-btn">
             FindPrice 比價
@@ -354,17 +435,27 @@
             BigGo 比價
           </button>
           <button onclick="search('ezprice')" class="shopping-btn">
-          飛比 比價
+            飛比 比價
           </button>
-          <button onclick="search('sogi')" class="shopping-btn">Sogi 手機王</button>
-          <button onclick="search('eprice')" class="shopping-btn">Eprice 手機比價</button>
-          <button onclick="search('findbook')" class="shopping-btn">Findbook</button>
-          <button onclick="search('funtime')" class="shopping-btn">Fun Time 玩時間</button>
-          <button onclick="search('taiwango')" class="shopping-btn">TaiwanGo 輕鬆比</button>
-          <button onclick="search('backpackers')" class="shopping-btn">背包客棧 旅行論壇</button>
-          <button onclick="search('agoda')" class="shopping-btn">
-            Agoda
+          <button onclick="search('sogi')" class="shopping-btn">
+            Sogi 手機王
           </button>
+          <button onclick="search('eprice')" class="shopping-btn">
+            Eprice 手機比價
+          </button>
+          <button onclick="search('findbook')" class="shopping-btn">
+            Findbook
+          </button>
+          <button onclick="search('funtime')" class="shopping-btn">
+            Fun Time 玩時間
+          </button>
+          <button onclick="search('taiwango')" class="shopping-btn">
+            TaiwanGo 輕鬆比
+          </button>
+          <button onclick="search('backpackers')" class="shopping-btn">
+            背包客棧 旅行論壇
+          </button>
+          <button onclick="search('agoda')" class="shopping-btn">Agoda</button>
           <button onclick="search('booking')" class="shopping-btn">
             Booking.com
           </button>
@@ -453,8 +544,8 @@
             Ideogram
           </button>
           <button onclick="search('Adobe_Firefly')" class="ai-pic-btn">
-            Adobe Firefly
-          </button><!-- 新增：Photo to Anime Converter -->
+            Adobe Firefly</button
+          ><!-- 新增：Photo to Anime Converter -->
           <button onclick="search('photo_to_anime')" class="ai-pic-btn">
             Photo to Anime Converter
           </button>
@@ -488,14 +579,14 @@
             (item, index) => `
               <div class="history-item">
                 <span class="history-time">${new Date(
-                  item.time
+                  item.time,
                 ).toLocaleString()}</span>
                 <span class="history-text" onclick="useHistoryItem('${encodeURIComponent(
-                  item.text
+                  item.text,
                 )}')">${item.text}</span>
                 <button class="delete-btn" onclick="deleteHistoryItem(${index})">刪除</button>
               </div>
-            `
+            `,
           )
           .join("");
       }
@@ -785,58 +876,58 @@
             home: "https://www.adobe.com/sensei/generative-ai/firefly.html",
           },
           photo_to_anime: {
-            search:"https://aienhancer.ai/photo-to-anime-converter",
+            search: "https://aienhancer.ai/photo-to-anime-converter",
             home: "https://aienhancer.ai/photo-to-anime-converter",
           },
           // 新增比價 / 購物比對網站 mappings（若搜尋參數不精準，將導向官網）
           sogi: {
             search: "http://www.sogi.com.tw/price/?q=",
-            home: "http://www.sogi.com.tw/price/"
+            home: "http://www.sogi.com.tw/price/",
           },
           eprice: {
             search: "http://www.eprice.com.tw/?q=",
-            home: "http://www.eprice.com.tw/"
+            home: "http://www.eprice.com.tw/",
           },
           findbook: {
             search: "http://findbook.tw/search?query=",
-            home: "http://findbook.tw/"
+            home: "http://findbook.tw/",
           },
           priceTW: {
             search: "https://biggo.com.tw/s/",
-            home: "https://biggo.com.tw"
+            home: "https://biggo.com.tw",
           },
           funtime: {
             search: "http://www.funtime.com.tw/search?keyword=",
-            home: "http://www.funtime.com.tw/"
+            home: "http://www.funtime.com.tw/",
           },
           findprice: {
             search: "https://www.findprice.com.tw/g/",
-            home: "https://www.findprice.com.tw"
+            home: "https://www.findprice.com.tw",
           },
           taiwango: {
             search: "http://www.taiwango.com.tw/ez/ez.asp?q=",
-            home: "http://www.taiwango.com.tw/ez/ez.asp"
+            home: "http://www.taiwango.com.tw/ez/ez.asp",
           },
           ezprice: {
             search: "https://feebee.com.tw/s/",
-            home: "https://feebee.com.tw"
+            home: "https://feebee.com.tw",
           },
           backpackers: {
             search: "http://www.backpackers.com.tw/forum/search.php?srch=",
-            home: "http://www.backpackers.com.tw/forum/airfare.php"
+            home: "http://www.backpackers.com.tw/forum/airfare.php",
           },
           // 新增：旅遊預訂網站
           agoda: {
             search: "https://www.agoda.com/search?ss=",
-            home: "https://www.agoda.com/"
+            home: "https://www.agoda.com/",
           },
           booking: {
             search: "https://www.booking.com/searchresults.html?ss=",
-            home: "https://www.booking.com/"
+            home: "https://www.booking.com/",
           },
           trip: {
             search: "https://www.trip.com/flights/?dcity=&acity=&ddate=&rdate=",
-            home: "https://www.trip.com/"
+            home: "https://www.trip.com/",
           },
           poe: {
             search: "https://poe.com",
@@ -894,54 +985,55 @@
           // 新增：購物網購物網站
           ruten: {
             search: "https://www.ruten.com.tw/find?q=",
-            home: "https://www.ruten.com.tw"
+            home: "https://www.ruten.com.tw",
           },
           momo: {
-            search: "https://www.momoshop.com.tw/search/searchShop.jsp?keyword=",
-            home: "https://www.momoshop.com.tw"
+            search:
+              "https://www.momoshop.com.tw/search/searchShop.jsp?keyword=",
+            home: "https://www.momoshop.com.tw",
           },
           pchome24: {
             search: "https://24h.pchome.com.tw/search/?q=",
-            home: "https://24h.pchome.com.tw"
+            home: "https://24h.pchome.com.tw",
           },
           shopee: {
             search: "https://shopee.tw/search?keyword=",
-            home: "https://shopee.tw"
+            home: "https://shopee.tw",
           },
           rakuten: {
             search: "https://www.rakuten.com.tw/search/?q=",
-            home: "https://www.rakuten.com.tw"
+            home: "https://www.rakuten.com.tw",
           },
           coupang: {
             search: "https://www.tw.coupang.com/search?q=",
-            home: "https://www.tw.coupang.com/"
+            home: "https://www.tw.coupang.com/",
           },
           blogger: {
             search: "https://search.books.com.tw/exSearch.php?key=",
-            home: "https://www.books.com.tw"
+            home: "https://www.books.com.tw",
           },
           fridays: {
             search: "https://ec-w.shopping.friday.tw/aisearch?keyword=",
-            home: "https://ec-w.shopping.friday.tw/"
+            home: "https://ec-w.shopping.friday.tw/",
           },
           // 新增：Search_購物網站.html 中的購物網站
           books: {
             search: "https://search.books.com.tw/search/query/key/",
-            home: "https://www.books.com.tw"
+            home: "https://www.books.com.tw",
           },
           etmall: {
             search: "https://www.etmall.com.tw/Search?keyword=",
-            home: "https://www.etmall.com.tw"
+            home: "https://www.etmall.com.tw",
           },
           // 新增：鮮拾和信源電器
           鮮拾: {
             search: "https://www.10mart.com.tw/search?q=",
-            home: "https://www.10mart.com.tw"
+            home: "https://www.10mart.com.tw",
           },
           信源電器: {
             search: "https://www.3cu.com.tw/search?q=",
-            home: "https://www.3cu.com.tw/"
-          }
+            home: "https://www.3cu.com.tw/",
+          },
         };
 
         let finalUrl;
@@ -958,7 +1050,7 @@
           };
 
           const existingIndex = searchHistory.findIndex(
-            (item) => item.text === searchText
+            (item) => item.text === searchText,
           );
           if (existingIndex !== -1) {
             searchHistory.splice(existingIndex, 1);

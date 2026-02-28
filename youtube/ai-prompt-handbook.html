@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 指令手冊 — Prompt Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090a; --s1:#0d1117; --s2:#161b22; --b1:#21262d; --b2:#30363d;
+  --green:#3fb950; --green-dim:#0d3318; --green-glow:rgba(63,185,80,.15);
+  --amber:#f0883e; --blue:#79c0ff; --purple:#d2a8ff; --red:#ff6b6b;
+  --text:#c9d1d9; --text-dim:#6e7681; --text-bright:#f0f6fc;
+  --mono:'IBM Plex Mono',monospace; --disp:'Syne',sans-serif; --body:'Noto Sans TC',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(63,185,80,.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(63,185,80,.04) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;z-index:0}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:100;background:rgba(7,9,10,.92);
+  backdrop-filter:blur(16px);border-bottom:1px solid var(--b1)}
+.hdr{max-width:1440px;margin:0 auto;padding:0 28px;
+  display:flex;align-items:center;justify-content:space-between;height:58px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.logo-box{width:30px;height:30px;border:1.5px solid var(--green);
+  display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.logo-box::after{content:'';position:absolute;inset:4px;background:var(--green);
+  opacity:.15;animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.1}50%{opacity:.3}}
+.logo-box svg{position:relative;z-index:1}
+.logo-name{font-family:var(--disp);font-size:17px;font-weight:800;
+  color:var(--text-bright);letter-spacing:-.5px}
+.logo-name em{color:var(--green);font-style:normal}
+.hdr-search{flex:1;max-width:380px;position:relative}
+.hdr-search input{width:100%;background:var(--s1);border:1px solid var(--b2);
+  color:var(--text);font-family:var(--mono);font-size:12px;
+  padding:8px 14px 8px 34px;outline:none;transition:.2s}
+.hdr-search input:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--green-glow)}
+.hdr-search input::placeholder{color:var(--text-dim)}
+.s-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  color:var(--text-dim);pointer-events:none}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.badge{font-family:var(--mono);font-size:9px;padding:4px 9px;
+  border:1px solid var(--b2);color:var(--text-dim);letter-spacing:1px;white-space:nowrap}
+.badge.live{border-color:var(--green);color:var(--green);display:flex;align-items:center;gap:5px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+.src-link{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-decoration:none;
+  border:1px solid var(--b1);padding:5px 11px;transition:.2s;display:flex;align-items:center;gap:6px}
+.src-link:hover{border-color:var(--green);color:var(--green)}
+
+/* HERO */
+.hero{position:relative;z-index:1;padding:48px 28px 40px;max-width:1440px;margin:0 auto}
+.hero-tag{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:3px;
+  margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.hero-tag::before{content:'▶';font-size:8px;opacity:.7}
+h1{font-family:var(--disp);font-size:clamp(36px,6vw,72px);font-weight:800;
+  line-height:.93;letter-spacing:-2px;color:var(--text-bright);margin-bottom:16px}
+h1 .g{color:var(--green);display:block}
+.hero-sub{font-size:14px;color:var(--text-dim);max-width:500px;line-height:1.75;margin-bottom:24px}
+.hero-stats{display:flex;gap:28px;flex-wrap:wrap}
+.st{display:flex;flex-direction:column;gap:2px}
+.st-n{font-family:var(--mono);font-size:20px;font-weight:600;color:var(--green);line-height:1}
+.st-l{font-size:10px;color:var(--text-dim);letter-spacing:.5px}
+
+/* MAIN */
+.main{max-width:1440px;margin:0 auto;padding:0 28px 80px;position:relative;z-index:1}
+
+/* API KEY BAR */
+.key-bar{background:#0b150b;border:1px solid #1a2e1a;margin-bottom:24px;padding:14px 20px;
+  display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.key-warn{font-family:var(--mono);font-size:9px;color:var(--amber);
+  letter-spacing:1px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.key-field{flex:1;min-width:220px;display:flex;gap:8px;align-items:center}
+.key-field input{flex:1;padding:7px 12px;font-size:11px;background:var(--bg);
+  border:1px solid var(--b2);color:var(--text);font-family:var(--mono);outline:none;transition:.2s}
+.key-field input:focus{border-color:var(--green)}
+.key-field input::placeholder{color:var(--text-dim)}
+.key-save-btn{cursor:pointer;padding:7px 14px;background:var(--green);color:#000;
+  border:none;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:1px;white-space:nowrap}
+.key-save-btn:hover{background:#4fcd60}
+.key-link{font-family:var(--mono);font-size:9px;color:var(--blue);white-space:nowrap;
+  text-decoration:none;flex-shrink:0}
+.key-link:hover{color:var(--text-bright)}
+#keyStatus{font-family:var(--mono);font-size:9px;letter-spacing:1px}
+.key-ok{color:var(--green)}
+.key-note{font-family:var(--mono);font-size:9px;color:var(--text-dim);width:100%;
+  padding-top:4px;border-top:1px solid var(--b1)}
+
+/* GENERATOR */
+.gen-panel{background:var(--s1);border:1px solid var(--b2);margin-bottom:44px;
+  position:relative;overflow:hidden}
+.gen-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent)}
+.gen-hdr{padding:16px 22px;border-bottom:1px solid var(--b1);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.gen-title{display:flex;align-items:center;gap:10px}
+.gen-icon{width:28px;height:28px;background:var(--green-dim);border:1px solid var(--green);
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.gen-label{font-family:var(--disp);font-size:14px;font-weight:700;color:var(--text-bright)}
+.gen-desc{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-top:2px}
+.gen-body{padding:22px;display:grid;grid-template-columns:1fr 1fr auto;gap:13px;align-items:end}
+@media(max-width:800px){.gen-body{grid-template-columns:1fr}}
+.fg{display:flex;flex-direction:column;gap:7px}
+.fl{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-dim);
+  text-transform:uppercase;display:flex;align-items:center;gap:5px}
+.fl .accent{color:var(--green)}
+select,input[type="text"]{background:var(--bg);border:1px solid var(--b2);color:var(--text);
+  font-family:var(--body);font-size:13px;padding:10px 14px;outline:none;
+  transition:.2s;width:100%;-webkit-appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%233fb950'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer}
+select:focus,input[type="text"]:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--green-glow)}
+input[type="text"]::placeholder{color:var(--text-dim)}
+select option{background:var(--s2)}
+.gen-btn{cursor:pointer;background:var(--green);color:#000;border:none;
+  padding:11px 22px;font-family:var(--mono);font-size:11px;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;transition:.2s;white-space:nowrap;
+  display:flex;align-items:center;gap:9px}
+.gen-btn:hover:not(:disabled){background:#4fcd60;transform:translateY(-1px)}
+.gen-btn:disabled{opacity:.45;cursor:not-allowed}
+.spin{width:12px;height:12px;border:2px solid rgba(0,0,0,.25);border-top-color:#000;
+  border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gen-btn.loading .spin{display:block}
+.gen-out{display:none;border-top:1px solid var(--b1);background:var(--bg)}
+.gen-out.show{display:block}
+.out-bar{padding:10px 18px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--b1)}
+.out-lbl{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--green);
+  display:flex;align-items:center;gap:6px;text-transform:uppercase}
+.out-actions{display:flex;gap:7px}
+.out-copy-btn,.out-ins-btn{cursor:pointer;padding:5px 11px;background:transparent;
+  border:1px solid var(--b2);font-family:var(--mono);font-size:9px;
+  letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;transition:.2s}
+.out-copy-btn:hover{border-color:var(--green);color:var(--green)}
+.out-ins-btn:hover{border-color:var(--amber);color:var(--amber)}
+.out-copy-btn.ok{border-color:#4caf6e;color:#4caf6e}
+.out-text{padding:18px;font-family:var(--mono);font-size:12px;line-height:1.8;
+  white-space:pre-wrap;word-break:break-word;color:var(--text);min-height:80px}
+.err-text{color:var(--red)}
+.skeleton{padding:18px;display:flex;flex-direction:column;gap:9px}
+.skel-ln{height:10px;background:linear-gradient(90deg,var(--s1) 25%,var(--s2) 50%,var(--s1) 75%);
+  background-size:200% 100%;animation:shim 1.4s infinite;border-radius:2px}
+@keyframes shim{to{background-position:-200% 0}}
+
+/* CATS */
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:26px}
+.cat-btn{cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:1px;
+  padding:7px 13px;border:1px solid var(--b2);background:transparent;
+  color:var(--text-dim);transition:.15s;white-space:nowrap}
+.cat-btn:hover{color:var(--text);background:var(--s1)}
+.cat-btn.active{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1px;background:var(--b1)}
+.card{background:var(--s1);transition:.15s;position:relative;display:flex;flex-direction:column}
+.card:hover{background:var(--s2)}
+.card-hdr{padding:15px 17px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card-left{display:flex;align-items:center;gap:9px}
+.card-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);border:1px solid var(--b2);font-size:14px;flex-shrink:0}
+.card-cat{font-family:var(--mono);font-size:8px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--text-dim);padding:3px 7px;border:1px solid var(--b1)}
+.card-tags{display:flex;gap:4px;flex-wrap:wrap}
+.card-tag{font-family:var(--mono);font-size:7px;letter-spacing:1px;
+  padding:2px 6px;border:1px solid var(--b1);color:var(--text-dim)}
+.card-title{padding:9px 17px 0;font-family:var(--disp);font-size:14px;font-weight:700;
+  color:var(--text-bright);line-height:1.3}
+.card-desc{padding:5px 17px 0;font-size:12px;color:var(--text-dim);line-height:1.6}
+.card-prompt{margin:11px 17px;background:var(--bg);border:1px solid var(--b1);
+  padding:13px;font-family:var(--mono);font-size:11px;line-height:1.75;
+  color:var(--text);flex:1;max-height:160px;overflow:hidden;position:relative}
+.card-prompt::after{content:'';position:absolute;bottom:0;left:0;right:0;height:32px;
+  background:linear-gradient(transparent,var(--bg))}
+.card-prompt .var{color:var(--amber);font-style:normal}
+.card-footer{padding:9px 17px 13px;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:7px}
+.copy-btn{cursor:pointer;padding:6px 13px;background:transparent;
+  border:1px solid var(--b2);font-family:var(--mono);font-size:9px;
+  letter-spacing:1px;color:var(--text-dim);transition:.15s;text-transform:uppercase}
+.copy-btn:hover{border-color:var(--green);color:var(--green)}
+.copy-btn.ok{border-color:#4caf6e;color:#4caf6e}
+.ai-gen-btn{cursor:pointer;padding:6px 13px;background:transparent;
+  border:1px solid var(--b1);font-family:var(--mono);font-size:9px;
+  letter-spacing:1px;color:var(--text-dim);transition:.15s;
+  display:flex;align-items:center;gap:5px;text-transform:uppercase}
+.ai-gen-btn:hover{border-color:var(--purple);color:var(--purple)}
+.no-results{padding:60px;text-align:center;color:var(--text-dim);
+  font-family:var(--mono);font-size:12px;grid-column:1/-1;letter-spacing:1px}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--b1);
+  background:var(--s1);padding:18px 28px}
+.foot-inner{max-width:1440px;margin:0 auto;display:flex;
+  align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.foot-left{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;line-height:1.8}
+.foot-right{display:flex;gap:12px;flex-wrap:wrap}
+.foot-link{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-decoration:none;
+  letter-spacing:1px;transition:.15s;border-bottom:1px solid transparent}
+.foot-link:hover{color:var(--green);border-color:var(--green)}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--s2);
+  border:1px solid var(--green);font-family:var(--mono);font-size:11px;
+  padding:10px 18px;color:var(--green);letter-spacing:1px;opacity:0;
+  transform:translateY(10px);transition:.3s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:600px){
+  .hdr-search{display:none}
+  h1{font-size:38px;letter-spacing:-1px}
+  .hdr-right .badge:not(.live){display:none}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <a class="logo" href="#">
+      <div class="logo-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#3fb950" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="logo-name">Prompt<em>Studio</em></span>
+    </a>
+    <div class="hdr-search">
+      <svg class="s-ico" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="搜尋指令… 按 / 快速聚焦" autocomplete="off">
+    </div>
+    <div class="hdr-right">
+      <div class="badge live"><div class="dot"></div>Claude AI</div>
+      <div class="badge">50 指令</div>
+      <a class="src-link" href="https://learnai.tw/prompt/" target="_blank">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        參考來源
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">AI 指令手冊 — PROMPT HANDBOOK</div>
+  <h1>問得<span class="g">精、巧、準</span></h1>
+  <p class="hero-sub">收錄 50+ 精煉提示詞，涵蓋工作、學習、程式、行銷等場景。選類別複製即用，或讓 AI 依需求即時生成專屬指令。</p>
+  <div class="hero-stats">
+    <div class="st"><div class="st-n" id="countAll">50</div><div class="st-l">精選指令</div></div>
+    <div class="st"><div class="st-n" id="countCats">10</div><div class="st-l">分類數</div></div>
+    <div class="st"><div class="st-n">Claude</div><div class="st-l">AI 引擎</div></div>
+    <div class="st"><div class="st-n">免費</div><div class="st-l">完全免費</div></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- API KEY BAR -->
+  <div class="key-bar">
+    <div class="key-warn">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      AI 生成功能需要 Anthropic API Key
+    </div>
+    <div class="key-field">
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-…　貼上你的 API Key">
+      <button class="key-save-btn" onclick="saveApiKey()">儲存 Key</button>
+    </div>
+    <a class="key-link" href="https://console.anthropic.com/settings/keys" target="_blank">→ 取得免費 API Key</a>
+    <span id="keyStatus"></span>
+    <div class="key-note">🔒 Key 僅存於瀏覽器記憶體，不會上傳至任何伺服器。不設置也可正常使用指令庫。</div>
+  </div>
+
+  <!-- AI GENERATOR -->
+  <div class="gen-panel">
+    <div class="gen-hdr">
+      <div class="gen-title">
+        <div class="gen-icon">✦</div>
+        <div>
+          <div class="gen-label">AI 隨選指令生成器</div>
+          <div class="gen-desc">輸入需求 → Claude 即時生成量身定制的提示詞</div>
+        </div>
+      </div>
+      <div class="badge">POWERED BY CLAUDE</div>
+    </div>
+    <div class="gen-body">
+      <div class="fg">
+        <div class="fl"><span class="accent">01</span> 應用場景</div>
+        <select id="genCat">
+          <option value="">選擇場景類別…</option>
+          <option>求職面試</option><option>文章寫作</option><option>程式開發</option>
+          <option>行銷文案</option><option>學習教育</option><option>數據分析</option>
+          <option>社群媒體</option><option>商業策略</option><option>角色扮演</option>
+          <option>日常生活</option><option>翻譯校對</option>
+        </select>
+      </div>
+      <div class="fg">
+        <div class="fl"><span class="accent">02</span> 具體需求描述</div>
+        <input type="text" id="genNeed" placeholder="例：幫我寫一封婉拒面試邀請的信…" onkeydown="if(event.key==='Enter')generatePrompt()">
+      </div>
+      <button class="gen-btn" id="genBtn" onclick="generatePrompt()">
+        <div class="spin"></div>
+        <span id="genBtnTxt">⚡ 生成指令</span>
+      </button>
+    </div>
+    <div class="gen-out" id="genOut">
+      <div class="out-bar">
+        <div class="out-lbl"><span class="dot"></span>Generated Prompt</div>
+        <div class="out-actions">
+          <button class="out-ins-btn" onclick="insertToSearch()">插入搜尋</button>
+          <button class="out-copy-btn" id="outCopyBtn" onclick="copyOutput()">⎘ 複製</button>
+        </div>
+      </div>
+      <div class="skeleton" id="genSkel">
+        <div class="skel-ln" style="width:88%"></div>
+        <div class="skel-ln" style="width:72%"></div>
+        <div class="skel-ln" style="width:80%"></div>
+        <div class="skel-ln" style="width:58%"></div>
+      </div>
+      <div class="out-text" id="outText"></div>
+    </div>
+  </div>
+
+  <!-- CATS -->
+  <div class="cats" id="catTabs"></div>
+
+  <!-- GRID -->
+  <div class="grid" id="cardsGrid"></div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-left">© 2025 Prompt Studio — AI 指令手冊<br>
+    靈感來源：learnai.tw · quickref.me · explainthis.io · huggingface.co</div>
+    <div class="foot-right">
+      <a class="foot-link" href="https://learnai.tw/prompt/" target="_blank">Learn AI</a>
+      <a class="foot-link" href="https://quickref.me/chatgpt" target="_blank">QuickRef</a>
+      <a class="foot-link" href="https://www.explainthis.io/zh-hant/chatgpt" target="_blank">ExplainThis</a>
+      <a class="foot-link" href="https://huggingface.co/datasets/fka/prompts.chat" target="_blank">HuggingFace</a>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+/* ── DATA ─────────────────────────────────────────── */
+const PROMPTS = [
+  {cat:'求職面試',icon:'💼',title:'STAR 法則改寫履歷',tags:['履歷'],
+   desc:'以 STAR 原則改寫工作經歷，加入量化成果。',
+   prompt:'你是資深 HR，請以 STAR 原則改寫以下工作經歷，加入量化數據，維持條列形式，語氣專業有力。\n\n【職稱】：[職稱]\n【經歷內容】：[貼上你的經歷]'},
+  {cat:'求職面試',icon:'💼',title:'求職信一鍵生成',tags:['Cover Letter'],
+   desc:'輸入公司與職位，產出個人化求職信草稿。',
+   prompt:'你是專業求職信撰寫師。用繁體中文為以下情況撰寫一封 300 字以內的求職信：\n\n公司：[公司名稱]\n職位：[職位名稱]\n我的核心優勢：[3 項優勢]\n我對這間公司的興趣：[原因]'},
+  {cat:'求職面試',icon:'💼',title:'面試問題模擬',tags:['模擬'],
+   desc:'列出指定職位最常見的 10 道面試題目。',
+   prompt:'你是 [公司名稱] 的 [職位] 面試官。請列出面試此職位最常問的 10 個問題，包含行為面試題與技術題，並標註每題的考察重點。'},
+  {cat:'求職面試',icon:'💼',title:'薪資談判腳本',tags:['談判'],
+   desc:'給你一套開口談薪的話術框架與備案。',
+   prompt:'請幫我撰寫薪資談判腳本。情境：我收到 [公司] 錄取，提供 [金額]，期望 [期望金額]，理由是 [理由]。請以自信但不失禮語氣寫開場話術及回應拒絕的備案。'},
+  {cat:'求職面試',icon:'💼',title:'弱點回答框架',tags:['行為面試'],
+   desc:'把「你的缺點是什麼」轉化為有說服力的回答。',
+   prompt:'幫我回答「你最大的缺點是什麼？」這道面試題。我的實際弱點是 [弱點]。請用「承認弱點 → 改善行動 → 成長結果」框架寫出自然誠懇的 150 字回答。'},
+
+  {cat:'文章寫作',icon:'✍️',title:'部落格大綱生成',tags:['SEO','大綱'],
+   desc:'給主題，輸出完整文章架構與各段重點。',
+   prompt:'你是 SEO 部落格撰稿人。為以下主題生成完整文章大綱：\n\n主題：[主題]\n目標讀者：[讀者]\n字數目標：[字數] 字\n\n需含：標題、Hook 開場、各 H2/H3 段落重點、CTA 結尾。'},
+  {cat:'文章寫作',icon:'✍️',title:'文章語調改寫',tags:['改寫'],
+   desc:'將原始文字改為指定語調（正式/輕鬆/說服性）。',
+   prompt:'請將以下文字改寫為 [語調：正式/輕鬆口語/說服性/學術/幽默] 風格，保留核心資訊，調整句子結構與用詞：\n\n[貼上原始文字]'},
+  {cat:'文章寫作',icon:'✍️',title:'爆款標題生成器',tags:['標題'],
+   desc:'一次生成 10 個不同風格的吸睛標題。',
+   prompt:'為以下文章主題生成 10 個標題（提問式、數字式、秘密揭露式、情緒共鳴式各至少 2 個），目標是吸引點擊且符合 SEO：\n\n主題：[主題]\n關鍵詞：[關鍵詞]'},
+  {cat:'文章寫作',icon:'✍️',title:'長文精煉摘要',tags:['摘要'],
+   desc:'把長篇文章壓縮成 200 字以內重點摘要。',
+   prompt:'請閱讀以下文章，用繁體中文寫 200 字以內摘要，格式：\n1. 核心主旨（1句）\n2. 三個關鍵重點（條列）\n3. 結論或行動建議（1句）\n\n[貼上文章]'},
+  {cat:'文章寫作',icon:'✍️',title:'開場 Hook 三款',tags:['創意寫作'],
+   desc:'為文章或演講寫出三種風格的開場第一段。',
+   prompt:'為以下主題寫 3 種開場 Hook（各約 50 字）：\n· 故事型：以場景或小故事帶入\n· 數據型：用驚人統計引發興趣\n· 問題型：拋出讓讀者想繼續的問題\n\n主題：[主題]'},
+
+  {cat:'程式開發',icon:'💻',title:'程式碼除錯分析',tags:['Debug'],
+   desc:'貼上錯誤代碼，AI 找出問題並給修正版本。',
+   prompt:'你是資深工程師。分析以下程式碼，說明：\n1. 哪裡有 bug 或潛在問題\n2. 為什麼出現\n3. 提供修正後完整程式碼\n\n語言：[語言]\n錯誤訊息：[錯誤訊息]\n\n```\n[貼上程式碼]\n```'},
+  {cat:'程式開發',icon:'💻',title:'程式碼重構建議',tags:['重構'],
+   desc:'審視程式碼，提出可讀性與效能改善建議。',
+   prompt:'審查以下程式碼，重點關注：可讀性、效能、SOLID 原則、邊界情況。分點說明並提供重構版本：\n\n```\n[貼上程式碼]\n```'},
+  {cat:'程式開發',icon:'💻',title:'Regex 生成器',tags:['Regex'],
+   desc:'用自然語言描述需求，AI 生成正規表達式。',
+   prompt:'生成符合以下條件的 Regex：\n\n需求：[例：匹配台灣手機號碼 09xx-xxx-xxx]\n語言環境：[JavaScript/Python/…]\n\n請提供：1. Regex 表達式 2. 各部分意義解釋 3. 3 個測試範例'},
+  {cat:'程式開發',icon:'💻',title:'語言轉換翻譯',tags:['翻譯'],
+   desc:'將程式碼從一種語言翻譯成另一種語言。',
+   prompt:'將以下 [來源語言] 程式碼翻譯成 [目標語言]，保持相同邏輯與功能，加上必要說明註解：\n\n```\n[貼上程式碼]\n```'},
+  {cat:'程式開發',icon:'💻',title:'單元測試生成',tags:['Testing'],
+   desc:'為函式自動生成涵蓋邊界情境的單元測試。',
+   prompt:'為以下函式生成完整單元測試，使用 [Jest/pytest/…] 框架，包含正常情況、邊界值、錯誤輸入：\n\n```\n[貼上函式]\n```'},
+
+  {cat:'行銷文案',icon:'📣',title:'廣告文案三版本',tags:['廣告'],
+   desc:'同一產品，生成三種不同訴求的廣告文案。',
+   prompt:'為以下產品撰寫 3 版廣告文案（每版不超過 80 字）：\n· A：情感訴求（觸動痛點）\n· B：理性訴求（數據功能）\n· C：社會認同（用戶見證）\n\n產品：[描述]\n目標客群：[客群]'},
+  {cat:'行銷文案',icon:'📣',title:'品牌故事撰寫',tags:['品牌'],
+   desc:'把品牌背景轉化成有溫度的品牌故事。',
+   prompt:'為以下品牌撰寫 200 字品牌故事，結構：創立緣由 → 核心理念 → 對客戶的承諾，語氣真誠有溫度：\n\n品牌：[名稱] / 行業：[行業]\n創立故事：[簡述]\n核心價值：[價值]'},
+  {cat:'行銷文案',icon:'📣',title:'Email 行銷序列',tags:['Email'],
+   desc:'生成五封由淺入深的電子郵件行銷序列。',
+   prompt:'為以下產品設計 5 封 Email 行銷序列，時間跨度 2 週，目標從初次接觸到促成購買：\n\n產品：[產品] / 目標讀者：[客群]\n\n每封需含：主旨、核心訊息、CTA、發送時機'},
+  {cat:'行銷文案',icon:'📣',title:'SEO 關鍵詞分析',tags:['SEO'],
+   desc:'分析主題並列出長尾關鍵詞與搜尋意圖。',
+   prompt:'針對以下主題進行 SEO 關鍵詞分析：\n\n主題：[主題] / 目標地區：[台灣/全球]\n\n請提供：1.主關鍵詞（5個）2.長尾關鍵詞（10個）3.LSI語意詞 4.搜尋意圖分類'},
+
+  {cat:'學習教育',icon:'🎓',title:'費曼學習法解釋',tags:['費曼'],
+   desc:'用 5 歲孩子能懂的方式解釋複雜概念。',
+   prompt:'用費曼學習法解釋「[概念名稱]」，對象是完全沒有背景的人。請包含：\n1. 一句話核心定義\n2. 生活化類比\n3. 最常見的誤解\n4. 與相關概念的區別'},
+  {cat:'學習教育',icon:'🎓',title:'學習計畫制定',tags:['計畫'],
+   desc:'依目標與期限生成具體可執行的學習計畫。',
+   prompt:'幫我制定學習「[主題]」的計畫：\n\n程度：[初學/中級/進階]\n目標：[學習目標]\n可用時間：每週 [X] 小時，共 [Y] 週\n\n請提供：分週進度表、每週任務、推薦資源、評估方式'},
+  {cat:'學習教育',icon:'🎓',title:'知識測驗題生成',tags:['測驗'],
+   desc:'根據學習材料自動出題並附上解析。',
+   prompt:'根據以下內容，生成 10 道複習題（單選 5 + 簡答 5），並附上每題正確答案與解析：\n\n[貼上學習材料]'},
+  {cat:'學習教育',icon:'🎓',title:'情境語言對話練習',tags:['語言'],
+   desc:'模擬真實場景，練習指定語言的對話。',
+   prompt:'你是我的 [英文/日文/…] 對話練習夥伴。模擬以下場景練習：\n\n場景：[例：咖啡廳點餐]\n程度：[初級/中級]\n\n每次我說錯時，在括號標注更自然說法，不中斷對話流程。'},
+
+  {cat:'數據分析',icon:'📊',title:'數據洞察報告',tags:['分析'],
+   desc:'貼上數據，AI 找出趨勢、異常與建議。',
+   prompt:'分析以下數據集，提供：\n1. 關鍵趨勢（3-5個）\n2. 異常值或值得注意的數據點\n3. 可能原因假設\n4. 行動建議（3個可執行項）\n\n數據：\n[貼上數據]'},
+  {cat:'數據分析',icon:'📊',title:'Excel 公式撰寫',tags:['Excel'],
+   desc:'描述你想計算什麼，AI 給出完整公式。',
+   prompt:'幫我寫 Excel 公式，達成以下目的：\n\n需求：[例：計算 A 欄中大於 1000 且 B 欄為「已完成」的總和]\n\n請提供：1.完整公式 2.各函式作用說明 3.如何修改適應不同情況'},
+  {cat:'數據分析',icon:'📊',title:'競品比較表格',tags:['競品'],
+   desc:'整理多個競品的差異，輸出結構化比較表。',
+   prompt:'製作競品比較表，評估以下產品：[產品1]、[產品2]、[產品3]\n\n比較維度：功能/價格/目標客群/優缺點/市場定位\n\n以 Markdown 表格呈現，並附上選擇建議。'},
+
+  {cat:'社群媒體',icon:'📱',title:'IG 貼文文案',tags:['Instagram'],
+   desc:'生成帶 emoji 和 hashtag 的吸睛 IG 貼文。',
+   prompt:'幫我寫 IG 貼文，主題：[主題]\n要求：\n· 開頭 2 句要吸引共鳴或好奇\n· 包含 3-5 個 emoji\n· 結尾附 10-15 個 hashtag（中英混合）\n· 語氣：[輕鬆/專業/勵志]'},
+  {cat:'社群媒體',icon:'📱',title:'LinkedIn 個人簡介',tags:['LinkedIn'],
+   desc:'撰寫吸引獵頭的 LinkedIn About 區塊。',
+   prompt:'幫我撰寫 LinkedIn About 區塊（150-200 字）：\n· 我是誰（職稱/專業）\n· 能為公司/客戶創造什麼價值\n· 核心技能與成就\n· 聯絡 CTA\n\n資訊：[職稱、產業、技能、成就]'},
+  {cat:'社群媒體',icon:'📱',title:'YouTube 影片腳本',tags:['腳本'],
+   desc:'完整的 YouTube 影片腳本，含 Hook 與 CTA。',
+   prompt:'幫我寫 [時長] 分鐘 YouTube 影片完整腳本：\n\n主題：[主題] / 目標觀眾：[受眾]\n影片目的：[教育/娛樂/銷售]\n\n格式：開場Hook(30秒) → 主體內容（分段）→ 總結 → 訂閱CTA'},
+  {cat:'社群媒體',icon:'📱',title:'Threads 短文串',tags:['Threads'],
+   desc:'把長文拆解成適合 Threads 的短文串格式。',
+   prompt:'把以下內容改寫成 5 則 Threads 短文串（每則不超過 280 字），串聯成有起承轉合的故事，每則結尾引發繼續閱讀的慾望：\n\n[貼上內容]'},
+
+  {cat:'商業策略',icon:'🏢',title:'SWOT 分析',tags:['策略'],
+   desc:'輸入公司/產品資訊，自動生成 SWOT 分析。',
+   prompt:'為以下公司進行完整 SWOT 分析，每個象限列 4-5 個具體點，並提出 3 個結合優勢與機會的策略建議：\n\n公司/產品：[名稱]\n行業：[行業]\n主要業務：[描述]'},
+  {cat:'商業策略',icon:'🏢',title:'OKR 目標制定',tags:['OKR'],
+   desc:'依部門目標生成符合 OKR 框架的具體指標。',
+   prompt:'幫我為以下目標撰寫 OKR：\n\n部門：[部門]\n公司目標：[目標]\n時間範圍：[季度/半年]\n\n請寫出 1 個 Objective + 3 個可量化 Key Results，並說明如何衡量。'},
+  {cat:'商業策略',icon:'🏢',title:'商業提案摘要',tags:['提案'],
+   desc:'把複雜的商業計畫壓縮成一頁精華摘要。',
+   prompt:'將以下商業計畫改寫為一頁執行摘要，格式：問題/機會→解決方案→市場規模→商業模式→競爭優勢→資金需求：\n\n[貼上商業計畫]'},
+  {cat:'商業策略',icon:'🏢',title:'定價策略分析',tags:['定價'],
+   desc:'分析三種定價策略的優劣並給出建議。',
+   prompt:'為以下產品分析三種定價策略（成本加成/競爭導向/價值導向）的優缺點，並根據目標市場給出最終建議：\n\n產品：[描述] / 目標客群：[描述]\n競品價格：[範圍] / 成本：[成本]'},
+
+  {cat:'角色扮演',icon:'🎭',title:'蘇格拉底式辯論',tags:['哲學'],
+   desc:'讓 AI 扮演蘇格拉底，以反問法引導思考。',
+   prompt:'請扮演蘇格拉底，用反問法引導我深度思考以下問題。每次只問一個問題，不直接給答案，當我回答後再提出更深入的反問：\n\n主題：[你想探討的問題]'},
+  {cat:'角色扮演',icon:'🎭',title:'嚴格導師模式',tags:['學習'],
+   desc:'設定嚴格專業導師，給出真實不客套的反饋。',
+   prompt:'你扮演嚴格但公正的 [領域] 導師，風格是直接指出問題、不給空洞讚美、要求具體改進。請用這個角色審閱以下作品：\n\n[貼上作品/文字/計畫]'},
+  {cat:'角色扮演',icon:'🎭',title:'魔鬼代言人挑戰',tags:['批判'],
+   desc:'讓 AI 扮演反方，挑戰你的想法與計畫所有盲點。',
+   prompt:"你扮演 Devil's Advocate。我將分享計畫，你的任務是提出所有可能的反對意見、風險與盲點。不要認同任何一點，積極挑戰：\n\n我的計畫：\n[描述計畫]"},
+  {cat:'角色扮演',icon:'🎭',title:'虛擬創業顧問',tags:['創業'],
+   desc:'20 年經驗的創業顧問，針對你的想法給直接建議。',
+   prompt:'你是有 20 年創業和投資經驗的顧問。針對以下創業想法，從市場可行性、競爭格局、商業模式、潛在風險、建議切入點五個維度給出直接分析：\n\n[創業想法]'},
+
+  {cat:'日常生活',icon:'🏠',title:'旅遊行程規劃',tags:['旅遊'],
+   desc:'輸入目的地與天數，生成詳細行程表。',
+   prompt:'規劃 [天數] 天的 [目的地] 旅行：\n\n出發日期：[日期] / 旅伴：[人數]\n預算：[預算] / 偏好：[文化/美食/戶外/購物]\n\n請提供每天行程表（含交通、用餐、住宿建議）'},
+  {cat:'日常生活',icon:'🏠',title:'健康飲食計畫',tags:['健康'],
+   desc:'根據目標生成一週健康飲食建議。',
+   prompt:'制定一週飲食計畫：\n\n目標：[減重/增肌/均衡] / 限制：[素食/無麩質/…]\n每日卡路里：[kcal]\n\n提供每天早中晚餐建議，附上簡易食譜或購買清單'},
+  {cat:'日常生活',icon:'🏠',title:'30 天習慣養成',tags:['自我提升'],
+   desc:'設計具體可行的 30 天習慣養成計畫。',
+   prompt:'設計 30 天「[習慣]」養成計畫：\n\n目前狀況：[現在狀態] / 希望達成：[具體目標]\n可用時間：每天約 [X] 分鐘\n\n提供：每週目標、每天具體行動、難關預測與克服方法'},
+  {cat:'日常生活',icon:'🏠',title:'衝突溝通腳本',tags:['溝通'],
+   desc:'化解衝突、清楚表達需求的 NVC 溝通框架。',
+   prompt:'幫我寫一段與 [關係] 溝通的腳本，情境：[描述衝突]。\n\n請使用非暴力溝通（NVC）框架：觀察→感受→需求→請求，語氣平靜且有建設性。'},
+
+  {cat:'翻譯校對',icon:'🌐',title:'台灣繁中自然翻譯',tags:['翻譯'],
+   desc:'翻譯並優化為台灣用語習慣的自然中文。',
+   prompt:'將以下內容翻譯成繁體中文，要求：\n· 使用台灣常用詞彙（非中國用語）\n· 語句通順自然，不像機器翻譯\n· 保留原文語氣與風格\n· 專業術語附英文原文\n\n[貼上原文]'},
+  {cat:'翻譯校對',icon:'🌐',title:'學術英文校對',tags:['學術'],
+   desc:'改善英文論文的語法、用詞與學術風格。',
+   prompt:'你是學術英文編輯。校對以下文字，改善：語法錯誤、不自然用詞、中式英文、句子結構。以「原文 → 修改版」對照方式呈現，並說明修改原因：\n\n[貼上英文段落]'},
+  {cat:'翻譯校對',icon:'🌐',title:'會議記錄整理',tags:['整理'],
+   desc:'把雜亂的會議紀錄整理成結構化文件。',
+   prompt:'將以下雜亂的會議記錄整理成結構化文件，格式：\n1. 會議結論（重點摘要）\n2. 待辦事項（負責人 + 截止日期）\n3. 下次會議主題\n\n原始記錄：\n[貼上記錄]'},
+];
+
+/* ── STATE ─────────────────────────────────────────── */
+let activeCat = '全部';
+let searchTerm = '';
+let lastGenText = '';
+let apiKey = '';
+
+const ALL_CATS = ['全部', ...new Set(PROMPTS.map(p => p.cat))];
+
+/* ── INIT ──────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  renderCats();
+  renderCards();
+  document.getElementById('countAll').textContent = PROMPTS.length;
+  document.getElementById('countCats').textContent = ALL_CATS.length - 1;
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchTerm = e.target.value.toLowerCase();
+    renderCards();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+      e.preventDefault();
+      document.getElementById('searchInput').focus();
+    }
+  });
+});
+
+/* ── API KEY ───────────────────────────────────────── */
+function saveApiKey() {
+  const val = document.getElementById('apiKeyInput').value.trim();
+  if (!val.startsWith('sk-ant-')) {
+    showStatus('⚠ 格式不正確，請確認 Key 以 sk-ant- 開頭', 'var(--red)');
+    return;
+  }
+  apiKey = val;
+  showStatus('✓ Key 已儲存（本次瀏覽有效）', 'var(--green)');
+  document.getElementById('apiKeyInput').value = '●'.repeat(20);
+}
+function showStatus(msg, color) {
+  const el = document.getElementById('keyStatus');
+  el.textContent = msg;
+  el.style.color = color;
+  setTimeout(() => { el.textContent = ''; }, 4000);
+}
+
+/* ── RENDER ────────────────────────────────────────── */
+function renderCats() {
+  document.getElementById('catTabs').innerHTML = ALL_CATS.map(c => `
+    <button class="cat-btn ${c===activeCat?'active':''}" onclick="setCategory('${c}')">
+      ${c}${c!=='全部'?` <span style="opacity:.5;font-size:9px">${PROMPTS.filter(p=>p.cat===c).length}</span>`:''}
+    </button>`).join('');
+}
+
+function renderCards() {
+  const filtered = PROMPTS.filter(p => {
+    const matchCat = activeCat==='全部' || p.cat===activeCat;
+    const q = searchTerm;
+    const matchSearch = !q ||
+      p.title.toLowerCase().includes(q) ||
+      p.cat.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q) ||
+      p.prompt.toLowerCase().includes(q) ||
+      p.tags.some(t => t.toLowerCase().includes(q));
+    return matchCat && matchSearch;
+  });
+  const grid = document.getElementById('cardsGrid');
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="no-results">// 沒有找到符合的指令<br><span style="font-size:10px">試試其他關鍵字或清除篩選</span></div>';
+    return;
+  }
+  grid.innerHTML = filtered.map((p,i) => {
+    const idx = PROMPTS.indexOf(p);
+    return `<div class="card" style="animation:fadeIn .3s ease ${(i%15)*0.025}s both">
+      <div class="card-hdr">
+        <div class="card-left">
+          <div class="card-icon">${p.icon}</div>
+          <div class="card-cat">${p.cat}</div>
+        </div>
+        <div class="card-tags">${p.tags.map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="card-title">${p.title}</div>
+      <div class="card-desc">${p.desc}</div>
+      <div class="card-prompt">${p.prompt.replace(/\[([^\]]+)\]/g,'<em class="var">[$1]</em>').replace(/\n/g,'<br>')}</div>
+      <div class="card-footer">
+        <button class="copy-btn" data-idx="${idx}" onclick="copyCard(this)">⎘ 複製指令</button>
+        <button class="ai-gen-btn" onclick="fillGen('${p.cat}','${p.title.replace(/'/g,"\\'")}')">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23 1.18-6.86L2 9.27l6.91-1.01L12 2z"/></svg>
+          AI 變化版
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── INTERACTIONS ──────────────────────────────────── */
+function setCategory(cat) {
+  activeCat = cat;
+  renderCats();
+  renderCards();
+}
+function copyCard(btn) {
+  const p = PROMPTS[parseInt(btn.dataset.idx)];
+  navigator.clipboard.writeText(p.prompt).then(() => {
+    btn.textContent = '✓ 已複製';
+    btn.classList.add('ok');
+    showToast('指令已複製到剪貼簿 ✓');
+    setTimeout(() => { btn.textContent = '⎘ 複製指令'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+function fillGen(cat, title) {
+  document.getElementById('genCat').value = cat;
+  document.getElementById('genNeed').value = `參考「${title}」生成更客製化的版本`;
+  document.querySelector('.gen-panel').scrollIntoView({ behavior:'smooth', block:'start' });
+  document.getElementById('genNeed').focus();
+}
+function copyOutput() {
+  if (!lastGenText) return;
+  navigator.clipboard.writeText(lastGenText).then(() => {
+    const b = document.getElementById('outCopyBtn');
+    b.textContent = '✓ 已複製'; b.classList.add('ok');
+    showToast('AI 生成指令已複製 ✓');
+    setTimeout(() => { b.textContent = '⎘ 複製'; b.classList.remove('ok'); }, 2000);
+  });
+}
+function insertToSearch() {
+  if (!lastGenText) return;
+  const q = lastGenText.slice(0,30);
+  document.getElementById('searchInput').value = q;
+  searchTerm = q.toLowerCase();
+  renderCards();
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ── AI GENERATE ───────────────────────────────────── */
+async function generatePrompt() {
+  const need = document.getElementById('genNeed').value.trim();
+  if (!need) { document.getElementById('genNeed').focus(); return; }
+
+  // check key
+  if (!apiKey) {
+    const keyInput = document.getElementById('apiKeyInput').value.trim();
+    if (keyInput.startsWith('sk-ant-')) {
+      apiKey = keyInput;
+    } else {
+      showToast('⚠ 請先在上方輸入並儲存你的 Anthropic API Key');
+      document.getElementById('apiKeyInput').focus();
+      return;
+    }
+  }
+
+  const cat   = document.getElementById('genCat').value;
+  const btn   = document.getElementById('genBtn');
+  const out   = document.getElementById('genOut');
+  const skel  = document.getElementById('genSkel');
+  const oText = document.getElementById('outText');
+  const bTxt  = document.getElementById('genBtnTxt');
+
+  btn.disabled = true; btn.classList.add('loading');
+  bTxt.textContent = '生成中…';
+  out.classList.add('show');
+  skel.style.display = 'flex'; oText.style.display = 'none'; oText.textContent = '';
+  out.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-6',
+        max_tokens: 800,
+        system: `你是世界級的 AI Prompt Engineer。根據使用者的場景與需求，生成一個高品質、可直接複製使用的提示詞（Prompt）。
+設計原則：1.明確角色設定 2.清晰任務描述 3.輸出格式規範 4.用 [變數] 標記需填入的部分 5.繁體中文/台灣用語 6.約150-250字可直接使用。
+只輸出提示詞本身，不要任何前言、說明或標題。`,
+        messages: [{ role:'user', content:`場景：${cat||'通用'}\n需求：${need}\n\n請生成高品質的提示詞。` }]
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    lastGenText = data.content?.map(c => c.text||'').join('') || '（無回應）';
+  } catch(e) {
+    lastGenText = '';
+    skel.style.display = 'none';
+    oText.style.display = 'block';
+    oText.innerHTML = `<span class="err-text">⚠ 錯誤：${e.message}\n\n常見原因：\n1. API Key 不正確或過期\n2. 帳戶餘額不足（請至 console.anthropic.com 確認）\n3. 網路連線問題</span>`;
+    btn.disabled = false; btn.classList.remove('loading');
+    bTxt.textContent = '⚡ 重試';
+    return;
+  }
+
+  skel.style.display = 'none';
+  oText.style.display = 'block';
+  oText.style.opacity = '0';
+  oText.textContent = lastGenText;
+  setTimeout(() => { oText.style.transition = 'opacity .4s'; oText.style.opacity = '1'; }, 30);
+
+  btn.disabled = false; btn.classList.remove('loading');
+  bTxt.textContent = '⚡ 再生成';
+}
+</script>
+</body>
+</html>
