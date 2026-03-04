@@ -1,100 +1,322 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>早安圖</title>
+    <title>隨機圖產生器 🌸</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        .qqwe {
-            border: 10px solid #fff;
-            overflow: hidden;
-            position: relative;
-            width: 100%;
-
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent-color: #38bdf8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
         }
 
-        .acv {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 15px 20px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
         }
 
         body {
-            background-color: #343434;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
         }
 
-        /* #cover {
-            width: 800px;
-            height: 800px;
-            margin: 0 auto;
-        } */
-
-        #cover>img,
-        #cover>a>img {
-            /* float: left; */
-            border: 2px solid black;
-            width: 10%;
-            margin: 1%;
+        header {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 30px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
-        a{
+
+        .header-top {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        header a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            opacity: 0.5;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        header a:hover {
+            opacity: 1;
+            color: var(--accent-color);
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+            overflow-x: auto;
+            max-width: 100%;
+            scrollbar-width: none;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            font-weight: 600;
+            opacity: 1;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+        }
+
+        .tab:hover:not(.active) {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-shuffle {
+            background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%);
             color: white;
-            font-size: 25px;
-            margin: 10px;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .btn-shuffle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
+            filter: brightness(1.1);
+        }
+
+        #cover {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 10px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .img-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .img-card:hover {
+            transform: scale(1.03) translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .img-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .img-card:hover img {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px;
+                top: 10px;
+            }
+            .header-top {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .nav-links {
+                order: 2;
+            }
+            .btn-shuffle {
+                width: 100%;
+                justify-content: center;
+            }
+            #cover {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
         }
     </style>
 </head>
 
 <body>
-    
+    <header>
+        <div class="header-top">
+            <div class="nav-links">
+                <a href="https://www.crazybless.com/" target="_blank">天天祝福語</a>
+                <a href="https://www.twholiday.com/" target="_blank">台灣節日資訊</a>
+            </div>
+            <button class="btn-shuffle" onclick="handleShuffle()">
+                <span>✨</span> 隨機洗牌
+            </button>
+        </div>
+        <div class="category-tabs">
+            <button class="tab active" data-cat="morning" onclick="changeCategory('morning')">早安</button>
+            <button class="tab" data-cat="afternoon" onclick="changeCategory('afternoon')">午安</button>
+            <button class="tab" data-cat="night" onclick="changeCategory('night')">晚安</button>
+            <button class="tab" data-cat="birthday" onclick="changeCategory('birthday')">生日</button>
+        </div>
+    </header>
 
-        <a href="https://www.crazybless.com/">天天祝福語</a>
-    
-    <a href="https://www.twholiday.com/">台灣節日資訊</a>
-    <div id="cover">
-        <!-- <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (898).jpg">
-        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (898).jpg"></a>
-        
-        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (1).jpg">
-        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (1).jpg"></a>
-        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (2).jpg">
-        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (2).jpg"></a>
-        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (198).jpg">
-        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (198).jpg"></a>
-        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (298).jpg">
-        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (298).jpg"></a>
-        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (398).jpg">
-        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (398).jpg"></a>
-        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (498).jpg">
-        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (498).jpg"></a>
-        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (598).jpg">
-        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (598).jpg"></a>
-        <a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (698).jpg">
-        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (698).jpg"></a> -->
-
-
-
-    </div>
-
+    <div id="cover"></div>
 
     <script>
         const cover = document.querySelector('#cover');
-        // https://www.crazybless.com/good-afternoon/afternoon/image/%E5%8D%88%E5%AE%89%E5%9C%96%E4%B8%8B%E8%BC%89%20(1411).jpg
-        const showFig = function (start, end) {
-            cover.innerHTML = '';
-            let html = '';
-            for (let i = start; i <= end; i++) {
-                html += `<a href="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (${i}).jpg">
-                        <img src="https://www.crazybless.com/good-morning/morning/image/早安圖下載 (${i}).jpg"></a>
-                        `;
+        const SHOW_COUNT = 200;
+
+        const CONFIG = {
+            morning: {
+                path: 'good-morning/morning',
+                prefix: '早安圖下載',
+                max: 1477
+            },
+            afternoon: {
+                path: 'good-afternoon/afternoon',
+                prefix: '午安圖下載',
+                max: 1500
+            },
+            night: {
+                path: 'good-night/night',
+                prefix: '晚安圖下載',
+                max: 1500
+            },
+            birthday: {
+                path: 'birthday/bir',
+                prefix: '生日快樂圖',
+                max: 1000
             }
-            cover.innerHTML = html;
         };
-        showFig(1, 1477);
+
+        let currentCategory = 'morning';
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function showFig() {
+            cover.innerHTML = '';
+            const conf = CONFIG[currentCategory];
+            const indices = Array.from({ length: conf.max }, (_, i) => i + 1);
+            const shuffled = shuffle(indices);
+            const selected = shuffled.slice(0, SHOW_COUNT);
+            
+            selected.forEach(i => {
+                const url = `https://www.crazybless.com/${conf.path}/image/${conf.prefix} (${i}).jpg`;
+                const card = document.createElement('a');
+                card.href = url;
+                card.target = '_blank';
+                card.className = 'img-card';
+                
+                const img = document.createElement('img');
+                img.src = url;
+                img.loading = 'lazy';
+                img.onerror = () => card.remove();
+
+                card.appendChild(img);
+                cover.appendChild(card);
+            });
+        }
+
+        function changeCategory(cat) {
+            if (currentCategory === cat) return;
+            currentCategory = cat;
+            
+            // 更新 UI
+            document.querySelectorAll('.tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.cat === cat);
+            });
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showFig();
+        }
+
+        function handleShuffle() {
+            const btn = document.querySelector('.btn-shuffle');
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                showFig();
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
+        }
+
+        showFig();
     </script>
 </body>
 
