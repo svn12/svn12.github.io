@@ -344,18 +344,13 @@
             <h3>📊 Google Sheets 設定</h3>
             <div class="form-group">
                 <label for="sheetUrlInput">Google Sheets URL:</label>
-                <input type="text" id="sheetUrlInput" placeholder="貼上你的 Google Sheets 分享連結..." onchange="fetchSheetNames()" />
+                <input type="text" id="sheetUrlInput" placeholder="貼上你的 Google Sheets 分享連結..." />
                 <small style="display: block; margin-top: 5px; opacity: 0.8;">
                     ⚠️ 請確保 Google Sheets 已設為「知道連結的使用者」可檢視
                 </small>
             </div>
-            <div class="form-group" id="sheetSelectContainer" style="display: none;">
-                <label for="sheetSelect">選擇工作表:</label>
-                <select id="sheetSelect" class="form-control">
-                    <option value="">-- 請選擇工作表 --</option>
-                </select>
-            </div>
-            <button class="btn btn-primary" onclick="loadFromGoogleSheets()">📥 載入題庫</button>
+            <button class="btn btn-primary" onclick="loadFromGoogleSheets(this)">📥 載入題庫</button>
+            <button class="btn btn-primary" style="background: rgba(243, 156, 18, 0.8);" onclick="openGoogleSheet()">📝 修改題庫</button>
             <button class="btn btn-primary" onclick="useDefaultCards()">🔄 使用預設題庫</button>
             
             <h3 style="margin-top: 2rem;">📝 手動新增閃卡</h3>
@@ -380,8 +375,7 @@
                 <p>使用方法：</p>
                 <ol style="text-align: left; margin: 0.5rem 0;">
                     <li>輸入 Google Sheets 網址</li>
-                    <li>從下拉式選單中選擇要載入的工作表</li>
-                    <li>點擊「載入題庫」按鈕</li>
+                    <li>點擊「載入題庫」按鈕（將自動載入第一個工作表）</li>
                 </ol>
             </div>
         </div>
@@ -532,84 +526,39 @@
         }
 
         // Google Sheets 相關函數
-        function fetchSheetNames() {
+        function openGoogleSheet() {
             const sheetUrl = document.getElementById('sheetUrlInput').value.trim();
-            
             if (!sheetUrl) {
+                alert('⚠️ 請先輸入 Google Sheets URL！');
                 return;
             }
-
-            let sheetId = extractSheetId(sheetUrl);
-            
-            if (!sheetId) {
-                return;
-            }
-
-            // 顯示載入狀態
-            const sheetSelectContainer = document.getElementById('sheetSelectContainer');
-            const sheetSelect = document.getElementById('sheetSelect');
-            
-            // 清空現有選項，只保留預設選項
-            sheetSelect.innerHTML = '<option value="">-- 請選擇工作表 --</option>';
-            
-            // 使用 Google Sheets API 獲取工作表列表
-            const sheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=AIzaSyDrzDh0qPrA2c9ZS1ufH1vwNO0bWLBgP0c`;
-            
-            fetch(sheetsApiUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('無法存取 Google Sheets，請檢查分享權限');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.sheets && data.sheets.length > 0) {
-                        // 填充下拉選單
-                        data.sheets.forEach(sheet => {
-                            const option = document.createElement('option');
-                            option.value = sheet.properties.sheetId;
-                            option.textContent = sheet.properties.title;
-                            sheetSelect.appendChild(option);
-                        });
-                        
-                        // 顯示下拉選單
-                        sheetSelectContainer.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('獲取工作表列表錯誤:', error);
-                    alert(`❌ 獲取工作表列表失敗：${error.message}\n\n請確保：\n1. Google Sheets 已設為公開或「知道連結的使用者」可檢視\n2. URL 格式正確\n3. 網路連線正常`);
-                });
+            window.open(sheetUrl, '_blank');
         }
 
-        function loadFromGoogleSheets() {
+        function loadFromGoogleSheets(loadButton) {
             const sheetUrl = document.getElementById('sheetUrlInput').value.trim();
-            const sheetSelect = document.getElementById('sheetSelect');
-            const selectedSheetId = sheetSelect.value;
             
             if (!sheetUrl) {
                 alert('⚠️ 請輸入 Google Sheets URL！');
                 return;
             }
-            
-            if (!selectedSheetId) {
-                alert('⚠️ 請選擇一個工作表！');
-                return;
-            }
 
-            // 將 Google Sheets URL 轉換為 CSV 匯出格式，使用選定的工作表 ID
-            const csvUrl = convertToCSVUrl(sheetUrl, selectedSheetId);
-            
-            if (!csvUrl) {
+            const sheetId = extractSheetId(sheetUrl);
+            if (!sheetId) {
                 alert('⚠️ 無效的 Google Sheets URL！請確保連結格式正確。');
                 return;
             }
 
+            // 轉換為 CSV 匯出格式，由於不指定 gid，將會直接載入預設的第一個工作表
+            const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+
             // 顯示載入狀態
-            const loadButton = event.target;
-            const originalText = loadButton.textContent;
-            loadButton.textContent = '⏳ 載入中...';
-            loadButton.disabled = true;
+            let originalText = '📥 載入題庫';
+            if (loadButton) {
+                originalText = loadButton.textContent;
+                loadButton.textContent = '⏳ 載入中...';
+                loadButton.disabled = true;
+            }
 
             fetch(csvUrl)
                 .then(response => {
@@ -636,8 +585,10 @@
                     alert(`❌ 載入失敗：${error.message}\n\n請確保：\n1. Google Sheets 已設為公開或「知道連結的使用者」可檢視\n2. URL 格式正確\n3. 網路連線正常`);
                 })
                 .finally(() => {
-                    loadButton.textContent = originalText;
-                    loadButton.disabled = false;
+                    if (loadButton) {
+                        loadButton.textContent = originalText;
+                        loadButton.disabled = false;
+                    }
                 });
         }
 
@@ -730,6 +681,7 @@
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
+            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
             switch(e.key) {
                 case ' ':
                 case 'Enter':
