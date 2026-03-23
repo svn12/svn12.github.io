@@ -704,7 +704,9 @@
         });
 
         // Initialize game
-        displayCard();
+        const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1-dezTXA5Lk15GTM3z0cm15aQKSumO9YkvrujsApIlxY/edit?usp=sharing';
+        document.getElementById('sheetUrlInput').value = DEFAULT_SHEET_URL;
+        loadFromGoogleSheets(null); // 自動載入預設題庫
     </script>
 </body>
 </html>
