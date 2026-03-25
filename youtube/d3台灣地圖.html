@@ -1,197 +1,249 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://d3js.org/d3.v3.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
-    <!-- <script src="https://unpkg.com/topojson@3"></script> -->
     <script src="https://d3js.org/topojson.v1.min.js"></script>
     <script src="https://d3js.org/queue.v1.min.js"></script>
-    <title>d3台灣人口地圖
-
-    </title>
+    <title>台灣歷年人口地圖</title>
     <style>
-      .counties {
-  fill:#33474e;
-}
-.counties :hover {
-  fill: #7f9ca7;
-  transition: 0.5s;
-}
-.county-borders {
-  fill: none;
-  stroke: #fff;
-  stroke-width: 0.5px;
-}
-path1:hover {
-				fill: yellowgreen;
-                transition: 0.5s;
-			}
- #tooltip {
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #e0aaff;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .controls label {
+            font-size: 1.1rem;
+            color: #c77dff;
+            margin-right: 10px;
+        }
+        #yearSlider {
+            width: 300px;
+            accent-color: #c77dff;
+            cursor: pointer;
+        }
+        #yearDisplay {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #e0aaff;
+            margin-left: 12px;
+        }
+        .map-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        svg {
+            display: block;
+            background: #16213e;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(199, 125, 255, 0.3);
+        }
+        .county-borders {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 0.5px;
+        }
+        #tooltip {
             position: absolute;
             width: 200px;
             height: auto;
-            padding: 10px;
-            background-color: white;
-            -webkit-border-radius: 10px;
-            -moz-border-radius: 10px;
+            padding: 10px 14px;
+            background: rgba(22, 33, 62, 0.95);
+            border: 1px solid #c77dff;
             border-radius: 10px;
-            -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-            -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 15px rgba(199, 125, 255, 0.4);
             pointer-events: none;
+            font-size: 14px;
+            line-height: 1.6;
         }
+        #tooltip.hidden { display: none; }
+        #tooltip strong { color: #e0aaff; font-size: 15px; }
+        #tooltip .pop { color: #c77dff; font-weight: bold; }
 
-        #tooltip.hidden {
-            display: none;
+        /* 圖例 */
+        .legend-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
         }
-
-        #tooltip p {
-            margin: 0;
-            font-family: sans-serif;
-            font-size: 16px;
-            line-height: 20px;
+        .legend-title { color: #c77dff; margin-bottom: 8px; font-size: 0.9rem; }
+        .legend-bar {
+            width: 20px;
+            height: 200px;
+        }
+        .legend-labels {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 200px;
+            margin-left: 6px;
+            font-size: 0.75rem;
+            color: #ccc;
         }
     </style>
 </head>
 <body>
-   
-   <H2>台灣人口地圖</H2>
-        <svg width="800px" height="600px" viewBox="0 0 800 600"></svg>
-        <div id="tooltip" class="hidden">
-            <p><strong id="Country">Important Label Heading</strong></p>
-            <p><span id="value">100</span> 人</p>
+    <h2>🗺️ 台灣歷年人口分布地圖</h2>
+
+    <div class="controls">
+        <label for="yearSlider">年份：</label>
+        <input type="range" id="yearSlider" min="2014" max="2023" step="1" value="2023">
+        <span id="yearDisplay">2023</span>
+    </div>
+
+    <div class="map-wrapper">
+        <svg width="600" height="560" viewBox="0 0 600 560"></svg>
+        <div class="legend-wrap">
+            <div class="legend-title">人口數</div>
+            <svg class="legend-bar" id="legendSvg"></svg>
+            <div class="legend-labels">
+                <span>400 萬+</span>
+                <span>300 萬</span>
+                <span>200 萬</span>
+                <span>100 萬</span>
+                <span>10 萬</span>
+            </div>
         </div>
-   
+    </div>
+
+    <div id="tooltip" class="hidden">
+        <strong id="tooltipCounty">--</strong><br>
+        人口：<span class="pop" id="tooltipPop">--</span> 人<br>
+        <span id="tooltipYear" style="font-size:12px;color:#aaa;"></span>
+    </div>
+
     <script>
-    var width = 800, height = 600;
-    var xPosition =250,yPosition =80;
-    var x,y,s;
-    var container=d3.select('svg');
-var zoom = d3.behavior.zoom()
-    .translate([0, 0])
-    .scaleExtent([1, 3])
-    .scale(1)
-    .on("zoom", zoomed);
+    var width = 600, height = 560;
+    var currentYear = 2023;
+    var allData = [];    // 全部年份資料
+    var features = [];
+    var color;
 
-function zoomed() {
-  x=d3.event.translate[0]/6;
-  y=d3.event.translate[1]/6;
-  s=d3.event.scale;
-  container.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
-    // container.attr("transform", "scale(" + d3.event.scale + ")");
-}
+    var container = d3.select('svg');
+    var zoom = d3.behavior.zoom()
+        .translate([0, 0])
+        .scaleExtent([1, 5])
+        .scale(1)
+        .on('zoom', zoomed);
 
+    function zoomed() {
+        container.attr('transform',
+            'translate(' + d3.event.translate + ') scale(' + d3.event.scale + ')');
+    }
     d3.select('svg').call(zoom);
+
+    // 色彩比例尺：淺藍 → 深紫
+    color = d3.scale.linear()
+        .domain([50000, 4100000])
+        .range(['#cce5ff', '#5e0080']);
+
+    // 畫圖例
+    var legendSvg = d3.select('#legendSvg');
+    var defs = legendSvg.append('defs');
+    var grad = defs.append('linearGradient')
+        .attr('id', 'legendGrad')
+        .attr('x1', '0%').attr('y1', '0%')
+        .attr('x2', '0%').attr('y2', '100%');
+    grad.append('stop').attr('offset', '0%').attr('stop-color', '#5e0080');
+    grad.append('stop').attr('offset', '100%').attr('stop-color', '#cce5ff');
+    legendSvg.append('rect')
+        .attr('width', 20).attr('height', 200)
+        .style('fill', 'url(#legendGrad)');
+
+    // 讀取資料
     queue()
-            .defer(d3.json, "../doc/TWN_1081121.json")
-            .defer(d3.tsv, "../doc/person_by_country.tsv")
-            
-            .await(ready);
+        .defer(d3.json, '../doc/TWN_1081121.json')
+        .defer(d3.tsv, '../doc/person_by_country_multi.tsv')
+        .await(ready);
 
-        function ready(error, topodata, density) {
-            if (error) throw error;
+    function ready(error, topodata, density) {
+        if (error) throw error;
 
-    // d3.json("TWN_1081121.json", function (topodata) {
-        console.log(topodata);
-        var features = topojson.feature(topodata, topodata.objects["COUNTY_MOI_1081121"]).features;
-            // 這裡要注意的是 topodata.objects["county"] 中的 "county" 為原本 shp 的檔名
-        var path = d3.geo.path().projection( // 路徑產生器
-            d3.geo.mercator().center([122.8, 23.95]).scale(6000) // 座標變換函式
-            );
-        d3.select("svg")
-                        .selectAll("path")
-                        .data(features)
-                        .enter()
-                        .append("a")
-                        .attr("href", function(d){
-                            for (j = 0; j < density.length; j++) {
-                                if (density[j].縣市 == d.properties["COUNTYNAME"]) {
-                                        return density[j].href;
-                                        break;
-                            }}})
-                        .attr('target', "_blank")
-                        .append("path")
-                        .attr("d", path)
-                        ;
-        d3.select("#tooltip")
-                .style("left", xPosition + "px")
-                .style("top", yPosition + "px");
-         var title = d3.select("svg")
-                .append("a")
-                .attr("id", 'alnk')
+        allData = density;  // [{年份, 縣市, 人口}, ...]
 
-                .attr("text-decoration", "underline")
-                .attr("display", "inline-block")
-                .attr("xlink:href", "https://countrycode.org/" + 'palestine/')
-                .append("text")
-                .attr("x", width * 2 / 5)
-                .attr("y", height * 1 / 9);
-        // density= d3.map(rdensity, function (d) { return d.縣市; })
-        console.log(density);
-        // title.text("TEST");
-        // d3.select('a').attr('href', "#" );
-        // var density = { "臺北市": 9952.60, "嘉義市": 4512.66, "新竹市": 4151.27, ...};
-         for (i = features.length - 1; i >= 0; i--) {
-             for(j=0; j<density.length;j++){
-                 if(density[j].縣市== features[i].properties["COUNTYNAME"]){
-                    features[i].properties.density = density[j].人口;
-                    break;
-                }
-             }
+        features = topojson.feature(topodata, topodata.objects['COUNTY_MOI_1081121']).features;
+
+        var path = d3.geo.path().projection(
+            d3.geo.mercator().center([121.0, 23.6]).scale(5500)
+        );
+
+        // 畫縣市
+        container.selectAll('path')
+            .data(features)
+            .enter()
+            .append('path')
+            .attr('d', path)
+            .attr('stroke', '#fff')
+            .attr('stroke-width', 0.5)
+            .on('mouseover', function(d) {
+                var pop = d.properties._pop || 0;
+                d3.select('#tooltipCounty').text(d.properties.COUNTYNAME);
+                d3.select('#tooltipPop').text(pop.toLocaleString());
+                d3.select('#tooltipYear').text(currentYear + ' 年');
+                d3.select('#tooltip').classed('hidden', false);
+                d3.select(this).attr('stroke', '#ffdd57').attr('stroke-width', 2);
+            })
+            .on('mousemove', function() {
+                d3.select('#tooltip')
+                    .style('left', (d3.event.pageX + 12) + 'px')
+                    .style('top',  (d3.event.pageY - 20) + 'px');
+            })
+            .on('mouseout', function(d) {
+                d3.select('#tooltip').classed('hidden', true);
+                d3.select(this).attr('stroke', '#fff').attr('stroke-width', 0.5);
+            });
+
+        updateMap(currentYear);
+    }
+
+    function updateMap(year) {
+        // 建立該年份的縣市人口 map
+        var popMap = {};
+        allData.forEach(function(row) {
+            if (+row['年份'] === +year) {
+                popMap[row['縣市']] = +row['人口'];
             }
-        var color = d3.scale.linear().domain([0, 2400000])
-                            // .range(["#fd0", "#0ad"]);
-                            // .range(["pink", "green"]);
-                             .range(["blue", "pink"]);
-            d3.select("svg").selectAll("path")
-                            .data(features)
-                            .attr({
-                             d: path,
-                            
-                            density: function (d) {return  parseInt(d.properties.density.replace(',', ''))},
-                            fill: function (d) {
+        });
 
-                                    cno= parseInt(d.properties.density.replace(/,/g, ''));
-                                    console.log('cno:', d.properties.density,cno, color(cno));
-                                    return color(cno);
-                                     }
-                            })
-                             .on("mouseover", function () {
-                                 //Get this bar's x/y values, then augment for the tooltip
-                                  console.log(this.__data__, this.__data__.properties.density);
-                                //  var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.rangeBand() / 2;
-                                //  var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + h / 2;
+        // 將人口寫回 feature 屬性
+        features.forEach(function(f) {
+            f.properties._pop = popMap[f.properties.COUNTYNAME] || 0;
+        });
 
-                                 //Update the tooltip position and value
-                                 d= this.__data__.properties.density;
+        // 更新顏色
+        container.selectAll('path')
+            .data(features)
+            .attr('fill', function(d) {
+                var pop = d.properties._pop;
+                return pop ? color(pop) : '#555';
+            });
+    }
 
-                                 d3.select("#tooltip")
-                                     
-                                     .select("#value")
-                                     .text(d);
-                                  d3.select("#tooltip")
-                                     
-                                     .select("#Country")
-                                     .text(this.__data__.properties.COUNTYNAME );
+    // 年份滑桿
+    var slider = document.getElementById('yearSlider');
+    var yearDisplay = document.getElementById('yearDisplay');
 
-                                 //Show the tooltip
-                                 d3.select("#tooltip").classed("hidden", false);
-
-                                // title.text(this.__data__.properties.COUNTYNAME+'-'+this.__data__.properties.density);
-                                d3.select(this)
-                                    .attr("fill", "red");
-                                    })
-                            .on("mouseout", function (d) {
-                                console.log(this.__data__, this.__data__.properties.density);
-                                 d3.select("#tooltip").classed("hidden", true);
-                                d3.select(this)
-                                    .attr("fill", color(parseInt(this.__data__.properties.density.replace(/,/g, ''))));
-                            });
-                            
-        }
+    slider.addEventListener('input', function() {
+        currentYear = +this.value;
+        yearDisplay.textContent = currentYear;
+        if (features.length > 0) updateMap(currentYear);
+    });
     </script>
-    
 </body>
 </html>
