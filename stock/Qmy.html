@@ -220,7 +220,8 @@
             txt1 = `
             <p>Mobile view is not supported for this feature. Please use a desktop device to view the analysis for stock code: ${code}.</p>`;
         }
-        $("#T4").append(txt1); // Append new elements
+
+        // $("#T4").append(txt1); // Append new elements
       }
     //<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/qoute;stockSymbol=${code}" ></iframe>`
     //<iframe class="iframe" src="https://www.capital.com.tw/web/#/stock-analysis/basic-info;stockSymbol=${code}" ></iframe>`
@@ -228,7 +229,7 @@
         //const keyArray=['T','M','US','JP','F']
         
         //let regex = /00\d{2,4}|00\d{3}[BLR]$|^[1-9]\d{3}$/;
-        let regex = /^(0\d{3,5}|0\d{4}[BLRSTU])$|^[1-9]\d{3,5}$/;
+        let regex = /^(0\d{3,5}|0\d{4}[BLRSTUA])$|^[1-9]\d{3,5}$/;
   // 调用 test 方法检查字符串是否符合模式
   if(!regex.test(code)){
           console.log(code,regex.test(code));
