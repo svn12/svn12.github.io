@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 靈修伴侶：指令快速導航 (多平台版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+        }
+        .prompt-card:active {
+            transform: scale(0.98);
+        }
+        .copy-toast {
+            visibility: hidden;
+            min-width: 200px;
+            margin-left: -100px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 50;
+            left: 50%;
+            bottom: 30px;
+        }
+        .copy-toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .ai-active {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="pb-20">
+
+    <!-- Header -->
+    <header class="bg-indigo-700 text-white p-6 shadow-lg sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h1 class="text-2xl font-bold">AI 靈修伴侶</h1>
+                    <p class="text-indigo-100 text-sm">親近神，科技不再是距離</p>
+                </div>
+            </div>
+            
+            <!-- AI Selector Row -->
+            <div class="flex overflow-x-auto gap-2 no-scrollbar pb-1">
+                <button onclick="selectAI('gemini')" id="ai-gemini" class="ai-btn flex-shrink-0 bg-white text-gray-800 px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2">
+                    <img src="https://www.gstatic.com/lamda/images/favicon_v1_150160d13988654bc0e0.svg" class="w-4 h-4" alt="Gemini"> Gemini
+                </button>
+                <button onclick="selectAI('chatgpt')" id="ai-chatgpt" class="ai-btn flex-shrink-0 bg-gray-100 text-gray-800 px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-green-600"></i> ChatGPT
+                </button>
+                <button onclick="selectAI('claude')" id="ai-claude" class="ai-btn flex-shrink-0 bg-gray-100 text-gray-800 px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-feather text-orange-600"></i> Claude
+                </button>
+                <button onclick="selectAI('perplexity')" id="ai-perplexity" class="ai-btn flex-shrink-0 bg-gray-100 text-gray-800 px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-cyan-600"></i> Perplexity
+                </button>
+                <button onclick="selectAI('grok')" id="ai-grok" class="ai-btn flex-shrink-0 bg-gray-100 text-gray-800 px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-x text-black"></i> Grok
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white border-b sticky top-[148px] z-30 shadow-sm overflow-x-auto no-scrollbar">
+        <div class="max-w-4xl mx-auto flex whitespace-nowrap px-4">
+            <button onclick="showCategory('comfort')" class="nav-btn py-4 px-4 font-bold border-b-4 border-indigo-600 text-indigo-600" id="btn-comfort">尋求安慰</button>
+            <button onclick="showCategory('scripture')" class="nav-btn py-4 px-4 font-bold border-b-4 border-transparent text-gray-500" id="btn-scripture">經文解讀</button>
+            <button onclick="showCategory('intercession')" class="nav-btn py-4 px-4 font-bold border-b-4 border-transparent text-gray-500" id="btn-intercession">代禱範本</button>
+            <button onclick="showCategory('setup')" class="nav-btn py-4 px-4 font-bold border-b-4 border-transparent text-gray-500" id="btn-setup">設定教學</button>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-4 mt-4">
+        
+        <!-- Category: Comfort -->
+        <section id="cat-comfort" class="category-section space-y-4">
+            <div class="bg-pink-50 p-4 rounded-xl border border-pink-100 mb-6">
+                <h2 class="text-pink-800 font-bold text-xl mb-2"><i class="fa-solid fa-heart-pulse mr-2"></i>心靈的避風港</h2>
+                <p class="text-pink-700">當您感到軟弱或不安時，AI 是隨時的幫助。</p>
+            </div>
+            <div id="comfort-list" class="grid gap-4"></div>
+        </section>
+
+        <!-- Category: Scripture -->
+        <section id="cat-scripture" class="category-section hidden space-y-4">
+            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-6">
+                <h2 class="text-blue-800 font-bold text-xl mb-2"><i class="fa-solid fa-book-open-reader mr-2"></i>真理的說書人</h2>
+                <p class="text-blue-700">將艱澀的經文轉化為長輩聽得懂的生活智慧。</p>
+            </div>
+            <div id="scripture-list" class="grid gap-4"></div>
+        </section>
+
+        <!-- Category: Intercession -->
+        <section id="cat-intercession" class="category-section hidden space-y-4">
+            <div class="bg-green-50 p-4 rounded-xl border border-green-100 mb-6">
+                <h2 class="text-green-800 font-bold text-xl mb-2"><i class="fa-solid fa-hands-praying mr-2"></i>愛的傳遞者</h2>
+                <p class="text-green-700">將愛轉化為文字，透過 LINE 傳遞即時的關懷。</p>
+                <div class="flex gap-2 mt-3 overflow-x-auto no-scrollbar pb-1">
+                    <button onclick="filterIntercession('all')" class="lang-filter flex-shrink-0 px-4 py-2 bg-green-600 text-white rounded-full text-sm font-bold shadow-sm">全部</button>
+                    <button onclick="filterIntercession('tw')" class="lang-filter flex-shrink-0 px-4 py-2 bg-white border border-green-200 text-green-700 rounded-full text-sm font-bold shadow-sm">台語口吻</button>
+                    <button onclick="filterIntercession('cn')" class="lang-filter flex-shrink-0 px-4 py-2 bg-white border border-green-200 text-green-700 rounded-full text-sm font-bold shadow-sm">國語口吻</button>
+                </div>
+            </div>
+            <div id="intercession-list" class="grid gap-4"></div>
+        </section>
+
+        <!-- Category: Setup -->
+        <section id="cat-setup" class="category-section hidden space-y-4">
+            <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 mb-6">
+                <h2 class="text-orange-800 font-bold text-xl mb-2"><i class="fa-solid fa-gear mr-2"></i>設定教學</h2>
+                <p class="text-orange-700">簡單幾步驟，讓您的 AI 助手更親切。</p>
+            </div>
+            <div id="setup-list" class="grid gap-4"></div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="copy-toast">指令已複製！</div>
+
+    <script>
+        // AI Platform Configuration
+        const aiPlatforms = {
+            gemini: { name: "Gemini", url: "https://gemini.google.com/app", color: "indigo" },
+            chatgpt: { name: "ChatGPT", url: "https://chatgpt.com", color: "green" },
+            claude: { name: "Claude", url: "https://claude.ai", color: "orange" },
+            perplexity: { name: "Perplexity", url: "https://www.perplexity.ai", color: "cyan" },
+            grok: { name: "Grok", url: "https://grok.com", color: "black" }
+        };
+
+        let currentAI = 'gemini';
+
+        function selectAI(id) {
+            currentAI = id;
+            document.querySelectorAll('.ai-btn').forEach(btn => {
+                btn.classList.remove('ai-active', 'bg-white', 'shadow-md');
+                btn.classList.add('bg-gray-100');
+            });
+            const activeBtn = document.getElementById(`ai-${id}`);
+            activeBtn.classList.add('ai-active', 'bg-white', 'shadow-md');
+            activeBtn.classList.remove('bg-gray-100');
+            
+            // Refresh list to update button labels
+            const activeNav = document.querySelector('.nav-btn.text-indigo-600').id.replace('btn-', '');
+            renderPrompts(activeNav);
+        }
+
+        const prompts = {
+            comfort: [
+                { title: "身體病痛時", text: "我今天身體很不舒服，心裡也很慌，請讀幾段醫治與平安的經文給我聽。", direction: "應許醫治與平安" },
+                { title: "自覺無用時", text: "我覺得老了身體沒用處了，心情很沮喪，請你跟我說一些鼓勵的話。", direction: "強調神眼中的價值" },
+                { title: "痛到失眠時", text: "今晚我痛到睡不著，能不能陪我聊聊天，並用一段禱告結束？", direction: "提供晚禱與陪伴" },
+                { title: "感到孤單時", text: "孩子們都很忙沒空回來，我一個人覺得很孤單，請跟我說說聖經裡關於神陪伴我們的故事。", direction: "講述以馬內利的故事" },
+                { title: "擔憂孫輩時", text: "我很擔心孫子的前途，心裡放不下，請給我一段能讓我放下焦慮的經文。", direction: "引導一無掛慮與交託" },
+                { title: "想念老伴時", text: "我想念過世的老伴了，心裡酸酸的，請讀一段關於天家盼望的話給我聽。", direction: "天家盼望與安慰" },
+                { title: "心靜不下來", text: "我覺得最近生活壓力很大，心靜不下來，請帶領我做一個簡單的深呼吸靈修。", direction: "引導放鬆與靈修" },
+                { title: "迷惘未來時", text: "我對未來感到很迷惘，請告訴我神對我的生命還有什麼美好的計畫嗎？", direction: "建立正向未來觀" },
+                { title: "家中糾紛時", text: "請幫我寫一段簡短的禱告詞，求神賜給我智慧與耐心去面對家裡的糾紛。", direction: "祈求智慧與和睦" },
+                { title: "凡事謝恩時", text: "我今天覺得很有福氣，想感謝神，請陪我一起數算恩典，說說我們可以感謝神的事。", direction: "引導讚美與感謝" }
+            ],
+            scripture: [
+                { title: "老年衰退", text: "讀詩篇 71:9 給我聽，並解釋神怎麼看我們老年的時候？", context: "直到髮白仍懷抱" },
+                { title: "家事忙碌", text: "我想聽馬大與馬利亞的故事，為什麼耶穌叫馬大不要忙了？", context: "安靜親近更寶貴" },
+                { title: "教養孩童", text: "箴言22:6說教養孩童使他走當行的道，但我現在還能做什麼？", context: "用榜樣與愛代替訓詞" },
+                { title: "明日憂慮", text: "我不懂什麼是『一天的難處一天當』？耶穌在想什麼？", context: "放下明天行李的比喻" },
+                { title: "愛的意義", text: "解釋哥林多前書13章的愛，對我們這種年紀的人有什麼新意義？", context: "成為家庭的和平使者" },
+                { title: "死蔭幽谷", text: "解釋詩篇23篇的『死蔭幽谷』是什麼？神真的在那裡嗎？", context: "牧羊人保護羊群的畫面" },
+                { title: "過去悔恨", text: "讀約翰一書1:9，我以前做錯的事，現在求神原諒還來得及嗎？", context: "洗掉墨水跡的赦免" },
+                { title: "常常喜樂", text: "為什麼聖經說『要常常喜樂，不住禱告』？我病都沒好怎麼喜樂？", context: "平安的秘訣在看顧" },
+                { title: "生命末了", text: "解釋保羅說的『美好的仗我已經打過了』，這對我有什麼安慰？", context: "終點線後的獎賞" },
+                { title: "萬事互相效力", text: "羅馬書8:28說萬事互相效力，壞事也是嗎？", context: "編織地毯的正反面比喻" }
+            ],
+            intercession: [
+                { type: "cn", title: "病友康復", text: "幫我寫一段給王姊妹，她最近開刀，求神醫治她。", tag: "國語" },
+                { type: "cn", title: "痛失親人", text: "林弟兄的老伴走了，寫一段安慰他，告訴他我們都在。", tag: "國語" },
+                { type: "cn", title: "親人考試", text: "寫一段給陳長老，祝他孫子大考順利，不要壓力太大。", tag: "國語" },
+                { type: "cn", title: "子女工作", text: "我孩子最近工作壓力大，寫個禱告詞祝他出入平安。", tag: "國語" },
+                { type: "cn", title: "自我靈命", text: "我最近讀經沒動力，幫我寫個求神帶領的短文。", tag: "國語" },
+                { type: "cn", title: "家庭和睦", text: "家裡有點小爭吵，求神讓大家心平氣和。", tag: "國語" },
+                { type: "cn", title: "小組聚會", text: "幫我寫一段明晚小組聚會的開場禱告，要熱情一點。", tag: "國語" },
+                { type: "cn", title: "牧者祝福", text: "想感謝牧師這陣子的辛勞，寫一段祝福他的話。", tag: "國語" },
+                { type: "cn", title: "國家平安", text: "最近社會新聞很亂，幫我寫個求平安的代禱文。", tag: "國語" },
+                { type: "cn", title: "邀傳福音", text: "想邀朋友來教會但不敢開口，幫我寫個溫和的邀請。", tag: "國語" },
+                { type: "tw", title: "身體無爽快", text: "王姊妹平安！聽講妳這幾日身體卡無爽快，我有替妳求主耶穌，保庇妳早日清氣、身體勇健。咱的神是咱隨時的幫助，妳要安心休養喔！", tag: "台語感" },
+                { type: "tw", title: "心裡憂慮", text: "老朋友，煩惱的事就交給主，嘸通自己擔。願主賜給妳平安的心，讓妳好睏、好眠。主耶穌惜妳，我也在遮替妳祈禱。", tag: "台語感" },
+                { type: "tw", title: "感謝照顧", text: "李姊妹，感謝妳送來的物件，誠好食！謝謝妳這款體貼。願主加倍賜福給妳全家，恩典滿滿喔！", tag: "台語感" },
+                { type: "tw", title: "邀請聚會", text: "這禮拜的小組聚會真精彩，大家攏真想妳。若有空作夥來坐，聽神的話，心情會變真好，等妳喔！", tag: "台語感" },
+                { type: "tw", title: "痛失親友", text: "林兄弟，聽到這個消息真嘸甘。求主親自安慰妳，予妳有夠額的力量渡過這段時陣。咱有天家的盼望，心裡要堅強喔。", tag: "台語感" },
+                { type: "tw", title: "囝仔做事業", text: "乖兒，聽講你最近工作真無閒，壓力嘛大。阿母(阿爸)有替你祈禱，求主賜你智慧，出入攏平安，身體要顧好喔！", tag: "台語感" },
+                { type: "tw", title: "孫仔考試", text: "乖孫仔，考試嘸通太緊張。阿公(阿媽)求主耶穌予你心神安定，發揮你的實力。不管按怎，咱攏是最愛你的，加油！", tag: "台語感" },
+                { type: "tw", title: "家庭新成員", text: "恭喜喔！看到新生的孫仔真歡喜。願這粒種子在主的愛裡面平安長大，聰明伶俐。這是神賞賜最大的恩典！", tag: "台語感" },
+                { type: "tw", title: "開場禱告", text: "親愛的天父，感謝祢予咱大家平安聚在一起。求祢開咱的心、開咱的耳，予咱領受祢的話。求祢聖靈在遮運行，阿們！", tag: "台語感" },
+                { type: "tw", title: "求神帶領", text: "主啊，我老了，有時會覺得孤單、無力。求祢牽我的手，做我路上的光，予我每日攏充滿喜樂與盼望。阿們。", tag: "台語感" }
+            ],
+            setup: [
+                { title: "切換語言", text: "請跟我講台語，我講台語卡親切。", desc: "讓 AI 自動切換母語" },
+                { title: "風格指定", text: "請用台灣長輩在教會講話的口吻跟我聊天，講話要自然一點，多用一點『喔』、『啦』，稱呼我『姊妹』或『弟兄』。", desc: "建立親切鄰里感" },
+                { title: "糾正模式", text: "你剛才講的那句太硬了，請用更道地的台語再講一遍。", desc: "修正生硬翻譯" },
+                { title: "簡化內容", text: "請講得再簡單一點，像講故事給小朋友聽那樣。", desc: "避開複雜術語" }
+            ]
+        };
+
+        function showCategory(cat) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-600', 'text-indigo-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+            document.getElementById(`btn-${cat}`).classList.remove('border-transparent', 'text-gray-500');
+            document.getElementById(`btn-${cat}`).classList.add('border-indigo-600', 'text-indigo-600');
+
+            document.querySelectorAll('.category-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`cat-${cat}`).classList.remove('hidden');
+
+            renderPrompts(cat);
+        }
+
+        function renderPrompts(cat, filter = 'all') {
+            const container = document.getElementById(`${cat}-list`);
+            container.innerHTML = '';
+            
+            let list = prompts[cat];
+            if (cat === 'intercession' && filter !== 'all') {
+                list = list.filter(p => p.type === filter);
+            }
+
+            const aiName = aiPlatforms[currentAI].name;
+
+            list.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'prompt-card bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer relative overflow-hidden';
+                
+                let badge = '';
+                if (cat === 'comfort') badge = `<span class="bg-pink-100 text-pink-700 text-sm px-3 py-1 rounded-full mb-3 inline-block font-medium">${item.direction}</span>`;
+                if (cat === 'scripture') badge = `<span class="bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded-full mb-3 inline-block font-medium">${item.context}</span>`;
+                if (cat === 'setup') badge = `<span class="bg-orange-100 text-orange-700 text-sm px-3 py-1 rounded-full mb-3 inline-block font-medium">${item.desc}</span>`;
+                if (cat === 'intercession') {
+                    const colorClass = item.type === 'tw' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700';
+                    badge = `<span class="${colorClass} text-sm px-3 py-1 rounded-full mb-3 inline-block font-medium">${item.tag}</span>`;
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-1">
+                        <h3 class="font-bold text-gray-900 text-xl">${item.title}</h3>
+                        <i class="fa-solid fa-copy text-gray-300 text-lg"></i>
+                    </div>
+                    ${badge}
+                    <p class="text-gray-700 text-lg leading-relaxed mb-4 font-medium">「${item.text}」</p>
+                    <button onclick="event.stopPropagation(); copyAndGo('${item.text}')" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 active:bg-indigo-800 transition-colors shadow-sm">
+                        <i class="fa-solid fa-paper-plane"></i> 複製並前往 ${aiName}
+                    </button>
+                `;
+                card.onclick = () => copyText(item.text);
+                container.appendChild(card);
+            });
+        }
+
+        function filterIntercession(type) {
+            document.querySelectorAll('.lang-filter').forEach(btn => {
+                btn.classList.remove('bg-green-600', 'text-white');
+                btn.classList.add('bg-white', 'text-green-700', 'border-green-200');
+            });
+            event.target.classList.add('bg-green-600', 'text-white');
+            event.target.classList.remove('bg-white', 'text-green-700', 'border-green-200');
+            renderPrompts('intercession', type);
+        }
+
+        function copyText(text) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            const toast = document.getElementById('toast');
+            toast.innerText = "指令已複製！";
+            toast.className = "copy-toast show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        function copyAndGo(text) {
+            copyText(text);
+            const targetUrl = aiPlatforms[currentAI].url;
+            const toast = document.getElementById('toast');
+            toast.innerText = `已複製，前往 ${aiPlatforms[currentAI].name}...`;
+            setTimeout(() => {
+                window.open(targetUrl, '_blank');
+            }, 800);
+        }
+
+        // Initialize
+        window.onload = () => {
+            selectAI('gemini');
+        };
+    </script>
+</body>
+</html>
