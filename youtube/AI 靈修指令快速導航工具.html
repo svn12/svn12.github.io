@@ -83,6 +83,7 @@
             <button onclick="showCategory('scripture')" class="nav-btn py-4 px-4 font-bold border-b-4 border-transparent text-gray-500" id="btn-scripture">經文解讀</button>
             <button onclick="showCategory('gems')" class="nav-btn py-4 px-4 font-bold border-b-4 border-transparent text-gray-500" id="btn-gems">Gems 專區</button>
             <button onclick="showCategory('intercession')" class="nav-btn py-4 px-4 font-bold border-b-4 border-transparent text-gray-500" id="btn-intercession">代禱範本</button>
+            <button onclick="showCategory('prayerq')" class="nav-btn py-4 px-4 font-bold border-b-4 border-transparent text-gray-500" id="btn-prayerq">禱告常見提問</button>
             <button onclick="showCategory('setup')" class="nav-btn py-4 px-4 font-bold border-b-4 border-transparent text-gray-500" id="btn-setup">設定教學</button>
         </div>
     </nav>
@@ -119,6 +120,15 @@
                 </div>
             </div>
             <div id="intercession-list" class="grid gap-4"></div>
+        </section>
+
+        <!-- Category: Prayer FAQ -->
+        <section id="cat-prayerq" class="category-section hidden space-y-4">
+            <div class="bg-teal-50 p-4 rounded-xl border border-teal-100 mb-6">
+                <h2 class="text-teal-800 font-bold text-xl mb-2"><i class="fa-solid fa-hands-holding-circle mr-2"></i>禱告常見提問</h2>
+                <p class="text-teal-700">年長會友的深層靈魂提問與牧者叮嚀。您可以將提問複製給 AI，尋求更深入的陪伴。</p>
+            </div>
+            <div id="prayerq-list" class="grid gap-4"></div>
         </section>
 
         <!-- Category: Setup -->
@@ -345,6 +355,38 @@
                     "desc": "Gems指令"
                 }
             ],
+            prayerq: [
+                { title: "身體軟弱時", text: "主啊，我現在身體這麼軟弱，什麼都不能做，我的禱告還有用嗎？", direction: "關於老化與病痛", hint: "牧長叮嚀：禱告是事奉，而非負擔。身體的限制反而讓您的靈裡更親近主。" },
+                { title: "祈求未蒙應允", text: "為什麼我天天祈求病痛離開，祢卻好像沒有聽見？", direction: "關於老化與病痛", hint: "牧長叮嚀：上帝的恩典在軟弱的人身上顯得完全，求主賜下超越環境的平安。" },
+                { title: "記憶衰退時", text: "我年紀大了，記憶力不好，禱告時常分心或忘記詞句，主會怪罪嗎？", direction: "關於老化與病痛", hint: "牧長叮嚀：上帝看重的是您的心，即便只有一句「主啊，憐憫我」，祂都垂聽。" },
+                { title: "兒女信仰冷淡", text: "孩子們都不去教會了，我該怎麼禱告才能讓他們回轉？", direction: "關於家庭與後代", hint: "牧長叮嚀：繼續撒種，主必負責生長。您的敬虔榜樣就是給後裔最好的禮物。" },
+                { title: "擔憂兒孫前途", text: "我為兒孫的學業和工作操心，這樣不停祈求是否太過囉唆？", direction: "關於家庭與後代", hint: "牧長叮嚀：凡事藉著禱告祈求和感謝，將憂慮卸給神，這是做長輩的特權。" },
+                { title: "後輩生活偏離", text: "看到後輩的生活方式不符合信仰，我該如何在禱告中忍耐？", direction: "關於家庭與後代", hint: "牧長叮嚀：求主賜下智慧的口與包容的心，先求神的國和義，家庭關係必蒙引領。" },
+                { title: "質疑得救確據", text: "主啊，如果祢現在就接我走，我真的準備好見祢了嗎？", direction: "關於終末與恩典", hint: "牧長叮嚀：我們是憑恩典得救，非靠行為。主的寶血已為您預備了永恆的家鄉。" },
+                { title: "過去的過犯", text: "我這一生還有許多過錯沒交代清楚，現在認罪還來得及嗎？", direction: "關於終末與恩典", hint: "牧長叮嚀：只要真心悔改，主的赦免是完全的。在基督裡，您每天都是新造的人。" },
+                { title: "感受不到神", text: "為什麼我感覺不到上帝的同在？是不是因為我信得不夠深？", direction: "關於終末與恩典", hint: "牧長叮嚀：感覺會起伏，但上帝的應許永不改變。請在聖經的話語中尋找確據。" },
+                { title: "怕成別人負擔", text: "我該如何禱告，才能在最後的年日中不成為別人的負擔？", direction: "關於終末與恩典", hint: "牧長叮嚀：求主賜下每日的體力與知足的心，讓您的生命在安靜中見證神的榮耀。" },
+                { title: "不適應新禮拜", text: "教會的禮拜越來越現代化，我跟不上節奏，主還在其中嗎？", direction: "關於變遷中的定位", hint: "牧長叮嚀：上帝是昔在、今在、永在的。形式會變，但祂的話語一句不落空。" },
+                { title: "代溝與代禱", text: "現在的年輕人想法好不同，我該如何為這個我不認識的世代禱告？", direction: "關於變遷中的定位", hint: "牧長叮嚀：跨越代溝的橋樑是愛。求主讓您成為這世代的守望者與祝福者。" },
+                { title: "退下服事後", text: "我以前參與許多服事，現在只能坐在台下，我還能為教會做什麼？", direction: "關於變遷中的定位", hint: "牧長叮嚀：您的「存在」本身就是恩典，在台下的默默守望是教會穩定的力量。" },
+                { title: "線上的隔閡", text: "科技這麼進步，我連線上聚會都不會用，上帝會覺得我落伍嗎？", direction: "關於變遷中的定位", hint: "牧長叮嚀：主看的是您的靈魂，而非您的設備。心靈的連結超越科技的隔閡。" },
+                { title: "教會的未來", text: "我的一生見證了教會的興衰，主啊，祢對這間教會的未來心意為何？", direction: "關於變遷中的定位", hint: "牧長叮嚀：上帝是歷史的主宰，祂必親自引領祂的羊群進入青草地。" },
+                { title: "求善終與尊嚴", text: "主啊，求祢讓我走的時候能有尊嚴，不要給家人帶來太多負擔。", direction: "關於存在的價值", hint: "牧長叮嚀：將明天的憂慮交託給神，求主賜下今日足用的平安與安息。" },
+                { title: "同齡人離去", text: "看著同齡的朋友一個個離去，我的心很孤單，祢真的還在我身邊嗎？", direction: "關於存在的價值", hint: "牧長叮嚀：主耶穌應許不撇下我們為孤兒。祂在您身旁，感同身受您的寂寞。" },
+                { title: "無眠的深夜", text: "我常在半夜醒來無法入睡，這段漫長的時間，我該如何與祢對話？", direction: "關於存在的價值", hint: "牧長叮嚀：深夜是與主密談的黃金時刻。在靜默中，深淵與深淵響應。" },
+                { title: "活著的意義", text: "我每天都在吃藥、看醫生，這就是我晚年活著的意義嗎？", direction: "關於存在的價值", hint: "牧長叮嚀：每一次呼吸都是主所賜。您的忍耐與信靠，正彰顯基督的生命。" },
+                { title: "害怕失智忘神", text: "我害怕失智、害怕忘記祢，主啊，那時候祢還會認得我嗎？", direction: "關於存在的價值", hint: "牧長叮嚀：即使您忘記自己，主也絕不會忘記您，因為祂已將您銘刻在掌心。" },
+                { title: "未和好的遺憾", text: "有些親友這輩子可能都無法和好了，我帶著這遺憾禱告可以嗎？", direction: "關於關係的完滿", hint: "牧長叮嚀：將遺憾交還給主。在基督裡，未完成的修復祂會接手。" },
+                { title: "無法彌補的錯", text: "我曾傷害過的人已經不在了，我該如何向他們（向祢）求饒恕？", direction: "關於關係的完滿", hint: "牧長叮嚀：基督的十字架跨越時空。祂的赦免足以填補您心中所有的虧欠。" },
+                { title: "思念天上配偶", text: "我對配偶的思念很重，禱告時我能請祢幫我帶話給他（她）嗎？", direction: "關於關係的完滿", hint: "牧長叮嚀：上帝是活人的神，也是死人的神。信徒在基督裡有著屬靈的連結。" },
+                { title: "兒女不耐煩", text: "兒女因為我年老而對我失去耐性，主啊，求祢給我寬恕他們的力量。", direction: "關於關係的完滿", hint: "牧長叮嚀：求主讓您看見兒女的壓力，也讓他們看見您的需要。愛能遮蓋罪。" },
+                { title: "被遺忘的感覺", text: "我感覺自己被社會遺忘了，主啊，祢還記得我的名字嗎？", direction: "關於關係的完滿", hint: "牧長叮嚀：上帝點名呼喚祂的羊。在祂眼中，您始終是祂寶貴的孩子。" },
+                { title: "對天家的恐懼", text: "主啊，天家真的像聖經說的那麼美好嗎？我還是會有一點害怕。", direction: "關於天家的渴慕", hint: "牧長叮嚀：恐懼是人性，但盼望是神性。主已為您預備了眼淚不再流的地方。" },
+                { title: "一生事工價值", text: "我這一生的工作，在永恆中真的有價值嗎？", direction: "關於天家的渴慕", hint: "牧長叮嚀：凡為著主名做的，哪怕是一杯涼水，主都必紀念。您的忠心是最大的財富。" },
+                { title: "見主面的禱告", text: "如果我明天就要見主面，我最後一句禱告該說什麼？", direction: "關於天家的渴慕", hint: "牧長叮嚀：「主啊，我將我的靈魂交在祢手裡。」這是一生最完美的交託。" },
+                { title: "為喪禮祈求", text: "我該如何為我的喪禮祈求？我不希望那是悲傷的，而是榮耀祢的。", direction: "關於天家的渴慕", hint: "牧長叮嚀：這就是「終末的見證」。求主讓您的喪禮成為福音的傳遞。" },
+                { title: "等候主再來", text: "主耶穌啊，我願祢來。但在那之前，求祢讓我活得像祢。", direction: "關於天家的渴慕", hint: "牧長叮嚀：這是最高尚的渴慕。願基督的樣式，在您的白髮中閃耀。" }
+            ],
             setup: [
                 { title: "切換語言", text: "請跟我講台語，我講台語卡親切。", desc: "讓 AI 自動切換母語" },
                 { title: "風格指定", text: "請用台灣長輩在教會講話的口吻跟我聊天，講話要自然一點，多用一點『喔』、『啦』，稱呼我『姊妹』或『弟兄』。", desc: "建立親切鄰里感" },
@@ -387,9 +429,15 @@
                 if (cat === 'scripture') badge = `<span class="bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded-full mb-3 inline-block font-medium">${item.context}</span>`;
                 if (cat === 'setup') badge = `<span class="bg-orange-100 text-orange-700 text-sm px-3 py-1 rounded-full mb-3 inline-block font-medium">${item.desc}</span>`;
                 if (cat === 'gems') badge = `<span class="bg-purple-100 text-purple-700 text-sm px-3 py-1 rounded-full mb-3 inline-block font-medium">${item.desc}</span>`;
+                if (cat === 'prayerq') badge = `<span class="bg-teal-100 text-teal-700 text-sm px-3 py-1 rounded-full mb-3 inline-block font-medium">${item.direction}</span>`;
                 if (cat === 'intercession') {
                     const colorClass = item.type === 'tw' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700';
                     badge = `<span class="${colorClass} text-sm px-3 py-1 rounded-full mb-3 inline-block font-medium">${item.tag}</span>`;
+                }
+
+                let extraContent = '';
+                if (cat === 'prayerq' && item.hint) {
+                    extraContent = `<div class="mb-4 text-sm text-teal-800 bg-teal-50/70 p-3 rounded-xl border border-teal-100 leading-relaxed font-medium"><i class="fa-solid fa-lightbulb text-teal-500 mr-2"></i>${item.hint}</div>`;
                 }
 
                 let encodedText = encodeURIComponent(item.text).replace(/'/g, "%27");
@@ -400,6 +448,7 @@
                     </div>
                     ${badge}
                     <p class="text-gray-700 text-lg leading-relaxed mb-4 font-medium whitespace-pre-wrap">「${item.text}」</p>
+                    ${extraContent}
                     <button onclick="event.stopPropagation(); copyAndGo(decodeURIComponent('${encodedText}'))" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 active:bg-indigo-800 transition-colors shadow-sm">
                         <i class="fa-solid fa-paper-plane"></i> 複製並前往 ${aiName}
                     </button>
