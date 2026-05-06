@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>手機班(3-6月、9-12月，二9:30) - 台北南門教會</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brown:    #6b4c2a;
+      --gold:     #c9973a;
+      --light:    #faf7f2;
+      --cream:    #f3ede3;
+      --dark:     #2c1f0e;
+      --border:   #c8b89a;
+      --accent:   #8b5e2a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--brown);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    nav .logo img { height: 48px; padding: 8px 0; }
+    nav a {
+      color: #f0e8d8;
+      text-decoration: none;
+      font-size: 13px;
+      padding: 16px 6px;
+      letter-spacing: .05em;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--gold); }
+
+    /* ── HERO BAND ── */
+    .page-title {
+      background: linear-gradient(135deg, var(--brown) 0%, var(--accent) 100%);
+      color: #fff;
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+    }
+    .page-title h1 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 700;
+      letter-spacing: .12em;
+    }
+    .page-title .meta { font-size: 12px; opacity: .8; margin-top: .4rem; }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 900px;
+      margin: 2.5rem auto;
+      padding: 0 1.2rem;
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media(max-width:680px){
+      .container { grid-template-columns: 1fr; }
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .course-photo {
+      width: 100%;
+      display: block;
+      max-height: 240px;
+      object-fit: cover;
+    }
+
+    .info-block {
+      padding: 1.5rem 1.8rem;
+    }
+    .info-block p { margin-bottom: .5rem; font-size: 14px; }
+    .info-block strong { color: var(--brown); }
+
+    .section-label {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--brown);
+      border-left: 4px solid var(--gold);
+      padding-left: .6rem;
+      margin: 1.4rem 0 .8rem;
+    }
+
+    /* ── 2026 課程大綱 TABLE ── */
+    .outline-wrap {
+      padding: 1.5rem 1.8rem;
+      border-top: 1px solid var(--border);
+    }
+    .outline-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 17px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: .15em;
+      color: var(--dark);
+      margin-bottom: 1rem;
+    }
+
+    table.outline {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    table.outline th {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      padding: .55rem 1rem;
+      text-align: center;
+      font-family: 'Noto Serif TC', serif;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: var(--brown);
+    }
+    table.outline td {
+      border: 1px solid var(--border);
+      padding: .45rem .9rem;
+      vertical-align: top;
+    }
+    table.outline td.month {
+      white-space: nowrap;
+      font-weight: 700;
+      font-family: 'Noto Serif TC', serif;
+      color: var(--brown);
+      text-align: center;
+      width: 60px;
+      background: var(--cream);
+    }
+    table.outline td.topics { line-height: 2; }
+    table.outline tr:hover td { background: #fdf9f3; }
+
+    .topic-item {
+      display: flex;
+      align-items: flex-start;
+      gap: .4rem;
+    }
+    .topic-item::before {
+      content: '▸';
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .side-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .side-card-head {
+      background: var(--brown);
+      color: #fff;
+      font-family: 'Noto Serif TC', serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      padding: .55rem 1rem;
+    }
+    .side-card-body { padding: 1rem 1.1rem; font-size: 13px; }
+
+    /* ── 課程流程 ── */
+    .schedule-list { list-style: none; }
+    .schedule-list li {
+      display: flex;
+      flex-direction: column;
+      padding: .55rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .schedule-list li:last-child { border-bottom: none; }
+    .schedule-list .time-range {
+      font-size: 12px;
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: .05em;
+    }
+    .schedule-list .label {
+      font-size: 13.5px;
+      color: var(--dark);
+      font-weight: 500;
+    }
+    .schedule-list .break-item .label { color: #888; font-style: italic; }
+
+    /* ── REGISTER BUTTON ── */
+    .register-btn {
+      display: block;
+      background: linear-gradient(135deg, var(--brown), var(--accent));
+      color: #fff;
+      text-align: center;
+      padding: .75rem;
+      border-radius: 3px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      transition: opacity .2s;
+      margin-top: .5rem;
+    }
+    .register-btn:hover { opacity: .85; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      color: #c8b89a;
+      font-size: 12px;
+      padding: 2rem;
+      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+    }
+    footer h4 {
+      font-family: 'Noto Serif TC', serif;
+      color: var(--gold);
+      font-size: 13px;
+      margin-bottom: .5rem;
+    }
+    footer p { margin-bottom: .25rem; }
+    footer .copy {
+      grid-column: 1/-1;
+      border-top: 1px solid #4a3520;
+      padding-top: 1rem;
+      text-align: center;
+      opacity: .7;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <a href="https://www.pctnm.tw/index.php">
+      <img src="https://www.pctnm.tw/img/com/logo.png" alt="南門教會" />
+    </a>
+  </div>
+  <a href="https://www.pctnm.tw/about.php">關於南門</a>
+  <a href="https://www.pctnm.tw/fellowship.php">團契聚會</a>
+  <a href="https://www.pctnm.tw/class.php">樂活課程</a>
+  <a href="https://www.pctnm.tw/video.php">影音紀錄</a>
+  <a href="https://www.pctnm.tw/download.php">檔案下載</a>
+  <a href="https://www.pctnm.tw/calendar.php">行事曆</a>
+  <a href="https://www.pctnm.tw/news.php">最新消息</a>
+  <a href="https://www.pctnm.tw/contact.php">聯絡我們</a>
+</nav>
+
+<!-- TITLE BAND -->
+<div class="page-title">
+  <h1>手機班（3–6月、9–12月，每周二 9:30）</h1>
+  <div class="meta">2024-03-05 ｜ 台北南門教會</div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="container">
+
+  <!-- LEFT: MAIN CARD -->
+  <div>
+    <div class="main-card">
+      <img class="course-photo"
+           src="https://www.pctnm.tw/images/images/a23a921a8f98c0ea421481877dc976f8.jpg"
+           alt="手機班課程" />
+
+      <div class="info-block">
+        <div class="section-label">課程資訊</div>
+        <p><strong>上課日期：</strong>每年 3–6 月、9–12 月，每周二上午 9:30–11:30</p>
+        <p><strong>上課地點：</strong>台北南門長老教會地下室（台北市重慶南路三段27巷4號）</p>
+        <p><strong>開課單位：</strong>台北南門教會</p>
+        <p><strong>授課老師：</strong>吳淑敬老師</p>
+
+        <div class="section-label">課程內容</div>
+        <p>4G、WiFi 傻傻搞不清楚？APP 又是什麼？</p>
+        <p>藉由本課程，學員可以對目前最流行的平板電腦與智慧型手機有基本的認識！透過 APP 的應用，讓你的手機／平板電腦同時也是你的隨身秘書・視聽室・導航器・攝影師。</p>
+      </div>
+
+      <!-- 2026 課程大綱 -->
+      <div class="outline-wrap">
+        <div class="outline-title">南門教會 2026 年手機課程</div>
+        <table class="outline">
+          <thead>
+            <tr><th colspan="2">上課大綱</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="month">三月</td>
+              <td class="topics">
+                <div class="topic-item">手機與平板基本設定與隱私守護</div>
+                <div class="topic-item">網路搜尋技巧</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="month">四月</td>
+              <td class="topics">
+                <div class="topic-item">AI 生活應用</div>
+                <div class="topic-item">AI 影像創作</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="month">五月</td>
+              <td class="topics">
+                <div class="topic-item">數位照片編修</div>
+                <div class="topic-item">雲端相簿</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="month">六月</td>
+              <td class="topics">
+                <div class="topic-item">雲端記事本</div>
+                <div class="topic-item">雲端行事曆</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- 課程流程 -->
+    <div class="side-card">
+      <div class="side-card-head">課程流程</div>
+      <div class="side-card-body">
+        <ul class="schedule-list">
+          <li>
+            <span class="time-range">09:30 ～ 09:40</span>
+            <span class="label">牧師分享</span>
+          </li>
+          <li>
+            <span class="time-range">09:40 ～ 10:30</span>
+            <span class="label">第一堂課</span>
+          </li>
+          <li class="break-item">
+            <span class="time-range">10:30 ～ 10:40</span>
+            <span class="label">休息時間</span>
+          </li>
+          <li>
+            <span class="time-range">10:40 ～ 11:30</span>
+            <span class="label">第二堂課</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 報名 -->
+    <div class="side-card">
+      <div class="side-card-head">立即報名</div>
+      <div class="side-card-body">
+        <p style="margin-bottom:.7rem;font-size:13px;">點擊下方連結填寫報名表單</p>
+        <a class="register-btn"
+           href="https://docs.google.com/forms/d/e/1FAIpQLSe_POWztvBU9wfkZo-t1iahF5ueKEqB5EYtEYygalfFYLv2Jw/viewform"
+           target="_blank">📋 線上報名表</a>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <h4>教會資訊</h4>
+    <p>電話：02-23411016</p>
+    <p>傳真：02-23927782</p>
+    <p>E-mail：pctnm1953@gmail.com</p>
+  </div>
+  <div>
+    <h4>地址</h4>
+    <p>100 台北市中正區</p>
+    <p>重慶南路三段 27 巷 4 號</p>
+  </div>
+  <div>
+    <h4>交通資訊</h4>
+    <p>捷運：古亭站 / 中正紀念堂站</p>
+    <p>步行 8–10 分鐘</p>
+    <p>公車：5, 227, 243, 248, 262, 304, 706</p>
+    <p>站牌：寧波重慶路口</p>
+  </div>
+  <div>
+    <h4>禮拜時間</h4>
+    <p>華語禮拜｜禮拜日 08:30–09:30</p>
+    <p>台語禮拜｜禮拜日 10:30–11:50</p>
+  </div>
+  <div class="copy">
+    Copyright © 2016–2026 Taipei Nan-Men Presbyterian Church. All rights reserved.
+  </div>
+</footer>
+
+</body>
+</html>
