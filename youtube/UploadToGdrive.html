@@ -177,6 +177,26 @@
       .warning {
         color: #ff9800;
       }
+      
+      #copyBtn {
+        font-family: sans-serif;
+        background: transparent;
+        padding: 8px 15px;
+        border: 2px solid #ff4d4f;
+        border-radius: 8px;
+        color: #ff4d4f;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 0;
+        display: none;
+        outline: none;
+      }
+      
+      #copyBtn:hover {
+        background-color: #ff4d4f;
+        color: #fff;
+      }
     </style>
   </head>
   <body>
@@ -190,9 +210,14 @@
       <div class="preview-section">
         <h3>Image Preview</h3>
         <div id="img-preview"></div>
-        <div id="textStatus"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; min-height: 40px;">
+          <div>
+            <div id="textStatus"></div>
+            <p id="fileUrl" style="margin: 5px 0 0 0; word-break: break-all;"></p>
+          </div>
+          <button id="copyBtn">複製到剪貼簿</button>
+        </div>
         <div>
-          <p id="fileUrl"></p>
           <div id="img-webview"></div>
         </div>
       </div>
@@ -243,6 +268,7 @@
       const loadingOverlay = document.getElementById("loadingOverlay");
       const loadingText = document.getElementById("loadingText");
       const submitButton = document.getElementById("submit");
+      const copyBtn = document.getElementById("copyBtn");
       
       // Variables to store file data
       let currentFile = null;
@@ -424,6 +450,7 @@
         imgPreview.style.display = "none";
         imgWebview.style.display = "none";
         fileUrl.textContent = '';
+        copyBtn.style.display = 'none';
         uploadClipboardBtn.disabled = true;
         
         updatePasteStatus('Click here and press Ctrl+V to paste', 'info');
@@ -551,6 +578,7 @@
         updatePasteStatus('Uploading...', 'info');
         imgWebview.style.display = "none";
         fileUrl.textContent = '';
+        copyBtn.style.display = 'none';
         
         const fr = new FileReader();
         fr.readAsArrayBuffer(file);
@@ -575,6 +603,7 @@
             ShowWebImg(e);
             Status.textContent = 'File uploaded successfully!';
             updatePasteStatus('Upload successful!', 'success');
+            copyBtn.style.display = 'inline-block';
             
             // Clear form data
             form.file.value = '';
@@ -621,6 +650,7 @@
           Status.textContent = '';
           imgWebview.style.display = "none";
           fileUrl.textContent = '';
+          copyBtn.style.display = 'none';
           
           // Show preview
           getImgData();
@@ -664,6 +694,21 @@
           console.error('Failed to copy: ', err);
         }
       }
+      
+      copyBtn.addEventListener('click', function() {
+        if (fileUrl.textContent) {
+          copyContent(fileUrl.textContent);
+          const originalText = copyBtn.textContent;
+          copyBtn.textContent = '已複製！';
+          copyBtn.style.borderColor = '#4CAF50';
+          copyBtn.style.color = '#4CAF50';
+          setTimeout(() => {
+            copyBtn.textContent = originalText;
+            copyBtn.style.borderColor = '#ff4d4f';
+            copyBtn.style.color = '#ff4d4f';
+          }, 1500);
+        }
+      });
       
       function ShowWebImg(e) {
         imgWebview.style.display = "block";
