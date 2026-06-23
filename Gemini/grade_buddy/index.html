@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>學生成績管理系統 | GradeBuddy</title>
+  <meta name="description" content="ClassBuddy 專屬學生成績登錄與管理系統，搭載 Google Sheets 資料庫與高階毛玻璃面版。">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+          </svg>
+        </div>
+        <h1 class="brand-name">GradeBuddy</h1>
+      </div>
+      <div class="db-status">
+        <span class="status-indicator online"></span>
+        <span class="status-text">Google Sheets 資料庫已連線</span>
+      </div>
+    </header>
+
+    <!-- Dashboard Quick Stats -->
+    <section class="stats-grid">
+      <div class="stat-card glass-card">
+        <div class="stat-label">總登錄人數</div>
+        <div class="stat-value" id="stat-total-students">0</div>
+      </div>
+      <div class="stat-card glass-card">
+        <div class="stat-label">全班總平均</div>
+        <div class="stat-value" id="stat-class-average">0.0</div>
+      </div>
+      <div class="stat-card glass-card">
+        <div class="stat-label">不及格人數 (任一科)</div>
+        <div class="stat-value text-danger" id="stat-fail-count">0</div>
+      </div>
+    </section>
+
+    <!-- Main Workspace -->
+    <div class="workspace-grid">
+      
+      <!-- Left Card: Grade Form -->
+      <section class="glass-card form-section">
+        <h2 class="section-title" id="form-title">成績登錄</h2>
+        
+        <form id="grade-form">
+          <!-- Hidden action field -->
+          <input type="hidden" id="form-action" value="upsert">
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="student-id">學號 <span class="required">*</span></label>
+              <input type="text" class="form-input" id="student-id" required placeholder="如 S001">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="student-name">姓名 <span class="required">*</span></label>
+              <input type="text" class="form-input" id="student-name" required placeholder="學生姓名">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="student-class">班級</label>
+              <input type="text" class="form-input" id="student-class" placeholder="如 701">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="student-seat">座號</label>
+              <input type="number" class="form-input" id="student-seat" placeholder="座號" min="1" max="100">
+            </div>
+          </div>
+
+          <h3 class="form-subtitle">學科成績 (0 - 100)</h3>
+          
+          <div class="form-row score-row">
+            <div class="form-group">
+              <label class="form-label">國文</label>
+              <input type="number" class="form-input score-input" id="score-chinese" min="0" max="100" value="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">英文</label>
+              <input type="number" class="form-input score-input" id="score-english" min="0" max="100" value="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">數學</label>
+              <input type="number" class="form-input score-input" id="score-math" min="0" max="100" value="0">
+            </div>
+          </div>
+
+          <div class="form-row score-row">
+            <div class="form-group">
+              <label class="form-label">自然</label>
+              <input type="number" class="form-input score-input" id="score-science" min="0" max="100" value="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">社會</label>
+              <input type="number" class="form-input score-input" id="score-social" min="0" max="100" value="0">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="student-notes">備註</label>
+            <textarea class="form-textarea" id="student-notes" rows="2" placeholder="輸入備註事項..."></textarea>
+          </div>
+
+          <!-- Dynamic Live Calculator Preview -->
+          <div class="calc-preview">
+            <span>即時總分：<strong id="preview-total">0</strong></span>
+            <span>即時平均：<strong id="preview-average">0.0</strong></span>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary" id="btn-submit">登入成績</button>
+            <button type="button" class="btn btn-secondary" id="btn-cancel" style="display: none;">取消修改</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Right Card: Grade List -->
+      <section class="glass-card list-section">
+        <div class="list-header">
+          <h2 class="section-title">成績清單</h2>
+          
+          <div class="search-box">
+            <input type="text" class="form-input" id="search-input" placeholder="搜尋姓名、學號、班級...">
+          </div>
+        </div>
+
+        <!-- Scrollable Table -->
+        <div class="table-container">
+          <table class="grades-table">
+            <thead>
+              <tr>
+                <th>學號</th>
+                <th>班級</th>
+                <th>座號</th>
+                <th>姓名</th>
+                <th>國</th>
+                <th>英</th>
+                <th>數</th>
+                <th>自</th>
+                <th>社</th>
+                <th>總分</th>
+                <th>平均</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="student-table-body">
+              <!-- Dynamically populated rows -->
+              <tr>
+                <td colspan="12" class="text-center text-muted">正在載入雲端資料庫...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <script src="app.js?v=1.0.1"></script>
+</body>
+</html>

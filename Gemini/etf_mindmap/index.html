@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0050/0056 換股與主動式 ETF 深度解析 - 心智圖</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy:       #050d1f;
+      --teal-dark:  #083040;
+      --teal:       #00c9b1;
+      --teal-glow:  rgba(0,201,177,0.25);
+      --gold:       #f5c518;
+      --gold-light: #ffe066;
+      --gold-glow:  rgba(245,197,24,0.3);
+      --cyan:       #39d0f0;
+      --red-accent: #ff6b6b;
+      --green-accent:#43e97b;
+      --text:       #e8f4f8;
+      --muted:      #7ea8be;
+      --glass:      rgba(5, 18, 40, 0.72);
+      --glass-border: rgba(0,201,177,0.18);
+      --font: 'Noto Sans TC', 'Outfit', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--navy);
+      background-image:
+        linear-gradient(rgba(5,13,31,0.55), rgba(5,13,31,0.82)),
+        url('./etf_finance_bg.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2.5rem 2rem 4rem;
+    }
+
+    /* ── 頂部標題 ─────────────────────── */
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .ep-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--teal), var(--cyan));
+      color: var(--navy);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff 20%, var(--gold) 60%, var(--teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.6rem;
+      line-height: 1.2;
+    }
+
+    .header-meta {
+      font-size: 0.92rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .header-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .print-btn {
+      margin-top: 1.5rem;
+      background: rgba(0,201,177,0.1);
+      border: 1px solid var(--teal);
+      color: var(--teal);
+      padding: 0.6rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .print-btn:hover {
+      background: rgba(0,201,177,0.2);
+      box-shadow: 0 0 16px var(--teal-glow);
+      transform: translateY(-2px);
+    }
+
+    /* ── 整體佈局：5欄自適應 ─────────────── */
+    .mindmap {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 核心摘要 — 橫跨全寬 */
+    .card-full {
+      grid-column: 1 / -1;
+    }
+
+    /* ── 卡片通用 ─────────────────────── */
+    .card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.8rem;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      opacity: 0.8;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0,201,177,0.45);
+      box-shadow: 0 14px 36px rgba(0,201,177,0.12), 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    /* 色彩主題變體 */
+    .card.gold::before   { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    .card.red::before    { background: linear-gradient(90deg, var(--red-accent), #ffaa00); }
+    .card.green::before  { background: linear-gradient(90deg, var(--green-accent), var(--teal)); }
+    .card.cyan::before   { background: linear-gradient(90deg, var(--cyan), #a78bfa); }
+
+    /* ── 卡片標題 ─────────────────────── */
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .card.gold .card-title  { color: var(--gold); }
+    .card.red .card-title   { color: var(--red-accent); }
+    .card.green .card-title { color: var(--green-accent); }
+    .card.cyan .card-title  { color: var(--cyan); }
+
+    /* ── 核心摘要：數字牆 ─────────────── */
+    .stat-row {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .stat-num {
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold), var(--teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ── ETF 換股卡：雙欄並排 ─────────── */
+    .etf-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .etf-box {
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .etf-box-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      vertical-align: middle;
+    }
+
+    .tag-out { background: rgba(255,107,107,0.2); color: var(--red-accent); border: 1px solid rgba(255,107,107,0.4); }
+    .tag-in  { background: rgba(67,233,123,0.15); color: var(--green-accent); border: 1px solid rgba(67,233,123,0.35); }
+    .tag-ai  { background: rgba(0,201,177,0.15); color: var(--teal); border: 1px solid var(--teal-glow); }
+
+    /* ── 指標卡 ───────────────────────── */
+    .indicator-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .indicator {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+    }
+
+    .indicator-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .ind-1 { background: rgba(0,201,177,0.25); color: var(--teal); }
+    .ind-2 { background: rgba(67,233,123,0.2); color: var(--green-accent); }
+    .ind-3 { background: rgba(255,107,107,0.2); color: var(--red-accent); }
+
+    .indicator-content strong {
+      display: block;
+      font-size: 0.97rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .indicator-content p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── 主動 ETF 分類 ────────────────── */
+    .etf-type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+    }
+
+    .etf-type {
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      border-left: 3px solid var(--teal);
+      font-size: 0.9rem;
+    }
+
+    .etf-type.t2 { border-left-color: var(--gold); }
+    .etf-type.t3 { border-left-color: var(--cyan); }
+    .etf-type.t4 { border-left-color: #a78bfa; }
+
+    .etf-type strong {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--teal);
+      margin-bottom: 0.25rem;
+    }
+
+    .etf-type.t2 strong { color: var(--gold); }
+    .etf-type.t3 strong { color: var(--cyan); }
+    .etf-type.t4 strong { color: #a78bfa; }
+
+    /* ── 實戰公式卡 ───────────────────── */
+    .formula {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+
+    .formula-step {
+      background: rgba(245,197,24,0.1);
+      border: 1px solid rgba(245,197,24,0.3);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--gold-light);
+    }
+
+    .formula-arrow {
+      font-size: 1.2rem;
+      color: var(--teal);
+    }
+
+    /* ── 建議列表 ─────────────────────── */
+    .tip-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .tip-list li {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .tip-list li::before {
+      content: '▸';
+      color: var(--teal);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .tip-list li strong { color: #fff; }
+
+    /* ── 警告 box ─────────────────────── */
+    .warn-box {
+      background: rgba(255,107,107,0.08);
+      border: 1px solid rgba(255,107,107,0.3);
+      border-radius: 10px;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.88rem;
+      color: #ffb3b3;
+      margin-top: 0.5rem;
+      line-height: 1.6;
+    }
+
+    .warn-box strong { color: var(--red-accent); }
+
+    /* ── 來源 footer ──────────────────── */
+    footer {
+      text-align: center;
+      margin-top: 3.5rem;
+      font-size: 0.8rem;
+      color: rgba(126,168,190,0.5);
+    }
+
+    footer a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    /* ── Print ────────────────────────── */
+    @media print {
+      body { background: #fff !important; color: #000 !important; padding: 1rem; }
+      header .print-btn { display: none; }
+      .card {
+        background: #f8f9fa !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+      .card::before { display: none; }
+      .card-title, .stat-num, .etf-box-title { color: #000 !important; }
+      .mindmap { grid-template-columns: 1fr 1fr; }
+      .card-full { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="ep-badge">ETF 錢滾錢 EP80 · CMoney 理財寶</div>
+  <h1>0050 / 0056 換股<br>與主動式 ETF 深度解析</h1>
+  <div class="header-meta">
+    <span>🎙️ 受訪：阿格力</span>
+    <span>🎬 主持：葉芷娟</span>
+    <span>💰 核心：4 兆台幣資金流向</span>
+  </div>
+  <button class="print-btn" onclick="window.print()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+    列印 / 存為 PDF
+  </button>
+</header>
+
+<div class="mindmap">
+
+  <!-- ① 核心摘要 -->
+  <div class="card card-full gold">
+    <div class="card-header">
+      <span class="card-icon">📊</span>
+      <span class="card-title">核心焦點：換股背後的買賣訊號</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-num">4兆</div>
+        <div class="stat-label">台幣 ETF 市場規模<br>換股帶動巨量資金流動</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">操盤核心指標<br>法人動向追蹤系統</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-label">ETF 類型對比<br>被動 vs. 主動式</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">AI↑</div>
+        <div class="stat-label">0050 換股趨勢<br>持續 AI 化轉型</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 被動 ETF 換股邏輯 -->
+  <div class="card" style="grid-column: span 2;">
+    <div class="card-header">
+      <span class="card-icon">⚡</span>
+      <span class="card-title">被動 ETF 換股邏輯</span>
+    </div>
+    <div class="etf-split">
+      <div class="etf-box">
+        <div class="etf-box-title">
+          📈 市值型 0050
+          <span class="tag tag-ai">越來越 AI 🚀</span>
+        </div>
+        <div style="font-size: 0.88rem; line-height: 1.9; color: var(--muted);">
+          <span class="tag tag-out">剔除</span>&nbsp; 中鋼、台塑（傳產）<br>
+          <span class="tag tag-in">納入</span>&nbsp; 創意、貿聯（科技）<br><br>
+          <span style="color: var(--text);">➜ 成分股持續 AI 科技化，傳統製造業比重下降</span>
+        </div>
+      </div>
+      <div class="etf-box">
+        <div class="etf-box-title">💰 高股息型 0056 / 878 / 919</div>
+        <div style="font-size: 0.88rem; line-height: 1.9; color: var(--muted);">
+          <span class="tag tag-in">納入</span>&nbsp; 金融、傳產類股<br><br>
+          <span style="color: var(--text);">➜ 逆勢追求防禦性價值</span><br>
+          <span style="color: var(--text);">➜ 與市值型形成互補配置</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 主動式 ETF 分類 -->
+  <div class="card cyan">
+    <div class="card-header">
+      <span class="card-icon">🔀</span>
+      <span class="card-title">主動式 ETF 四大分類</span>
+    </div>
+    <div class="etf-type-grid">
+      <div class="etf-type">
+        <strong>台股型</strong>
+        不限產業 / 鎖定科技
+      </div>
+      <div class="etf-type t2">
+        <strong>高股息選股型</strong>
+        動能 + 高息雙因子
+      </div>
+      <div class="etf-type t3">
+        <strong>海外型</strong>
+        聚焦美股 / 全球布局
+      </div>
+      <div class="etf-type t4">
+        <strong>指數增強型</strong>
+        優化複製特定指數
+      </div>
+    </div>
+    <div class="warn-box" style="margin-top:1rem;">
+      <strong>⚠️ 規模盲點：</strong>基金規模過大，操作難度大增；資金多易將中小型股買到漲停，影響績效。
+    </div>
+  </div>
+
+  <!-- ④ 三大操盤指標 -->
+  <div class="card green">
+    <div class="card-header">
+      <span class="card-icon">🎯</span>
+      <span class="card-title">操盤三大核心指標</span>
+    </div>
+    <div class="indicator-list">
+      <div class="indicator">
+        <div class="indicator-num ind-1">1</div>
+        <div class="indicator-content">
+          <strong>新納入持股 ⚡</strong>
+          <p>法人消息領先市場，ETF 調倉動作引發同業群聚效應，是最強的買入訊號。</p>
+        </div>
+      </div>
+      <div class="indicator">
+        <div class="indicator-num ind-2">2</div>
+        <div class="indicator-content">
+          <strong>持續加碼 📈</strong>
+          <p>法人連買且不盲目停力，代表看法確定；跟隨持續加碼的動向可降低追高風險。</p>
+        </div>
+      </div>
+      <div class="indicator">
+        <div class="indicator-num ind-3">3</div>
+        <div class="indicator-content">
+          <strong>投信下車 ❌</strong>
+          <p>連續賣超訊號出現，應果斷落袋為安，切勿抱著等反彈。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 資產配置建議 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-icon">💡</span>
+      <span class="card-title">資產配置與操作心態</span>
+    </div>
+    <ul class="tip-list">
+      <li><strong>市值型 + 高股息搭配：</strong>兩者並非對立，互補配置更能均衡風險與收益。</li>
+      <li><strong>不要非黑即白：</strong>避免「只選一種 ETF」的二元思維，適合自己的配比才是關鍵。</li>
+      <li><strong>主動式 ETF 定位：</strong>不適合長線存股，適合視為「順風車」或資金暫時停泊站。</li>
+      <li><strong>紀律重於預測：</strong>追蹤法人指標，避免主觀猜測市場方向。</li>
+    </ul>
+  </div>
+
+  <!-- ⑥ 實戰選股公式 -->
+  <div class="card gold card-full">
+    <div class="card-header">
+      <span class="card-icon">🎯</span>
+      <span class="card-title">實戰選股三步公式</span>
+    </div>
+    <div class="formula">
+      <div class="formula-step">📉 股價跌到<br>重要均線支撐</div>
+      <div class="formula-arrow">＋</div>
+      <div class="formula-step">📊 當月營收<br>創歷史新高</div>
+      <div class="formula-arrow">＋</div>
+      <div class="formula-step">📈 主動 ETF<br>轉賣為買訊號</div>
+      <div class="formula-arrow">＝</div>
+      <div class="formula-step" style="background: rgba(0,201,177,0.15); border-color: var(--teal); color: var(--teal);">✅ 高勝率<br>買入時機</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>資料來源：<a href="http://www.youtube.com/watch?v=O_4NoeKMmuc" target="_blank">CMoney 理財寶 · ETF 錢滾錢 EP80</a> · 受訪阿格力 · 主持葉芷娟</p>
+  <p style="margin-top:0.4rem;">本海報僅供學習參考，不構成任何投資建議。</p>
+</footer>
+
+</body>
+</html>

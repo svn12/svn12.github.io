@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gemini AI 生成的各類專案與科普資訊圖總導覽頁面。">
+    <title>Gemini 專案總覽</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #020617 100%);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary-color: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 1.5rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.75rem 2rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 20px 40px -15px rgba(56, 189, 248, 0.2);
+            background: rgba(30, 41, 59, 0.85);
+        }
+
+        .project-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+
+        .project-card:hover .project-title {
+            color: var(--primary-color);
+        }
+
+        .project-desc {
+            font-size: 0.925rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .project-tag {
+            align-self: flex-start;
+            padding: 0.25rem 0.75rem;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary-color);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+            margin-left: 1.5rem;
+        }
+
+        .project-card:hover .arrow {
+            color: var(--primary-color);
+            transform: translateX(6px);
+        }
+
+        footer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gemini Projects</h1>
+            <p>Gemini AI 生成的各類專案與科普資訊圖列表</p>
+        </header>
+
+        <main class="grid">
+            <a href="./manga_ebook_wake_up/index.html" class="project-card" id="link-manga_ebook_wake_up">
+                <div class="project-info">
+                    <span class="project-tag">互動漫畫</span>
+                    <div class="project-title">深夜裸醒謎案 - 互動式漫畫電子書</div>
+                    <div class="project-desc">一位美女深夜醒來驚覺身上涼涼的... 互動式點擊播放 TTS 繁中台詞與翻頁的趣味四格漫畫電子書。</div>
+                </div>
+                <div class="arrow">→</div>
+            </a>
+            <a href="./grade_buddy/index.html" class="project-card" id="link-grade_buddy">
+                <div class="project-info">
+                    <span class="project-tag">教學工具</span>
+                    <div class="project-title">學生成績管理系統 | GradeBuddy</div>
+                    <div class="project-desc">ClassBuddy 專屬學生成績登錄與管理系統，搭載 Google Sheets 資料庫與高階毛玻璃面版。</div>
+                </div>
+                <div class="arrow">→</div>
+            </a>
+            <a href="./class_tools/index.html" class="project-card" id="link-class_tools">
+                <div class="project-info">
+                    <span class="project-tag">教學工具</span>
+                    <div class="project-title">ClassBuddy | 課堂隨機抽籤與常用教學工具箱</div>
+                    <div class="project-desc">課堂專用的教學互動平台。包含幸運大轉盤、電子拉霸機、分組計分板、倒數與秒錶、趣味泡泡噪音偵測器與隨機分組，為課堂帶來趣味與活力。</div>
+                </div>
+                <div class="arrow">→</div>
+            </a>
+            <a href="./life_motivation/index.html" class="project-card" id="link-life_motivation">
+                <div class="project-info">
+                    <span class="project-tag">心靈勵志</span>
+                    <div class="project-title">生活再難也要自律自強穩步向前</div>
+                    <div class="project-desc">人生哲理與箴言，提供生活動力的網頁。</div>
+                </div>
+                <div class="arrow">→</div>
+            </a>
+            <a href="./satan_permission/index.html" class="project-card" id="link-satan_permission">
+                <div class="project-info">
+                    <span class="project-tag">神學探討</span>
+                    <div class="project-title">上帝容許撒旦的理由 - 心智圖架構海報</div>
+                    <div class="project-desc">探討上帝容許撒旦存在的神學觀點心智圖海報。</div>
+                </div>
+                <div class="arrow">→</div>
+            </a>
+            <a href="./etf_mindmap/index.html" class="project-card" id="link-etf_mindmap">
+                <div class="project-info">
+                    <span class="project-tag">投資理財</span>
+                    <div class="project-title">0050/0056 換股與主動式 ETF 深度解析 - 心智圖</div>
+                    <div class="project-desc">ETF 換股策略及主動式 ETF 的解析心智圖海報。</div>
+                </div>
+                <div class="arrow">→</div>
+            </a>
+            <a href="./okc_surgery/index.html" class="project-card" id="link-okc-surgery">
+                <div class="project-info">
+                    <span class="project-tag">醫療科普</span>
+                    <div class="project-title">牙源性角化囊腫 (OKC) 復發處理與手術策略</div>
+                    <div class="project-desc">深入剖析生長機轉、預防復發的手術步驟以及術後長期隨訪指南的互動式資訊圖。</div>
+                </div>
+                <div class="arrow">→</div>
+            </a>
+            
+            <!-- 未來移入的項目可直接加在此處 -->
+        </main>
+
+        <footer>
+            <p>&copy; 2026 svn12.github.io. Powered by Gemini AI.</p>
+        </footer>
+    </div>
+</body>
+</html>

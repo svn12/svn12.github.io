@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClassBuddy | 課堂隨機抽籤與常用教學工具箱</title>
+  <meta name="description" content="課堂專用的教學互動平台。包含幸運大轉盤、電子拉霸機、分組計分板、倒數與秒錶、趣味泡泡噪音偵測器與隨機分組，為課堂帶來趣味與活力。">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Confetti effect for picking winner -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="brand">
+          <div class="brand-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 7a5 5 0 100 10 5 5 0 000-10z"></path>
+            </svg>
+          </div>
+          <span class="brand-name">ClassBuddy</span>
+        </div>
+
+        <nav class="nav-container">
+          <ul class="nav-menu">
+            <li class="nav-item active" data-tab="picker">
+              <button id="nav-btn-picker">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5a3 3 0 00-3-3H7a3 3 0 00-3 3v12a5 5 0 005 5h4"></path>
+                </svg>
+                班級抽籤
+              </button>
+            </li>
+            <li class="nav-item" data-tab="scoreboard">
+              <button id="nav-btn-scoreboard">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+                </svg>
+                小組積分板
+              </button>
+            </li>
+            <li class="nav-item" data-tab="timer">
+              <button id="nav-btn-timer">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                倒數與秒錶
+              </button>
+            </li>
+            <li class="nav-item" data-tab="noise">
+              <button id="nav-btn-noise">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                </svg>
+                噪音偵測器
+              </button>
+            </li>
+            <li class="nav-item" data-tab="grouping">
+              <button id="nav-btn-grouping">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                隨機分組
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button class="btn btn-secondary btn-full" id="btn-manage-students">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          學生名單管理 (<span id="total-count">0</span>)
+        </button>
+        <div class="sidebar-footer" style="border: none; padding-top: 0.5rem; margin-top: 0.5rem;">
+          ClassBuddy © 2026
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Section 1: Picker (班級抽籤) -->
+      <section id="section-picker" class="tab-section active">
+        <div class="content-header">
+          <h1 class="page-title">班級抽籤工具</h1>
+        </div>
+
+        <div class="picker-layout-grid">
+          <!-- Left Main Area: Draw Animation -->
+          <div class="picker-main-card glass-card">
+            <!-- Mode Switcher -->
+            <div class="mode-switcher">
+              <button class="mode-tab active" id="tab-wheel">幸運大轉盤</button>
+              <button class="mode-tab" id="tab-slots">電子拉霸機</button>
+            </div>
+
+            <!-- View A: Lucky Wheel -->
+            <div class="picker-container-view" id="view-wheel">
+              <div class="wheel-box">
+                <div class="wheel-pointer"></div>
+                <canvas id="wheel-canvas" width="420" height="420"></canvas>
+              </div>
+              <button class="btn btn-primary btn-draw-trigger" id="btn-draw-wheel">開始抽籤</button>
+            </div>
+
+            <!-- View B: Slot Machine -->
+            <div class="picker-container-view" id="view-slots" style="display: none;">
+              <div class="slot-machine-box">
+                <div class="slot-window">
+                  <div class="slot-reel" id="slot-reel-container">
+                    <!-- Names dynamically added for scrolling -->
+                    <div class="slot-name-node">準備拉霸...</div>
+                  </div>
+                  <div class="slot-overlay"></div>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-draw-trigger" id="btn-draw-slots">開始拉霸</button>
+            </div>
+          </div>
+
+          <!-- Right Sidebar Area: Settings & Logs -->
+          <div class="picker-sidebar-card glass-card">
+            <h2 class="form-label" style="font-size: 1.15rem; margin-bottom: 1.25rem;">抽籤設定</h2>
+            
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-exclude-picked" checked>
+                <span class="custom-checkbox"></span>
+                排除已中籤的學生 (不重複抽)
+              </label>
+            </div>
+
+            <div class="draw-logs-header">
+              <span>已抽出名單 (<span id="log-count">0</span>)</span>
+              <button class="btn-text-action" id="btn-clear-logs">清空紀錄</button>
+            </div>
+
+            <div class="draw-logs-container" id="draw-logs-list">
+              <div class="no-logs" id="no-logs-text">尚無抽籤紀錄</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Scoreboard (小組積分板) -->
+      <section id="section-scoreboard" class="tab-section">
+        <div class="content-header">
+          <h1 class="page-title">小組積分板</h1>
+          <div class="quick-actions">
+            <button class="btn btn-primary" id="btn-add-team">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v12m6-6H6"></path>
+              </svg>
+              新增組別
+            </button>
+            <button class="btn btn-secondary" id="btn-reset-scores">重置全部分數</button>
+          </div>
+        </div>
+
+        <div class="board-grid" id="scoreboard-grid">
+          <!-- Scorecards populated by JS -->
+        </div>
+      </section>
+
+      <!-- Section 3: Timer (倒數與秒錶) -->
+      <section id="section-timer" class="tab-section">
+        <div class="content-header">
+          <h1 class="page-title">倒數與秒錶</h1>
+        </div>
+
+        <div class="glass-card">
+          <div class="timer-container">
+            <div class="timer-visual">
+              <svg class="progress-ring" width="280" height="280">
+                <circle class="progress-ring__circle" stroke="#6366f1" stroke-width="12" fill="transparent" r="120" cx="140" cy="140"/>
+              </svg>
+              <div class="timer-digits" id="timer-digits">05:00</div>
+            </div>
+
+            <div class="preset-timers">
+              <button class="btn btn-secondary btn-preset" data-seconds="60">1 分鐘</button>
+              <button class="btn btn-secondary btn-preset" data-seconds="180">3 分鐘</button>
+              <button class="btn btn-secondary btn-preset" data-seconds="300">5 分鐘</button>
+              <button class="btn btn-secondary btn-preset" data-seconds="600">10 分鐘</button>
+              <button class="btn btn-secondary btn-preset" data-seconds="1200">20 分鐘</button>
+            </div>
+
+            <div class="timer-controls">
+              <button class="btn btn-primary" id="btn-timer-start">開始</button>
+              <button class="btn btn-secondary" id="btn-timer-pause">暫停</button>
+              <button class="btn btn-danger" id="btn-timer-reset">重置</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Noise (噪音偵測器) -->
+      <section id="section-noise" class="tab-section">
+        <div class="content-header">
+          <h1 class="page-title">噪音偵測器</h1>
+        </div>
+
+        <div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+          <div class="noise-container">
+            <div class="noise-visualizer">
+              <canvas class="noise-canvas" id="noise-canvas"></canvas>
+            </div>
+
+            <div class="gauge-value" id="noise-db">0%</div>
+            <div class="noise-status status-quiet" id="noise-status-label">環境安靜</div>
+
+            <button class="btn btn-primary" id="btn-noise-auth">啟用麥克風監測</button>
+            <p class="form-label" style="text-align: center; font-size: 0.8rem; margin-top: 1rem;">
+              提示：我們僅在本地即時分析音量，不會將任何音訊上傳至雲端伺服器。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Grouping (隨機分組) -->
+      <section id="section-grouping" class="tab-section">
+        <div class="content-header">
+          <h1 class="page-title">隨機分組工具</h1>
+        </div>
+
+        <div class="glass-card">
+          <div class="group-creation-box" style="max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem;">
+            <h2 class="form-label" style="font-size: 1.1rem; text-align: center;">快速分組設定</h2>
+            
+            <div class="form-group">
+              <label class="form-label" for="select-group-mode">分組基準</label>
+              <select class="form-input" id="select-group-mode" style="background: rgba(0, 0, 0, 0.3);">
+                <option value="num-groups">自訂分組數量 (分 N 組)</option>
+                <option value="per-group">自訂每組人數 (每組 N 人)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-group-number" id="lbl-group-number">想要分成幾組？</label>
+              <input type="number" class="form-input" id="input-group-number" value="4" min="2" max="50">
+            </div>
+
+            <button class="btn btn-primary btn-full" id="btn-execute-grouping">生成分組</button>
+          </div>
+        </div>
+
+        <!-- Grouping Output Panel -->
+        <div class="glass-card" id="grouping-output-panel" style="display: none; margin-top: 2rem;">
+          <h2 class="form-label" style="font-size: 1.25rem;">分組結果</h2>
+          <div class="grouping-results" id="grouping-results-container"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Student List Manager Modal -->
+  <div class="modal-overlay" id="students-modal">
+    <div class="modal-card glass-card">
+      <div class="modal-header">
+        <h2 class="modal-title">學生名單管理</h2>
+        <button class="btn-close-modal" id="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">貼上學生名單（以逗號、空格或換行分隔）</label>
+          <textarea class="form-textarea" id="textarea-student-names" rows="12" placeholder="張小明&#10;李小華&#10;王大同&#10;..."></textarea>
+        </div>
+        
+        <h3 class="form-label" style="font-size: 0.95rem; margin-top: 1rem; margin-bottom: 0.5rem;">當前班級成員名單</h3>
+        <div class="tags-container" id="modal-tags-container" style="background: rgba(0,0,0,0.2); max-height: 180px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-reset-picked-modal">重設抽籤狀態</button>
+        <button class="btn btn-primary" id="btn-save-students-modal">儲存名單</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
