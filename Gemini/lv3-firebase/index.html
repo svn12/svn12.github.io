@@ -618,25 +618,9 @@
       appId: "1:1234567890:web:abcdefghijklmn"
     };
 
-    // 初始化 Firebase (僅在配置有效或非 placeholder 時初始化，若為 placeholder 則模擬資料庫以防報錯)
+    // 初始化 Firebase 變數
     let db = null;
     let isMockMode = false;
-    
-    try {
-      if (firebaseConfig.apiKey.includes("placeholder")) {
-        console.warn("檢測到 Firebase 預設占位符配置，改用 Mock 模擬即時資料庫模式");
-        isMockMode = true;
-        initMockLeaderboard();
-      } else {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.firestore();
-        initLiveLeaderboard();
-      }
-    } catch (err) {
-      console.error("Firebase 初始化失敗，開啟 Mock 模式:", err);
-      isMockMode = true;
-      initMockLeaderboard();
-    }
 
     const correctAnswers = ['B', 'B', 'A', 'C'];
     let userAnswers = [null, null, null, null];
@@ -831,6 +815,23 @@
       document.getElementById('sync-text').textContent = '';
       
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 啟動初始化流程
+    try {
+      if (firebaseConfig.apiKey.includes("placeholder")) {
+        console.warn("檢測到 Firebase 預設占位符配置，改用 Mock 模擬即時資料庫模式");
+        isMockMode = true;
+        initMockLeaderboard();
+      } else {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        initLiveLeaderboard();
+      }
+    } catch (err) {
+      console.error("Firebase 初始化失敗，開啟 Mock 模式:", err);
+      isMockMode = true;
+      initMockLeaderboard();
     }
   </script>
 </body>
