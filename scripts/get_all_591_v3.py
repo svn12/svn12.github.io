@@ -8,15 +8,32 @@ import time
 import pandas as pd
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'Device': 'pc',
+    'Cookie': 'urlJumpIp=1; urlJumpIpByIp=1;',
+    'Referer': 'https://rent.591.com.tw/',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
 }
 
+debug_logs = []
+
 def get_nuxt_data(url):
-    print(f"正在抓取網頁: {url}")
+    log_msg = f"正在抓取網頁: {url}"
+    print(log_msg)
+    debug_logs.append(log_msg)
     try:
         res = requests.get(url, headers=headers, timeout=15)
+        status_msg = f"  狀態碼: {res.status_code}"
+        print(status_msg)
+        debug_logs.append(status_msg)
+        
         if res.status_code != 200:
-            print(f"  請求失敗，狀態碼: {res.status_code}")
+            err_msg = f"  請求失敗，狀態碼: {res.status_code}"
+            print(err_msg)
+            debug_logs.append(err_msg)
+            snippet = res.text[:500].replace('\n', ' ')
+            debug_logs.append(f"  網頁片段: {snippet}")
             return None
             
         soup = BeautifulSoup(res.text, 'html.parser')
@@ -29,7 +46,11 @@ def get_nuxt_data(url):
                 break
                 
         if not nuxt_js:
-            print("  在 HTML 中找不到 __NUXT__ 變數")
+            err_msg = "  在 HTML 中找不到 __NUXT__ 變數"
+            print(err_msg)
+            debug_logs.append(err_msg)
+            snippet = res.text[:500].replace('\n', ' ')
+            debug_logs.append(f"  網頁片段: {snippet}")
             return None
             
         js_content = f"const window = {{}};\n{nuxt_js}\nconsole.log(JSON.stringify(window.__NUXT__));"
@@ -40,12 +61,16 @@ def get_nuxt_data(url):
             
         proc = subprocess.run(['node', js_path], capture_output=True, text=True, encoding='utf-8', timeout=10)
         if proc.returncode != 0:
-            print(f"  Node 執行出錯: {proc.stderr}")
+            err_msg = f"  Node 執行出錯: {proc.stderr}"
+            print(err_msg)
+            debug_logs.append(err_msg)
             return None
             
         return json.loads(proc.stdout)
     except Exception as e:
-        print(f"  處理網址 {url} 時發生錯誤: {e}")
+        err_msg = f"  處理網址 {url} 時發生錯誤: {e}"
+        print(err_msg)
+        debug_logs.append(err_msg)
         return None
     finally:
         if 'js_path' in locals() and os.path.exists(js_path):
@@ -284,6 +309,15 @@ def main():
         f.write("\n".join(md_content))
         
     print(f"Markdown 報告成功生成: {md_file}")
+
+    # 寫入 debug 日誌
+    debug_path = os.path.join(output_dir, 'debug_log.json')
+    try:
+        with open(debug_path, 'w', encoding='utf-8') as f:
+            json.dump(debug_logs, f, ensure_ascii=False, indent=2)
+        print(f"Debug 日誌成功生成: {debug_path}")
+    except Exception as e:
+        print(f"無法寫入 debug 日誌: {e}")
 
 if __name__ == '__main__':
     main()

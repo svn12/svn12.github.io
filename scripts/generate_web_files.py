@@ -12,43 +12,54 @@ if not os.path.exists(PUBLIC_DIR):
     os.makedirs(PUBLIC_DIR)
 
 def main():
-    if not os.path.exists(EXCEL_PATH):
-        print(f"錯誤: 找不到 {EXCEL_PATH}")
-        return
+    rentals = []
+    if os.path.exists(EXCEL_PATH):
+        try:
+            df = pd.read_excel(EXCEL_PATH)
+            df = df.fillna('')
+            for idx, row in df.iterrows():
+                rentals.append({
+                    "district": str(row.get('行政區', '')),
+                    "title": str(row.get('名稱', '')),
+                    "kind": str(row.get('類型', '')),
+                    "price": str(row.get('租金', '')),
+                    "price_contain": str(row.get('租金包含', '')),
+                    "size_floor": str(row.get('大小 / 樓層', '')),
+                    "address": str(row.get('地址', '')),
+                    "refresh_time": str(row.get('何時更新', '')),
+                    "yesterday_views": str(row.get('昨日瀏覽人數', '')),
+                    "cover_img": str(row.get('封面照片網址', '')),
+                    "url": str(row.get('連結', ''))
+                })
+        except Exception as e:
+            print(f"讀取 Excel 失敗: {e}")
+    else:
+        print(f"警告: 找不到 {EXCEL_PATH}")
         
-    df = pd.read_excel(EXCEL_PATH)
-    df = df.fillna('')
-    
     # 抓取時間
     now_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
-    # 整理 JSON 資料
-    rentals = []
-    for idx, row in df.iterrows():
-        rentals.append({
-            "district": str(row.get('行政區', '')),
-            "title": str(row.get('名稱', '')),
-            "kind": str(row.get('類型', '')),
-            "price": str(row.get('租金', '')),
-            "price_contain": str(row.get('租金包含', '')),
-            "size_floor": str(row.get('大小 / 樓層', '')),
-            "address": str(row.get('地址', '')),
-            "refresh_time": str(row.get('何時更新', '')),
-            "yesterday_views": str(row.get('昨日瀏覽人數', '')),
-            "cover_img": str(row.get('封面照片網址', '')),
-            "url": str(row.get('連結', ''))
-        })
-        
+    # 讀取 debug 日誌
+    debug_logs = []
+    debug_path = os.path.join(PROJECT_DIR, 'output/debug_log.json')
+    if os.path.exists(debug_path):
+        try:
+            with open(debug_path, 'r', encoding='utf-8') as f:
+                debug_logs = json.load(f)
+        except Exception as e:
+            debug_logs = [f"讀取 debug_log.json 失敗: {e}"]
+            
     data_payload = {
         "fetched_time": now_str,
-        "rentals": rentals
+        "rentals": rentals,
+        "debug_logs": debug_logs
     }
     
     # 寫入 data.json
     json_path = os.path.join(PUBLIC_DIR, 'data.json')
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(data_payload, f, ensure_ascii=False, indent=2)
-    print(f"成功生成 {json_path}，共 {len(rentals)} 筆資料。")
+    print(f"成功生成 {json_path}，共 {len(rentals)} 筆資料，附帶 {len(debug_logs)} 筆 debug 資訊。")
     
     # 建立 index.html (包含中正區選項)
     html_content = """<!DOCTYPE html>
@@ -412,13 +423,15 @@ def main():
 
     <script>
         let allRentals = [];
+        let debugLogs = [];
 
         // 載入資料 (改為相對路徑讀取 data.json)
         fetch('./data.json')
             .then(res => res.json())
             .then(data => {
                 document.getElementById('fetched-time').textContent = data.fetched_time;
-                allRentals = data.rentals;
+                allRentals = data.rentals || [];
+                debugLogs = data.debug_logs || [];
                 applyFilters();
             })
             .catch(err => {
@@ -477,7 +490,21 @@ def main():
             document.getElementById('total-count').textContent = items.length;
             
             if (items.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-muted);">無符合條件的套房資料。</div>';
+                let debugHtml = '';
+                if (debugLogs && debugLogs.length > 0) {
+                    debugHtml = `<div style="margin-top: 30px; text-align: left; background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid rgba(248, 113, 113, 0.2); font-family: monospace; font-size: 0.85rem; color: #f87171; max-width: 800px; margin-left: auto; margin-right: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        <h4 style="margin-bottom: 12px; font-size: 1rem; color: #fca5a5; display: flex; align-items: center; gap: 8px;">
+                            ⚠️ GitHub Actions 執行偵錯日誌 (Debug Logs):
+                        </h4>
+                        <div style="max-height: 250px; overflow-y: auto; padding: 10px; background: #0f172a; border-radius: 6px; line-height: 1.5;">
+                            ${debugLogs.map(log => `<div style="margin-bottom: 4px; white-space: pre-wrap; word-break: break-all;">${log}</div>`).join('')}
+                        </div>
+                    </div>`;
+                }
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-muted);">
+                    無符合條件的套房資料。
+                    ${debugHtml}
+                </div>`;
                 return;
             }
 
