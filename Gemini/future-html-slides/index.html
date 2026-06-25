@@ -293,28 +293,24 @@
 
   const COLORS = ['#4fc3f7','#e8643a','#ffb74d','#81c784','#ce93d8','#80deea','#f48fb1'];
   let wcData = [];
+  let useMock = false;
+  let mockWords = [];
 
-  window.wcSubmit = async function() {
-    const input = document.getElementById('wc-input');
-    const word = input.value.trim();
-    if (!word) return;
-    const btn = document.getElementById('wc-btn');
-    btn.disabled = true;
-    try {
-      await addDoc(wordsRef, { word, created_at: serverTimestamp() });
-      input.value = '';
-    } catch(e) { console.error(e); }
-    finally { btn.disabled = false; }
-  };
+  // 從 localStorage 初始化本地端數據
+  try {
+    const saved = localStorage.getItem('future_slides_wordcloud_mock');
+    if (saved) {
+      mockWords = JSON.parse(saved);
+    } else {
+      // 預填一些預設詞彙作為基礎展示
+      mockWords = ["排版慢", "找圖難", "沒質感", "字體死板", "效率低", "對齊麻煩", "排版慢", "找圖難", "沒質感"];
+      localStorage.setItem('future_slides_wordcloud_mock', JSON.stringify(mockWords));
+    }
+  } catch(e) {
+    console.error("無法讀取 localStorage", e);
+  }
 
-  document.getElementById('wc-input')?.addEventListener('keypress', e => {
-    if (e.key === 'Enter') window.wcSubmit();
-  });
-  document.getElementById('wc-btn')?.addEventListener('click', window.wcSubmit);
-
-  onSnapshot(query(wordsRef, orderBy('created_at', 'asc')), snap => {
-    const words = [];
-    snap.forEach(doc => words.push(doc.data().word));
+  function renderWordCloudData(words) {
     const counts = {};
     words.forEach(w => counts[w] = (counts[w] || 0) + 1);
     wcData = Object.entries(counts).sort((a, b) => b[1] - a[1]);
@@ -325,7 +321,7 @@
     const listEl = document.getElementById('wc-list');
     listEl.innerHTML = wcData.slice(0, 10).map(([w, c]) =>
       `<div style="display:flex;justify-content:space-between;padding:4px 0;
-                   border-bottom:1px solid rgba(255,255,255,0.06);">
+                   border-bottom:1px solid rgba(255,255,255,0.06); font-size:12px;">
         <span>${w}</span><span style="color:var(--accent);font-weight:700;">${c}</span>
       </div>`
     ).join('') || '<div style="color:#555;padding:8px 0;">尚無資料</div>';
@@ -333,6 +329,63 @@
     const empty = document.getElementById('wc-empty');
     if (empty) empty.style.display = wcData.length > 0 ? 'none' : '';
     drawWordCloud();
+  }
+
+  window.wcSubmit = async function() {
+    const input = document.getElementById('wc-input');
+    const word = input.value.trim();
+    if (!word) return;
+    const btn = document.getElementById('wc-btn');
+    btn.disabled = true;
+
+    if (useMock) {
+      mockWords.push(word);
+      try {
+        localStorage.setItem('future_slides_wordcloud_mock', JSON.stringify(mockWords));
+      } catch(e) {}
+      renderWordCloudData(mockWords);
+      input.value = '';
+      btn.disabled = false;
+      return;
+    }
+
+    try {
+      await addDoc(wordsRef, { word, created_at: serverTimestamp() });
+      input.value = '';
+    } catch(e) {
+      console.warn("寫入 Firestore 失敗，無縫切換至 LocalStorage 模式！", e);
+      useMock = true;
+      mockWords.push(word);
+      try {
+        localStorage.setItem('future_slides_wordcloud_mock', JSON.stringify(mockWords));
+      } catch(ex) {}
+      renderWordCloudData(mockWords);
+      input.value = '';
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  document.getElementById('wc-input')?.addEventListener('keypress', e => {
+    if (e.key === 'Enter') window.wcSubmit();
+  });
+  document.getElementById('wc-btn')?.addEventListener('click', window.wcSubmit);
+
+  // 訂閱 Firestore 機制，並在失敗時切換到 LocalStorage
+  onSnapshot(query(wordsRef, orderBy('created_at', 'asc')), snap => {
+    if (useMock) return; // 已經切換到 Mock 時忽略 snapshot
+    const words = [];
+    snap.forEach(doc => words.push(doc.data().word));
+    // 如果線上資料為空，且本地有舊的 mock 資料，優先展示 mock 資料避免空空如也
+    if (words.length === 0 && mockWords.length > 0) {
+      renderWordCloudData(mockWords);
+    } else {
+      renderWordCloudData(words);
+    }
+  }, err => {
+    console.warn("Firestore 載入失敗（權限不足或安全規則過期），無縫切換至 LocalStorage 模式！", err);
+    useMock = true;
+    renderWordCloudData(mockWords);
   });
 
   function drawWordCloud() {
@@ -345,7 +398,7 @@
     if (wcData.length === 0) return;
     const maxCount = wcData[0][1];
     WordCloud(canvas, {
-      list: wcData.map(([w, c]) => [w, Math.max(18, Math.round((c / maxCount) * 60))]),
+      list: wcData.map(([w, c]) => [w, Math.max(16, Math.round((c / maxCount) * 56))]),
       gridSize: 5,
       weightFactor: 1,
       fontFamily: '"Microsoft JhengHei", "Noto Sans TC", sans-serif',
