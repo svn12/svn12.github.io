@@ -8,3 +8,5 @@ github.bat
 ._*
 youtube/._*
 .DS_Store
+!scripts/get_all_591_v3.py
+!scripts/generate_web_files.py
