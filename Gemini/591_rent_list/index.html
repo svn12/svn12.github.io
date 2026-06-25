@@ -317,6 +317,11 @@
             <p class="meta-info">資料更新時間：<span class="highlight-time" id="fetched-time">取得中...</span></p>
         </header>
 
+        <div id="cache-warning" style="display: none; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: center; font-size: 0.95rem; line-height: 1.5; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+            ⚠️ Cloudflare/AWS 阻擋了 GitHub Actions 雲端自動更新，目前顯示為歷史快取資料。<br>
+            如需強制獲取即時資料，請在本地執行 <code>update_591.command</code> 腳本。
+        </div>
+
         <section class="filter-panel">
             <div class="filter-group">
                 <label for="filter-district">行政區</label>
@@ -368,6 +373,15 @@
                 document.getElementById('fetched-time').textContent = data.fetched_time;
                 allRentals = data.rentals || [];
                 debugLogs = data.debug_logs || [];
+                
+                // 檢查是否為快取資料，是的話顯示警告橫幅
+                const warningBanner = document.getElementById('cache-warning');
+                if (data.is_cached) {
+                    warningBanner.style.display = 'block';
+                } else {
+                    warningBanner.style.display = 'none';
+                }
+                
                 applyFilters();
             })
             .catch(err => {
