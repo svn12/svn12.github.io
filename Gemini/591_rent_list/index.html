@@ -360,7 +360,7 @@
     <script>
         let allRentals = [];
 
-        // 載入資料
+        // 載入資料 (改為相對路徑讀取 data.json)
         fetch('./data.json')
             .then(res => res.json())
             .then(data => {
