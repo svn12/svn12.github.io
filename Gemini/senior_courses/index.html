@@ -459,12 +459,17 @@
         fetch('./data.json?t=' + new Date().getTime())
             .then(res => res.json())
             .then(data => {
-                // 因為資料可能沒有包裝 object，而是一個 array，如果是 array 就拿目前時間，或者直接解析。
                 allCourses = Array.isArray(data) ? data : data.courses || [];
                 
-                // 設定更新時間
-                const now = new Date();
-                document.getElementById('fetched-time').textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+                // 設定更新時間 (使用爬蟲產生的時間，若無則 fallback 到當前時間)
+                let updateTime = '';
+                if (!Array.isArray(data) && data.updateTime) {
+                    updateTime = data.updateTime;
+                } else {
+                    const now = new Date();
+                    updateTime = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+                }
+                document.getElementById('fetched-time').textContent = updateTime;
                 
                 initDistricts();
                 applyFilters();
