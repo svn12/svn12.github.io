@@ -15,13 +15,19 @@ def main():
     # 讀取舊的 rentals 以防抓取失敗時作為快取備份
     old_rentals = []
     json_path = os.path.join(PUBLIC_DIR, 'data.json')
-    if os.path.exists(json_path):
+    backup_path = os.path.join(PROJECT_DIR, 'Gemini/591_rent_list/data.json')
+    
+    load_path = json_path
+    if not os.path.exists(load_path) and os.path.exists(backup_path):
+        load_path = backup_path
+        
+    if os.path.exists(load_path):
         try:
-            with open(json_path, 'r', encoding='utf-8') as f:
+            with open(load_path, 'r', encoding='utf-8') as f:
                 old_data = json.load(f)
                 old_rentals = old_data.get('rentals', [])
         except Exception as e:
-            print(f"讀取舊 data.json 失敗: {e}")
+            print(f"讀取舊 data.json ({load_path}) 失敗: {e}")
 
     rentals = []
     if os.path.exists(EXCEL_PATH):
