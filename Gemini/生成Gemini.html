@@ -141,6 +141,64 @@
             transform: translateX(6px);
         }
 
+        /* 篩選與搜尋列樣式 */
+        .filter-search-bar {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+            width: 100%;
+        }
+
+        .filter-select, .search-input {
+            font-family: inherit;
+            font-size: 0.95rem;
+            padding: 0.65rem 1.25rem;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            border-radius: 12px;
+            outline: none;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: var(--transition);
+        }
+
+        .filter-select:focus, .search-input:focus {
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 0 0 15px var(--primary-glow);
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .filter-select {
+            cursor: pointer;
+            min-width: 140px;
+        }
+
+        .filter-select option {
+            background: #1e293b;
+            color: var(--text-main);
+        }
+
+        .search-input {
+            flex: 1;
+            max-width: 320px;
+        }
+
+        .project-card.hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 480px) {
+            .filter-search-bar {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            .search-input {
+                max-width: 100%;
+            }
+        }
+
         footer {
             margin-top: 5rem;
             text-align: center;
@@ -156,6 +214,13 @@
             <h1>Gemini Projects</h1>
             <p>Gemini AI 生成的各類專案與科普資訊圖列表</p>
         </header>
+
+        <div class="filter-search-bar">
+            <select id="category-filter" class="filter-select">
+                <option value="全部">全部類別</option>
+            </select>
+            <input type="text" id="keyword-search" class="search-input" placeholder="搜尋專案名稱或描述...">
+        </div>
 
         <main class="grid">
             <a href="./591_rent_list/index.html" class="project-card" id="link-591_rent_list">
@@ -278,5 +343,68 @@
             <p>&copy; 2026 svn12.github.io. Powered by Gemini AI.</p>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.project-card');
+            const categoryFilter = document.getElementById('category-filter');
+            const keywordSearch = document.getElementById('keyword-search');
+            
+            // 收集所有標籤，並取得不重複的標籤列表
+            const tags = new Set();
+            cards.forEach(card => {
+                const tagSpan = card.querySelector('.project-tag');
+                if (tagSpan) {
+                    tags.add(tagSpan.textContent.trim());
+                }
+            });
+
+            // 依序建立各種類別 option
+            tags.forEach(tag => {
+                const option = document.createElement('option');
+                option.value = tag;
+                option.textContent = tag;
+                categoryFilter.appendChild(option);
+            });
+
+            // 共同篩選邏輯 (AND 關係)
+            function filterProjects() {
+                const selectedCategory = categoryFilter.value;
+                const keyword = keywordSearch.value.trim().toLowerCase();
+
+                cards.forEach(card => {
+                    // 1. 類別篩選
+                    let isCategoryMatch = false;
+                    if (selectedCategory === '全部') {
+                        isCategoryMatch = true;
+                    } else {
+                        const tagSpan = card.querySelector('.project-tag');
+                        if (tagSpan && tagSpan.textContent.trim() === selectedCategory) {
+                            isCategoryMatch = true;
+                        }
+                    }
+
+                    // 2. 關鍵字篩選 (搜尋標題與描述)
+                    let isKeywordMatch = false;
+                    const titleText = card.querySelector('.project-title')?.textContent.toLowerCase() || '';
+                    const descText = card.querySelector('.project-desc')?.textContent.toLowerCase() || '';
+                    if (keyword === '' || titleText.includes(keyword) || descText.includes(keyword)) {
+                        isKeywordMatch = true;
+                    }
+
+                    // 3. 同時符合才顯示
+                    if (isCategoryMatch && isKeywordMatch) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+
+            // 監聽變更事件
+            categoryFilter.addEventListener('change', filterProjects);
+            keywordSearch.addEventListener('input', filterProjects);
+        });
+    </script>
 </body>
 </html>
