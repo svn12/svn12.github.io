@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雙北樂齡學堂課程大百科</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --container-bg: rgba(17, 24, 39, 0.6);
+            --card-bg: rgba(31, 41, 55, 0.6);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --primary: #10b981; /* 活力綠 */
+            --primary-glow: rgba(16, 185, 129, 0.15);
+            --orange: #f59e0b; /* 活力橘 */
+            --orange-glow: rgba(245, 158, 11, 0.15);
+            --blue: #3b82f6;
+            --purple: #8b5cf6;
+        }
+
+        /* 亮色主題 */
+        body.light-theme {
+            --bg-color: #f0fdf4; /* 翠綠底色 */
+            --container-bg: rgba(255, 255, 255, 0.85);
+            --card-bg: #ffffff;
+            --border-color: rgba(16, 185, 129, 0.15);
+            --text-color: #111827;
+            --text-muted: #4b5563;
+            --primary-glow: rgba(16, 185, 129, 0.25);
+            --orange-glow: rgba(245, 158, 11, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 60px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 45%),
+                              radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 45%);
+            background-attachment: fixed;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: var(--text-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        h1 {
+            font-size: 2.6rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 30%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto 15px auto;
+        }
+
+        .meta-info {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .highlight-val {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* 篩選面板 */
+        .filter-panel {
+            background: var(--container-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-color);
+            font-size: 1.05rem;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        body.light-theme .filter-group select, body.light-theme .filter-group input {
+            background: rgba(16, 185, 129, 0.03);
+        }
+
+        .filter-group select:focus, .filter-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        /* 按鈕 Toggle 群組 */
+        .toggle-btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+        }
+
+        body.light-theme .toggle-btn {
+            background: #fff;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .btn-orange-toggle.active {
+            background: var(--orange);
+            border-color: var(--orange);
+            box-shadow: 0 4px 12px var(--orange-glow);
+        }
+
+        /* 統計狀態 */
+        .listing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 5px;
+        }
+
+        .listing-stats {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .listing-stats span {
+            font-size: 1.5rem;
+        }
+
+        /* 課程網格 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 25px;
+        }
+
+        /* 卡片設計 */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), 0 0 20px var(--primary-glow);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .card.has-fee:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), 0 0 20px var(--orange-glow);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .card-header {
+            padding: 20px 20px 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .source-tag {
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        /* 來源標籤背景 */
+        .tag-ntpc { background: #0284c7; }
+        .tag-tpelib { background: #3b82f6; }
+        .tag-tpelife { background: #8b5cf6; }
+        .tag-moe { background: #059669; }
+
+        .price-badge {
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 30px;
+            text-align: center;
+        }
+
+        .price-free {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .price-fee {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .card-body {
+            padding: 10px 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 3.5rem;
+        }
+
+        .card-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .info-icon {
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-detail {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 14px var(--primary-glow);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-detail:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        .card.has-fee .btn-detail {
+            background: var(--orange);
+            box-shadow: 0 4px 14px var(--orange-glow);
+        }
+
+        /* 響應式調整 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">切換亮色主題</button>
+            <h1>雙北樂齡學堂課程大百科 🎓</h1>
+            <p class="subtitle">整合台北市終身學習網、北市圖、新北市數位樂學網與教育部終身學習e起來，為您提供豐富的學習資訊！</p>
+            <p class="meta-info">資料更新時間：<span class="highlight-val" id="fetched-time">取得中...</span></p>
+        </header>
+
+        <section class="filter-panel">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label>縣市</label>
+                    <div class="toggle-btn-group">
+                        <button class="toggle-btn active" id="btn-city-all" onclick="setCityFilter('all')">全部</button>
+                        <button class="toggle-btn" id="btn-city-tpe" onclick="setCityFilter('tpe')">台北市</button>
+                        <button class="toggle-btn" id="btn-city-ntpc" onclick="setCityFilter('ntpc')">新北市</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>報名費用</label>
+                    <div class="toggle-btn-group">
+                        <button class="toggle-btn active" id="btn-price-all" onclick="setPriceFilter('all')">全部</button>
+                        <button class="toggle-btn" id="btn-price-free" onclick="setPriceFilter('free')">免費</button>
+                        <button class="toggle-btn btn-orange-toggle" id="btn-price-fee" onclick="setPriceFilter('fee')">付費</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-district">行政區</label>
+                    <select id="filter-district" onchange="applyFilters()">
+                        <option value="all">載入中...</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-weekday">上課星期</label>
+                    <select id="filter-weekday" onchange="applyFilters()">
+                        <option value="all">全部星期</option>
+                        <option value="一">星期一</option>
+                        <option value="二">星期二</option>
+                        <option value="三">星期三</option>
+                        <option value="四">星期四</option>
+                        <option value="五">星期五</option>
+                        <option value="六">星期六</option>
+                        <option value="日">星期日</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label for="search-input">關鍵字搜尋 (課程名稱、承辦單位、講師等)</label>
+                <input type="text" id="search-input" oninput="applyFilters()" placeholder="請輸入關鍵字，例如：手機、日語、運動...">
+            </div>
+        </section>
+
+        <div class="listing-header">
+            <div class="listing-stats">
+                共找到 <span class="highlight-val" id="total-count">0</span> 門精彩課程
+            </div>
+        </div>
+
+        <main class="grid" id="listings-grid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-muted); font-size: 1.2rem;">正在載入課程資料中，請稍候...</div>
+        </main>
+    </div>
+
+    <script>
+        let allCourses = [];
+        let filterCity = 'all';  // all, tpe, ntpc
+        let filterPrice = 'all'; // all, free, fee
+
+        // 載入資料 (加上時間戳以防快取)
+        fetch('./data.json?t=' + new Date().getTime())
+            .then(res => res.json())
+            .then(data => {
+                // 因為資料可能沒有包裝 object，而是一個 array，如果是 array 就拿目前時間，或者直接解析。
+                allCourses = Array.isArray(data) ? data : data.courses || [];
+                
+                // 設定更新時間
+                const now = new Date();
+                document.getElementById('fetched-time').textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+                
+                initDistricts();
+                applyFilters();
+            })
+            .catch(err => {
+                console.error("載入 JSON 失敗", err);
+                document.getElementById('fetched-time').textContent = "載入失敗";
+                document.getElementById('listings-grid').innerHTML = 
+                    `<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #ef4444; font-size: 1.2rem;">載入課程資料失敗，請確認資料檔是否存在。</div>`;
+            });
+
+        // 初始化行政區下拉選單
+        function initDistricts() {
+            const districtSelect = document.getElementById('filter-district');
+            const distCounts = {};
+            
+            allCourses.forEach(c => {
+                let dist = c.district || '';
+                dist = dist.trim();
+                if (!dist) return;
+                
+                // 標準化行政區名稱為區結尾
+                if (dist !== '未分類' && !dist.endsWith('區')) {
+                    dist += '區';
+                }
+                distCounts[dist] = (distCounts[dist] || 0) + 1;
+            });
+            
+            const sortedDistricts = Object.entries(distCounts)
+                .sort((a, b) => b[1] - a[1]);
+                
+            let html = '<option value="all">全部行政區</option>';
+            sortedDistricts.forEach(([dist, count]) => {
+                html += `<option value="${dist}">${dist} (${count}門)</option>`;
+            });
+            
+            districtSelect.innerHTML = html;
+        }
+
+        // 縣市篩選 Button 切換
+        function setCityFilter(city) {
+            filterCity = city;
+            ['all', 'tpe', 'ntpc'].forEach(c => {
+                const btn = document.getElementById(`btn-city-${c}`);
+                if (c === city) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            applyFilters();
+        }
+
+        // 費用篩選 Button 切換
+        function setPriceFilter(price) {
+            filterPrice = price;
+            ['all', 'free', 'fee'].forEach(p => {
+                const btn = document.getElementById(`btn-price-${p}`);
+                if (p === price) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            applyFilters();
+        }
+
+        // 篩選與排序主要邏輯
+        function applyFilters() {
+            let filtered = [...allCourses];
+
+            // 1. 縣市篩選
+            if (filterCity === 'tpe') {
+                filtered = filtered.filter(item => 
+                    item.source.includes('台北') || 
+                    item.source.includes('臺北') || 
+                    item.organizer.includes('台北') || 
+                    item.organizer.includes('臺北') || 
+                    ['大同區', '萬華區', '中正區', '大安區', '中山區', '松山區', '信義區', '士林區', '北投區', '內湖區', '南港區', '文山區'].includes(item.district)
+                );
+            } else if (filterCity === 'ntpc') {
+                filtered = filtered.filter(item => 
+                    item.source.includes('新北') || 
+                    item.organizer.includes('新北') || 
+                    ['板橋區', '新莊區', '中和區', '永和區', '土城區', '樹林區', '三峽區', '鶯歌區', '三重區', '蘆洲區', '五股區', '泰山區', '林口區', '八里區', '淡水區', '三芝區', '石門區', '金山區', '萬里區', '汐止區', '深坑區', '石碇區', '平溪區', '雙溪區', '貢寮區', '瑞芳區', '新店區', '坪林區', '烏來區'].includes(item.district)
+                );
+            }
+
+            // 2. 費用篩選
+            if (filterPrice === 'free') {
+                filtered = filtered.filter(item => item.price === '免費' || !item.price);
+            } else if (filterPrice === 'fee') {
+                filtered = filtered.filter(item => item.price && item.price !== '免費');
+            }
+
+            // 3. 行政區選單篩選
+            const district = document.getElementById('filter-district').value;
+            if (district !== 'all') {
+                filtered = filtered.filter(item => {
+                    let d = item.district || '';
+                    if (d && !d.endsWith('區')) d += '區';
+                    return d === district;
+                });
+            }
+
+            // 4. 星期篩選
+            const weekday = document.getElementById('filter-weekday').value;
+            if (weekday !== 'all') {
+                filtered = filtered.filter(item => {
+                    const time = item.classTime || '';
+                    return time.includes(`星期${weekday}`) || time.includes(`(${weekday})`) || time.includes(weekday);
+                });
+            }
+
+            // 5. 關鍵字篩選
+            const query = document.getElementById('search-input').value.trim().toLowerCase();
+            if (query) {
+                filtered = filtered.filter(item => 
+                    item.title.toLowerCase().includes(query) || 
+                    (item.organizer || '').toLowerCase().includes(query) || 
+                    (item.teacher || '').toLowerCase().includes(query) ||
+                    (item.district || '').toLowerCase().includes(query)
+                );
+            }
+
+            renderGrid(filtered);
+        }
+
+        // 渲染課程卡片
+        function renderGrid(items) {
+            const grid = document.getElementById('listings-grid');
+            document.getElementById('total-count').textContent = items.length;
+            
+            if (items.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-muted); font-size: 1.2rem;">無符合篩選條件的課程。</div>';
+                return;
+            }
+
+            grid.innerHTML = items.map(item => {
+                const isFree = item.price === '免費' || !item.price;
+                const priceClass = isFree ? 'price-free' : 'price-fee';
+                const cardClass = isFree ? '' : 'has-fee';
+                
+                // 來源 Tag 樣式
+                let sourceClass = 'tag-moe';
+                let shortSource = item.source || '其他';
+                if (item.source.includes('新北市')) {
+                    sourceClass = 'tag-ntpc';
+                    shortSource = '新北市';
+                } else if (item.source.includes('圖書館')) {
+                    sourceClass = 'tag-tpelib';
+                    shortSource = '台北市立圖書館';
+                } else if (item.source.includes('終身學習')) {
+                    sourceClass = 'tag-tpelife';
+                    shortSource = '台北市終身學習網';
+                } else if (item.source.includes('教育部')) {
+                    sourceClass = 'tag-moe';
+                    shortSource = '教育部';
+                }
+                
+                // 上課期間資訊
+                let periodText = '';
+                if (item.startDate && item.endDate) {
+                    periodText = `${item.startDate} 至 ${item.endDate}`;
+                } else if (item.startDate) {
+                    periodText = `${item.startDate} 起`;
+                } else {
+                    periodText = '請參考官方網頁';
+                }
+
+                return `
+                    <article class="card ${cardClass}">
+                        <div class="card-header">
+                            <span class="source-tag ${sourceClass}">${shortSource}</span>
+                            <span class="price-badge ${priceClass}">${item.price || '免費'}</span>
+                        </div>
+                        <div class="card-body">
+                            <h2 class="card-title" title="${item.title}">${item.title}</h2>
+                            <div class="card-info-list">
+                                <div class="info-item">
+                                    <span class="info-icon">📍</span>
+                                    <span>${item.district ? item.district : ''} ${item.organizer || '未載明'}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">📅</span>
+                                    <span>上課期間：${periodText}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">🕒</span>
+                                    <span>時段：${item.classTime || '請參考詳情'}</span>
+                                </div>
+                                ${item.teacher ? `
+                                <div class="info-item">
+                                    <span class="info-icon">👤</span>
+                                    <span>講師：${item.teacher}</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="card-footer">
+                                <a href="${item.link}" target="_blank" class="btn-detail">查看課程詳情</a>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        // 主題切換
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('theme-btn');
+            body.classList.toggle('light-theme');
+            if (body.classList.contains('light-theme')) {
+                btn.textContent = '切換暗色主題';
+            } else {
+                btn.textContent = '切換亮色主題';
+            }
+        }
+    </script>
+</body>
+</html>
