@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☁️</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="多人即時線上文字雲，基於 Firebase Firestore 即時同步與 HTML5 Canvas 技術渲染。" />
+    <title>即時線上文字雲 - Realtime Word Cloud</title>
+    
+    <!-- 引入 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="./assets/index-CE1qpXV1.js"></script>
+  </head>
+  <body>
+    <main id="app">
+      <header>
+        <h1>即時線上文字雲</h1>
+        <p class="subtitle">多人即時協作，共同點綴出我們的話語之雲</p>
+      </header>
+
+      <div class="main-container">
+        <!-- 文字雲展示區 -->
+        <div class="canvas-card" id="canvasCard">
+          <canvas id="wordCloudCanvas"></canvas>
+          <div class="tooltip" id="cloudTooltip"></div>
+        </div>
+
+        <!-- 控制面版 -->
+        <div class="control-card">
+          <div class="input-group">
+            <label for="wordInput">輸入單一詞彙</label>
+            <input type="text" id="wordInput" placeholder="例如：音樂、聖歌隊、平安" maxlength="20" />
+          </div>
+
+          <div class="input-group">
+            <label for="textInput">或貼上整段文章</label>
+            <textarea id="textInput" placeholder="在此貼上文章，系統將自動進行詞頻統計與文字過濾..."></textarea>
+          </div>
+
+          <button id="submitBtn" class="btn-primary" type="button">
+            <span>🚀 送出並更新文字雲</span>
+          </button>
+
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-label">累積輸入詞彙數：</span>
+              <span id="statCount" class="stat-value">0</span>
+            </div>
+            <div class="stat-item" id="statUniqueContainer" style="cursor: pointer;" title="雙擊此處重設資料庫">
+              <span class="stat-label">不重複字詞數：</span>
+              <span id="statUnique" class="stat-value">0</span>
+            </div>
+          </div>
+
+          <div class="word-list-section" style="margin-top: 1.5rem; border-top: 1px solid var(--panel-border); padding-top: 1.5rem;">
+            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">詞彙頻率清單 (點擊填入)</label>
+            <ul id="wordListContainer" style="list-style: none; margin-top: 0.75rem; max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 0.25rem;">
+              <!-- 動態生成 <li> -->
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </body>
+</html>
