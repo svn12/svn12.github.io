@@ -1,5 +1,5 @@
 {
-  "fetched_time": "2026-06-26 07:48:54",
+  "fetched_time": "2026-06-25 23:49:35",
   "rentals": [
     {
       "district": "大安區",
@@ -2799,21 +2799,13 @@
   ],
   "debug_logs": [
     "正在抓取網頁: https://rent.591.com.tw/?region=1&section=1,4,5&kind=2&rentprice=10000_20000&page=1",
-    "  狀態碼: 200",
-    "正在抓取網頁: https://rent.591.com.tw/?region=1&section=1,4,5&kind=2&rentprice=10000_20000&page=2",
-    "  狀態碼: 200",
-    "正在抓取網頁: https://rent.591.com.tw/?region=1&section=1,4,5&kind=2&rentprice=10000_20000&page=3",
-    "  狀態碼: 200",
-    "正在抓取網頁: https://rent.591.com.tw/?region=1&section=1,4,5&kind=2&rentprice=10000_20000&page=4",
-    "  狀態碼: 200",
+    "  狀態碼: 403",
+    "  請求失敗，狀態碼: 403",
+    "  網頁片段: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"> <HTML><HEAD><META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=iso-8859-1\"> <TITLE>ERROR: The request could not be satisfied</TITLE> </HEAD><BODY> <H1>403 ERROR</H1> <H2>The request could not be satisfied.</H2> <HR noshade size=\"1px\"> Request blocked. We can't connect to the server for this app or website at this time. There might be too much traffic or a configuration error. Try again",
     "正在抓取網頁: https://rent.591.com.tw/?region=1&section=1,4,5&kind=3&rentprice=10000_20000&page=1",
-    "  狀態碼: 200",
-    "正在抓取網頁: https://rent.591.com.tw/?region=1&section=1,4,5&kind=3&rentprice=10000_20000&page=2",
-    "  狀態碼: 200",
-    "正在抓取網頁: https://rent.591.com.tw/?region=1&section=1,4,5&kind=3&rentprice=10000_20000&page=3",
-    "  狀態碼: 200",
-    "正在抓取網頁: https://rent.591.com.tw/?region=1&section=1,4,5&kind=3&rentprice=10000_20000&page=4",
-    "  狀態碼: 200"
+    "  狀態碼: 403",
+    "  請求失敗，狀態碼: 403",
+    "  網頁片段: <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"> <HTML><HEAD><META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=iso-8859-1\"> <TITLE>ERROR: The request could not be satisfied</TITLE> </HEAD><BODY> <H1>403 ERROR</H1> <H2>The request could not be satisfied.</H2> <HR noshade size=\"1px\"> Request blocked. We can't connect to the server for this app or website at this time. There might be too much traffic or a configuration error. Try again"
   ],
-  "is_cached": false
+  "is_cached": true
 }
