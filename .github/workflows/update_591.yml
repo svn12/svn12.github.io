@@ -1,6 +1,8 @@
 name: 591 Auto Update
 
 on:
+  push:
+    branches: [ master ]
   schedule:
     # 每天台灣時間早上 8:30 (UTC 00:30) 與 晚上 8:30 (UTC 12:30) 自動執行
     - cron: '30 0,12 * * *'
