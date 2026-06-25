@@ -12,6 +12,17 @@ if not os.path.exists(PUBLIC_DIR):
     os.makedirs(PUBLIC_DIR)
 
 def main():
+    # 讀取舊的 rentals 以防抓取失敗時作為快取備份
+    old_rentals = []
+    json_path = os.path.join(PUBLIC_DIR, 'data.json')
+    if os.path.exists(json_path):
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                old_data = json.load(f)
+                old_rentals = old_data.get('rentals', [])
+        except Exception as e:
+            print(f"讀取舊 data.json 失敗: {e}")
+
     rentals = []
     if os.path.exists(EXCEL_PATH):
         try:
@@ -36,6 +47,15 @@ def main():
     else:
         print(f"警告: 找不到 {EXCEL_PATH}")
         
+    is_cached = False
+    if len(rentals) == 0:
+        if len(old_rentals) > 0:
+            rentals = old_rentals
+            is_cached = True
+            print(f"警告: 本次抓取資料為空，已載入 {len(rentals)} 筆歷史快取資料。")
+        else:
+            print("警告: 本次抓取資料為空，且無歷史快取資料。")
+
     # 抓取時間
     now_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
@@ -52,7 +72,8 @@ def main():
     data_payload = {
         "fetched_time": now_str,
         "rentals": rentals,
-        "debug_logs": debug_logs
+        "debug_logs": debug_logs,
+        "is_cached": is_cached
     }
     
     # 寫入 data.json
@@ -381,6 +402,11 @@ def main():
             <p class="meta-info">資料更新時間：<span class="highlight-time" id="fetched-time">取得中...</span></p>
         </header>
 
+        <div id="cache-warning" style="display: none; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: center; font-size: 0.95rem; line-height: 1.5; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+            ⚠️ Cloudflare/AWS 阻擋了 GitHub Actions 雲端自動更新，目前顯示為歷史快取資料。<br>
+            如需強制獲取即時資料，請在本地執行 <code>update_591.command</code> 腳本。
+        </div>
+
         <section class="filter-panel">
             <div class="filter-group">
                 <label for="filter-district">行政區</label>
@@ -432,6 +458,15 @@ def main():
                 document.getElementById('fetched-time').textContent = data.fetched_time;
                 allRentals = data.rentals || [];
                 debugLogs = data.debug_logs || [];
+                
+                // 檢查是否為快取資料，是的話顯示警告橫幅
+                const warningBanner = document.getElementById('cache-warning');
+                if (data.is_cached) {
+                    warningBanner.style.display = 'block';
+                } else {
+                    warningBanner.style.display = 'none';
+                }
+                
                 applyFilters();
             })
             .catch(err => {
