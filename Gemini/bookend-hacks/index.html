@@ -579,7 +579,7 @@
              data-background-size="cover">
       <h2>極簡核心心法</h2>
       <div class="conclusion-grid" style="margin-top:0.6em;">
-        <div class="conclusion-card positive fragment">
+          <div class="conclusion-card positive fragment">
           <div class="cc-title">♻️ 一物多用</div>
           <ul>
             <li>每件物品都有第二個用途</li>
@@ -675,32 +675,27 @@
   };
   const app = initializeApp(firebaseConfig);
   const fdb = getFirestore(app);
-  const wordsRef = collection(fdb, 'bookend_hacks_wordcloud');
+  const wordsRef = collection(fdb, 'ultimate_presentation_wordcloud');
 
   const COLORS = ['#4fc3f7','#e8643a','#ffb74d','#81c784','#ce93d8','#80deea','#f48fb1'];
   let wcData = [];
+  let useMock = false;
+  let mockWords = [];
 
-  window.wcSubmit = async function() {
-    const input = document.getElementById('wc-input');
-    const word = input.value.trim();
-    if (!word) return;
-    const btn = document.getElementById('wc-btn');
-    btn.disabled = true;
-    try {
-      await addDoc(wordsRef, { word, created_at: serverTimestamp() });
-      input.value = '';
-    } catch(e) { console.error(e); }
-    finally { btn.disabled = false; }
-  };
+  // 初始化本地端數據
+  try {
+    const saved = localStorage.getItem('bookend_hacks_wordcloud_mock');
+    if (saved) {
+      mockWords = JSON.parse(saved);
+    } else {
+      mockWords = ["擋書", "冰箱收納", "極簡", "零成本", "上下櫃", "文具架", "DIY置物架", "毛巾架", "掛衣桿", "鞋櫃隔層", "沙發杯架", "床邊架"];
+      localStorage.setItem('bookend_hacks_wordcloud_mock', JSON.stringify(mockWords));
+    }
+  } catch(e) {
+    console.error("無法讀取 localStorage", e);
+  }
 
-  document.getElementById('wc-input')?.addEventListener('keypress', e => {
-    if (e.key === 'Enter') window.wcSubmit();
-  });
-  document.getElementById('wc-btn')?.addEventListener('click', window.wcSubmit);
-
-  onSnapshot(query(wordsRef, orderBy('created_at', 'asc')), snap => {
-    const words = [];
-    snap.forEach(doc => words.push(doc.data().word));
+  function renderWordCloudData(words) {
     const counts = {};
     words.forEach(w => counts[w] = (counts[w] || 0) + 1);
     wcData = Object.entries(counts).sort((a, b) => b[1] - a[1]);
@@ -719,6 +714,61 @@
     const empty = document.getElementById('wc-empty');
     if (empty) empty.style.display = wcData.length > 0 ? 'none' : '';
     drawWordCloud();
+  }
+
+  window.wcSubmit = async function() {
+    const input = document.getElementById('wc-input');
+    const word = input.value.trim();
+    if (!word) return;
+    const btn = document.getElementById('wc-btn');
+    btn.disabled = true;
+
+    if (useMock) {
+      mockWords.push(word);
+      try {
+        localStorage.setItem('bookend_hacks_wordcloud_mock', JSON.stringify(mockWords));
+      } catch(e) {}
+      renderWordCloudData(mockWords);
+      input.value = '';
+      btn.disabled = false;
+      return;
+    }
+
+    try {
+      await addDoc(wordsRef, { word, created_at: serverTimestamp() });
+      input.value = '';
+    } catch(e) {
+      console.warn("寫入 Firestore 失敗，無縫切換至 LocalStorage 模式！", e);
+      useMock = true;
+      mockWords.push(word);
+      try {
+        localStorage.setItem('bookend_hacks_wordcloud_mock', JSON.stringify(mockWords));
+      } catch(ex) {}
+      renderWordCloudData(mockWords);
+      input.value = '';
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  document.getElementById('wc-input')?.addEventListener('keypress', e => {
+    if (e.key === 'Enter') window.wcSubmit();
+  });
+  document.getElementById('wc-btn')?.addEventListener('click', window.wcSubmit);
+
+  onSnapshot(query(wordsRef, orderBy('created_at', 'asc')), snap => {
+    if (useMock) return;
+    const words = [];
+    snap.forEach(doc => words.push(doc.data().word));
+    if (words.length === 0 && mockWords.length > 0) {
+      renderWordCloudData(mockWords);
+    } else {
+      renderWordCloudData(words);
+    }
+  }, err => {
+    console.warn("Firestore 載入文字雲失敗（權限不足），切換至 LocalStorage 備援！", err);
+    useMock = true;
+    renderWordCloudData(mockWords);
   });
 
   function drawWordCloud() {
@@ -772,9 +822,25 @@
     { id: 'display', label: '🏆 展示 & DIY（模型架、鞋櫃、自製架）' },
     { id: 'bed',     label: '🛋️ 床邊 & 沙發（床邊架、杯架）' },
   ];
-  const pollRef = doc(fdb2, 'bookend_hacks_poll', 'results');
+  const pollRef = doc(fdb2, 'ultimate_presentation_poll_8', 'results');
   const userId = 'user_' + Math.random().toString(36).slice(2, 9);
   let myVote = null;
+  let usePollMock = false;
+  let mockVotes = {};
+
+  // 從 localStorage 初始化投票數據
+  try {
+    myVote = localStorage.getItem('bookend_hacks_my_vote');
+    const saved = localStorage.getItem('bookend_hacks_poll_mock');
+    if (saved) {
+      mockVotes = JSON.parse(saved);
+    } else {
+      mockVotes = { 'user1': 'kitchen', 'user2': 'desk', 'user3': 'kitchen', 'user4': 'wall', 'user5': 'display', 'user6': 'kitchen', 'user7': 'bed' };
+      localStorage.setItem('bookend_hacks_poll_mock', JSON.stringify(mockVotes));
+    }
+  } catch(e) {
+    console.error("無法讀取 localStorage", e);
+  }
 
   const container = document.getElementById('poll-options');
   OPTIONS.forEach(opt => {
@@ -795,22 +861,12 @@
     `;
     btn.style.cssText = `width:100%;padding:12px 16px;background:rgba(255,255,255,0.06);
       border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:#fff;
-      font-size:0.45em;cursor:pointer;font-family:inherit;text-align:left;`;
+      font-size:0.45em;cursor:pointer;font-family:inherit;text-align:left;outline:none;`;
     btn.onclick = () => vote(opt.id);
     container.appendChild(btn);
   });
 
-  async function vote(optId) {
-    myVote = optId;
-    const data = {};
-    data[`votes.${userId}`] = optId;
-    data.updated_at = serverTimestamp();
-    await setDoc(pollRef, data, { merge: true });
-  }
-
-  onSnapshot(pollRef, snap => {
-    const data = snap.data() || {};
-    const votes = data.votes || {};
+  function renderPollData(votes) {
     const counts = {};
     OPTIONS.forEach(o => counts[o.id] = 0);
     Object.values(votes).forEach(v => { if (counts[v] !== undefined) counts[v]++; });
@@ -821,13 +877,67 @@
       const pct = total > 0 ? Math.round((counts[opt.id] / total) * 100) : 0;
       document.getElementById(`poll-bar-${opt.id}`).style.width = pct + '%';
       document.getElementById(`poll-pct-${opt.id}`).textContent = pct + '%';
+      
       const check = document.getElementById(`poll-check-${opt.id}`);
       if (myVote === opt.id) {
         check.textContent = '✓';
         check.style.background = 'var(--accent2)';
         check.style.borderColor = 'var(--accent2)';
+        check.style.color = '#0d1117';
+        check.style.fontWeight = 'bold';
+      } else {
+        check.textContent = '';
+        check.style.background = 'transparent';
+        check.style.borderColor = 'rgba(255,255,255,0.3)';
       }
     });
+  }
+
+  async function vote(optId) {
+    myVote = optId;
+    try {
+      localStorage.setItem('bookend_hacks_my_vote', optId);
+    } catch(e) {}
+
+    if (usePollMock) {
+      mockVotes[userId] = optId;
+      try {
+        localStorage.setItem('bookend_hacks_poll_mock', JSON.stringify(mockVotes));
+      } catch(e) {}
+      renderPollData(mockVotes);
+      return;
+    }
+
+    const data = {};
+    data[`votes.${userId}`] = optId;
+    data.updated_at = serverTimestamp();
+
+    try {
+      await setDoc(pollRef, data, { merge: true });
+    } catch(e) {
+      console.warn("寫入 Firestore 投票失敗，切換至 LocalStorage 備援！", e);
+      usePollMock = true;
+      mockVotes[userId] = optId;
+      try {
+        localStorage.setItem('bookend_hacks_poll_mock', JSON.stringify(mockVotes));
+      } catch(ex) {}
+      renderPollData(mockVotes);
+    }
+  }
+
+  onSnapshot(pollRef, snap => {
+    if (usePollMock) return;
+    const data = snap.data() || {};
+    const votes = data.votes || {};
+    if (Object.keys(votes).length === 0 && Object.keys(mockVotes).length > 0) {
+      renderPollData(mockVotes);
+    } else {
+      renderPollData(votes);
+    }
+  }, err => {
+    console.warn("Firestore 載入投票失敗（權限不足），切換至 LocalStorage 備援！", err);
+    usePollMock = true;
+    renderPollData(mockVotes);
   });
 </script>
 
