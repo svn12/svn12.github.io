@@ -62,8 +62,9 @@ def main():
         else:
             print("警告: 本次抓取資料為空，且無歷史快取資料。")
 
-    # 抓取時間
-    now_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    # 抓取時間 (設定時區為台北時間 UTC+8)
+    tz_taipei = datetime.timezone(datetime.timedelta(hours=8))
+    now_str = datetime.datetime.now(tz_taipei).strftime('%Y-%m-%d %H:%M:%S')
     
     # 讀取 debug 日誌
     debug_logs = []
