@@ -116,6 +116,45 @@
             box-shadow: 0 0 0 3px var(--primary-glow);
         }
 
+        /* 多選 Checkbox 群組 */
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 2px 0;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .checkbox-label:hover {
+            border-color: rgba(249, 115, 22, 0.5);
+            background: rgba(249, 115, 22, 0.05);
+        }
+
+        .checkbox-label input {
+            display: none;
+        }
+
+        .checkbox-label.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
         /* 物件列表 */
         .listing-stats {
             margin-bottom: 20px;
@@ -323,14 +362,19 @@
         </div>
 
         <section class="filter-panel">
-            <div class="filter-group">
-                <label for="filter-district">行政區</label>
-                <select id="filter-district">
-                    <option value="all">全部地區</option>
-                    <option value="大安區">大安區</option>
-                    <option value="松山區">松山區</option>
-                    <option value="中正區">中正區</option>
-                </select>
+            <div class="filter-group" style="flex: 2; min-width: 300px;">
+                <label>行政區 (多選)</label>
+                <div class="checkbox-group" id="district-checkboxes">
+                    <label class="checkbox-label active">
+                        <input type="checkbox" value="大安區" checked> 大安區
+                    </label>
+                    <label class="checkbox-label active">
+                        <input type="checkbox" value="松山區" checked> 松山區
+                    </label>
+                    <label class="checkbox-label active">
+                        <input type="checkbox" value="中正區" checked> 中正區
+                    </label>
+                </div>
             </div>
             <div class="filter-group">
                 <label for="filter-kind">套房類型</label>
@@ -390,23 +434,40 @@
             });
 
         // 篩選與排序邏輯
-        const districtSelect = document.getElementById('filter-district');
         const kindSelect = document.getElementById('filter-kind');
         const searchInput = document.getElementById('search-input');
         const sortSelect = document.getElementById('sort-select');
 
-        [districtSelect, kindSelect, sortSelect].forEach(el => {
+        [kindSelect, sortSelect].forEach(el => {
             el.addEventListener('change', applyFilters);
         });
         searchInput.addEventListener('input', applyFilters);
 
+        // 行政區 checkbox 切換 active class 與事件監聽
+        const districtLabels = document.querySelectorAll('#district-checkboxes .checkbox-label');
+        districtLabels.forEach(label => {
+            const checkbox = label.querySelector('input');
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    label.classList.add('active');
+                } else {
+                    label.classList.remove('active');
+                }
+                applyFilters();
+            });
+        });
+
         function applyFilters() {
             let filtered = [...allRentals];
 
-            // 1. 行政區篩選
-            const district = districtSelect.value;
-            if (district !== 'all') {
-                filtered = filtered.filter(item => item.district === district);
+            // 1. 行政區多選篩選
+            const activeDistricts = Array.from(document.querySelectorAll('#district-checkboxes input:checked'))
+                .map(cb => cb.value);
+            
+            if (activeDistricts.length > 0) {
+                filtered = filtered.filter(item => activeDistricts.includes(item.district));
+            } else {
+                filtered = [];
             }
 
             // 2. 類型篩選
