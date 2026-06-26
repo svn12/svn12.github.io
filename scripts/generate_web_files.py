@@ -458,8 +458,8 @@ def main():
         let allRentals = [];
         let debugLogs = [];
 
-        // 載入資料 (改為相對路徑讀取 data.json)
-        fetch('./data.json')
+        // 載入資料 (加上時間戳避免瀏覽器快取)
+        fetch('./data.json?t=' + new Date().getTime())
             .then(res => res.json())
             .then(data => {
                 document.getElementById('fetched-time').textContent = data.fetched_time;
