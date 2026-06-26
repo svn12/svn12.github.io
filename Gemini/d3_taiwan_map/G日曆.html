@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>行事曆</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css'/>
+    <!-- <link rel="stylesheet" href="css/style.css"> -->
+</head>
+<body>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+    <style>
+        body{
+            font-family: 'Microsoft JhengHei';
+        }
+    </style>
+    <div id="wrap">
+        <div class="container mt-5 mb-5">
+            <div class="row">
+                <div class="col-10 mx-auto">
+                    <h1>校園行事曆</h1>
+                    <div id="calList">
+                        <div class="form-check form-check-inline">
+                            <!-- <input class="form-check-input" type="checkbox" id="chk_Default" value="各個Google日曆連結網址" checked="checked"> -->
+                            <input class="form-check-input" type="checkbox" id="chk_Default" value="src=YzliM2Y4Y2VlNzIxODM1YmMyZjFmYjExZTEzZTRiMjIxNTUyYjU1Y2UxMWQyMGIwMDZmNjA5MTA4MzY4ZWMwMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%237CB342&amp;src=YWQ5ZDZkM2I0OWJlYzk5ZGM3ZmJkZGU3MWFlNTJhYzZlM2Q0NDc5ZDhmMDhhYTNkYzllNWY3MjU4NDRhNjkwY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23F09300&amp;src=ZTljNTczYTBhNDcyY2ZlMjE0N2M0YzVjN2EwZjM0NjlhZWM4M2NjN2VhZWM1NDc4MTgyMjA1YmFmZjEzMWQxOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23039BE5&amp;src=YWMyNzdiNjU4ZTNhZWQ0ZjY1OWM3YWQxZmVlNGViOWZmOTQ4YzI3M2YzNTEzZjUyYmIxYzFlNGFhMTA3MDEwZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%239E69AF" checked="checked">
+                            <label class="form-check-label" for="chk_Default">全部</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="chk_Student" value="src=YzliM2Y4Y2VlNzIxODM1YmMyZjFmYjExZTEzZTRiMjIxNTUyYjU1Y2UxMWQyMGIwMDZmNjA5MTA4MzY4ZWMwMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%237CB342&amp;">
+                            <label class="form-check-label" for="chk_Student">學生行事曆</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="chk_Teacher" value="src=YWQ5ZDZkM2I0OWJlYzk5ZGM3ZmJkZGU3MWFlNTJhYzZlM2Q0NDc5ZDhmMDhhYTNkYzllNWY3MjU4NDRhNjkwY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23F09300&amp;">
+                            <label class="form-check-label" for="chk_Teacher">教師行事曆</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="chk_Screening" value="src=ZTljNTczYTBhNDcyY2ZlMjE0N2M0YzVjN2EwZjM0NjlhZWM4M2NjN2VhZWM1NDc4MTgyMjA1YmFmZjEzMWQxOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23039BE5&amp;">
+                            <label class="form-check-label" for="chk_Screening">大學甄試入學</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <!-- <input class="form-check-input" type="checkbox" id="chk_Training" value="Google日曆連結網址"> -->
+                            <input class="form-check-input" type="checkbox" id="chk_Training" value="src=YWMyNzdiNjU4ZTNhZWQ0ZjY1OWM3YWQxZmVlNGViOWZmOTQ4YzI3M2YzNTEzZjUyYmIxYzFlNGFhMTA3MDEwZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%239E69AF&amp;">
+                            <label class="form-check-label" for="chk_Training">教育訓練</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <!-- <a class="btn btn-primary" href="javascript:;" onclick="showCalendar();">確定</a> -->
+                            <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSf_olc_BAJWIHwSjnqjffBbBy-3m3NZHyqUPp1AUqE6jcGBWA/viewform">申請</a>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <a class="btn btn-primary" href="https://docs.google.com/spreadsheets/d/1nv-dvI3ocf68qY7lbKSN4t8FxPqqGsCndAFz5IQEqfQ/edit#gid=777391807">核准</a>
+                        </div>
+                    </div>
+                    <div class="embed-responsive embed-responsive-16by9 mt-5">
+                        <iframe class="embed-responsive-item" id="ifCal" src="https://calendar.google.com/calendar/embed?showTitle=0&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=Asia%2FTaipei&amp;
+                        src=YzliM2Y4Y2VlNzIxODM1YmMyZjFmYjExZTEzZTRiMjIxNTUyYjU1Y2UxMWQyMGIwMDZmNjA5MTA4MzY4ZWMwMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%237CB342&amp;
+                        src=YWQ5ZDZkM2I0OWJlYzk5ZGM3ZmJkZGU3MWFlNTJhYzZlM2Q0NDc5ZDhmMDhhYTNkYzllNWY3MjU4NDRhNjkwY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23F09300&amp;
+                        src=ZTljNTczYTBhNDcyY2ZlMjE0N2M0YzVjN2EwZjM0NjlhZWM4M2NjN2VhZWM1NDc4MTgyMjA1YmFmZjEzMWQxOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23039BE5&amp;
+                        src=YWMyNzdiNjU4ZTNhZWQ0ZjY1OWM3YWQxZmVlNGViOWZmOTQ4YzI3M2YzNTEzZjUyYmIxYzFlNGFhMTA3MDEwZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%239E69AF"></iframe>
+                    </div>
+                    <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23D81B60&ctz=Asia%2FTaipei&src=amt0YWkxMjNAZ21haWwuY29t&src=aTBvcDdpYjcybzZ1Y3BycHQ2dTMwYTAycGNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=dDg0MDUxMEBnbWFpbC5jb20&src=emgtdHcudGFpd2FuI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%237986CB&color=%23D81B60&color=%23039BE5&color=%23E67C73" style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                    <!-- <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23D81B60&ctz=Asia%2FTaipei&src=YzliM2Y4Y2VlNzIxODM1YmMyZjFmYjExZTEzZTRiMjIxNTUyYjU1Y2UxMWQyMGIwMDZmNjA5MTA4MzY4ZWMwMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%237CB342" style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no"></iframe> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showCalendar() {
+            displayCal();
+        }
+        $(document).ready(() => {
+            showCalendar();
+            $('#calList').change(() =>showCalendar());
+        })
+        function displayCal() {
+            var iframeURL = 'https://calendar.google.com/calendar/embed?showTitle=0&wkst=1&';
+            $("#calList .form-check input:checked").each(function () {
+                iframeURL += $(this).val();
+                console.log($(this).val());
+            });
+            iframeURL += '&ctz=Asia%2FTaipei';
+            console.log(`iframeURL===> 
+            ${iframeURL}`);
+            $('#ifCal').attr('src', iframeURL);
+        }
+    </script>
+    <!-- <script src="js/main.js"></script> -->
+</body>
+</html>

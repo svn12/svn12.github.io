@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 圖片生成網站</title>
+</head>
+<body>
+    <h1>AI 圖片生成網站</h1>
+    <label for="ai-sites">選擇一個網站：</label>
+    <select id="ai-sites" onchange="openSite()">
+        <option value="">--請選擇--</option>
+        <option value="https://artguru.ai">Artguru</option>
+        <option value="https://creator.nightcafe.studio">NightCafe Creator</option>
+        <option value="https://magicstudio.com">Magic Studio</option>
+        <option value="https://hotpot.ai">Hotpot AI</option>
+        <option value="https://www.craiyon.com">Craiyon</option>
+        <option value="https://deepai.org">DeepAI</option>
+        <option value="https://www.fotor.com">Fotor</option>
+        <option value="https://www.adobe.com/sensei/generative-ai/firefly.html">Adobe Firefly</option>
+        <option value="https://www.midjourney.com">Midjourney</option>
+        <option value="https://www.openart.ai">OpenArt</option>
+    </select>
+
+    <script>
+        function openSite() {
+            const select = document.getElementById("ai-sites");
+            const url = select.value;
+            if (url) {
+                window.open(url, "_blank");
+            }
+        }
+    </script>
+</body>
+</html>

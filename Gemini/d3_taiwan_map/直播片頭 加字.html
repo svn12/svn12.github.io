@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <script src="https://svn12.github.io/js/Fetch.js"></script> -->
+    <script src="https://www.jktai123.com/js/Fetch.js"></script>
+  <title>直播片頭 加字</title>
+
+  <style>
+    html {
+      /*>>>>>>>>>>>>  BACKGROUND COLOR  <<<<<<<<<<<<<<<*/
+      /* background: gold; */
+      /* background: white; */
+      background: transparent;
+
+      font-size: 2vw;
+
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    /* body {
+      height: 100vh;
+      margin: 0;
+    } */
+
+    .container {
+      /* position: relative; */
+      max-width: 1920px;
+      /* margin: 0 auto; */
+      /* vertical-align: middle; */
+    }
+
+
+
+
+
+    .horizontal {
+      white-space: nowrap;
+      /* left: 20%; */
+      text-align: start;
+      /* left: 50%;
+      transform: translate(-50%, 0); */
+      /* word-break: break-all; */
+      position: absolute;
+      top: 80%;
+      left:7%;
+      color: white;
+      font-size: 2rem;
+      text-shadow: 2px 2px 1px black;
+      /* , 3px 3px 2px white; */
+
+      margin: 0;
+
+      font-family: PingFang, STHeiti, "Microsoft JhengHei", "Noto Sans CJK TC", sans-serif, serif;
+
+    }
+
+    .vertical {
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      text-align: start;
+      white-space: nowrap;
+      position: absolute;
+      left: 10%;
+      top: 7%;
+      color: white;
+      font-size: 1.5rem;
+      text-shadow: 2px 2px 1px black;
+      /* , 3px 3px 2px white; */
+
+      margin: 0;
+
+      font-family: "Microsoft JhengHei", "Noto Sans CJK TC", PingFang, STHeiti, sans-serif, serif;
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <p id="demo" style="display: none;"></p>
+  <div class="container">
+    <h2 id="add_text" class="horizontal"></h2>
+
+
+
+  </div>
+  <script>
+
+    const add_text = document.querySelector('#add_text');
+
+
+    // img.src=img_Src;
+    const fileLink = 'https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing';
+    Read_SheetData();
+    let imageArr = [];
+    let curImage = 0;
+
+    document.addEventListener("click", setImage, true);
+
+
+    async function Read_SheetData() {
+      //document.querySelector("#myTable1").innerHTML = '';
+      await RsheetData(fileLink, '加字')
+        .then(data => {
+          data.forEach((item, index) => {
+            if (index > 0) {
+              imageArr.push(item[0]);
+            }
+          });
+          add_text.innerText = imageArr[0];
+        })
+        ;
+    }
+
+
+    function setImage(el) {
+      if (el.y < window.innerHeight / 2) {
+        if (el.x > window.innerWidth / 2) {
+          if (el.x > window.innerWidth * .75) {
+            window.open("南門教會直播片頭.html", "_self");
+          } else {
+            window.open("https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing");
+          }
+        } else {
+          add_text.classList.toggle('vertical');
+        }
+      } else {
+        // console.log(`${el.x} ${el.y}  ${window.innerWidth}`);
+        if (el.x > window.innerWidth / 2) {
+          if (++curImage == imageArr.length) {
+            curImage = 0;
+          }
+        } else {
+          if (--curImage < 0) {
+            curImage = imageArr.length - 1;
+          }
+        }
+        add_text.innerText = imageArr[curImage];
+        console.log(`${el.x} ${el.y}  ${window.innerWidth} ${curImage}`);
+        document.getElementById("demo").innerHTML = `${curImage} ${el.x} ${el.y}  ${window.innerWidth}`;
+      }
+    }
+
+  </script>
+</body>
+
+</html>

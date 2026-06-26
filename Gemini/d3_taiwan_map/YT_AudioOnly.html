@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Premium YT Audio Player 🎧</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="../js/Fetch.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --player-bg: rgba(255, 255, 255, 0.05);
+            --accent-color: #38bdf8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(236, 72, 153, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .player-container {
+            width: 95%;
+            max-width: 1200px; /* 增加最大寬度以利用大螢幕 */
+            background: var(--player-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 35px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        #file_href {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.8rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: rgba(56, 189, 248, 0.1);
+            transition: 0.3s;
+        }
+
+        #file_href:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .visualizer {
+            width: 100%;
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 24px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        #youtube-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: auto; /* 讓影片可以互動 */
+        }
+
+        .track-info {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        #selectSub {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            padding: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        #selectSub:focus {
+            border-color: var(--accent-color);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 25px;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            accent-color: var(--accent-color);
+            cursor: pointer;
+            appearance: none;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-circle {
+            width: 450px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-main {
+            width: 64px;
+            height: 64px;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            box-shadow: 0 8px 16px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-circle:hover {
+            transform: scale(1.1);
+            color: var(--accent-color);
+        }
+
+        .btn-main:hover {
+            transform: scale(1.1);
+            color: var(--bg-color);
+            filter: brightness(1.1);
+        }
+
+        .icon-large { font-size: 2.2rem !important; }
+        .icon-medium { font-size: 1.8rem !important; }
+
+        /* Settings Bar */
+        .settings-bar {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .setting-item label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            min-width: 40px;
+        }
+
+        .setting-item i {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Custom Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px; width: 14px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: var(--accent-color); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        @media (max-width: 480px) {
+            .player-container { padding: 25px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="player-container">
+        <div class="header">
+            <h1>YT PLAYER</h1>
+            <a href="" id="file_href" target="_blank">SPREADSHEET</a>
+        </div>
+
+        <div class="visualizer">
+            <div id="ytaudio" class="youtube-audio" data-video="" data-autoplay="0" data-loop="1">
+                <div id="youtube-player"></div>
+            </div>
+            <i class="material-icons" style="font-size: 4rem; opacity: 0.2;">music_note</i>
+        </div>
+
+        <div class="track-info">
+            <select id="selectSub" onchange="ChangeAudio()"></select>
+        </div>
+
+        <div class="progress-container">
+            <div class="time-display">
+                <span id="current-time">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+            <input type="range" id="progress-bar" value="0" min="0" max="100">
+        </div>
+
+        <div class="controls">
+            <button class="btn-circle material-icons icon-medium" id="previous">skip_previous</button>
+            <button class="btn-circle material-icons icon-medium" id="back">fast_rewind</button>
+            <button class="btn-circle btn-main material-icons icon-large" id="play-pause">play_arrow</button>
+            <button class="btn-circle material-icons icon-medium" id="forward">fast_forward</button>
+            <button class="btn-circle material-icons icon-medium" id="next">skip_next</button>
+        </div>
+
+        <div class="settings-bar">
+            <div class="setting-item">
+                <i class="material-icons">volume_up</i>
+                <input type="range" id="volume" min="0" max="100" step="1" value="100">
+                <div class="setting-item" style="margin-left: 10px;">
+                    <label class="switch">
+                        <input type="checkbox" id="toggleMute">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting-item">
+                <i class="material-icons">speed</i>
+                <label id="spdLabel">1.0x</label>
+                <input type="range" id="rate" min="0.25" max="2" step="0.25" value="1">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fl1 = 'https://docs.google.com/spreadsheets/d/1xAZ810fin7AY4azNgN-sPr4fuIx0a77ASFOymfvxTXk/edit#gid=1769528515';
+        let player;
+        let timeUpdateInterval;
+
+        // 初始化
+        Read_Sheet();
+        document.getElementById("file_href").href = fl1;
+
+        // 載入 YouTube API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        async function Read_Sheet() {
+            const sht = await Rsheet(fl1, 'Plist');
+            const select = $("#selectSub");
+            select.empty();
+            sht.forEach(item => {
+                select.append($('<option>', { value: item.Sname, text: item.Sname }));
+            });
+            ChangeAudio();
+        }
+
+        function ChangeAudio() {
+            if (player) {
+                player.destroy();
+                player = null;
+            }
+            onYouTubeIframeAPIReady();
+        }
+
+        async function onYouTubeIframeAPIReady() {
+            const videoId = $('#selectSub option:selected').val();
+            const playlistData = await RsheetData(fl1, videoId);
+            const playlistIds = Array2Json(playlistData).map(e => get_video_id(e.href));
+
+            player = new YT.Player('youtube-player', {
+                height: '360',
+                width: '640',
+                videoId: playlistIds[0],
+                playerVars: {
+                    autoplay: 0,
+                    loop: 1,
+                    controls: 0,
+                    playlist: playlistIds.join(',')
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            setupControls(event.target);
+            startTimer();
+        }
+
+        function onPlayerStateChange(event) {
+            const playPauseBtn = document.getElementById('play-pause');
+            if (event.data === YT.PlayerState.PLAYING) {
+                playPauseBtn.textContent = 'pause';
+            } else {
+                playPauseBtn.textContent = 'play_arrow';
+            }
+
+            if (event.data === YT.PlayerState.ENDED) {
+                const select = document.getElementById("selectSub");
+                if (select.selectedIndex < select.options.length - 1) {
+                    select.selectedIndex++;
+                    ChangeAudio();
+                }
+            }
+        }
+
+        function setupControls(p) {
+            const playPauseBtn = document.getElementById('play-pause');
+            const volSlider = document.getElementById('volume');
+            const rateSlider = document.getElementById('rate');
+            const progressBar = document.getElementById('progress-bar');
+            const muteToggle = document.getElementById('toggleMute');
+
+            playPauseBtn.onclick = () => {
+                const state = p.getPlayerState();
+                if (state === YT.PlayerState.PLAYING) p.pauseVideo();
+                else p.playVideo();
+            };
+
+            document.getElementById('next').onclick = () => p.nextVideo();
+            document.getElementById('previous').onclick = () => p.previousVideo();
+            document.getElementById('back').onclick = () => p.seekTo(p.getCurrentTime() - 10);
+            document.getElementById('forward').onclick = () => p.seekTo(p.getCurrentTime() + 10);
+
+            volSlider.oninput = (e) => p.setVolume(e.target.value);
+            rateSlider.oninput = (e) => {
+                const val = e.target.value;
+                document.getElementById('spdLabel').textContent = val + 'x';
+                p.setPlaybackRate(Number(val));
+            };
+
+            progressBar.oninput = (e) => {
+                const newTime = p.getDuration() * (e.target.value / 100);
+                p.seekTo(newTime);
+            };
+
+            muteToggle.onchange = (e) => {
+                if (e.target.checked) p.mute();
+                else p.unMute();
+            };
+        }
+
+        function startTimer() {
+            if (timeUpdateInterval) clearInterval(timeUpdateInterval);
+            timeUpdateInterval = setInterval(() => {
+                if (player && player.getCurrentTime) {
+                    const current = player.getCurrentTime();
+                    const total = player.getDuration();
+                    document.getElementById('current-time').textContent = formatTime(current);
+                    document.getElementById('duration').textContent = formatTime(total);
+                    document.getElementById('progress-bar').value = (current / total) * 100 || 0;
+                }
+            }, 1000);
+        }
+
+        function formatTime(time) {
+            time = Math.round(time);
+            const m = Math.floor(time / 60);
+            const s = time % 60;
+            return m + ":" + (s < 10 ? '0' + s : s);
+        }
+    </script>
+</body>
+
+</html>

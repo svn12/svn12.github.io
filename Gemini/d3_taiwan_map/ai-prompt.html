@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI 指令手冊 — Prompt Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1208; --paper:#f7f3ec; --warm:#ede5d4; --rule:#d4c9b4;
+  --muted:#8a7f6e; --accent:#c8401a; --green:#2d6e40; --card:#faf7f2;
+  --code:#1e1810; --code-t:#e0d4bc;
+  --mono:'DM Mono',monospace; --serif:'DM Serif Display',serif; --sans:'Noto Sans TC',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E")}
+
+/* ─ HEADER ─ */
+header{border-bottom:3px double var(--rule);background:var(--paper);position:relative;z-index:10}
+.hdr-top{max-width:1360px;margin:0 auto;padding:12px 32px;
+  display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--rule)}
+.site-tag{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+.hdr-links{display:flex;gap:20px}
+.hdr-link{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);
+  text-decoration:none;border-bottom:1px solid transparent;transition:.15s}
+.hdr-link:hover{color:var(--accent);border-color:var(--accent)}
+
+.hdr-hero{max-width:1360px;margin:0 auto;padding:28px 32px 24px;
+  display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end}
+.hero-title{font-family:var(--serif);font-size:clamp(52px,7vw,100px);
+  line-height:.9;letter-spacing:-1px;color:var(--ink)}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-right{text-align:right}
+.hero-desc{font-size:13px;color:var(--muted);line-height:1.75;max-width:280px;
+  margin-left:auto;margin-bottom:16px}
+.hero-stats{display:flex;gap:24px;justify-content:flex-end}
+.st .n{font-family:var(--mono);font-size:22px;color:var(--accent);line-height:1}
+.st .l{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+
+.hdr-ticker{max-width:1360px;margin:0 auto;border-top:1px solid var(--rule);
+  display:flex;overflow-x:auto;scrollbar-width:none}
+.hdr-ticker::-webkit-scrollbar{display:none}
+.t-item{padding:10px 22px;font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);border-right:1px solid var(--rule);white-space:nowrap;flex-shrink:0}
+.t-item.hi{color:var(--accent)}
+
+/* ─ SEARCH BAR (sticky) ─ */
+.search-bar{position:sticky;top:0;z-index:50;background:var(--paper);
+  border-bottom:1px solid var(--rule);box-shadow:0 2px 14px rgba(26,18,8,.08)}
+.si{max-width:1360px;margin:0 auto;padding:10px 32px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.sw{position:relative;flex:0 0 400px}
+.sw svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.sq{width:100%;padding:9px 14px 9px 34px;border:1.5px solid var(--rule);
+  background:var(--card);font-family:var(--sans);font-size:13px;color:var(--ink);outline:none;transition:.2s}
+.sq:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,64,26,.1)}
+.sq::placeholder{color:var(--muted)}
+.cats{display:flex;gap:6px;overflow-x:auto;flex:1;padding:2px 0;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cb{cursor:pointer;padding:6px 13px;border:1.5px solid var(--rule);background:transparent;
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);
+  transition:.15s;white-space:nowrap;flex-shrink:0}
+.cb:hover{border-color:var(--ink);color:var(--ink)}
+.cb.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.rc{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;white-space:nowrap}
+
+/* ─ SOURCES SECTION ─ */
+.src-section{max-width:1360px;margin:32px auto 0;padding:0 32px;position:relative;z-index:1}
+.src-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.src-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+.src-line{flex:1;height:1px;background:var(--rule)}
+.src-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule)}
+.src-card{background:var(--card);padding:18px 20px;text-decoration:none;
+  display:flex;flex-direction:column;gap:8px;transition:background .15s;position:relative;overflow:hidden}
+.src-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--rule);transition:.2s}
+.src-card:hover{background:#fff}
+.src-card:hover::before{background:var(--accent)}
+.src-card-top{display:flex;align-items:center;justify-content:space-between}
+.src-num{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px}
+.src-ext{font-size:10px;color:var(--muted);transition:.2s}
+.src-card:hover .src-ext{color:var(--accent)}
+.src-name{font-family:var(--serif);font-size:18px;color:var(--ink);line-height:1.1}
+.src-url{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.src-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.src-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.src-tag{font-family:var(--mono);font-size:8px;letter-spacing:1px;
+  padding:2px 7px;background:var(--warm);color:var(--muted)}
+
+/* ─ GENERATOR ─ */
+.gen-wrap{max-width:1360px;margin:32px auto 0;padding:0 32px;position:relative;z-index:1}
+.gen-box{border:1.5px solid var(--rule);background:var(--card);overflow:hidden;position:relative}
+.gen-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:repeating-linear-gradient(90deg,var(--accent) 0,var(--accent) 14px,transparent 14px,transparent 18px)}
+.gen-head{padding:16px 24px;border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.gen-head-l{display:flex;align-items:center;gap:12px}
+.gen-icon{width:32px;height:32px;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.gen-name{font-family:var(--serif);font-size:18px;color:var(--ink)}
+.gen-sub{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px}
+.gen-chip{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--muted);
+  padding:4px 10px;border:1px solid var(--rule)}
+
+.gen-body{padding:20px 24px;display:grid;grid-template-columns:1fr 1fr auto;gap:14px;align-items:end}
+.fg{display:flex;flex-direction:column;gap:7px}
+.fl{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:5px}
+.fl b{color:var(--accent)}
+select,input[type=text]{background:var(--paper);border:1.5px solid var(--rule);color:var(--ink);
+  font-family:var(--sans);font-size:13px;padding:10px 14px;outline:none;
+  transition:.2s;width:100%;-webkit-appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%238a7f6e'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer}
+select:focus,input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,64,26,.1)}
+input[type=text]::placeholder{color:var(--muted)}
+select option{background:var(--paper)}
+.gen-btn{cursor:pointer;background:var(--ink);color:var(--paper);border:none;
+  padding:11px 26px;font-family:var(--mono);font-size:11px;font-weight:500;
+  letter-spacing:2px;text-transform:uppercase;transition:.2s;white-space:nowrap;
+  display:flex;align-items:center;gap:8px}
+.gen-btn:hover{background:var(--accent)}
+
+.gen-out{display:none;border-top:1.5px solid var(--rule)}
+.gen-out.show{display:block}
+.out-top{padding:10px 20px;background:var(--code);display:flex;align-items:center;justify-content:space-between}
+.out-lbl{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:#8a7a5a;
+  text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.out-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.out-btns{display:flex;gap:7px}
+.ob{cursor:pointer;padding:5px 12px;background:transparent;border:1px solid #3a3020;
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;color:#6a6050;
+  text-transform:uppercase;transition:.2s}
+.ob:hover{border-color:#c8401a;color:#e06040}
+.ob.ok{border-color:#4a9a5a;color:#5ab06a}
+.out-txt{padding:20px;font-family:var(--mono);font-size:12px;line-height:1.9;
+  white-space:pre-wrap;word-break:break-word;color:var(--code-t);background:var(--code);min-height:80px}
+
+/* ─ CARDS ─ */
+.cards-wrap{max-width:1360px;margin:32px auto 60px;padding:0 32px;position:relative;z-index:1}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.sh-l{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+.sh-line{flex:1;height:1px;background:var(--rule)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.card{background:var(--card);display:flex;flex-direction:column;
+  transition:background .15s;animation:fadeUp .35s ease both}
+.card:hover{background:#fff}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.c-top{padding:15px 17px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.c-left{display:flex;align-items:center;gap:8px}
+.c-icon{width:28px;height:28px;background:var(--warm);display:flex;align-items:center;
+  justify-content:center;font-size:14px;flex-shrink:0}
+.c-cat{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);padding:3px 7px;border:1px solid var(--rule)}
+.c-tags{display:flex;gap:3px;flex-wrap:wrap}
+.c-tag{font-family:var(--mono);font-size:7px;letter-spacing:1px;
+  padding:2px 6px;background:var(--warm);color:var(--muted)}
+.c-title{padding:9px 17px 0;font-family:var(--serif);font-size:16px;color:var(--ink);line-height:1.3}
+.c-desc{padding:4px 17px 0;font-size:12px;color:var(--muted);line-height:1.6}
+.c-prompt{margin:11px 17px;padding:13px;background:var(--code);font-family:var(--mono);
+  font-size:11px;line-height:1.75;color:var(--code-t);flex:1;max-height:148px;
+  overflow:hidden;position:relative}
+.c-prompt::after{content:'';position:absolute;bottom:0;left:0;right:0;height:34px;
+  background:linear-gradient(transparent,var(--code))}
+.c-prompt .v{color:#f0883e}
+.c-foot{padding:9px 17px 13px;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:7px;border-top:1px solid var(--warm)}
+.cp-btn{cursor:pointer;padding:6px 13px;background:transparent;border:1.5px solid var(--rule);
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);
+  transition:.15s;text-transform:uppercase}
+.cp-btn:hover{border-color:var(--ink);color:var(--ink)}
+.cp-btn.ok{border-color:var(--green);color:var(--green)}
+.rmx-btn{cursor:pointer;padding:6px 13px;background:transparent;border:1.5px solid var(--warm);
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);
+  transition:.15s;display:flex;align-items:center;gap:5px;text-transform:uppercase}
+.rmx-btn:hover{border-color:var(--accent);color:var(--accent)}
+.no-res{grid-column:1/-1;padding:64px;text-align:center;
+  font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:1px;line-height:2.2}
+
+/* ─ FOOTER ─ */
+footer{border-top:3px double var(--rule);background:var(--paper);position:relative;z-index:1}
+.foot{max-width:1360px;margin:0 auto;padding:18px 32px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.foot-l{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;line-height:1.9}
+.foot-r{display:flex;gap:16px;flex-wrap:wrap}
+.fa{font-family:var(--mono);font-size:9px;color:var(--muted);text-decoration:none;
+  letter-spacing:1px;border-bottom:1px solid transparent;transition:.15s}
+.fa:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ─ TOAST ─ */
+#toast{position:fixed;bottom:28px;right:28px;z-index:999;
+  background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:11px;
+  padding:10px 20px;letter-spacing:1px;border-left:3px solid var(--accent);
+  opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none}
+#toast.on{opacity:1;transform:translateY(0)}
+
+@media(max-width:680px){
+  .hdr-hero{grid-template-columns:1fr}
+  .hero-title{font-size:52px}
+  .hdr-top,.hdr-hero,.hdr-ticker,.src-section,.gen-wrap,.cards-wrap,.foot{padding-left:16px;padding-right:16px}
+  .si{padding:10px 16px}
+  .sw{flex:1 1 100%}
+  .gen-body{grid-template-columns:1fr}
+  .grid,.src-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═ HEADER ════════════════════════════════════════ -->
+<header>
+  <div class="hdr-top">
+    <span class="site-tag">✦ AI Prompt Studio — 指令手冊</span>
+    <div class="hdr-links">
+      <a class="hdr-link" href="https://learnai.tw/prompt/" target="_blank">learnai.tw</a>
+      <a class="hdr-link" href="https://quickref.me/chatgpt" target="_blank">quickref.me</a>
+      <a class="hdr-link" href="https://www.explainthis.io/zh-hant/chatgpt" target="_blank">explainthis.io</a>
+      <a class="hdr-link" href="https://huggingface.co/datasets/fka/prompts.chat" target="_blank">huggingface.co</a>
+    </div>
+  </div>
+  <div class="hdr-hero">
+    <h1 class="hero-title">問得<br><em>精、巧、準</em></h1>
+    <div class="hero-right">
+      <p class="hero-desc">收錄 50+ 精煉提示詞，涵蓋工作、學習、程式、行銷等場景。複製即用，或隨選生成專屬指令。</p>
+      <div class="hero-stats">
+        <div class="st"><div class="n">50+</div><div class="l">指令</div></div>
+        <div class="st"><div class="n">10</div><div class="l">分類</div></div>
+        <div class="st"><div class="n">4</div><div class="l">參考來源</div></div>
+        <div class="st"><div class="n">免費</div><div class="l">無需登入</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="hdr-ticker">
+    <div class="t-item hi">⎘ Copy &amp; Paste</div>
+    <div class="t-item">求職面試</div><div class="t-item">文章寫作</div>
+    <div class="t-item">程式開發</div><div class="t-item">行銷文案</div>
+    <div class="t-item">學習教育</div><div class="t-item">數據分析</div>
+    <div class="t-item">社群媒體</div><div class="t-item">商業策略</div>
+    <div class="t-item">角色扮演</div><div class="t-item">日常生活</div>
+    <div class="t-item">翻譯校對</div>
+  </div>
+</header>
+
+<!-- ═ SEARCH BAR ══════════════════════════════════════ -->
+<div class="search-bar">
+  <div class="si">
+    <div class="sw">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input class="sq" id="sQ" type="text" placeholder="搜尋指令… 按 / 快速聚焦" autocomplete="off">
+    </div>
+    <div class="cats" id="cats"></div>
+    <div class="rc" id="rCount"></div>
+  </div>
+</div>
+
+<!-- ═ REFERENCE SOURCES ════════════════════════════════ -->
+<div class="src-section">
+  <div class="src-head">
+    <div class="src-label">參考來源</div>
+    <div class="src-line"></div>
+    <div class="src-label">點擊前往</div>
+  </div>
+  <div class="src-grid">
+
+    <a class="src-card" href="https://learnai.tw/prompt/" target="_blank" rel="noopener">
+      <div class="src-card-top">
+        <span class="src-num">01 / learnai.tw</span>
+        <span class="src-ext">↗</span>
+      </div>
+      <div class="src-name">Learn AI 提示詞手冊</div>
+      <div class="src-url">learnai.tw/prompt/</div>
+      <div class="src-desc">台灣本地 AI 學習平台，提供中文化的 ChatGPT 提示詞分類教學，涵蓋 AI 繪圖、工作應用、程式碼等多個實用分類。</div>
+      <div class="src-tags">
+        <span class="src-tag">繁體中文</span>
+        <span class="src-tag">AI 繪圖</span>
+        <span class="src-tag">工作應用</span>
+        <span class="src-tag">程式碼</span>
+      </div>
+    </a>
+
+    <a class="src-card" href="https://quickref.me/chatgpt" target="_blank" rel="noopener">
+      <div class="src-card-top">
+        <span class="src-num">02 / quickref.me</span>
+        <span class="src-ext">↗</span>
+      </div>
+      <div class="src-name">ChatGPT Cheat Sheet</div>
+      <div class="src-url">quickref.me/chatgpt</div>
+      <div class="src-desc">英文版 ChatGPT 速查手冊，收錄超過 100 個各場景的提示詞範本，涵蓋寫作、程式、電子郵件、試算表、社群媒體等分類。</div>
+      <div class="src-tags">
+        <span class="src-tag">English</span>
+        <span class="src-tag">速查手冊</span>
+        <span class="src-tag">100+ 指令</span>
+        <span class="src-tag">開源</span>
+      </div>
+    </a>
+
+    <a class="src-card" href="https://huggingface.co/datasets/fka/prompts.chat" target="_blank" rel="noopener">
+      <div class="src-card-top">
+        <span class="src-num">03 / huggingface.co</span>
+        <span class="src-ext">↗</span>
+      </div>
+      <div class="src-name">Awesome ChatGPT Prompts</div>
+      <div class="src-url">huggingface.co/datasets/fka/prompts.chat</div>
+      <div class="src-desc">HuggingFace 上最受歡迎的提示詞資料集，收錄超過 150 個角色扮演與場景設定提示，是全球開發者的重要參考資源。</div>
+      <div class="src-tags">
+        <span class="src-tag">Dataset</span>
+        <span class="src-tag">150+ 角色</span>
+        <span class="src-tag">開源資料集</span>
+      </div>
+    </a>
+
+    <a class="src-card" href="https://www.explainthis.io/zh-hant/chatgpt" target="_blank" rel="noopener">
+      <div class="src-card-top">
+        <span class="src-num">04 / explainthis.io</span>
+        <span class="src-ext">↗</span>
+      </div>
+      <div class="src-name">ExplainThis 指令大全</div>
+      <div class="src-url">explainthis.io/zh-hant/chatgpt</div>
+      <div class="src-desc">科技職涯平台 ExplainThis 整理的中文提示詞大全，特別著重求職面試、職涯發展、程式開發、產品管理等職場實戰場景。</div>
+      <div class="src-tags">
+        <span class="src-tag">繁體中文</span>
+        <span class="src-tag">職場應用</span>
+        <span class="src-tag">求職面試</span>
+        <span class="src-tag">科技業</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ═ GENERATOR ═══════════════════════════════════════ -->
+<div class="gen-wrap">
+  <div class="gen-box">
+    <div class="gen-head">
+      <div class="gen-head-l">
+        <div class="gen-icon">✦</div>
+        <div>
+          <div class="gen-name">隨選指令生成器</div>
+          <div class="gen-sub">選場景 + 描述需求 → 立即生成專屬提示詞 · 無需 API · 完全離線</div>
+        </div>
+      </div>
+      <div class="gen-chip">OFFLINE · NO LOGIN</div>
+    </div>
+    <div class="gen-body">
+      <div class="fg">
+        <div class="fl"><b>01</b>&nbsp; 應用場景</div>
+        <select id="gCat">
+          <option value="">選擇場景類別…</option>
+          <option>求職面試</option><option>文章寫作</option><option>程式開發</option>
+          <option>行銷文案</option><option>學習教育</option><option>數據分析</option>
+          <option>社群媒體</option><option>商業策略</option><option>角色扮演</option>
+          <option>日常生活</option><option>翻譯校對</option>
+        </select>
+      </div>
+      <div class="fg">
+        <div class="fl"><b>02</b>&nbsp; 具體需求描述</div>
+        <input type="text" id="gNeed" placeholder="例：改寫履歷工作經歷、除錯 Python 程式、寫 IG 貼文…"
+          onkeydown="if(event.key==='Enter')gen()">
+      </div>
+      <button class="gen-btn" onclick="gen()">⚡&nbsp; 生成指令</button>
+    </div>
+    <div class="gen-out" id="gOut">
+      <div class="out-top">
+        <div class="out-lbl"><div class="out-dot"></div>Generated Prompt</div>
+        <div class="out-btns">
+          <button class="ob" onclick="insertSearch()">插入搜尋</button>
+          <button class="ob" id="oCopyBtn" onclick="copyOut()">⎘ 複製</button>
+        </div>
+      </div>
+      <div class="out-txt" id="oText"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═ CARDS GRID ══════════════════════════════════════ -->
+<div class="cards-wrap">
+  <div class="sec-head">
+    <div class="sh-l">指令庫</div>
+    <div class="sh-line"></div>
+    <div class="sh-l" id="filtLbl">全部</div>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>
+  <div class="foot">
+    <div class="foot-l">© 2025 AI Prompt Studio — 完全離線運行，無 API、無登入、無資料上傳</div>
+    <div class="foot-r">
+      <a class="fa" href="https://learnai.tw/prompt/" target="_blank">learnai.tw</a>
+      <a class="fa" href="https://quickref.me/chatgpt" target="_blank">quickref.me</a>
+      <a class="fa" href="https://www.explainthis.io/zh-hant/chatgpt" target="_blank">explainthis.io</a>
+      <a class="fa" href="https://huggingface.co/datasets/fka/prompts.chat" target="_blank">huggingface.co</a>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+/* ═════════════════════════════════════════
+   PROMPT DATABASE
+═════════════════════════════════════════ */
+const DB = [
+  {cat:"求職面試",icon:"💼",title:"STAR 法則改寫履歷",tags:["履歷","STAR"],
+   desc:"以 STAR 原則改寫工作經歷，突出量化成果，讓 HR 眼睛一亮。",
+   prompt:"你是資深 HR 與履歷顧問。請以 STAR 原則（情境→任務→行動→結果）改寫以下工作經歷，在每一點加入量化數據，維持條列形式，語氣專業有力。\n\n【職稱】：[職稱]\n【公司/產業】：[說明]\n【原始經歷】：\n[貼上每點一行的原始內容]"},
+  {cat:"求職面試",icon:"💼",title:"求職信一鍵生成",tags:["Cover Letter"],
+   desc:"輸入公司職位與優勢，30 秒產出有說服力的求職信。",
+   prompt:"你是專業求職信撰寫師。用繁體中文撰寫 300 字以內的求職信，結構：吸引開場 → 核心優勢（連結職位需求）→ 對公司的熱情 → 行動 CTA。\n\n公司：[公司名稱]\n職位：[職位名稱]\n我的核心優勢：[優勢 1、優勢 2、優勢 3]\n吸引我加入的原因：[說明]"},
+  {cat:"求職面試",icon:"💼",title:"面試問題模擬清單",tags:["模擬","面試"],
+   desc:"列出指定職位最常見的 10 道面試題，附考察重點。",
+   prompt:"你是 [公司名稱] 的 [職位] 資深面試官。請列出面試此職位時最常問的 10 個問題，包含：行為面試題（至少 4 題）、技術/情境題（至少 3 題）、文化契合題（2 題）、反問環節建議（1 題）。每題標注考察重點與理想回答要素。"},
+  {cat:"求職面試",icon:"💼",title:"薪資談判完整腳本",tags:["談判","薪資"],
+   desc:"開口談薪的完整話術框架，含三個版本與拒絕備案。",
+   prompt:"請幫我撰寫完整的薪資談判腳本，包含三個版本：\n· 主動開場版（主動提出期望）\n· 回應詢問版（被問到時如何回答）\n· 對方拒絕後的備案話術\n\n情境：我收到 [公司] [職位] 錄取\n提供薪資：[金額]\n我的期望：[期望金額]\n支撐理由：[市場行情/過去成就/稀缺技能]"},
+  {cat:"求職面試",icon:"💼",title:"弱點問題完美回答",tags:["行為面試"],
+   desc:"把「你最大的缺點是什麼」轉化為有說服力的加分回答。",
+   prompt:"幫我回答面試中「你最大的缺點是什麼？」我的實際弱點是 [弱點描述]。請用「承認弱點（誠懇具體）→ 改善行動（已採取步驟）→ 成長結果（進步證據）」框架，寫出自然、150 字以內的回答，避免「我太努力工作」這種老套說法。"},
+
+  {cat:"文章寫作",icon:"✍️",title:"部落格文章完整大綱",tags:["SEO","大綱"],
+   desc:"給主題，輸出完整文章架構、各段重點與 SEO 建議。",
+   prompt:"你是資深 SEO 內容策略師。為以下主題生成完整部落格文章大綱：\n\n主題：[主題]\n目標讀者：[讀者輪廓]\n字數目標：約 [字數] 字\n關鍵詞：[主要關鍵詞]\n\n大綱需包含：\n· 10 個候選標題（含 H1 建議）\n· Meta description 草稿\n· 引言 Hook 方向\n· H2 段落（各附 2-3 個 H3 子項目及寫作要點）\n· 結論與 CTA 建議"},
+  {cat:"文章寫作",icon:"✍️",title:"語調改寫大師",tags:["改寫","語調"],
+   desc:"將原始文字改為指定語調，保留核心資訊。",
+   prompt:"請將以下文字改寫為「[語調]」風格（可選：正式嚴謹/輕鬆口語/說服性/學術客觀/幽默活潑/溫暖親切）。保留所有核心資訊、調整句子結構與用詞、確保語氣前後一致。\n\n目標語調：[語調]\n原始文字：\n[貼上原文]"},
+  {cat:"文章寫作",icon:"✍️",title:"爆款標題生成器",tags:["標題","點擊率"],
+   desc:"一次生成 10 個不同風格的吸睛標題供挑選。",
+   prompt:"為以下文章主題生成 10 個不同風格的標題，每種至少 1 個：\n① 數字型（7個方法…）\n② 提問型（讓讀者說「這就是我！」）\n③ 秘密揭露型（揭開…真相）\n④ 反直覺型（為什麼…反而更好）\n⑤ 痛點型（你正在犯的錯…）\n\n文章主題：[主題]\n目標讀者：[讀者]\n主關鍵詞：[關鍵詞]"},
+  {cat:"文章寫作",icon:"✍️",title:"長文精煉摘要",tags:["摘要","重點"],
+   desc:"把長篇文章壓縮成結構清晰的 200 字摘要。",
+   prompt:"請閱讀以下文章，用繁體中文撰寫結構化摘要：\n\n【核心主旨】（1 句話）\n【三大重點】\n· [重點 1]\n· [重點 2]\n· [重點 3]\n【關鍵數據或案例】（如有）\n【結論與行動建議】\n\n文章：\n[貼上全文]"},
+  {cat:"文章寫作",icon:"✍️",title:"開場 Hook 三款式",tags:["Hook","創意"],
+   desc:"為文章或演講寫出三種風格的抓人開場。",
+   prompt:"為以下主題設計 3 種開場 Hook（各約 60 字），讓讀者在 5 秒內被抓住：\n\n· 【故事型】：用一個具體場景製造代入感\n· 【數據型】：用令人驚訝的統計開場\n· 【問題型】：拋出讓讀者強烈想知道答案的問題\n\n主題：[主題]\n目標讀者：[讀者]"},
+
+  {cat:"程式開發",icon:"💻",title:"程式碼除錯分析",tags:["Debug","錯誤修復"],
+   desc:"貼上錯誤代碼，AI 找出 bug 並給出修正後完整版本。",
+   prompt:"你是資深 [語言] 工程師。請分析以下程式碼並提供：\n\n1. 【問題診斷】：所有 bug、潛在問題、安全漏洞\n2. 【根本原因】：解釋每個問題為何發生\n3. 【修正版本】：完整修正後的程式碼\n4. 【改善建議】：額外的最佳實踐建議\n\n程式語言：[語言]\n錯誤訊息：[錯誤訊息]\n\n```\n[貼上程式碼]\n```"},
+  {cat:"程式開發",icon:"💻",title:"程式碼重構顧問",tags:["重構","Clean Code"],
+   desc:"審視程式碼，提出可讀性、效能、架構改善建議。",
+   prompt:"請作為 Clean Code 顧問審查以下程式碼：\n· 可讀性（命名、結構、註解）\n· 效能（時間/空間複雜度）\n· SOLID 原則遵循度\n· 邊界情況與例外處理\n\n用「原始問題 → 重構理由 → 改善後程式碼」格式分點呈現。\n\n```\n[貼上程式碼]\n```"},
+  {cat:"程式開發",icon:"💻",title:"Regex 生成器",tags:["Regex","正規表達式"],
+   desc:"用自然語言描述需求，生成正規表達式與解說。",
+   prompt:"請生成符合以下條件的 Regex 並用繁體中文解說：\n\n需求：[例：匹配台灣手機號碼，格式 0912-345-678 或 0912345678]\n語言環境：[JavaScript / Python / PHP]\n\n請提供：\n1. 完整 Regex 表達式\n2. 逐步解析每個部分的意義\n3. 符合範例（3個）+ 不符合範例（2個）\n4. 使用示範程式碼"},
+  {cat:"程式開發",icon:"💻",title:"單元測試生成",tags:["Testing","TDD"],
+   desc:"為函式自動生成完整單元測試，涵蓋邊界情境。",
+   prompt:"請為以下函式生成完整的單元測試，使用 [Jest / pytest / JUnit] 框架。\n\n測試案例須涵蓋：\n· 正常情況（Happy Path）至少 3 個\n· 邊界值（空值、最大值、最小值）\n· 錯誤輸入（型別錯誤、非法值）\n· 非預期情況\n\n每個測試加上中文 describe 說明。\n\n```\n[貼上目標函式]\n```"},
+  {cat:"程式開發",icon:"💻",title:"API 文件撰寫",tags:["文件","API"],
+   desc:"把函式或端點描述轉成標準格式的 API 文件。",
+   prompt:"根據以下資訊，撰寫標準 REST API 文件（Markdown 格式）：\n\n· 端點說明與用途\n· HTTP 方法與 URL\n· 請求參數表（名稱/類型/必填/說明/範例）\n· 請求 Body 範例（JSON）\n· 成功回應格式\n· 錯誤碼說明表\n· 使用注意事項\n\n函式 / 端點資訊：\n[貼上說明或程式碼]"},
+
+  {cat:"行銷文案",icon:"📣",title:"廣告文案三版本",tags:["廣告","文案"],
+   desc:"同一產品，情感、理性、社群三種訴求各一版。",
+   prompt:"為以下產品撰寫 3 版廣告文案（每版不超過 80 字，含標語）：\n\n· 【情感版】：觸動痛點，讓人產生「這就是我需要的！」共鳴\n· 【理性版】：強調數據、功能、ROI\n· 【社群版】：用戶見證，製造 FOMO 和社會認同\n\n產品名稱：[名稱]\n產品描述：[核心功能與特點]\n目標客群：[描述]\n競爭優勢：[差異點]"},
+  {cat:"行銷文案",icon:"📣",title:"品牌故事撰寫",tags:["品牌","Story"],
+   desc:"把品牌背景轉化成有溫度、有記憶點的品牌故事。",
+   prompt:"你是品牌故事撰寫師。為以下品牌撰寫 250 字以內的品牌故事：\n\n1. 引人共鳴的開場（創辦人的困境或洞察）\n2. 轉折點（為什麼決定創立這個品牌）\n3. 核心使命（品牌存在的意義）\n4. 對客戶的承諾\n\n語氣真誠溫暖，避免空洞企業化用語。\n\n品牌：[名稱] / 產業：[行業]\n創立背景：[故事]\n核心價值：[價值觀]"},
+  {cat:"行銷文案",icon:"📣",title:"Email 行銷五封序列",tags:["Email","自動化"],
+   desc:"從認識到購買，設計五封遞進式 Email 行銷序列。",
+   prompt:"為以下產品設計 5 封 Email 行銷序列，時間跨度 14 天：\n\n【D0】歡迎信：建立關係，交付免費價值\n【D2】教育信：解決核心痛點，建立信任\n【D5】案例信：用戶故事 + 社群證明\n【D9】提案信：首次推銷，限時優惠\n【D13】緊迫信：最後機會，強化 CTA\n\n每封需含：主旨行（A/B 兩版）、信件架構、CTA 按鈕文字\n\n產品：[名稱與描述]\n目標讀者：[客群描述]"},
+  {cat:"行銷文案",icon:"📣",title:"SEO 關鍵詞研究",tags:["SEO","關鍵詞"],
+   desc:"分析主題並列出長尾關鍵詞、搜尋意圖與內容建議。",
+   prompt:"針對以下主題進行 SEO 關鍵詞研究：\n\n主題：[主題]\n目標地區：[台灣/全球華語]\n網站類型：[部落格/電商/企業官網]\n\n請提供：\n1. 主關鍵詞（5個）+ 月搜尋量估算\n2. 長尾關鍵詞（10個）+ 競爭度評估\n3. LSI 語意相關詞（10個）\n4. 搜尋意圖分類\n5. 對應內容主題建議（5 篇文章方向）"},
+
+  {cat:"學習教育",icon:"🎓",title:"費曼學習法解釋",tags:["費曼","概念理解"],
+   desc:"用最簡單的語言解釋複雜概念，確保真正理解。",
+   prompt:"請用費曼學習法解釋「[概念名稱]」，假設對象是完全沒有相關背景的高中生。請包含：\n\n1. 【一句話定義】（20 字以內，不用術語）\n2. 【生活化類比】\n3. 【運作機制】（逐步解釋）\n4. 【常見誤解】\n5. 【與相關概念的區別】\n6. 【現實應用】"},
+  {cat:"學習教育",icon:"🎓",title:"個人化學習計畫",tags:["學習計畫","進度"],
+   desc:"依目標、程度與可用時間，生成具體可執行的學習計畫。",
+   prompt:"幫我制定學習「[主題]」的個人化計畫：\n\n目前程度：[完全初學 / 有基礎 / 中級想進階]\n學習目標：[具體想達成什麼]\n可用時間：每週 [X] 小時，共計 [Y] 週\n學習偏好：[影片 / 書籍 / 動手做 / 課程]\n\n請提供：\n· 分週進度表\n· 推薦資源（免費+付費各 3 個）\n· 里程碑指標\n· 常見卡關點與解決建議"},
+  {cat:"學習教育",icon:"🎓",title:"知識測驗出題",tags:["測驗","複習"],
+   desc:"根據學習材料自動出題，附答案與詳細解析。",
+   prompt:"根據以下學習材料，設計一份複習測驗：\n\n【測驗結構】\n· 單選題 5 題（每題 4 選項）\n· 是非題 3 題\n· 簡答題 3 題\n· 應用情境題 1 題\n\n每題需附：正確答案 + 詳細解析\n\n學習材料：\n[貼上文章、筆記或教材]"},
+  {cat:"學習教育",icon:"🎓",title:"情境語言對話練習",tags:["語言學習","口說"],
+   desc:"模擬真實日常場景，練習指定語言的自然對話。",
+   prompt:"你是我的 [英文/日文/韓文/法文] 語言練習夥伴，個性友善有耐心。請模擬以下場景進行對話練習：\n\n場景：[例：日本便利商店結帳、紐約咖啡廳點餐、商業會議開場白]\n我的程度：[初級 A2 / 中級 B1 / 進階 B2]\n\n規則：每次我說錯時，在括號用中文標注更自然的說法，不中斷對話流程。"},
+
+  {cat:"數據分析",icon:"📊",title:"數據洞察報告",tags:["數據","分析"],
+   desc:"貼上數據，AI 找出趨勢、異常值，給出行動建議。",
+   prompt:"你是資深數據分析師。請分析以下數據，提供洞察報告：\n\n1. 數據概覽（基本統計描述）\n2. 關鍵趨勢（3-5 個顯著趨勢，附數據佐證）\n3. 異常值/值得關注的數據點\n4. 相關性發現\n5. 假設推論（2-3 個可驗證的假設）\n6. 行動建議（3 個具體可執行的下一步）\n\n數據：\n[貼上數據表格或描述]"},
+  {cat:"數據分析",icon:"📊",title:"Excel / Sheets 公式",tags:["Excel","公式"],
+   desc:"描述需求，AI 生成完整試算表公式與說明。",
+   prompt:"請幫我設計試算表公式並用繁體中文解說：\n\n需求描述：[例：計算 A 欄中，當 B 欄為「已完成」且 C 欄日期在本月內，則將 D 欄數值加總]\n試算表工具：[Excel / Google Sheets]\n\n請提供：\n1. 完整公式（可直接貼上）\n2. 逐步解析每個函式\n3. 替代方案（若有）\n4. 常見錯誤與除錯方法"},
+  {cat:"數據分析",icon:"📊",title:"競品深度比較表",tags:["競品","市場分析"],
+   desc:"整理多個競品的差異，輸出結構化比較分析。",
+   prompt:"幫我製作競品比較分析，評估：[產品/品牌 1]、[產品/品牌 2]、[產品/品牌 3]\n\n比較維度：\n· 核心功能對比\n· 目標客群定位\n· 定價策略\n· 核心優勢\n· 明顯弱點\n· 市場定位差異\n· 用戶評價摘要\n\n最後附上決策建議：哪種用戶適合選哪個產品？請用 Markdown 表格呈現。"},
+
+  {cat:"社群媒體",icon:"📱",title:"IG 貼文文案全包",tags:["Instagram","社群"],
+   desc:"生成帶 emoji 和多組 hashtag 的完整 IG 貼文。",
+   prompt:"幫我撰寫一篇 IG 貼文，提供 2 個版本（A版約 150 字、B版精簡約 80 字）：\n\n要求：\n· 開頭 1-2 句要製造共鳴、好奇或衝擊感\n· 適度使用 emoji（3-6 個）\n· 加入明確的 CTA（留言/保存/分享）\n· 結尾附 15-20 個分組 hashtag（大眾標+中眾標+小眾標）\n\n貼文主題：[主題]\n語氣風格：[輕鬆/專業/勵志/幽默/感性]\n目標帳號定位：[帳號類型]"},
+  {cat:"社群媒體",icon:"📱",title:"LinkedIn 個人品牌簡介",tags:["LinkedIn","個人品牌"],
+   desc:"撰寫吸引獵頭與理想工作的 LinkedIn About 區塊。",
+   prompt:"你是個人品牌顧問，請幫我撰寫 LinkedIn About 區塊（200 字以內）：\n\n1. 開場鉤子（說明我能解決什麼問題）\n2. 我是誰（職稱、領域、年資）\n3. 核心技能與工具（3-5 個關鍵詞）\n4. 代表成就（1-2 個量化成果）\n5. 我在尋找什麼（合作方向）\n6. 聯絡 CTA\n\n我的資訊：\n職稱：[職稱] / 產業：[產業]\n核心技能：[列舉]\n代表成就：[描述]"},
+  {cat:"社群媒體",icon:"📱",title:"YouTube 影片腳本",tags:["YouTube","腳本"],
+   desc:"完整的 YouTube 影片腳本，從 Hook 到訂閱 CTA。",
+   prompt:"請幫我撰寫 [時長：5/10/15] 分鐘 YouTube 影片完整口播腳本：\n\n主題：[影片主題]\n目標觀眾：[受眾描述]\n影片目的：[教育/娛樂/評測/教學]\n\n腳本架構：\n【0-30秒 Hook】讓觀眾無法滑走的開場\n【30-60秒 承諾】告訴觀眾看完能得到什麼\n【主體內容】分 3-5 個段落，附轉場語\n【總結】快速回顧核心要點\n【CTA】訂閱/留言/下部影片引導\n\n附：3 個可 A/B 測試的影片標題"},
+  {cat:"社群媒體",icon:"📱",title:"Threads 文字串",tags:["Threads","短文"],
+   desc:"把長篇內容改寫成吸引人繼續閱讀的 Threads 串文。",
+   prompt:"把以下內容改寫成 5 則 Threads 短文串，讓人停不下來地往下滑：\n\n規則：\n· 每則不超過 280 字\n· 第 1 則：衝擊性開場，讓人必須繼續讀\n· 第 2-4 則：核心內容，每則一個要點，結尾留鉤子\n· 第 5 則：總結 + CTA\n· 適度加入換行讓版面易讀\n\n原始內容：\n[貼上文章/想法/資訊]"},
+
+  {cat:"商業策略",icon:"🏢",title:"SWOT 深度分析",tags:["策略","SWOT"],
+   desc:"輸入公司/產品資訊，生成有洞察的 SWOT 與策略建議。",
+   prompt:"為以下公司/產品進行完整 SWOT 分析：\n\n每個象限列 4-5 個具體點，並說明影響程度（高/中/低）。\n最後提出 3 個「SO 策略」（優勢×機會）+ 2 個「WT 防禦策略」。\n\n公司/產品：[名稱]\n行業：[行業]\n主要業務：[描述]\n規模：[描述]\n主要競爭對手：[列舉]"},
+  {cat:"商業策略",icon:"🏢",title:"OKR 目標設計",tags:["OKR","目標管理"],
+   desc:"生成符合 OKR 框架的激勵目標與可量化關鍵成果。",
+   prompt:"幫我設計一套季度 OKR：\n\n部門：[部門名稱]\n公司整體目標：[描述]\n部門核心挑戰：[描述]\n時間範圍：[Q1 / Q2 / 上半年]\n\n請提供：\n· 1 個激勵性的 Objective（像宣言，不是任務清單）\n· 3 個 Key Results（必須有數字，避免「提升」這種模糊用詞）\n· 每個 KR 的衡量方式與負責人建議\n· OKR 常犯的錯誤提醒"},
+  {cat:"商業策略",icon:"🏢",title:"商業提案一頁摘要",tags:["提案","商業計畫"],
+   desc:"把複雜的商業計畫壓縮成讓投資人想繼續聊的一頁摘要。",
+   prompt:"將以下商業計畫改寫為「電梯投資提案」（Executive Summary），讓投資人在 2 分鐘內評估是否繼續。\n\n格式（每項 1-3 句，精準不廢話）：\n· 問題/機會：我們在解決什麼痛點？市場有多大？\n· 解決方案：我們怎麼做？核心差異是什麼？\n· 商業模式：如何賺錢？單位經濟效益？\n· 牽引力：目前成果（用戶/營收/增長率）\n· 團隊：為什麼是我們？\n· 需求：要什麼？用來做什麼？\n\n[貼上商業計畫或填入以上各項]"},
+  {cat:"商業策略",icon:"🏢",title:"定價策略建議",tags:["定價","策略"],
+   desc:"分析三種定價框架的優劣，給出具體定價建議。",
+   prompt:"為以下產品分析定價策略，提供具體數字建議：\n\n分析框架：\n1. 成本加成定價：成本結構分析 + 合理利潤率\n2. 競爭導向定價：競品對標 + 差異化溢價空間\n3. 價值導向定價：客戶認知價值 + 願意支付分析\n\n最終提出：\n· 建議定價區間及理由\n· 分級定價方案（若適合）\n· 心理定價技巧建議\n\n產品描述：[描述] / 目標客群：[描述]\n競品價格：[範圍] / 主要成本：[說明]"},
+
+  {cat:"角色扮演",icon:"🎭",title:"蘇格拉底式思考對話",tags:["哲學","批判思考"],
+   desc:"讓 AI 扮演蘇格拉底，用反問法引導深度思考。",
+   prompt:"請扮演古希臘哲學家蘇格拉底。你的風格是：永遠用問題來回應問題，不直接給出答案，透過層層提問引導對方自己發現真理與矛盾。每次對話只問一個問題，等待我回答後再繼續深挖。\n\n今天我想探討：[你想深入思考的問題]"},
+  {cat:"角色扮演",icon:"🎭",title:"嚴格導師評審模式",tags:["評審","反饋"],
+   desc:"設定嚴格但公正的導師，給出不客套的真實評估。",
+   prompt:"你扮演在 [領域] 有 20 年實戰經驗的嚴格但公正的導師。你的評審風格：直接說出問題、不給空洞讚美、每個批評都附具體改進方法。\n\n請用以下格式評審：\n✓ 做得好的地方（真正優秀的，不是客套話）\n✗ 需要改進的問題（3-5 個具體問題）\n→ 如果是我，我會這樣改（具體建議）\n? 我想多了解的問題\n\n待評審內容：\n[貼上作品/計畫/想法]"},
+  {cat:"角色扮演",icon:"🎭",title:"魔鬼代言人挑戰",tags:["批判","決策"],
+   desc:"讓 AI 扮演反方，找出你的計畫所有盲點與漏洞。",
+   prompt:"你扮演魔鬼代言人（Devil's Advocate）。請對我的計畫提出最強力的反對意見，找出所有漏洞、風險、假設錯誤和盲點，不要認同任何一點。\n\n挑戰格式：\n· 最致命的 3 個風險\n· 5 個關鍵假設錯誤\n· 最有可能被忽略的競爭威脅\n· 利害關係人的可能反應\n· 最壞情況模擬\n\n我的計畫：\n[詳細描述]"},
+  {cat:"角色扮演",icon:"🎭",title:"虛擬創業投資顧問",tags:["創業","融資"],
+   desc:"20 年經驗的投資顧問，從五個維度直接評估你的想法。",
+   prompt:"你是投資過 50+ 新創、有 20 年經驗的天使投資人兼創業顧問。請針對以下創業想法給出直接評估（不要客套話）：\n\n1. 【市場機會】市場真實夠大嗎？時機對嗎？\n2. 【競爭格局】現有玩家是誰？差異化是真的嗎？\n3. 【商業模式】能規模化嗎？單位經濟說得通嗎？\n4. 【執行風險】最危險的 3 個執行挑戰\n5. 【建議切入點】第一步怎麼驗證？\n\n最後給 1-10 的投資意願分數並說明理由。\n\n創業想法：\n[詳細描述]"},
+
+  {cat:"日常生活",icon:"🏠",title:"客製化旅遊行程",tags:["旅遊","行程規劃"],
+   desc:"依偏好與預算生成詳細的每日旅行行程安排。",
+   prompt:"幫我規劃一趟客製化旅行：\n\n目的地：[城市/國家]\n天數：[N] 天\n出發日期：[日期]\n旅伴：[獨旅/情侶/家庭/朋友]\n預算：[總預算/每日預算]\n偏好：[文化歷史/美食探索/自然戶外/購物/藝術/放鬆]\n體力程度：[輕鬆/一般/密集]\n\n請提供：\n· 每天詳細行程（含時間/地點/預估費用）\n· 必吃美食與餐廳推薦\n· 交通方式建議\n· 住宿區域推薦\n· 省錢小技巧"},
+  {cat:"日常生活",icon:"🏠",title:"30 天習慣養成計畫",tags:["習慣","自我提升"],
+   desc:"結合行為科學的 30 天習慣養成路徑圖。",
+   prompt:"幫我設計「[想建立的習慣]」的 30 天養成計畫，結合行為科學原理：\n\n目前狀況：[現在狀態描述]\n終極目標：[30 天後希望達到的狀態]\n可用時間：每天約 [X] 分鐘\n過去失敗原因（如有）：[描述]\n\n請提供：\n· 分三階段（導入期/建構期/穩固期）的每週計畫\n· 每天具體行動（極小化到不可能失敗）\n· 可預見的難關與防範對策\n· 追蹤方法與里程碑獎勵設計"},
+  {cat:"日常生活",icon:"🏠",title:"非暴力溝通腳本",tags:["溝通","人際關係"],
+   desc:"用 NVC 框架化解衝突，清楚表達需求而不傷害關係。",
+   prompt:"幫我用非暴力溝通（NVC）框架設計溝通腳本：\n\nNVC 四步驟：\n1. 【觀察】描述事實（不帶評價的客觀陳述）\n2. 【感受】表達情緒（「我感到…」而非「你讓我…」）\n3. 【需求】說出內心需要\n4. 【請求】提出具體可行的請求（不是要求）\n\n最後附上：對方反應抵抗/防禦的應對話術。\n\n對象：[關係：同事/伴侶/父母/朋友]\n衝突情境：[詳細描述發生了什麼]"},
+
+  {cat:"翻譯校對",icon:"🌐",title:"台灣繁中自然翻譯",tags:["翻譯","本地化"],
+   desc:"翻譯並優化為道地台灣繁體中文，不像機器翻譯。",
+   prompt:"請將以下內容翻譯成繁體中文，品質要求：\n\n✓ 使用台灣慣用詞彙（軟體不說軟件、網路不說網絡）\n✓ 語句通順自然，讀起來像台灣人寫的\n✓ 保留原文的語氣、節奏與說話風格\n✓ 專業術語第一次出現時附上英文原文（括號）\n✓ 若原文有文化梗，請加注釋說明\n\n原文語言：[語言]\n文章類型：[技術文件/行銷文案/文學/日常對話]\n\n原文：\n[貼上原文]"},
+  {cat:"翻譯校對",icon:"🌐",title:"英文學術論文潤稿",tags:["英文","學術"],
+   desc:"改善英文論文的語法、措辭與學術寫作風格。",
+   prompt:"你是學術英文編輯，有審查頂級期刊論文的經驗。請校對以下英文段落：\n\n1. 【逐句修改】以「原文 → 修改版」對照形式呈現\n2. 【修改說明】每處修改的理由（語法/自然度/學術性）\n3. 【整體評估】流暢度、清晰度、學術正式度（各 1-5 分）\n4. 【建議】這段落還可以再強化的方向\n\n請特別注意中式英文、過度複雜的句子結構。\n\n[貼上英文段落]"},
+  {cat:"翻譯校對",icon:"🌐",title:"會議記錄整理",tags:["整理","效率"],
+   desc:"把雜亂的會議紀錄整理成清晰的行動摘要文件。",
+   prompt:"將以下雜亂的會議記錄整理成清晰的行動摘要文件：\n\n📋 會議摘要\n日期：[日期] ｜ 出席：[人員]\n\n🎯 結論與決議\n· [決議 1]\n· [決議 2]\n\n✅ 行動事項\n| 任務 | 負責人 | 截止日期 | 優先級 |\n\n🚫 未解決的問題\n· [問題 — 下次討論]\n\n📅 下次會議\n時間：[時間] ｜ 待討論主題：[主題]\n\n原始記錄：\n[貼上會議記錄]"},
+];
+
+/* ═════════════════════════════════════════
+   SMART TEMPLATE ENGINE (offline)
+═════════════════════════════════════════ */
+const TPL = {
+  "求職面試": ["你是資深 HR 顧問與職涯教練。針對「{need}」，請提供：\n\n1. 核心重點（3-5 個最重要的事項）\n2. 具體可用的模板或腳本（用 [括號] 標記需填入的部分）\n3. 三個不同情境的版本\n4. 需要避開的常見地雷\n5. 讓它脫穎而出的關鍵差異點\n\n請以繁體中文、條列式呈現，每項都要具體且可立即使用。",
+               "請幫我回答求職面試中關於「{need}」的問題，提供：\n· 直接可複製使用的回答框架\n· 填入個人資訊後即可使用的模板（2-3 個版本）\n· 應避免說的話與常見失誤\n· 讓面試官印象深刻的加分要素"],
+  "文章寫作": ["你是資深內容策略師與文案撰寫師。針對「{need}」，請提供：\n\n1. 最佳架構框架（開場→主體→結尾）\n2. 3 個不同切入角度的開場句\n3. 核心內容要點（5-7 個）\n4. 增加可讀性的技巧（排版、節奏、轉場詞）\n5. 強力結尾 + CTA 範例\n\n輸出請直接可用於繁體中文讀者。",
+               "請幫我規劃「{need}」的寫作計畫：\n\n· 標題（提供 5 個風格各異的版本）\n· 核心讀者痛點\n· 文章骨架（H1→H2→H3 大綱）\n· 每段核心訊息（一句話說清楚）\n· SEO 關鍵詞建議（5-10 個）"],
+  "程式開發": ["你是資深全端工程師。關於「{need}」，請提供：\n\n1. 最佳實踐方案（附完整程式碼）\n2. 時間/空間複雜度分析\n3. 常見陷阱與錯誤\n4. 邊界情況處理\n5. 單元測試建議\n\n請用繁體中文解說，程式碼加上詳細的中文註解。",
+               "針對「{need}」這個技術需求，請提供：\n\n· 3 種不同的實作方案（各有優缺點）\n· 推薦方案及理由\n· 完整的示範程式碼\n· 相關設計模式或最佳實踐\n· 效能優化建議\n· 需要注意的安全問題"],
+  "行銷文案": ["你是世界級文案大師。針對「{need}」，請提供：\n\n1. 核心文案（標題 + 副標 + 正文 + CTA）\n2. 3 個不同訴求角度的版本（情感/理性/社群認同）\n3. A/B 測試建議\n4. 適合不同平台的改編版（FB/IG/Email）\n\n所有文案請直接可用，填入 [括號] 即可。",
+               "請用 AIDA 框架（注意→興趣→慾望→行動）為「{need}」設計完整行銷文案：\n\n【A 注意】：吸引目光的開場（痛點/數據/懸念）\n【I 興趣】：加深好奇心\n【D 慾望】：塑造渴望，展示理想結果\n【A 行動】：強力 CTA，降低行動門檻\n\n每段附 2 個不同風格的版本。"],
+  "學習教育": ["你是教育設計師與學習顧問。關於「{need}」，請提供：\n\n1. 費曼式解釋（用最簡單的語言說清楚）\n2. 學習路徑圖（從零到精通的里程碑）\n3. 最有效的練習方法\n4. 推薦資源（免費+付費各 3 個）\n5. 常見卡關點與突破方法",
+               "請為「{need}」設計一份實用學習指南：\n\n· 核心概念地圖（最重要的 5-10 個概念）\n· 學習順序建議（先學什麼，再學什麼）\n· 30 天學習計畫（每週具體目標）\n· 自我測試方法\n· 進階延伸（學完基礎後的下一步）"],
+  "數據分析": ["你是資深數據科學家。針對「{need}」，請提供：\n\n1. 分析框架（該看哪些指標，為什麼）\n2. 數據收集方法\n3. 視覺化建議（什麼數據適合哪種圖表）\n4. 常見分析誤區\n5. 從數據到行動的決策框架\n6. 工具推薦",
+               "請幫我思考「{need}」的數據分析方案：\n\n· 核心問題定義（真正想回答什麼問題）\n· 需要的數據類型與來源\n· 分析步驟（探索→清洗→建模→解讀）\n· 可能的發現方向（3-5 個假設）\n· 如何呈現結果給非技術受眾"],
+  "社群媒體": ["你是社群媒體策略師與內容創作者。針對「{need}」，請提供：\n\n1. 平台最適內容格式建議\n2. 完整貼文草稿（2個版本：詳細版/精簡版）\n3. 發布時機建議\n4. hashtag 策略（大眾/中眾/小眾標）\n5. 互動提升技巧",
+               "請為「{need}」規劃社群媒體內容策略：\n\n· 目標受眾分析（他們在乎什麼？痛點是什麼？）\n· 一週發文計畫（各平台頻率）\n· 爆款內容公式\n· 文案模板（可重複使用的結構）"],
+  "商業策略": ["你是麥肯錫等級的策略顧問。針對「{need}」，請提供：\n\n1. 現況診斷（問題根源在哪裡）\n2. 策略選項（3個可行方向及優缺點）\n3. 推薦方案及執行路徑\n4. 關鍵成功因素（KSF）\n5. 風險評估與應對計畫\n6. 衡量成效的 KPI 設計",
+               "請用 MECE 原則分析「{need}」：\n\n· 問題拆解（分解為可解決的子問題）\n· 各維度分析（不遺漏、不重複）\n· 優先順序排列（最重要的 3 個行動）\n· 資源需求評估（人力/時間/資金）\n· 里程碑設計"],
+  "角色扮演": ["請扮演有 20 年 [相關領域] 深度經驗的專家，個性是直接、務實、不說廢話。\n\n針對以下情況：「{need}」\n\n請用這個角色的視角，給出真實的評估與建議：\n· 這個想法/計畫/作品的優勢\n· 最大的問題與風險\n· 你會如何改進\n· 下一步具體行動",
+               "情境扮演設定：\n\n情境：{need}\n\n請投入角色，用第一人稱進行回應。每次互動後，提供 2-3 個我可以選擇的回應方向，讓對話更有深度。"],
+  "日常生活": ["你是生活教練與實用主義者。針對「{need}」，請提供：\n\n1. 最直接有效的解決方案（可立即執行）\n2. 分步驟行動計畫（每步不超過 15 分鐘）\n3. 需要準備的資源清單\n4. 常見障礙與應對方法\n5. 如何維持長期效果\n\n請保持實用、具體、沒有空話。",
+               "幫我規劃「{need}」的完整執行方案：\n\n· 目標設定（SMART 原則）\n· 每日/每週行動清單\n· 進度追蹤方式\n· 遇到困難怎麼辦\n· 成功完成後的下一個挑戰"],
+  "翻譯校對": ["你是資深繁體中文編輯與翻譯師。針對「{need}」，請提供：\n\n1. 翻譯/改寫版本（使用台灣慣用詞彙）\n2. 修改說明（解釋為何這樣翻譯更自然）\n3. 替代用詞建議\n4. 需要注意的文化差異\n5. 整體流暢度評分（1-10）",
+               "請幫我處理「{need}」這個翻譯/校對需求：\n\n· 提供修改後的完整版本\n· 標注每處修改（原文 → 修改版，附理由）\n· 語氣一致性檢查\n· 台灣用語確認\n· 整體改善建議"],
+};
+
+/* ═════════════════════════════════════════
+   STATE
+═════════════════════════════════════════ */
+let activeCat = "全部";
+let searchQ = "";
+let lastGen = "";
+const CATS = ["全部", ...new Set(DB.map(p => p.cat))];
+
+/* ═════════════════════════════════════════
+   BOOT
+═════════════════════════════════════════ */
+document.addEventListener("DOMContentLoaded", () => {
+  renderCats();
+  renderCards();
+  document.getElementById("sQ").addEventListener("input", e => {
+    searchQ = e.target.value.toLowerCase();
+    renderCards();
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "/" && document.activeElement.tagName !== "INPUT") {
+      e.preventDefault();
+      document.getElementById("sQ").focus();
+    }
+  });
+});
+
+/* ═════════════════════════════════════════
+   RENDER
+═════════════════════════════════════════ */
+function renderCats() {
+  document.getElementById("cats").innerHTML = CATS.map(c => {
+    const n = c === "全部" ? DB.length : DB.filter(p => p.cat === c).length;
+    return `<button class="cb ${c===activeCat?"on":""}" onclick="setCat('${c}')">
+      ${c} <span style="opacity:.55;font-size:8px">${n}</span></button>`;
+  }).join("");
+}
+
+function renderCards() {
+  const filtered = DB.filter(p => {
+    const okCat = activeCat === "全部" || p.cat === activeCat;
+    const q = searchQ;
+    const okQ = !q ||
+      p.title.toLowerCase().includes(q) ||
+      p.cat.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q) ||
+      p.prompt.toLowerCase().includes(q) ||
+      p.tags.some(t => t.toLowerCase().includes(q));
+    return okCat && okQ;
+  });
+
+  document.getElementById("rCount").textContent = `${filtered.length} 則`;
+  document.getElementById("filtLbl").textContent =
+    (activeCat === "全部" ? "全部" : activeCat) + ` ${filtered.length} 則`;
+
+  const grid = document.getElementById("grid");
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="no-res">// 找不到符合的指令<br><span style="font-size:11px">試試其他關鍵字，或清除篩選條件</span></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map((p, i) => {
+    const idx = DB.indexOf(p);
+    const fmt = p.prompt.replace(/\[([^\]]+)\]/g, '<span class="v">[$1]</span>').replace(/\n/g, "<br>");
+    return `<div class="card" style="animation-delay:${i*0.02}s">
+      <div class="c-top">
+        <div class="c-left">
+          <div class="c-icon">${p.icon}</div>
+          <div class="c-cat">${p.cat}</div>
+        </div>
+        <div class="c-tags">${p.tags.map(t=>`<span class="c-tag">${t}</span>`).join("")}</div>
+      </div>
+      <div class="c-title">${p.title}</div>
+      <div class="c-desc">${p.desc}</div>
+      <div class="c-prompt">${fmt}</div>
+      <div class="c-foot">
+        <button class="cp-btn" data-idx="${idx}" onclick="cpCard(this)">⎘ 複製指令</button>
+        <button class="rmx-btn" onclick="remix('${p.cat}','${p.title.replace(/'/g,"\\'")}')">↻ 變化版本</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ═════════════════════════════════════════
+   ACTIONS
+═════════════════════════════════════════ */
+function setCat(c) { activeCat = c; renderCats(); renderCards(); }
+
+function cpCard(btn) {
+  const p = DB[parseInt(btn.dataset.idx)];
+  navigator.clipboard.writeText(p.prompt).then(() => {
+    btn.textContent = "✓ 已複製"; btn.classList.add("ok");
+    toast("指令已複製 ✓");
+    setTimeout(() => { btn.textContent = "⎘ 複製指令"; btn.classList.remove("ok"); }, 2000);
+  });
+}
+
+function remix(cat, title) {
+  document.getElementById("gCat").value = cat;
+  document.getElementById("gNeed").value = `類似「${title}」但更客製化的版本`;
+  document.querySelector(".gen-wrap").scrollIntoView({ behavior:"smooth", block:"start" });
+  setTimeout(() => gen(), 400);
+}
+
+function gen() {
+  const cat  = document.getElementById("gCat").value || "文章寫作";
+  const need = document.getElementById("gNeed").value.trim();
+  if (!need) { document.getElementById("gNeed").focus(); return; }
+
+  const options = TPL[cat] || TPL["文章寫作"];
+  const tmpl = options[Math.floor(Math.random() * options.length)];
+  lastGen = tmpl.replace(/{need}/g, need).replace(/{cat}/g, cat);
+
+  const out = document.getElementById("gOut");
+  const oText = document.getElementById("oText");
+  out.classList.add("show");
+  oText.style.opacity = "0";
+  oText.textContent = lastGen;
+  requestAnimationFrame(() => {
+    oText.style.transition = "opacity .35s";
+    oText.style.opacity = "1";
+  });
+  out.scrollIntoView({ behavior:"smooth", block:"nearest" });
+}
+
+function copyOut() {
+  if (!lastGen) return;
+  navigator.clipboard.writeText(lastGen).then(() => {
+    const b = document.getElementById("oCopyBtn");
+    b.textContent = "✓ 已複製"; b.classList.add("ok");
+    toast("AI 生成指令已複製 ✓");
+    setTimeout(() => { b.textContent = "⎘ 複製"; b.classList.remove("ok"); }, 2000);
+  });
+}
+
+function insertSearch() {
+  if (!lastGen) return;
+  const q = lastGen.split("\n")[0].slice(0, 30);
+  document.getElementById("sQ").value = q;
+  searchQ = q.toLowerCase();
+  renderCards();
+}
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove("on"), 2400);
+}
+</script>
+</body>
+</html>

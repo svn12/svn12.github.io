@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <title>台灣歷年人口地圖</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #e0aaff;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .controls label {
+            font-size: 1.1rem;
+            color: #c77dff;
+            margin-right: 10px;
+        }
+        #yearSlider {
+            width: 300px;
+            accent-color: #c77dff;
+            cursor: pointer;
+        }
+        #yearDisplay {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #e0aaff;
+            margin-left: 12px;
+        }
+        .map-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        svg {
+            display: block;
+            background: #16213e;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(199, 125, 255, 0.3);
+        }
+        .county-borders {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 0.5px;
+        }
+        #tooltip {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            padding: 10px 14px;
+            background: rgba(22, 33, 62, 0.95);
+            border: 1px solid #c77dff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(199, 125, 255, 0.4);
+            pointer-events: none;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        #tooltip.hidden { display: none; }
+        #tooltip strong { color: #e0aaff; font-size: 15px; }
+        #tooltip .pop { color: #c77dff; font-weight: bold; }
+
+        /* 圖例 */
+        .legend-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
+        }
+        .legend-title { color: #c77dff; margin-bottom: 8px; font-size: 0.9rem; }
+        .legend-bar {
+            width: 20px;
+            height: 200px;
+        }
+        .legend-labels {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 200px;
+            margin-left: 6px;
+            font-size: 0.75rem;
+            color: #ccc;
+        }
+        /* 排行列表 */
+        .ranking-wrap {
+            max-width: 700px;
+            margin: 24px auto 0;
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px 24px;
+            box-shadow: 0 0 20px rgba(253,141,60,0.2);
+        }
+        .ranking-title {
+            color: #fecc5c;
+            text-align: center;
+            margin: 0 0 14px;
+            font-size: 1.1rem;
+        }
+        #rankingTable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        #rankingTable th {
+            background: #0f3460;
+            color: #fecc5c;
+            padding: 8px 12px;
+            text-align: left;
+            letter-spacing: 1px;
+        }
+        #rankingTable td {
+            padding: 7px 12px;
+            border-bottom: 1px solid #1e3a5f;
+            color: #eee;
+        }
+        #rankingTable tr:hover td {
+            background: #1a2f4e;
+        }
+        .rank-medal { font-size: 1.1rem; }
+        .bar-bg {
+            background: #0f3460;
+            border-radius: 4px;
+            height: 10px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 10px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #fecc5c, #e31a1c);
+            transition: width 0.4s ease;
+        }
+    </style>
+</head>
+<body>
+    <h2>🗺️ 台灣歷年人口分布地圖</h2>
+
+
+
+    <div class="map-wrapper">
+        <svg width="600" height="560" viewBox="0 0 600 560"></svg>
+        <div class="legend-wrap">
+            <div class="legend-title">人口數</div>
+            <svg class="legend-bar" id="legendSvg"></svg>
+            <div class="legend-labels">
+                <span>400 萬+</span>
+                <span>300 萬</span>
+                <span>200 萬</span>
+                <span>100 萬</span>
+                <span>10 萬</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <label for="yearSlider">年份：</label>
+        <input type="range" id="yearSlider" min="2014" max="2024" step="1" value="2024">
+        <span id="yearDisplay">2024</span>
+    </div>
+
+    <!-- 排行列表 -->
+    <div class="ranking-wrap">
+        <h3 class="ranking-title">🏆 <span id="rankingYear">2024</span> 年各縣市人口排行</h3>
+        <table id="rankingTable">
+            <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>縣市</th>
+                    <th>人口數</th>
+                    <th>比例</th>
+                </tr>
+            </thead>
+            <tbody id="rankingBody"></tbody>
+        </table>
+    </div>
+
+    <div id="tooltip" class="hidden">
+        <strong id="tooltipCounty">--</strong><br>
+        人口：<span class="pop" id="tooltipPop">--</span> 人<br>
+        <span id="tooltipYear" style="font-size:12px;color:#aaa;"></span>
+    </div>
+
+    <script>
+    var width = 600, height = 560;
+    var currentYear = 2024;
+    var allData = [];    // 全部年份資料
+    var features = [];
+    var color;
+
+    var container = d3.select('svg');
+    var zoom = d3.behavior.zoom()
+        .translate([0, 0])
+        .scaleExtent([1, 5])
+        .scale(1)
+        .on('zoom', zoomed);
+
+    function zoomed() {
+        container.attr('transform',
+            'translate(' + d3.event.translate + ') scale(' + d3.event.scale + ')');
+    }
+    d3.select('svg').call(zoom);
+
+    // 色彩比例尺：淺黃 → 橙 → 深紅（明亮好辨識）
+    color = d3.scale.linear()
+        .domain([50000, 700000, 2000000, 4100000])
+        .range(['#ffffb2', '#fecc5c', '#fd8d3c', '#e31a1c']);
+
+    // 畫圖例
+    var legendSvg = d3.select('#legendSvg');
+    var defs = legendSvg.append('defs');
+    var grad = defs.append('linearGradient')
+        .attr('id', 'legendGrad')
+        .attr('x1', '0%').attr('y1', '0%')
+        .attr('x2', '0%').attr('y2', '100%');
+    grad.append('stop').attr('offset', '0%').attr('stop-color', '#e31a1c');
+    grad.append('stop').attr('offset', '50%').attr('stop-color', '#fd8d3c');
+    grad.append('stop').attr('offset', '80%').attr('stop-color', '#fecc5c');
+    grad.append('stop').attr('offset', '100%').attr('stop-color', '#ffffb2');
+    legendSvg.append('rect')
+        .attr('width', 20).attr('height', 200)
+        .style('fill', 'url(#legendGrad)');
+
+    // 讀取資料
+    queue()
+        .defer(d3.json, '../doc/TWN_1081121.json')
+        .defer(d3.tsv, '../doc/person_by_country_multi.tsv')
+        .await(ready);
+
+    function ready(error, topodata, density) {
+        if (error) throw error;
+
+        allData = density;  // [{年份, 縣市, 人口}, ...]
+
+        features = topojson.feature(topodata, topodata.objects['COUNTY_MOI_1081121']).features;
+
+        var path = d3.geo.path().projection(
+            d3.geo.mercator().center([121.0, 23.6]).scale(5500)
+        );
+
+        // 畫縣市
+        container.selectAll('path')
+            .data(features)
+            .enter()
+            .append('path')
+            .attr('d', path)
+            .attr('stroke', '#fff')
+            .attr('stroke-width', 0.5)
+            .on('mouseover', function(d) {
+                var pop = d.properties._pop || 0;
+                d3.select('#tooltipCounty').text(d.properties.COUNTYNAME);
+                d3.select('#tooltipPop').text(pop.toLocaleString());
+                d3.select('#tooltipYear').text(currentYear + ' 年');
+                d3.select('#tooltip').classed('hidden', false);
+                d3.select(this).attr('stroke', '#ffdd57').attr('stroke-width', 2);
+            })
+            .on('mousemove', function() {
+                d3.select('#tooltip')
+                    .style('left', (d3.event.pageX + 12) + 'px')
+                    .style('top',  (d3.event.pageY - 20) + 'px');
+            })
+            .on('mouseout', function(d) {
+                d3.select('#tooltip').classed('hidden', true);
+                d3.select(this).attr('stroke', '#fff').attr('stroke-width', 0.5);
+            });
+
+        updateMap(currentYear);
+    }
+
+    function updateMap(year) {
+        // 建立該年份的縣市人口 map
+        var popMap = {};
+        allData.forEach(function(row) {
+            if (+row['年份'] === +year) {
+                popMap[row['縣市']] = +row['人口'];
+            }
+        });
+
+        // 將人口寫回 feature 屬性
+        features.forEach(function(f) {
+            f.properties._pop = popMap[f.properties.COUNTYNAME] || 0;
+        });
+
+        // 更新顏色
+        container.selectAll('path')
+            .data(features)
+            .attr('fill', function(d) {
+                var pop = d.properties._pop;
+                return pop ? color(pop) : '#555';
+            });
+
+        // 更新列表
+        updateRanking(popMap, year);
+    }
+
+    function updateRanking(popMap, year) {
+        // 排序：人口由大到小
+        var sorted = Object.keys(popMap).map(function(k) {
+            return { name: k, pop: popMap[k] };
+        }).sort(function(a, b) { return b.pop - a.pop; });
+
+        var maxPop = sorted.length ? sorted[0].pop : 1;
+        var totalPop = sorted.reduce(function(sum, d) { return sum + d.pop; }, 0);
+
+        document.getElementById('rankingYear').textContent = year;
+        var tbody = document.getElementById('rankingBody');
+        tbody.innerHTML = '';
+
+        var medals = ['🥇', '🥈', '🥉'];
+
+        sorted.forEach(function(item, i) {
+            var rank = i + 1;
+            var pct = (item.pop / totalPop * 100).toFixed(1);   // 佔全國比例
+            var barW = Math.round(item.pop / maxPop * 100);     // 橫條長度仍以最大縣市為基準
+
+            var rankCell = rank <= 3
+                ? '<span class="rank-medal">' + medals[i] + '</span>'
+                : rank;
+            var tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td>' + rankCell + '</td>' +
+                '<td>' + item.name + '</td>' +
+                '<td>' + item.pop.toLocaleString() + '</td>' +
+                '<td><div style="display:flex;align-items:center;gap:8px;"><div class="bar-bg" style="flex:1"><div class="bar-fill" style="width:' + barW + '%"></div></div><span style="color:#fecc5c;font-size:0.8rem;min-width:42px;text-align:right">' + pct + '%</span></div></td>';
+            tbody.appendChild(tr);
+        });
+    }
+
+    // 年份滑桿
+    var slider = document.getElementById('yearSlider');
+    var yearDisplay = document.getElementById('yearDisplay');
+
+    slider.addEventListener('input', function() {
+        currentYear = +this.value;
+        yearDisplay.textContent = currentYear;
+        if (features.length > 0) updateMap(currentYear);
+    });
+    </script>
+</body>
+</html>

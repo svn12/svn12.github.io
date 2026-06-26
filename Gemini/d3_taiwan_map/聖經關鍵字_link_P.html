@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <title>聖經關鍵字</title>
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+        <!-- <script src="https://code.jquery.com/jquery-1.9.1.js"></script> -->
+        <!-- <link rel="stylesheet" href="reset.css"> -->
+        <style type="text/css">
+            td {
+                            display: table-cell;
+                            vertical-align: inherit;
+                            }
+            table {
+                    border-collapse: separate;
+                    text-indent: initial;
+                    border-spacing: 2px;
+                    }
+            form{margin:0px; display:inline;font-size:16px; }
+            button{margin:0px; display:inline;font-size:16px; }
+            /* label {display:inline;} */
+            /* input {display:inline;} */
+            select {font-size:18px;}
+        
+        
+            .container {
+                max-width: 700px;
+            }
+            
+        </style>
+    <link rel="stylesheet" href="link_P.css">
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+//   $("button").click(function(){
+//     alert($("input:text").val());
+//   });
+});
+function query_bible_keyw(){
+         var qstr=encodeURI($("#location-input").val());
+        qstr1="AAAb"+ "  "+qstr
+        $("#demo1").html(qstr1);
+       
+    }
+    function query_bible_keyw3(){
+        var qstr=encodeURI($("#location-input").val());
+        url="https://bible.fhl.net/json/se.php?orig=0&limit=500&offset=0" + "&q=" + qstr + "&VERSION=tghg&strong=0&gb=0"
+        
+        $("#demo1").html('');
+        $.get(url,  function (data,status) {
+            var obj = JSON.parse(data);
+            
+            var txt='<br> <h1 align="center" class="search">'+ "台語漢羅 (" +obj.record_count.toString()+')</h1>';
+            
+            txt += '<table  class="table"> <tbody>';
+            
+            for (x in obj.record){
+                                
+                //    url2=url2.replace("bklcl", "tghg");
+                txt += "<tr>";
+                txt += '<td valign="top"> <font size="-1">'+obj.record[x].chineses+''+                           obj.record[x].chap.toString()+":"+obj.record[x].sec.toString() + "</font> </td>";
+                txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                txt += "</tr>";
+
+            };
+                    
+                    txt += "</tbody></table>"
+                    $("#demo1").html(txt);
+                     
+            
+        })
+        url=url.replace('tghg','unv');
+        $("#demo3").html('');
+        $.get(url,  function (data,status) {
+            var obj = JSON.parse(data);
+            
+            var txt='<br> <h1 align="center">'+ "和合本 (" +obj.record_count.toString()+')</h1>';
+            
+            txt += '<table  class="table"> <tbody>';
+            
+            for (x in obj.record){
+                                
+                //    url2=url2.replace("bklcl", "tghg");
+                txt += "<tr>";
+                txt += '<td valign="top"> <font size="-1">'+obj.record[x].chineses+''+                           obj.record[x].chap.toString()+":"+obj.record[x].sec.toString() + "</font> </td>";
+                txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                txt += "</tr>";
+
+            };
+                    
+                    txt += "</tbody></table>"
+                    $("#demo3").html(txt);
+                     
+            
+        })
+
+        url=url.replace('unv','tcv95')
+        $("#demo4").html('');
+        $.get(url,  function (data,status) {
+            var obj = JSON.parse(data);
+            
+            var txt='<br> <h1 align="center">'+ "現代中文譯本 (" +obj.record_count.toString()+')</h1>';
+            
+            txt += '<table  class="table"> <tbody>';
+            
+            for (x in obj.record){
+                                
+                //    url2=url2.replace("bklcl", "tghg");
+                txt += "<tr>";
+                txt += '<td valign="top"> <font size="-1">'+obj.record[x].chineses+''+                           obj.record[x].chap.toString()+":"+obj.record[x].sec.toString() + "</font> </td>";
+                txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                txt += "</tr>";
+
+            };
+                    
+                    txt += "</tbody></table>"
+                    $("#demo4").html(txt);
+                     
+            
+        })
+        
+        url=url.replace('tcv95','rcuv')
+        $("#demo5").html('');
+        $.get(url,  function (data,status) {
+            var obj = JSON.parse(data);
+            
+            var txt='<br> <h1 align="center">'+ "和修本 (" +obj.record_count.toString()+')</h1>';
+            
+            txt += '<table  class="table"> <tbody>';
+            
+            for (x in obj.record){
+                                
+                //    url2=url2.replace("bklcl", "tghg");
+                txt += "<tr>";
+                txt += '<td valign="top"> <font size="-1">'+obj.record[x].chineses+''+                           obj.record[x].chap.toString()+":"+obj.record[x].sec.toString() + "</font> </td>";
+                txt += "<td>" + obj.record[x]["bible_text"] + "</td>";
+                txt += "</tr>";
+
+            };
+                    
+                    txt += "</tbody></table>"
+                    $("#demo5").html(txt);
+                     
+            
+        })
+        
+    }  
+    function check(){
+        $("#demo1").html($(".search").text());
+        if($("#demo3 > h1").text().indexOf(')')>0) {
+           $("#demo3").html('aaa');
+       }
+    }
+</script>
+</head>
+<body>
+<div class="container">
+
+<input type="text" class="form-control" placeholder="關鍵字" id="location-input">
+
+<button onclick="query_bible_keyw3()">查詢</button>
+<button onclick="check()">查詢check</button>
+
+<div id="demo1"></div>
+<div id="demo3"></div>
+<div id="demo4"></div>
+<div id="demo5"></div>
+</div>
+</body>
+</html>

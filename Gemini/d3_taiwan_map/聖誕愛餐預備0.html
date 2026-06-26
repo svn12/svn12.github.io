@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聖誕愛餐預備</title>
+	
+    <link rel="stylesheet1" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	
+	<script src="../js/Fetch.js"></script>
+	<script>
+	const shtUrl='https://docs.google.com/spreadsheets/d/1P4Ltza6WPNpoqfCli5cifiD3o-OY4_Aw7jJv71GC3oA/edit?usp=sharing'
+	</script>
+	
+    <style> 
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+	.container {  display: flex;
+			
+			}
+	table {
+	  border-collapse: collapse;
+	  border-spacing: 0;
+	  width: 100%;
+	  border: 1px solid #ddd;
+	  overflow-x:scroll;
+	  overflow-y:scroll;
+	}
+	th{
+	 background: yellow;
+	 position: sticky;
+	 top: 0; /* Don't forget this, required for the stickiness */
+	 box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+	 }
+	tr:nth-child(even){
+		/* background-color: #f2f2f2 
+		overflow-y: scroll;
+		display: block;
+		position: fixed;
+		top: 30;
+		*/
+		 background-color: lightblue;
+		}
+	thead	{
+        background-color: orange;
+	
+			  
+      }
+			
+            </style>
+</head>
+<body onload="GSname()">
+    <!-- 
+	
+    <link rel="stylesheet1" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	
+	<h2 class="text-center">&nbsp&nbsp &nbsp姓名電話資料查詢</h2> 
+    <h2 >&nbsp&nbsp &nbsp查報到編號</h2> 
+ <a href="https://youtu.be/oLQVo89k7L0">聖誕慶祝會直播</a>
+	
+	<div class="container ">
+	<h2>查報到序號 &nbsp&nbsp </h2> 
+	<img id="barcode"src = "https://api.qrserver.com/v1/create-qr-code/?data=https://bit.ly/3sufNMo &amp;size=60x60"></a>
+	 
+</div>
+	--> 
+	 <div class="container1">  
+	  <a href="https://bit.ly/3HpgjTz"><img width="80" height="80" src="https://chart.googleapis.com/chart?cht=qr&amp;chl=https://bit.ly/3HpgjTz&amp;chld=L|0&amp;chs=150" border="0"></a>
+    <select class="form-select" id="select_sh" onchange="Read_SheetData()" aria-label="label for the select">  </select>
+	<!-- <h3>&nbsp &nbsp</h3> -->
+	<input type="text" placeholder="姓名關鍵字" id="location-input" > 
+    <!-- <a href="https://youtu.be/oLQVo89k7L0">聖誕慶祝會直播</a> -->
+     <!-- onclick="Query_Tel2()"> -->
+    
+	
+    <div class="table-responsive table-striped"">
+        <p id="show"></p>
+         
+		<!-- <table id="myTable1" style="width:90%" class="table"></table> -->
+		<table id="myTable1"  class="table"></table>
+	</div>
+	
+    <script>
+	 
+	var input = document.getElementById('location-input');
+	/* input.addEventListener("keyup", function(event) {
+	if (event.keyCode === 13) {
+	   event.preventDefault();
+	 //  document.getElementById("myBtn").click();
+	//    Dummy();
+    //    Read_SheetData();
+	}
+	}); */
+	
+	
+	async function  Read_SheetData(){
+		//document.querySelector("#myTable1").innerHTML = '';
+		await RsheetData(shtUrl,document.getElementById("select_sh").value)
+		.then(data=> {
+				TableShow(data,"#myTable1");
+				data.shift();
+				return data.map((e) => `${e[0]} ${e[1]}-(${e[2]})[${e[3]}]@${e[4]}-${e[6]}`	)
+				})
+		.then(arr=>{
+				//document.querySelector("#myTable1").setAttribute("style","display:none;");
+				// autocomplete_CH(document.getElementById("location-input"), arr,Query_Tel2,document.querySelector("#myTable1"));
+				autocomplete_CH(document.getElementById("location-input"), arr,Dummy,document.querySelector("#myTable1"));
+			//	document.querySelector("#myTable1").setAttribute("style","display:block;");
+			});
+		
+		
+
+		
+	}
+	
+function Dummy(){
+    document.getElementById('location-input').value='';
+}
+function  GSname(){
+  
+  var select_sh=$('#select_sh').val();
+  var a = {
+	sheetUrl:shtUrl
+                    };
+	$("#select_sh").empty();	
+	//document.getElementById("query").style.display = "none";
+	document.getElementById("show").innerHTML = '';
+   $.get('https://script.google.com/macros/s/AKfycby2wc_EZaX2pcqBgCApZz5C2ZfYX09GNGJ6IFygOaxsTtYeBgnKmkpJqeNhAo8-A-pVnQ/exec', a, function (data) {
+                
+         // if(document.getElementById("select_url").value==a.sheetUrl){  
+		  if(a.sheetUrl==a.sheetUrl){  
+              /*  $('#select_sh').append($('<option>', { 
+                      value: '',
+                      text : `---請選擇---- ${$("#select_url option:selected").text()} `
+				  }));
+				  */
+                       
+                data = JSON.parse(data);
+                $.each(data, function (i, item) {
+                    $('#select_sh').append($('<option>', { 
+                      value: item.Sname,
+                      text : item.Sname 
+					}));
+				
+				});
+				Read_SheetData();;
+			}   
+		});
+			
+}
+
+		 
+         function        Query_Tel2(){
+               
+                var findString = document.getElementById('location-input').value;
+                // console.log(findString);
+                if(findString.length>0){
+                    
+                if(findString=='!' || findString=='！'){ findString = '';}
+                document.getElementById("show").innerHTML = '查詢 "*' + findString+'*" 中 ....';
+                var $show = $('#show');
+               
+                // console.log(shURL);
+                var a = {
+                    // sheetUrl: 'https://docs.google.com/spreadsheets/d/1LSHeADB2hF_-lNlimwA2WF2Oi7M7GWEAI3v68hTWcBo/edit?usp=sharing',
+                    // sheetUrl: 'https://docs.google.com/spreadsheets/d/1gT1hvm-q9qsfhHmh14wNlCLEvIEP3x7JjDpK6qp4VRA/edit?usp=sharing',
+                    sheetUrl:shtUrl,
+                    sheetTag: document.getElementById("select_sh").value,
+                    findSting: findString
+                    };
+				//const Search_API='https://script.google.com/macros/s/AKfycbyqALYgYmkOq61OVNBD5M0dcSWP0Ims1LD5CzwrGnF-tIxdTRdqFfDmzXHBCX9YbL5MMg/exec';
+				const Search_API='https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec';
+                $.get(Search_API, a, function (data) {    
+                //$.get('https://script.google.com/macros/s/AKfycbx-smoEvM6pV4tRuQJio9iPC3SQBtSZO4aSUvYtpjwKuZQD6_Ey/exec', a, function (data) {
+                    if(data.length==2){
+                        document.getElementById("show").innerHTML = '查無資料 請重新輸入再查詢';
+                    }
+                    else  if (data.length==0){ 
+                        document.getElementById("show").innerHTML = 'sheet Name 須為 "List"';}
+                    else {
+
+                    // console.log(data.length);
+                    // console.log(data);
+                    data = JSON.parse(data);
+                    var heads=[];
+                    for(head in data[0]){
+                        heads.push(head);
+                    }
+                    // console.log(heads.length);
+
+                    var txt='';
+                    txt += '<table  class="table  table-hover "> <thead><tr>';
+                    // heads.forEach(el=>console.log(el));
+                    heads.forEach(function(e){
+                        txt += "<th>" + e + "</th>";
+
+                    })
+                    
+                    txt+="</tr></thead><tbody>";
+                    // console.log(txt);
+
+                    for (x in data) {
+                        txt += "<tr>";
+                        // console.log(x);
+                        // console.log(data[x]);
+                        heads.forEach(function(e){
+                        txt += "<td>" + data[x][e] + "</td>";
+
+                        })
+                        txt += "</tr>";
+                        // txt += "<tr><td>" + data[x].Name + "</td><td>"+ data[x].手機 +"</td></tr>";
+                    }
+                    txt += "</tbody></table>"
+                    document.getElementById("show").innerHTML = txt;
+
+
+                    var arr = [];
+                    for (var i = 0; i < (a.endRow - a.row + 1); i++) {
+                        arr[i] = d.splice(0, (a.endCol - a.col + 1));
+                        $show.append(arr[i] + '<br/>');
+                    }
+                    }
+
+                });
+            };
+        }
+    </script>
+</body>
+</html>

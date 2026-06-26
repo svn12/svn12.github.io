@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>常用詞彙複製工具</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 20px;
+      }
+      select,
+      button,
+      input {
+        font-size: 16px;
+        margin: 10px;
+        padding: 5px;
+      }
+      table {
+        width: 50%;
+        margin: 20px auto;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      td {
+        text-align: left;
+        background-color: #e7aaaa;
+      }
+      input.editable {
+        width: 90%;
+        font-size: 16px;
+        border: none;
+        text-align: center;
+      }
+      td {
+        cursor: pointer; /* 讓詞彙看起來可以點擊 */
+      }
+    </style>
+  </head>
+  <body>
+    <a href="https://github.com/dean9703111/chatGPT3/blob/master/Ch04/README.md"><h2>管理常用詞彙</h2></a>
+    <input
+      type="text"
+      id="newWord"
+      placeholder="輸入新詞彙"
+      style="width: 40%"
+    />
+    <button onclick="addNewWord()">新增</button>
+    <button onclick="pasteFromClipboard()">從剪貼簿新增</button>
+    <button onclick="resetToDefault()">重置預設值</button>
+    <p id="message" style="color: green"></p>
+
+    <table style="width: 70%">
+      <thead>
+        <tr>
+          <th style="width: 100%">詞彙</th>
+        </tr>
+      </thead>
+      <tbody id="wordTable"></tbody>
+    </table>
+
+    <script>
+            document.addEventListener("DOMContentLoaded", loadWords);
+
+            // 點擊詞彙時複製內容
+            function copyWord(event) {
+              var word = event.target.textContent.trim();
+              navigator.clipboard
+                .writeText(word)
+                .then(function () {
+                  document.getElementById("message").innerText = "已複製: " + word;
+                })
+                .catch(function () {
+                  document.getElementById("message").innerText = "複製失敗！";
+                });
+            }
+
+            function addNewWord() {
+              var newWord = document.getElementById("newWord").value.trim();
+              if (newWord !== "") {
+                // 檢查詞彙是否已經存在於表格中
+                var rows = document.getElementById("wordTable").rows;
+                var exists = false;
+                for (var i = 0; i < rows.length; i++) {
+                  var word = rows[i].cells[0].textContent.trim();
+                  if (word === newWord) {
+                    exists = true;
+                    break;
+                  }
+                }
+
+                if (!exists) {
+                  addWordToTable(newWord);
+                  document.getElementById("newWord").value = "";
+                  document.getElementById("message").innerText = "已新增: " + newWord;
+                  saveWords();
+                } else {
+                  document.getElementById(
+                    "message"
+                  ).innerText = `新增詞彙已經存在: 『${newWord}』`;
+                }
+              } else {
+                document.getElementById("message").innerText = "請輸入有效的詞彙！";
+              }
+            }
+
+            function pasteFromClipboard() {
+              navigator.clipboard
+                .readText()
+                .then(function (clipboardText) {
+                  let addedCount = 0;
+                  let existingWords = new Set();
+
+                  // 先取得目前表格中的詞彙
+                  var rows = document.getElementById("wordTable").rows;
+                  for (var i = 0; i < rows.length; i++) {
+                    var word = rows[i].cells[0].textContent.trim();
+                    existingWords.add(word);
+                  }
+
+                  clipboardText.split(/\r?\n/).forEach((line) => {
+                    let trimmedLine = line.trim();
+                    if (trimmedLine !== "" && !existingWords.has(trimmedLine)) {
+                      addWordToTable(trimmedLine);
+                      existingWords.add(trimmedLine); // 更新已存在的詞彙集合
+                      addedCount++;
+                    }
+                  });
+
+                  document.getElementById("message").innerText =
+                    addedCount > 0
+                      ? `已從剪貼簿新增 ${addedCount} 個詞彙`
+                      : `剪貼簿詞彙已存在：『${clipboardText}』`;
+                  if (addedCount > 0) {
+                    saveWords();
+                  }
+                })
+                .catch(function () {
+                  document.getElementById("message").innerText = "無法從剪貼簿讀取！";
+                });
+            }
+
+            function addWordToTable(word) {
+              var table = document.getElementById("wordTable");
+              var row = table.insertRow();
+              var cell = row.insertCell(0);
+              cell.textContent = word; // 直接顯示詞彙
+              cell.addEventListener("click", copyWord); // 點擊詞彙時觸發複製功能
+            }
+
+            function saveWords() {
+              var words = new Set(); // 使用Set來自動去除重複元素
+              var rows = document.getElementById("wordTable").rows;
+              for (var i = 0; i < rows.length; i++) {
+                var word = rows[i].cells[0].textContent.trim();
+                if (word !== "") {
+                  words.add(word); // 將詞彙加入Set
+                }
+              }
+              localStorage.setItem("wordList", JSON.stringify([...words])); // 將Set轉回陣列並儲存
+            }
+
+            function loadWords() {
+              var savedWords = localStorage.getItem("wordList");
+              if (savedWords) {
+                var words = JSON.parse(savedWords);
+                words.forEach((word) => addWordToTable(word));
+              } else {
+                let defaultWords = [
+              
+                ];
+
+                defaultWords.forEach((word) => addWordToTable(word));
+                saveWords();
+              }
+            }
+
+            function resetToDefault() {
+              if (confirm("確定要重置為預設值嗎？這將清除所有現有的詞彙。")) {
+                localStorage.removeItem("wordList");
+                document.getElementById("wordTable").innerHTML = "";
+                let defaultWords = [
+                "請用繁體中文回答",
+                `
+你是一位專業的內容分析與知識結構化專家。
+請全部使用「繁體中文」：
+請進行詳細摘要，並將摘要轉換成 XMind 可直接匯入的 Markdown 格式心智圖，加上適當的圖示/Emoji 標記。
+請嚴格遵循以下輸出結構與風格：
+
+1. **影片詳細摘要**（使用正式、專業的中文撰寫）
+   - 開頭說明基本資訊：標題、中文翻譯標題、影片連結、頻道、上傳日期、觀看次數、長度（若可推估）、主要目的或主題
+   - 按時間軸或邏輯順序詳細拆解內容重點（包含時間戳若明顯可辨）
+   - 列出核心原則、技能/工具清單、贊助、注意事項、結論等關鍵元素
+   - 最後總結整體訊息、適用對象與實務價值
+   - 保留專有名詞與技術名詞原文
+   - 不加入臆測或延伸觀點
+
+2. **XMind Markdown 格式心智圖**
+   - 中央主題：影片標題 +中文翻譯標題 + 頻道（加上 📽️ 或相關 emoji）
+   - 第一層分支：影片基本資訊 ℹ️、影片連結(顯示與連結)、上傳日期、觀看次數、長度（若可推估)、核心原則 🚀、主要內容 🛠️、優缺點或技能 ⚖️、結語與建議 💡 等（依影片內容適當調整）
+   - 第二層及以下分支：保持 2–4 層深度，內容精確、層級清晰
+   - 每個分支適當添加 emoji 作為視覺標記（例如 📊、⚡、🛠️、⚠️、💡、✅、❌ 等）
+   - 格式必須是純 Markdown，可直接複製到 .md 檔案後匯入 XMind
+   - 不要過度冗長，總心智圖層級與先前輸出的深度一致
+
+使用正式、專業的語調，結構清晰、條理分明，如同回覆專業同事。
+`,
+                "將 https://www.socialchamp.io/blog/ai-prompt-examples/ 內的所有 prompts 中英文列表 類型 編號序 並轉存成可存到google sheet 的格式",
+                "請以可將表格貼到Google Sheet 的方式回答",
+                "請以html 的方式呈現",
+                "請以markdown 的方式呈現",
+                "請將影片摘要,並將摘要轉換成 XMind Markdown 格式心智圖，你可以直接匯入 XMind ",
+                "請用HTML創建一個可互動的簡報的方式呈現",
+                "請翻譯下列英文為繁體中文",
+                "請翻譯下列英文為#zh-tw",
+                "根據這張圖片的主題和場景，撰寫一段要透過 AI 產生類似圖片的中英文提示詞",
+                "請協助分析這張圖片所描述的內容，並用中文進行重點整理描述",
+                "請將這個網頁進行 100 字的重點整理：網址",
+                `請根據以下規則幫我整理下方文章製作成懶人包
+                1. 每個懶人包只講 1 個主題，總字數 150 以下，可適當搭配 emoji 增加閱讀舒適度，若資訊無法在 1 個主題講完，請拆分成多個懶人包
+                2. 每個主題會先顯示 3 個重點，以列點呈現
+                3. 每個主題最後透過 Q & A 的形式呈現主要資訊，僅挑選 1 個問題並用多個答案列點補充，讓一般民眾輕鬆吸收資訊
+                    "https://www.fiftyplus.com.tw/articles/33196 A"`,
+                "請提供一篇教會詩班在主日崇拜前練習結束時的禱告",
+                "請用台灣基督教長老會常用的方式表現 [請提供一篇教會詩班星期五晚上練習結束的閉會禱告]",
+                "請協助撰寫一篇教會詩班在主日崇拜前練習結束時的禱告, 請用台灣基督教長老會常用的方式表現。禱告內容包括感謝神賜予詩班成員音樂的恩賜，祈求神的恩典與力量充滿在主日崇拜中，並鼓勵詩班以心靈與誠實來讚美神。語調充滿感恩和平安，不包含任何太過個人的祈求或未來承諾。 ",
+                "我想寫一本<AI的未來>的書，請幫建議內容大綱",
+                "請用簡報大綱方式呈現 ",
+                '以"Side Project 對工程師的重要性"為標題，寫出激勵人心的文章大綱。',
+                "濃縮摘要: 請將上方的內文濃縮為“200”字的預告摘要，要能引起閱讀興趣。",
+                "你是個優秀的編輯，請提供 5 個不同的面向，讓這段話變得更通順、易於閱讀且具備吸引力:「今晚受人力資源管理協會邀約，透過直播向大家分享在面對陌生主題、繁雜資料時，ChatGPT 能給我們帶來哪些幫助，以及如何使用 Gamma 生成圖文並茂的漂亮簡報」",
+                `你是一名文學素養深厚的詩人，我想請你幫我的朋友寫一首氣勢雄渾的詩。
+                  他在 31 歲出版過 6 本書，經營部落格四年發表了 300 多篇文章，
+                  累積瀏覽數破 300 萬人次，在公司擔任過工程師、專案經理、技術主管，還斜槓專欄作家、講師、魔術師。
+                  字數 200 字內。`,
+                "請規劃宜蘭自由行用大眾運輸工具的3天兩夜行程",
+                "請給我天龍八部這本書的重點摘要以及適合閱讀的對象",
+                "請幫我準備3頁  手機line APP  使用的教學資料",
+                "請參考圖片做一首七言絕句詩",
+                "請幫我撰寫 推銷 『隔週捷運出發健行』的行銷文案",
+                "請用300個字 描述『漂亮女孩遊火星的故事』",
+                "請用300個字 描述『漂亮女孩遊火星的故事』描述內容請適度加上emoji 符號",
+                "請摘要 上述『漂亮女孩遊火星的故事』",
+                "請用上述『漂亮女孩遊火星的故事』 撰寫心得",
+                "教會詩班缺人 請以適合emoji方式撰寫推廣文招人",
+                "請建立教會資產管理準則",
+                "請說明下列網址內容",
+                "請用中文說明下列網址內容",
+                "請說明下列網址內容,請以可將表格貼到Google Sheet 的方式回答",
+                "請說明下列網址內容,請以簡報大綱的方式回答",
+                "請搜索新竹交大校園圖片",
+                "use that image to create a hand draw portrait",
+                "use this image to create a color caricature similar to what you would get at a theme park in the 1990s",
+                "請撰寫一篇約 500 字，介紹「XXXX」的文章，需要包含前言、內文和段落。",
+                "Please give me a summary of the key points and the apropriate audience of the book [] .And I want you to act as traditional Chinese translator",
+                "你現在是『英文學習機』 當我輸入中文時 你需翻譯成英文  包含ｋｋ音標 並以該英文造句 同時輸出相關的英文單字 與例句 右邊並需都加注中文。",
+                "Please explain [decorator pattern use example with node.js] in detail.And I want you to act as traditional Chinese translator",
+                "如果想請你幫忙[寫一份電競筆電行銷文案]，請告訴我我提供怎麼樣的Prompt可以得到較好回答請說明為什麼並在最後舉出實際的Prompt範例",
+                "如果想請你幫忙[將上傳的照片去背加上海邊渡假的圖]，請告訴我我提供怎麼樣的Prompt可以得到較好回答請說明為什麼並在最後舉出實際的Prompt範例三則 請一律增加繁體中文的Prompt example",
+                "一個可愛的機器人感到驚訝，旁邊有尖叫或大叫的空白對話泡泡，並有一些驚訝的放射狀線條，背景在圖書館裡，日本漫畫風格",
+                '請你參考這個網頁內容，產生並提供我可以在社群分享的「分享縮圖」，風格使用超現實主義達利的插畫風格，並且包含這些關鍵字：AI、藝術、創造力、未來、科技。這個縮圖應該要引人注目，並且能夠吸引觀眾的注意力。請確保它具有強烈的視覺衝擊力和獨特的設計元素。',
+                `你現在是一個擅長寫「產生圖片提示詞」的 AI 繪圖專家，我會傳送給你要生成影像的提示詞或參考圖，你會按照下列規則進行回應：
+1、我不會跟你聊天，傳送給你的所有文字都是我要產生圖片的提示詞
+2、以我的提示詞為主軸，擴展成更具有想像力、畫面更好的的提示詞
+3、你修改後的提示詞適合用於 Meijourney 或 Image Creator 使用
+4、提供我兩種不同內容的繁體中文和英文提示詞
+5、如果我提供你圖片，請提供我可以產生類似影像的繁體中文和英文提示詞 ( 50 字以內 )
+下方是範例，例如我傳送了「A hand holding a counter and counting numbers with many numbers on the background, illustration, painting, poster」
+你會美化成：「A vibrant and intricate illustration of a hand skillfully holding a traditional abacus counter, with beads sliding gracefully back and forth. The background is filled with a myriad of numbers in various fonts and colors, creating a dynamic visual experience. The overall ambiance of the piece is both educational and artistic, with a sense of movement and life. illustration, painting, poster」`
+              ];
+
+                defaultWords.forEach((word) => addWordToTable(word));
+                saveWords();
+                document.getElementById("message").innerText = "已重置為預設值";
+              }
+            }
+    </script>
+  </body>
+</html>
