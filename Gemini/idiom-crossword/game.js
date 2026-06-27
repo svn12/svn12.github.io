@@ -506,14 +506,14 @@ function handleWinLevel() {
     
     // 更新解鎖關卡進度
     if (currentLevel === unlockedLevel) {
-        unlockedLevel = Math.min(100, unlockedLevel + 1);
+        unlockedLevel = Math.min(1000, unlockedLevel + 1);
     }
 
     saveProgress();
 
     // 彈出通關彈窗
     setTimeout(() => {
-        if (currentLevel === 100) {
+        if (currentLevel === 1000) {
             showModal('modal-complete-all');
         } else {
             showModal('modal-win');
@@ -706,7 +706,7 @@ function openLevelsMenu() {
     const grid = document.getElementById('levels-menu-grid');
     grid.innerHTML = '';
 
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 1000; i++) {
         const item = document.createElement('div');
         item.classList.add('level-item');
         item.innerText = i;
@@ -778,7 +778,7 @@ function setupEventListeners() {
     // 通關後點擊下一關
     document.getElementById('btn-next-level').addEventListener('click', () => {
         closeModal('modal-win');
-        if (currentLevel < 100) {
+        if (currentLevel < 1000) {
             loadLevel(currentLevel + 1);
         }
     });
