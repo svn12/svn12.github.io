@@ -99,7 +99,7 @@ window.addEventListener('DOMContentLoaded', () => {
 // 關卡加載與渲染
 // ==========================================================================
 function loadLevel(levelNum) {
-    if (levelNum < 1 || levelNum > 100) return;
+    if (levelNum < 1 || levelNum > 1000) return;
     currentLevel = levelNum;
     
     // 獲取當前關卡數據（由 levels.js 提供）
