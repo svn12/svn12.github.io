@@ -549,49 +549,100 @@ function triggerHint() {
     applyHint(targetBlank);
 }
 
-// 免費廣告提示
+// 免費廣告提示（顯示聖經金句隨機照片）
 function triggerAdHint() {
     initAudio();
     SoundEffects.click();
-    
+
     const targetBlank = findHintTarget();
     if (!targetBlank) return;
 
-    // 模擬廣告播放
+    // 建立 overlay
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay active';
-    overlay.style.zIndex = '999';
+    overlay.style.cssText = 'z-index:999; cursor:default;';
+
+    const GALLERY_DATA_URL = 'https://www.jktai123.com/Gemini/bible_verses_gallery/data.js';
+    const GALLERY_PAGE_URL = 'https://www.jktai123.com/Gemini/bible_verses_gallery/index.html';
+
+    // 顯示過渡中的載入畫面
     overlay.innerHTML = `
-        <div class="modal-content paper-style text-center animate-pop">
-            <h3 class="modal-title font-ancient">正在觀看宣紙畫報...</h3>
-            <p style="margin: 15px 0;">墨香飄逸，神怡心曠。讀懂成語，字字珠璣。</p>
-            <div class="loading-bar-container" style="background:#e0d8c3; height:8px; border-radius:4px; overflow:hidden; margin:10px 0;">
-                <div class="loading-bar" style="background:var(--accent-red); width:0%; height:100%; transition: width 2.5s linear;"></div>
+        <div class="modal-content paper-style text-center animate-pop" style="max-width:340px; padding:20px;">
+            <h3 class="modal-title font-ancient" style="margin-bottom:10px;">🙏 今日靈感</h3>
+            <div id="ad-photo-area" style="min-height:160px; display:flex; align-items:center; justify-content:center;">
+                <p style="color:gray; font-size:13px;">載入中...</p>
             </div>
-            <p id="ad-timer" style="font-size:12px; color:gray;">請稍候 3 秒...</p>
+            <p id="ad-topic-label" style="font-size:12px; color:#888; margin:8px 0 4px;"></p>
+            <a id="ad-gallery-link" href="${GALLERY_PAGE_URL}" target="_blank"
+               style="font-size:11px; color:var(--primary-color); text-decoration:underline; display:block; margin-bottom:12px;">
+               查看更多聖經金句 →
+            </a>
+            <div id="ad-countdown" style="font-size:12px; color:gray; margin-bottom:12px;">請稍候 <span id="ad-sec">5</span> 秒...</div>
+            <button id="ad-close-btn" class="btn-primary" style="display:none; padding:8px 24px; border:none; background:var(--primary-color); color:#fff; border-radius:20px; cursor:pointer; font-size:14px;">
+                ✅ 已閱讀，獲得提示
+            </button>
         </div>
     `;
     document.body.appendChild(overlay);
 
-    // 啟動進度條
-    setTimeout(() => {
-        const bar = overlay.querySelector('.loading-bar');
-        if (bar) bar.style.width = '100%';
-    }, 50);
+    // 動態載入 BIBLE_DATA（若尚未載入）
+    function loadBibleData(cb) {
+        if (typeof BIBLE_DATA !== 'undefined') { cb(BIBLE_DATA); return; }
+        const s = document.createElement('script');
+        s.src = GALLERY_DATA_URL;
+        s.onload = () => cb(BIBLE_DATA);
+        s.onerror = () => cb(null);
+        document.head.appendChild(s);
+    }
 
-    let timeLeft = 3;
+    loadBibleData((data) => {
+        const photoArea = document.getElementById('ad-photo-area');
+        const topicLabel = document.getElementById('ad-topic-label');
+
+        if (!data || !data.data || data.data.length === 0) {
+            if (photoArea) photoArea.innerHTML = '<p style="color:gray;">無法載入圖片，請稍後再試。</p>';
+        } else {
+            // 隨機選一個主題
+            const topic = data.data[Math.floor(Math.random() * data.data.length)];
+            // 從該主題隨機選一張圖
+            const imgUrl = topic.images[Math.floor(Math.random() * topic.images.length)];
+
+            if (photoArea) {
+                photoArea.innerHTML = `
+                    <img src="${imgUrl}" alt="${topic.topic}"
+                         style="max-width:100%; max-height:200px; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.18); object-fit:cover;"
+                         onerror="this.style.display='none'">
+                `;
+            }
+            if (topicLabel) topicLabel.textContent = `主題：${topic.topic}`;
+        }
+    });
+
+    // 倒數計時 5 秒後顯示關閉按鈕
+    let timeLeft = 5;
+    const secEl = () => document.getElementById('ad-sec');
     const timer = setInterval(() => {
         timeLeft--;
-        const timerText = overlay.querySelector('#ad-timer');
-        if (timerText) timerText.innerText = `請稍候 ${timeLeft} 秒...`;
+        if (secEl()) secEl().textContent = timeLeft;
         if (timeLeft <= 0) {
             clearInterval(timer);
-            document.body.removeChild(overlay);
-            // 贈送提示
-            applyHint(targetBlank);
+            const cdEl = document.getElementById('ad-countdown');
+            const btnEl = document.getElementById('ad-close-btn');
+            if (cdEl) cdEl.style.display = 'none';
+            if (btnEl) btnEl.style.display = 'inline-block';
         }
     }, 1000);
+
+    // 關閉按鈕：給予提示並移除 overlay
+    overlay.addEventListener('click', (e) => {
+        if (e.target.id === 'ad-close-btn') {
+            clearInterval(timer);
+            document.body.removeChild(overlay);
+            applyHint(targetBlank);
+        }
+    });
 }
+
 
 // 尋找提示要填哪一個字（尚未填寫或填錯的格子）
 function findHintTarget() {
