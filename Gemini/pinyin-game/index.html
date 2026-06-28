@@ -109,6 +109,7 @@
         <button class="tab-btn" data-tab="finals">韻母 (Finals)</button>
         <button class="tab-btn" data-tab="tones">四聲調 (Tones)</button>
         <button class="tab-btn" data-tab="rules">拼讀規則 (Rules)</button>
+        <button class="tab-btn" data-tab="idioms">成語例子 (Idioms)</button>
       </div>
 
       <!-- 課堂內容 -->
@@ -179,6 +180,17 @@
               <button id="btn-rule-prev" class="btn btn-secondary">◀ 上一則</button>
               <button id="btn-rule-next" class="btn btn-secondary">下一則 ▶</button>
             </div>
+          </div>
+        </div>
+
+        <!-- 成語例子面板 -->
+        <div id="tab-idioms" class="tab-panel">
+          <p class="tab-intro">精選 100 組成語拼讀例子。點擊卡片聆聽發音，查看詳細釋義與拼音拆解：</p>
+          <div class="idioms-search-container">
+            <input type="text" id="idioms-search-input" placeholder="🔍 輸入關鍵字或拼音搜尋成語...">
+          </div>
+          <div class="idioms-list-container" id="idioms-tutorial-list">
+            <!-- 由 JS 動態生成 100 組成語卡片 -->
           </div>
         </div>
       </div>

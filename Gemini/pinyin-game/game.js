@@ -4619,6 +4619,7 @@ const Game = {
     this.renderTutorialInitials();
     this.renderTutorialFinals();
     this.renderTutorialRules();
+    this.renderTutorialIdioms();
   },
 
   // 註冊 DOM 事件
@@ -4888,6 +4889,86 @@ const Game = {
     document.getElementById("rule-title").innerText = rule.title;
     document.getElementById("rule-detail").innerHTML = rule.detail.replace(/`([^`]+)`/g, '<span class="highlight" style="font-size:1.05rem">$1</span>');
     document.getElementById("rule-example").innerText = rule.example;
+  },
+
+  // 渲染成語例子卡片清單
+  renderTutorialIdioms() {
+    const container = document.getElementById("idioms-tutorial-list");
+    if (!container) return;
+    container.innerHTML = "";
+    
+    // 從 VOCABULARY 中篩選出成語 (字數為 4 的項目)
+    const idiomsList = VOCABULARY.filter(item => item.word.length === 4);
+    
+    idiomsList.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "idiom-tutorial-card";
+      card.setAttribute("data-word", item.word);
+      card.setAttribute("data-pinyin", item.pinyin.toLowerCase());
+      
+      card.innerHTML = `
+        <div class="idiom-tut-header">
+          <span class="idiom-tut-emoji">${item.emoji}</span>
+          <span class="idiom-tut-word">${item.word}</span>
+          <span class="idiom-tut-pinyin">${item.pinyin}</span>
+        </div>
+        <div class="idiom-tut-details hidden">
+          <div class="idiom-tut-zhuyin">注音: <strong>${item.zhuyin.replace(/%/g, "")}</strong></div>
+          <div class="idiom-tut-explanation">💡 意思: ${item.english}</div>
+          <div class="idiom-tut-breakdown">
+            ${item.chars.map(c => `
+              <span class="bd-item">
+                <strong class="char">${c.char}</strong>
+                <span class="pinyin">${c.pinyin}</span>
+                <span class="zhuyin">${c.zhuyin}</span>
+              </span>
+            `).join("")}
+          </div>
+        </div>
+      `;
+      
+      // 點擊卡片：播放發音並切換展開詳細內容
+      card.addEventListener("click", () => {
+        this.sounds.playPop();
+        this.tts.speak(item.word);
+        
+        const details = card.querySelector(".idiom-tut-details");
+        const isHidden = details.classList.contains("hidden");
+        
+        // 先將其他成語卡片折疊以保持整潔
+        document.querySelectorAll(".idiom-tutorial-card .idiom-tut-details").forEach(d => {
+          d.classList.add("hidden");
+        });
+        document.querySelectorAll(".idiom-tutorial-card").forEach(c => {
+          c.classList.remove("expanded");
+        });
+        
+        if (isHidden) {
+          details.classList.remove("hidden");
+          card.classList.add("expanded");
+        }
+      });
+      
+      container.appendChild(card);
+    });
+    
+    // 搜尋輸入框事件綁定
+    const searchInput = document.getElementById("idioms-search-input");
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        const cards = container.querySelectorAll(".idiom-tutorial-card");
+        cards.forEach(c => {
+          const word = c.getAttribute("data-word");
+          const pinyin = c.getAttribute("data-pinyin");
+          if (word.includes(q) || pinyin.includes(q)) {
+            c.style.display = "";
+          } else {
+            c.style.display = "none";
+          }
+        });
+      });
+    }
   },
 
   // ==========================================================================

@@ -1577,3 +1577,140 @@ header#global-header {
   pointer-events: none;
   z-index: 200;
 }
+
+/* 13. 互動成語課堂專用樣式 */
+.idioms-search-container {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+#idioms-search-input {
+  font-family: var(--font-family);
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--panel-border);
+  background: hsla(230, 20%, 8%, 0.5);
+  color: white;
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+#idioms-search-input:focus {
+  border-color: var(--color-cyan);
+  box-shadow: 0 0 10px var(--color-secondary-glow);
+}
+
+.idioms-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.idiom-tutorial-card {
+  background: hsla(230, 20%, 25%, 0.3);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.idiom-tutorial-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-cyan);
+  background: hsla(180, 85%, 55%, 0.05);
+}
+
+.idiom-tutorial-card.expanded {
+  border-color: var(--color-primary);
+  background: hsla(265, 80%, 65%, 0.05);
+}
+
+.idiom-tut-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.idiom-tut-emoji {
+  font-size: 1.5rem;
+}
+
+.idiom-tut-word {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.idiom-tut-pinyin {
+  font-size: 0.95rem;
+  color: var(--color-cyan);
+  font-weight: 700;
+}
+
+.idiom-tut-details {
+  border-top: 1px solid var(--panel-border);
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+.idiom-tut-zhuyin {
+  font-size: 0.85rem;
+  color: var(--color-yellow);
+}
+
+.idiom-tut-explanation {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.idiom-tut-breakdown {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.bd-item {
+  flex: 1;
+  min-width: 60px;
+  background: hsla(0, 0%, 0%, 0.2);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.bd-item .char {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: white;
+}
+
+.bd-item .pinyin {
+  font-size: 0.75rem;
+  color: var(--color-cyan);
+  font-weight: 700;
+}
+
+.bd-item .zhuyin {
+  font-size: 0.7rem;
+  color: var(--color-yellow);
+}
