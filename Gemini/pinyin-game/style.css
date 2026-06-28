@@ -1288,8 +1288,10 @@ header#global-header {
   backdrop-filter: blur(8px);
   z-index: 100;
   justify-content: center;
-  align-items: center;
-  padding: 24px;
+  align-items: flex-start;
+  padding: 40px 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal.active {
@@ -1309,6 +1311,7 @@ header#global-header {
   flex-direction: column;
   gap: 20px;
   position: relative;
+  margin: auto;
 }
 
 .success-header {
@@ -1395,10 +1398,13 @@ header#global-header {
 .breakdown-cards {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .breakdown-card {
-  flex: 1;
+  flex: 1 1 calc(50% - 10px);
+  min-width: 80px;
   background: hsla(230, 20%, 15%, 0.5);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-md);
@@ -1407,6 +1413,12 @@ header#global-header {
   flex-direction: column;
   align-items: center;
   gap: 4px;
+}
+
+@media(min-width: 480px) {
+  .breakdown-card {
+    flex: 1;
+  }
 }
 
 .breakdown-card .bd-char {
