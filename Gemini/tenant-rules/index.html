@@ -266,6 +266,31 @@
         margin: 0;
       }
     }
+
+    /* === 響應式與行動裝置優化 (手機 & iPad) === */
+    @media (max-width: 768px) {
+      .reveal .slides {
+        font-size: 1.3em; /* 縮放時調大基礎字體，確保手機可讀 */
+      }
+      .reveal h1 { font-size: 1.8em !important; }
+      .reveal h2 { font-size: 1.3em !important; }
+      
+      /* 將所有並列網格與卡片排版強制改為直向單欄排列，避免擠壓 */
+      .stat-row { flex-direction: column; gap: 10px; }
+      .adv-grid { grid-template-columns: 1fr !important; gap: 12px; }
+      .vs-grid { grid-template-columns: 1fr !important; gap: 12px; }
+      .vs-center { display: none; }
+      .conclusion-grid { grid-template-columns: 1fr !important; gap: 12px; }
+      .card-layout { grid-template-columns: 1fr !important; gap: 12px; }
+      
+      /* 縮小卡片內邊距以釋放手機螢幕空間 */
+      .stat-card { padding: 12px 16px; }
+      .adv-card { padding: 12px; }
+      .vs-col { padding: 12px; }
+      .conclusion-card { padding: 12px; }
+      .main-info-card { padding: 16px; }
+      .side-info-card { padding: 16px; }
+    }
   </style>
 </head>
 <body>
@@ -500,6 +525,11 @@
     progress: true,
     controls: true,
     slideNumber: 'c/t',
+    width: 1050,
+    height: 700,
+    margin: 0.05,
+    minScale: 0.2,
+    maxScale: 2.0,
     plugins: []
   });
 
