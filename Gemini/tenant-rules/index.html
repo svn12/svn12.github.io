@@ -270,18 +270,44 @@
     /* === 響應式與行動裝置優化 (手機 & iPad) === */
     @media (max-width: 768px) {
       .reveal .slides {
-        font-size: 1.3em; /* 縮放時調大基礎字體，確保手機可讀 */
+        font-size: 1.4em; /* 再次調大基礎字體 */
       }
       .reveal h1 { font-size: 1.8em !important; }
       .reveal h2 { font-size: 1.3em !important; }
       
-      /* 將所有並列網格與卡片排版強制改為直向單欄排列，避免擠壓 */
+      /* 將所有並列網格與卡片排版強制改為直向單欄排列，避免內容擠壓 */
       .stat-row { flex-direction: column; gap: 10px; }
       .adv-grid { grid-template-columns: 1fr !important; gap: 12px; }
       .vs-grid { grid-template-columns: 1fr !important; gap: 12px; }
       .vs-center { display: none; }
       .conclusion-grid { grid-template-columns: 1fr !important; gap: 12px; }
       .card-layout { grid-template-columns: 1fr !important; gap: 12px; }
+      
+      /* 強制放大行動裝置下的卡片與列表字體 */
+      .stat-card .num { font-size: 2.2em !important; }
+      .stat-card .label { font-size: 0.75em !important; }
+      
+      .adv-card .adv-title { font-size: 0.85em !important; }
+      .adv-card .adv-desc { font-size: 0.7em !important; }
+      .adv-card .adv-desc ul { padding-left: 20px !important; }
+      
+      .vs-panel .vs-panel-title { font-size: 0.85em !important; }
+      .vs-panel ul { font-size: 0.7em !important; padding-left: 20px !important; }
+      .vs-panel ul li { margin-bottom: 8px !important; }
+      
+      .main-info-card .info-title { font-size: 0.85em !important; }
+      .main-info-card .info-body { font-size: 0.7em !important; }
+      .main-info-card .info-body ul { padding-left: 20px !important; }
+      .main-info-card .info-body li { margin-bottom: 10px !important; }
+      
+      .side-info-card .wifi-ssid { font-size: 0.75em !important; }
+      .side-info-card .wifi-pwd { font-size: 0.85em !important; }
+      
+      .end-slide .warn-box { font-size: 0.75em !important; max-width: 100% !important; line-height: 1.7 !important; }
+      .end-slide .tagline { font-size: 0.8em !important; }
+      
+      .timeline-item { font-size: 0.75em !important; }
+      .quote-box { font-size: 0.8em !important; }
       
       /* 縮小卡片內邊距以釋放手機螢幕空間 */
       .stat-card { padding: 12px 16px; }
