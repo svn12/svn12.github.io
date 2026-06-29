@@ -321,63 +321,61 @@
             <ul>
               <li><strong>專屬頻寬：</strong>房源內提供獨立 WiFi，極速穩定。</li>
               <li><strong>連線資訊：</strong>投影片後續有詳細帳密資料可連線。</li>
-              <li><strong>合規使用：</strong>請勿用於非法下載或侵害版權。</li>
+              <li><strong>合規使用：</strong>請勿用於非法下載 or 侵害版權。</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 頁 3：垃圾桶區分與處理實務 -->
+    <!-- 頁 3：垃圾分類 - ❌ 錯誤處理方式 (Before) -->
     <section>
-      <h2 style="margin-bottom: 0.3em;">垃圾分類：Before vs After</h2>
-      <p style="font-size:0.4em; color:#aaa; margin-bottom: 10px;">拖動下方滑桿，查看正確的處理方式與垃圾桶區別</p>
-      
-      <div class="viz-container">
-        <!-- Before: 亂丟 -->
-        <div class="viz-before" id="viz-before">
-          <div class="viz-title">❌ 錯誤的處理方式 (Before)</div>
-          <div class="viz-content">
-            <ul>
-              <li>吃完的便當盒或飲料杯直接裝在塑膠袋內就丟進回收箱。</li>
-              <li>可回收的餐盒、飲料瓶等未經沖洗直接當一般垃圾丟棄。</li>
-              <li>廚餘連同便當盒餐盒混在一起亂丟。</li>
-              <li>回收箱堆積油污與異味，嚴重影響公共環境與清潔人員。</li>
-            </ul>
-          </div>
-        </div>
-        
-        <!-- After: 正確處理 -->
-        <div class="viz-after" id="viz-after">
-          <div class="viz-title">✨ 正確的生活指引 (After)</div>
-          <div class="viz-content">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-              <div>
-                <strong>藍色與紅色桶區分：</strong>
-                <ul style="margin-top:5px;">
-                  <li>🔵 <strong>大藍色桶：</strong>餐盒、飲料瓶、紙盒、飲料杯、紙張等食品容器（須洗乾淨）。</li>
-                  <li>🔴 <strong>大紅色桶：</strong>放置一般垃圾、廁浴衛生類。<strong>切勿</strong>放入可回收物！</li>
-                </ul>
-              </div>
-              <div>
-                <strong>細心提醒：</strong>
-                <ul style="margin-top:5px;">
-                  <li>🔴 <strong>小紅色桶：</strong>廚房葉菜與蔬果廚餘。吃不完的食物請用袋子包好（勿套餐盒）放置。</li>
-                  <li>💡 <strong>原則：</strong>食用完畢請將容器<strong>沖洗、擦拭乾淨</strong>再丟入藍色桶！</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- 畫分滑線 -->
-        <div class="viz-divider" id="viz-divider"></div>
+      <h2>❌ 錯誤的處理方式 (Before)</h2>
+      <p style="font-size:0.42em; color:var(--danger); margin-bottom: 20px; font-weight:700;">以下為常見的錯誤示範，請務必避免：</p>
+      <div class="main-info-card" style="background: linear-gradient(135deg, #2d1414, #1a0808); border-color: rgba(255, 82, 82, 0.3); padding: 30px; max-width: 800px; margin: 0 auto;">
+        <ul style="font-size: 0.5em; line-height: 1.8; color: #ff8a8a; list-style-type: none; padding: 0;">
+          <li style="margin-bottom: 12px; padding-left: 28px; position: relative;">
+            <span style="position: absolute; left: 0;">❌</span>
+            外帶吃完的便當盒或飲料杯，<strong>直接裝在塑膠袋內</strong>就丟進回收箱。
+          </li>
+          <li style="margin-bottom: 12px; padding-left: 28px; position: relative;">
+            <span style="position: absolute; left: 0;">❌</span>
+            可回收的餐盒、飲料瓶等，<strong>未經沖洗直接當一般垃圾</strong>丟棄。
+          </li>
+          <li style="margin-bottom: 12px; padding-left: 28px; position: relative;">
+            <span style="position: absolute; left: 0;">❌</span>
+            吃不完的<strong>廚餘連同便當盒餐盒混在一起</strong>，未經分類即亂丟。
+          </li>
+          <li style="margin-bottom: 12px; padding-left: 28px; position: relative;">
+            <span style="position: absolute; left: 0;">❌</span>
+            回收箱堆積油污與異味，嚴重影響公共環境衛生與大樓清潔人員。
+          </li>
+        </ul>
       </div>
+    </section>
 
-      <div class="viz-slider-control">
-        <label>❌ 錯誤處理</label>
-        <input id="viz-slider" type="range" min="0" max="100" value="0">
-        <label>✨ 正確分類 🔵🔴</label>
+    <!-- 頁 4：垃圾分類 - ✨ 正確生活指引 (After) -->
+    <section>
+      <h2>✨ 正確的生活指引 (After)</h2>
+      <p style="font-size:0.42em; color:var(--success); margin-bottom: 20px; font-weight:700;">請依照以下垃圾桶區分確實分類：</p>
+      
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; max-width: 900px; margin: 0 auto; text-align: left;">
+        <div class="vs-panel left-panel" style="border-left-color: var(--accent2); background: rgba(79,195,247,0.05); padding: 20px;">
+          <div class="vs-panel-title" style="color: var(--accent2); font-size:0.55em; margin-bottom: 10px;">🔵 大藍色桶 (可回收)</div>
+          <ul style="font-size:0.38em; line-height: 1.7; color: #ccc;">
+            <li><strong>食品容器：</strong>餐盒、飲料瓶、紙盒、飲料杯。</li>
+            <li><strong>紙張紙類：</strong>紙張也是可回收物品。</li>
+            <li><strong>💡 重點：</strong>食用完畢請將容器<strong>沖洗、擦拭乾淨</strong>再置放。</li>
+          </ul>
+        </div>
+        
+        <div class="vs-panel right-panel" style="border-left-color: var(--danger); background: rgba(255,82,82,0.05); padding: 20px;">
+          <div class="vs-panel-title" style="color: var(--danger); font-size:0.55em; margin-bottom: 10px;">🔴 紅色桶 (一般/廚餘)</div>
+          <ul style="font-size:0.38em; line-height: 1.7; color: #ccc;">
+            <li>🔴 <strong>大紅色桶：</strong>放置<strong>一般垃圾、廁浴衛生類</strong>。切勿放可回收餐盒與飲料瓶！</li>
+            <li style="margin-top:8px;">🔴 <strong>小紅色桶：</strong>廚房<strong>葉菜類及蔬菓</strong>。吃不完的食物請用袋子包好放置（切勿裝在餐盒內放置）。</li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -443,7 +441,7 @@
           <div class="info-body">
             <ul>
               <li><strong>電費結算：</strong>每個月請自行拍照記錄房間專屬電表，計算實際用電度數。</li>
-              <li><strong>合併匯款：</strong>請依算出的電費金額，連同當月租金一同匯入指定的房源帳戶。</li>
+              <li><strong>合併匯款：</strong>請依算出的電費金額，連同當月租金一同匯入台灣銀行帳戶。</li>
               <li><strong>消耗品處理：</strong>租屋處的「電燈泡」等消耗品若壞掉，屬於租客自行負擔項目，請自行購買同規格燈泡進行更換。</li>
             </ul>
           </div>
@@ -497,12 +495,7 @@
     plugins: []
   });
 
-  // VIZ 滑桿核心邏輯
-  document.getElementById('viz-slider').addEventListener('input', function() {
-    const value = +this.value;
-    document.getElementById('viz-after').style.clipPath = `inset(0 ${100 - value}% 0 0)`;
-    document.getElementById('viz-divider').style.left = value + '%';
-  });
+
 </script>
 </body>
 </html>
