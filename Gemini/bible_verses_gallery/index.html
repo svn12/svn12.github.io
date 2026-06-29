@@ -18,9 +18,14 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fa-solid fa-cross logo-icon"></i>
-                    <h1>聖經金句瀏覽</h1>
+                <div class="logo-row">
+                    <div class="logo">
+                        <i class="fa-solid fa-cross logo-icon"></i>
+                        <h1>聖經金句瀏覽</h1>
+                    </div>
+                    <button id="btn-random-topic" class="btn btn-secondary btn-random-header" title="隨機主題">
+                        <i class="fa-solid fa-shuffle"></i> <span class="btn-text">隨機主題</span>
+                    </button>
                 </div>
                 <p class="subtitle">DailyVerses.net 圖片庫</p>
             </div>
@@ -28,12 +33,6 @@
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input type="text" id="topic-search" placeholder="搜尋主題... (例如: 喜樂, 愛)">
-            </div>
-            
-            <div class="quick-actions">
-                <button id="btn-random-topic" class="btn btn-secondary">
-                    <i class="fa-solid fa-shuffle"></i> 隨機主題
-                </button>
             </div>
             
             <div class="topics-list-container">
