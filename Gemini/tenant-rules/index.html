@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/css/print/pdf.css" type="text/css" media="print" />
   <style>
     /* === 全域變數與極致暗色調 === */
     :root {
@@ -258,6 +259,29 @@
       max-width: 600px;
     }
     .end-slide .warn-box strong { color: var(--danger); }
+
+    /* === 列印優化 === */
+    @media print {
+      @page {
+        size: 297mm 210mm; /* A4 橫向尺寸 */
+        margin: 0;
+      }
+      html, body {
+        width: 297mm !important;
+        height: 210mm !important;
+        background-color: var(--bg-dark) !important;
+        background: var(--bg-dark) !important;
+      }
+      .reveal {
+        background-color: var(--bg-dark) !important;
+        background: var(--bg-dark) !important;
+      }
+      .reveal section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+      }
+    }
   </style>
 </head>
 <body>
