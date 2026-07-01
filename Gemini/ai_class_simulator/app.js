@@ -260,73 +260,85 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.clearRect(0, 0, w, h);
 
     if (style === 'popart') {
-      const halfW = w / 2;
-      const halfH = h / 2;
-      const colorSchemes = [
-        ['#ffff00', '#0000ff'], 
-        ['#ff007f', '#ffff00'], 
-        ['#38bdf8', '#ef4444'], 
-        ['#10b981', '#0b0f19']  
-      ];
+      try {
+        const halfW = w / 2;
+        const halfH = h / 2;
+        const colorSchemes = [
+          ['#ffff00', '#0000ff'], 
+          ['#ff007f', '#ffff00'], 
+          ['#38bdf8', '#ef4444'], 
+          ['#10b981', '#0b0f19']  
+        ];
 
-      for (let i = 0; i < 4; i++) {
-        const dx = (i % 2) * halfW;
-        const dy = Math.floor(i / 2) * halfH;
+        for (let i = 0; i < 4; i++) {
+          const dx = (i % 2) * halfW;
+          const dy = Math.floor(i / 2) * halfH;
 
-        ctx.drawImage(img, dx, dy, halfW, halfH);
+          ctx.drawImage(img, dx, dy, halfW, halfH);
 
-        const imgData = ctx.getImageData(dx, dy, halfW, halfH);
-        const data = imgData.data;
-        const bg = hexToRgb(colorSchemes[i][0]);
-        const fg = hexToRgb(colorSchemes[i][1]);
+          const imgData = ctx.getImageData(dx, dy, halfW, halfH);
+          const data = imgData.data;
+          const bg = hexToRgb(colorSchemes[i][0]);
+          const fg = hexToRgb(colorSchemes[i][1]);
 
-        for (let j = 0; j < data.length; j += 4) {
-          const r = data[j];
-          const g = data[j+1];
-          const b = data[j+2];
-          const gray = 0.299 * r + 0.587 * g + 0.114 * b;
-          
-          let factor = gray;
-          if (gray < 100) factor = 0;
-          else if (gray > 180) factor = 255;
-          else factor = (gray - 100) * (255 / 80);
+          for (let j = 0; j < data.length; j += 4) {
+            const r = data[j];
+            const g = data[j+1];
+            const b = data[j+2];
+            const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+            
+            let factor = gray;
+            if (gray < 100) factor = 0;
+            else if (gray > 180) factor = 255;
+            else factor = (gray - 100) * (255 / 80);
 
-          const pct = factor / 255;
-          data[j]   = fg.r + (bg.r - fg.r) * pct;
-          data[j+1] = fg.g + (bg.g - fg.g) * pct;
-          data[j+2] = fg.b + (bg.b - fg.b) * pct;
+            const pct = factor / 255;
+            data[j]   = fg.r + (bg.r - fg.r) * pct;
+            data[j+1] = fg.g + (bg.g - fg.g) * pct;
+            data[j+2] = fg.b + (bg.b - fg.b) * pct;
+          }
+          ctx.putImageData(imgData, dx, dy);
+
+          ctx.strokeStyle = 'rgba(0,0,0,0.8)';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(dx, dy, halfW, halfH);
         }
-        ctx.putImageData(imgData, dx, dy);
-
-        ctx.strokeStyle = 'rgba(0,0,0,0.8)';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(dx, dy, halfW, halfH);
+      } catch (err) {
+        ctx.filter = 'contrast(1.5) saturate(1.8)';
+        ctx.drawImage(img, 0, 0, w, h);
+        ctx.filter = 'none';
       }
     } 
     else if (style === 'clay') {
-      ctx.filter = 'saturate(1.5) contrast(1.15) brightness(1.05) blur(1.5px)';
-      ctx.drawImage(img, 0, 0, w, h);
-      ctx.filter = 'none';
+      try {
+        ctx.filter = 'saturate(1.5) contrast(1.15) brightness(1.05) blur(1.5px)';
+        ctx.drawImage(img, 0, 0, w, h);
+        ctx.filter = 'none';
 
-      const imgData = ctx.getImageData(0, 0, w, h);
-      const data = imgData.data;
-      for (let j = 0; j < data.length; j += 4) {
-        data[j]   = Math.round(data[j] / 51) * 51;
-        data[j+1] = Math.round(data[j+1] / 51) * 51;
-        data[j+2] = Math.round(data[j+2] / 51) * 51;
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const data = imgData.data;
+        for (let j = 0; j < data.length; j += 4) {
+          data[j]   = Math.round(data[j] / 51) * 51;
+          data[j+1] = Math.round(data[j+1] / 51) * 51;
+          data[j+2] = Math.round(data[j+2] / 51) * 51;
+        }
+        ctx.putImageData(imgData, 0, 0);
+
+        ctx.globalAlpha = 0.15;
+        ctx.drawImage(img, 0, 0, w, h);
+        ctx.globalAlpha = 1.0;
+
+        const gradient = ctx.createRadialGradient(w * 0.3, h * 0.3, 0, w * 0.5, h * 0.5, Math.max(w, h) * 0.7);
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+        gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0.45)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, w, h);
+      } catch (err) {
+        ctx.filter = 'saturate(1.4) contrast(1.1) blur(1.2px)';
+        ctx.drawImage(img, 0, 0, w, h);
+        ctx.filter = 'none';
       }
-      ctx.putImageData(imgData, 0, 0);
-
-      ctx.globalAlpha = 0.15;
-      ctx.drawImage(img, 0, 0, w, h);
-      ctx.globalAlpha = 1.0;
-
-      const gradient = ctx.createRadialGradient(w * 0.3, h * 0.3, 0, w * 0.5, h * 0.5, Math.max(w, h) * 0.7);
-      gradient.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
-      gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.45)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, w, h);
     }
     else if (style === 'artnouveau') {
       ctx.filter = 'sepia(0.55) contrast(1.1) brightness(1.05) saturate(1.25)';
@@ -446,13 +458,29 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.strokeRect(14, 14, w - 28, h - 28);
     }
     else if (['plushie', 'marshmallow', 'softanime', 'baby'].includes(style)) {
-      ctx.filter = 'brightness(1.05) saturate(1.2) contrast(0.95)';
+      ctx.filter = 'brightness(1.08) saturate(1.4) contrast(1.15)';
       ctx.drawImage(img, 0, 0, w, h);
-      ctx.globalAlpha = 0.45;
-      ctx.filter = 'blur(6px) brightness(1.1)';
+      
+      ctx.globalAlpha = 0.5;
+      ctx.filter = 'blur(10px) brightness(1.2) saturate(1.2)';
       ctx.drawImage(canvas, 0, 0);
       ctx.globalAlpha = 1.0;
       ctx.filter = 'none';
+
+      ctx.strokeStyle = '#fbcfe8';
+      ctx.lineWidth = 10;
+      ctx.strokeRect(5, 5, w - 10, h - 10);
+      
+      ctx.fillStyle = '#bae6fd';
+      const dots = [
+        [20, 20], [w-20, 20], [20, h-20], [w-20, h-20],
+        [w/2, 20], [w/2, h-20], [20, h/2], [w-20, h/2]
+      ];
+      dots.forEach(pt => {
+        ctx.beginPath();
+        ctx.arc(pt[0], pt[1], 8, 0, 2*Math.PI);
+        ctx.fill();
+      });
     }
     else if (style === 'gummy') {
       ctx.filter = 'saturate(1.6) contrast(1.2) blur(0.5px)';
@@ -479,44 +507,56 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     else if (['flat', 'infographic', 'geometric'].includes(style)) {
-      ctx.drawImage(img, 0, 0, w, h);
-      const imgData = ctx.getImageData(0, 0, w, h);
-      const data = imgData.data;
-      for (let j = 0; j < data.length; j += 4) {
-        data[j]   = Math.round(data[j] / 85) * 85;
-        data[j+1] = Math.round(data[j+1] / 85) * 85;
-        data[j+2] = Math.round(data[j+2] / 85) * 85;
+      try {
+        ctx.drawImage(img, 0, 0, w, h);
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const data = imgData.data;
+        for (let j = 0; j < data.length; j += 4) {
+          data[j]   = Math.round(data[j] / 85) * 85;
+          data[j+1] = Math.round(data[j+1] / 85) * 85;
+          data[j+2] = Math.round(data[j+2] / 85) * 85;
+        }
+        ctx.putImageData(imgData, 0, 0);
+      } catch (err) {
+        ctx.filter = 'contrast(1.4) saturate(1.2)';
+        ctx.drawImage(img, 0, 0, w, h);
+        ctx.filter = 'none';
       }
-      ctx.putImageData(imgData, 0, 0);
     }
     else if (['korean', 'doodle', 'monochrome', 'graffiti', 'chalkboard'].includes(style)) {
-      ctx.filter = 'contrast(1.6) grayscale(1.0)';
-      ctx.drawImage(img, 0, 0, w, h);
-      ctx.filter = 'none';
+      try {
+        ctx.filter = 'contrast(1.6) grayscale(1.0)';
+        ctx.drawImage(img, 0, 0, w, h);
+        ctx.filter = 'none';
 
-      const imgData = ctx.getImageData(0, 0, w, h);
-      const data = imgData.data;
-      const threshold = 120;
-      for (let j = 0; j < data.length; j += 4) {
-        const v = (data[j] + data[j+1] + data[j+2]) / 3;
-        const color = v > threshold ? 255 : 0;
-        data[j] = data[j+1] = data[j+2] = color;
-      }
-      ctx.putImageData(imgData, 0, 0);
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const data = imgData.data;
+        const threshold = 120;
+        for (let j = 0; j < data.length; j += 4) {
+          const v = (data[j] + data[j+1] + data[j+2]) / 3;
+          const color = v > threshold ? 255 : 0;
+          data[j] = data[j+1] = data[j+2] = color;
+        }
+        ctx.putImageData(imgData, 0, 0);
 
-      if (style === 'chalkboard') {
-        const d = ctx.getImageData(0, 0, w, h).data;
-        ctx.fillStyle = '#1e3a1e';
-        ctx.fillRect(0, 0, w, h);
-        ctx.fillStyle = '#ffffff';
-        for (let y = 0; y < h; y += 2) {
-          for (let x = 0; x < w; x += 2) {
-            const idx = (y * w + x) * 4;
-            if (d[idx] === 0) {
-              ctx.fillRect(x, y, 1.5, 1.5);
+        if (style === 'chalkboard') {
+          const d = ctx.getImageData(0, 0, w, h).data;
+          ctx.fillStyle = '#1e3a1e';
+          ctx.fillRect(0, 0, w, h);
+          ctx.fillStyle = '#ffffff';
+          for (let y = 0; y < h; y += 2) {
+            for (let x = 0; x < w; x += 2) {
+              const idx = (y * w + x) * 4;
+              if (d[idx] === 0) {
+                ctx.fillRect(x, y, 1.5, 1.5);
+              }
             }
           }
         }
+      } catch (err) {
+        ctx.filter = 'grayscale(1.0) contrast(1.5)';
+        ctx.drawImage(img, 0, 0, w, h);
+        ctx.filter = 'none';
       }
     }
     else if (['retroanime', 'lightleak'].includes(style)) {
@@ -579,6 +619,30 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 12;
       ctx.strokeRect(6, 6, w - 12, h - 12);
+    }
+
+    // Draw high-quality style watermark at bottom right
+    try {
+      ctx.save();
+      const styleName = styleNameMap[style] || 'AI 變身';
+      
+      // Draw semi-transparent dark glass background
+      ctx.fillStyle = 'rgba(17, 24, 39, 0.75)';
+      ctx.fillRect(w - 225, h - 45, 205, 33);
+      
+      // Draw golden boundary stroke
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(w - 225, h - 45, 205, 33);
+      
+      // Draw golden typography text
+      ctx.fillStyle = '#fbbf24'; 
+      ctx.font = 'bold 13px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(`✨ AI 畫風：${styleName}`, w - 30, h - 23);
+      ctx.restore();
+    } catch (e) {
+      console.warn("Watermark error:", e);
     }
   }
 
