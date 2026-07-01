@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
 
   /* ==========================================================================
-     1. Tab Navigation Logic
+     1. General Tab Navigation Logic (6 tabs now)
      ========================================================================== */
   const tabs = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
@@ -28,12 +28,33 @@ document.addEventListener('DOMContentLoaded', () => {
       if (targetTab === 'camera') {
         setTimeout(initCanvas, 50);
       }
+      
+      // Special handling when switching to Devotion tab to load prompts
+      if (targetTab === 'devotion') {
+        renderDevotionPrompts(currentDevotionCat, currentDevotionFilter);
+      }
+
+      // Special handling when switching to Search tab to load history
+      if (targetTab === 'search') {
+        renderSearchHistory();
+      }
     });
   });
 
   /* ==========================================================================
-     2. Copy to Clipboard Utility
+     2. Copy to Clipboard Utility & Toast Notification
      ========================================================================== */
+  const toast = document.getElementById('toast');
+
+  function showToast(message) {
+    if (!toast) return;
+    toast.innerText = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2500);
+  }
+
   const copyButtons = document.querySelectorAll('.btn-copy');
   copyButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -58,9 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================================
-     3. Interactive Prompt Generators
+     3. Interactive Prompt Generators (Course Tab)
      ========================================================================== */
-  // Form 1: AI變身公式
   const btnGenFormula = document.getElementById('btn-gen-formula');
   if (btnGenFormula) {
     btnGenFormula.addEventListener('click', () => {
@@ -74,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Form 2: 公版畫風指令
   const btnGenStyle = document.getElementById('btn-gen-style');
   if (btnGenStyle) {
     btnGenStyle.addEventListener('click', () => {
@@ -93,29 +112,26 @@ document.addEventListener('DOMContentLoaded', () => {
      4. AI Style Camera / Canvas Filter Simulator
      ========================================================================== */
   const canvas = document.getElementById('editor-canvas');
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas?.getContext('2d');
   const refImage = document.getElementById('ref-image');
   const loader = document.getElementById('loader');
   const progressBar = document.getElementById('progress-bar');
   const btnProcess = document.getElementById('btn-process-image');
   
   let currentImageSrc = 'assets/hike_sample.jpg';
-  let selectedStyle = 'popart'; // Default style
+  let selectedStyle = 'popart'; 
   let isUploadedImage = false;
   let uploadedImageObj = null;
 
-  // Initialize Canvas dimensions and draw default image
   function initCanvas() {
-    if (!canvas) return;
+    if (!canvas || !ctx) return;
     
     const img = isUploadedImage ? uploadedImageObj : refImage;
     if (!img || !img.complete) {
-      // If not loaded yet, wait and try again
       if (img) img.onload = () => initCanvas();
       return;
     }
 
-    // Adjust canvas resolution to match image ratio but cap max size
     const maxDimension = 800;
     let width = img.naturalWidth || img.width;
     let height = img.naturalHeight || img.height;
@@ -133,12 +149,10 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.width = width;
     canvas.height = height;
 
-    // Default: draw clean original image
     ctx.filter = 'none';
     ctx.drawImage(img, 0, 0, width, height);
   }
 
-  // Handle Image Source Selection Cards
   const sampleCards = document.querySelectorAll('.sample-img-card');
   const fileInput = document.getElementById('camera-upload-input');
 
@@ -159,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Handle local file upload
   if (fileInput) {
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -171,7 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isUploadedImage = true;
             currentImageSrc = event.target.result;
             
-            // Highlight upload card
             sampleCards.forEach(c => c.classList.remove('active'));
             const uploadCard = document.querySelector('[data-src="upload"]');
             if (uploadCard) uploadCard.classList.add('active');
@@ -185,7 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Handle Style Selection buttons
   const styleBtns = document.querySelectorAll('.style-select-btn');
   styleBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -195,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // AI Style Processing Trigger (Simulated with progress bar)
   if (btnProcess) {
     btnProcess.addEventListener('click', () => {
       loader.classList.add('active');
@@ -207,55 +217,41 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBar.style.width = `${progress}%`;
         if (progress >= 100) {
           clearInterval(interval);
-          
-          // Apply Style Effect to Canvas
           applyStyleFilter(selectedStyle);
-          
           setTimeout(() => {
             loader.classList.remove('active');
           }, 300);
         }
-      }, 150); // Generates in 1.5 seconds total
+      }, 120); 
     });
   }
 
-  /* ==========================================================================
-     Canvas Filter Implementations (Pop-Art, Art Nouveau, Ukiyo-e, etc.)
-     ========================================================================== */
   function applyStyleFilter(style) {
     const img = isUploadedImage ? uploadedImageObj : refImage;
-    if (!img) return;
+    if (!img || !ctx || !canvas) return;
 
     const w = canvas.width;
     const h = canvas.height;
 
-    // Reset canvas with fresh draw
     ctx.filter = 'none';
     ctx.clearRect(0, 0, w, h);
 
     if (style === 'popart') {
-      // Andy Warhol 4-Grid Style
-      // Draw 2x2 grid, each with high-contrast duotone maps
       const halfW = w / 2;
       const halfH = h / 2;
-
-      // Color maps for the 4 grids: [Background Color, Foreground Color]
       const colorSchemes = [
-        ['#ffff00', '#0000ff'], // Grid 1: Yellow background, Blue foreground
-        ['#ff007f', '#ffff00'], // Grid 2: Pink background, Yellow foreground
-        ['#38bdf8', '#ef4444'], // Grid 3: Light Blue background, Red foreground
-        ['#10b981', '#0b0f19']  // Grid 4: Green background, Dark Blue foreground
+        ['#ffff00', '#0000ff'], 
+        ['#ff007f', '#ffff00'], 
+        ['#38bdf8', '#ef4444'], 
+        ['#10b981', '#0b0f19']  
       ];
 
-      // Draw each of the 4 grids
       for (let i = 0; i < 4; i++) {
         const dx = (i % 2) * halfW;
         const dy = Math.floor(i / 2) * halfH;
 
-        // Draw normal image to temporary area
         ctx.drawImage(img, dx, dy, halfW, halfH);
 
-        // Apply pixel duotone effect to this quadrant
         const imgData = ctx.getImageData(dx, dy, halfW, halfH);
         const data = imgData.data;
         const bg = hexToRgb(colorSchemes[i][0]);
@@ -265,56 +261,44 @@ document.addEventListener('DOMContentLoaded', () => {
           const r = data[j];
           const g = data[j+1];
           const b = data[j+2];
-          
-          // Grayscale value
           const gray = 0.299 * r + 0.587 * g + 0.114 * b;
           
-          // High contrast map (stretch contrast for pop-art silkscreen effect)
           let factor = gray;
-          if (gray < 100) factor = 0;       // shadows go full foreground
-          else if (gray > 180) factor = 255; // highlights go full background
-          else factor = (gray - 100) * (255 / 80); // midtones ramped up
+          if (gray < 100) factor = 0;
+          else if (gray > 180) factor = 255;
+          else factor = (gray - 100) * (255 / 80);
 
-          // Map factor (0 to 255) between foreground and background
           const pct = factor / 255;
-          data[j]   = fg.r + (bg.r - fg.r) * pct; // R
-          data[j+1] = fg.g + (bg.g - fg.g) * pct; // G
-          data[j+2] = fg.b + (bg.b - fg.b) * pct; // B
+          data[j]   = fg.r + (bg.r - fg.r) * pct;
+          data[j+1] = fg.g + (bg.g - fg.g) * pct;
+          data[j+2] = fg.b + (bg.b - fg.b) * pct;
         }
         ctx.putImageData(imgData, dx, dy);
 
-        // Draw subtle black dividers
         ctx.strokeStyle = 'rgba(0,0,0,0.8)';
         ctx.lineWidth = 4;
         ctx.strokeRect(dx, dy, halfW, halfH);
       }
     } 
     else if (style === 'artnouveau') {
-      // Art Nouveau: Warm golden filters + organic decorative frame
       ctx.filter = 'sepia(0.55) contrast(1.1) brightness(1.05) saturate(1.25)';
       ctx.drawImage(img, 0, 0, w, h);
       ctx.filter = 'none';
 
-      // Draw Art Nouveau organic double borders
       const padding = Math.min(w, h) * 0.05;
-      
-      // Outer border (Gold)
       ctx.strokeStyle = '#d97706';
       ctx.lineWidth = 6;
       ctx.strokeRect(padding / 2, padding / 2, w - padding, h - padding);
 
-      // Inner thin border
       ctx.strokeStyle = '#f59e0b';
       ctx.lineWidth = 2;
       ctx.strokeRect(padding, padding, w - padding * 2, h - padding * 2);
 
-      // Draw floral design corners
-      drawArtNouveauCorner(ctx, padding, padding, 0); // Top-left
-      drawArtNouveauCorner(ctx, w - padding, padding, Math.PI / 2); // Top-right
-      drawArtNouveauCorner(ctx, padding, h - padding, -Math.PI / 2); // Bottom-left
-      drawArtNouveauCorner(ctx, w - padding, h - padding, Math.PI); // Bottom-right
+      drawArtNouveauCorner(ctx, padding, padding, 0); 
+      drawArtNouveauCorner(ctx, w - padding, padding, Math.PI / 2); 
+      drawArtNouveauCorner(ctx, padding, h - padding, -Math.PI / 2); 
+      drawArtNouveauCorner(ctx, w - padding, h - padding, Math.PI); 
 
-      // Text Header at bottom inside border
       ctx.fillStyle = 'rgba(17, 24, 39, 0.8)';
       ctx.fillRect(padding, h - padding - 36, w - padding * 2, 36);
 
@@ -324,22 +308,17 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillText('溪頭一日健行 • 藝術寫真', w / 2, h - padding - 12);
     } 
     else if (style === 'ukiyoe') {
-      // Ukiyo-e: Clean lines, flat coloring, high contrast sepia-blue hue
       ctx.filter = 'contrast(1.3) saturate(1.2) sepia(0.3)';
       ctx.drawImage(img, 0, 0, w, h);
       ctx.filter = 'none';
-
-      // Simulate woodblock ink lines by drawing a subtle edge-overlay (simplistic Sobel/Outline simulation)
-      // For performance & robust browser behavior, we'll draw a thin vignette and stamp look
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, w, h);
 
-      // Red seal stamp (classic in Ukiyo-e)
       const stampSize = Math.max(30, Math.round(w * 0.07));
       const sx = w - stampSize - 20;
       const sy = 20;
       
-      ctx.fillStyle = '#ef4444'; // Red seal
+      ctx.fillStyle = '#ef4444';
       ctx.fillRect(sx, sy, stampSize, stampSize);
       ctx.strokeStyle = '#fff';
       ctx.lineWidth = 2;
@@ -351,36 +330,27 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillText('美', sx + stampSize / 2, sy + stampSize / 1.45);
     } 
     else if (style === 'impressionism') {
-      // Impressionism: Pointillism/brush stroke simulation
-      // We will redraw the image using random circular paint dabs
       ctx.drawImage(img, 0, 0, w, h);
-      
       const imgData = ctx.getImageData(0, 0, w, h);
       const data = imgData.data;
       
-      // Clear canvas with base background color
       ctx.fillStyle = '#0b0f19';
       ctx.fillRect(0, 0, w, h);
 
-      // Draw thousands of colored brush strokes
-      const strokesCount = w * h * 0.08; // density
+      const strokesCount = w * h * 0.08;
       const maxBrushSize = Math.max(8, w * 0.025);
 
       for (let k = 0; k < strokesCount; k++) {
         const rx = Math.floor(Math.random() * w);
         const ry = Math.floor(Math.random() * h);
-        
-        // Read color at pixel
         const idx = (ry * w + rx) * 4;
         const r = data[idx];
         const g = data[idx+1];
         const b = data[idx+2];
         const a = data[idx+3] / 255;
 
-        // Draw dab
         ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a * 0.85})`;
         ctx.beginPath();
-        // random brush rotation
         const radiusX = Math.random() * maxBrushSize + 2;
         const radiusY = Math.random() * (maxBrushSize / 2) + 1;
         const angle = Math.random() * Math.PI;
@@ -389,12 +359,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } 
     else if (style === 'vintage') {
-      // Vintage Old Photo: Heavy sepia, low contrast, subtle noise
       ctx.filter = 'sepia(0.85) contrast(0.8) brightness(0.95)';
       ctx.drawImage(img, 0, 0, w, h);
       ctx.filter = 'none';
 
-      // Draw scratches & dust
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
       ctx.lineWidth = 1;
       for (let i = 0; i < 6; i++) {
@@ -411,7 +379,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.stroke();
       }
       
-      // Draw dark vignette
       const gradient = ctx.createRadialGradient(w/2, h/2, Math.min(w,h) * 0.4, w/2, h/2, Math.max(w,h) * 0.7);
       gradient.addColorStop(0, 'rgba(0,0,0,0)');
       gradient.addColorStop(1, 'rgba(0,0,0,0.65)');
@@ -420,7 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Helper: Hex color to RGB
   function hexToRgb(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
@@ -430,7 +396,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } : { r: 0, g: 0, b: 0 };
   }
 
-  // Helper: Draw organic vine corner for Art Nouveau
   function drawArtNouveauCorner(ctx, cx, cy, angle) {
     ctx.save();
     ctx.translate(cx, cy);
@@ -439,14 +404,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillStyle = '#f59e0b';
     ctx.lineWidth = 2;
 
-    // Draw spiral vine
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.bezierCurveTo(15, 5, 20, 30, 5, 35);
     ctx.bezierCurveTo(-10, 40, -25, 20, -10, 5);
     ctx.stroke();
 
-    // Draw little leaves
     ctx.beginPath();
     ctx.ellipse(18, 12, 6, 3, Math.PI / 4, 0, 2 * Math.PI);
     ctx.ellipse(6, 28, 5, 2, -Math.PI / 6, 0, 2 * Math.PI);
@@ -455,7 +418,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.restore();
   }
 
-  // Handle image download
   const btnDownload = document.getElementById('btn-download-img');
   if (btnDownload) {
     btnDownload.addEventListener('click', () => {
@@ -472,7 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const photoWall = document.getElementById('photo-wall');
   const classPhotoCount = document.getElementById('class-photo-count');
   
-  // Default Pre-loaded artworks
   const defaultArtworks = [
     {
       id: 'default-1',
@@ -508,7 +469,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  // Load artworks from localStorage or use default
   function getArtworks() {
     const stored = localStorage.getItem('ai_class_artworks');
     if (!stored) {
@@ -518,22 +478,19 @@ document.addEventListener('DOMContentLoaded', () => {
     return JSON.parse(stored);
   }
 
-  // Save new artwork
   function saveArtwork(artwork) {
     const list = getArtworks();
-    list.unshift(artwork); // Prepend to show first
+    list.unshift(artwork);
     localStorage.setItem('ai_class_artworks', JSON.stringify(list));
     renderPhotoWall();
   }
 
-  // Render the Photo Wall grid
   function renderPhotoWall() {
     if (!photoWall) return;
 
     const list = getArtworks();
     photoWall.innerHTML = '';
     
-    // Update Counter badge
     if (classPhotoCount) {
       classPhotoCount.innerText = list.length;
     }
@@ -541,8 +498,6 @@ document.addEventListener('DOMContentLoaded', () => {
     list.forEach(art => {
       const card = document.createElement('div');
       card.className = 'photo-card';
-      
-      // Extract first letter of name for avatar
       const firstLetter = art.uploader ? art.uploader.charAt(0) : 'A';
 
       card.innerHTML = `
@@ -569,7 +524,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Handle Form Manual Upload in Photo Wall Tab
   const wallForm = document.getElementById('wall-upload-form');
   const wallFileInput = document.getElementById('wall-file-input');
   const fileChosenText = document.getElementById('file-chosen-text');
@@ -583,7 +537,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const file = e.target.files[0];
       if (file) {
         fileChosenText.innerText = file.name;
-        
         const reader = new FileReader();
         reader.onload = (event) => {
           manualUploadBase64 = event.target.result;
@@ -622,13 +575,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       saveArtwork(newArt);
 
-      // Reset form
       wallForm.reset();
       fileChosenText.innerText = '尚未選擇檔案';
       thumbWrapper.style.display = 'none';
       manualUploadBase64 = '';
 
-      // Auto scroll to photo wall section
       const wallSection = document.getElementById('photo-wall');
       if (wallSection) {
         wallSection.scrollIntoView({ behavior: 'smooth' });
@@ -636,7 +587,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Clear Storage / Reset button
   const btnClear = document.getElementById('btn-clear-storage');
   if (btnClear) {
     btnClear.addEventListener('click', () => {
@@ -659,13 +609,10 @@ document.addEventListener('DOMContentLoaded', () => {
   
   if (btnPublishTrigger) {
     btnPublishTrigger.addEventListener('click', () => {
-      // Load current canvas data url into modal preview
       const dataUrl = canvas.toDataURL();
       modalPreviewImg.src = dataUrl;
 
-      // Autopopulate current prompt based on selected style
       const modalPromptInput = document.getElementById('modal-uploader-prompt');
-      
       let curPrompt = '';
       if (selectedStyle === 'popart') {
         curPrompt = document.getElementById('preview-style-text').innerText;
@@ -674,13 +621,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       modalPromptInput.value = curPrompt;
 
-      // Open Modal
       publishModal.classList.add('active');
     });
   }
 
   const closeModal = () => {
-    publishModal.classList.remove('active');
+    publishModal?.classList.remove('active');
   };
 
   if (btnModalClose) btnModalClose.addEventListener('click', closeModal);
@@ -715,7 +661,6 @@ document.addEventListener('DOMContentLoaded', () => {
       saveArtwork(newArt);
       closeModal();
 
-      // Switch to Photo Wall tab
       tabs.forEach(t => t.classList.remove('active'));
       const wallTabBtn = document.querySelector('[data-tab="wall"]');
       if (wallTabBtn) wallTabBtn.classList.add('active');
@@ -727,7 +672,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Auto scroll to photo wall section
       setTimeout(() => {
         const wallSection = document.getElementById('photo-wall');
         if (wallSection) {
@@ -737,9 +681,469 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Initialize photo wall rendering on start
+
+  /* ==========================================================================
+     7. AI Devotion Companion Logic (Tab 5)
+     ========================================================================== */
+  const aiPlatforms = {
+    gemini: { name: "Gemini", url: "https://gemini.google.com/app" },
+    chatgpt: { name: "ChatGPT", url: "https://chatgpt.com" },
+    claude: { name: "Claude", url: "https://claude.ai" },
+    perplexity: { name: "Perplexity", url: "https://www.perplexity.ai" },
+    grok: { name: "Grok", url: "https://grok.com" }
+  };
+
+  let currentAI = 'gemini';
+  let currentDevotionCat = 'comfort';
+  let currentDevotionFilter = 'all'; // For intercession dialect
+
+  const devotionData = {
+    comfort: [
+      { title: "身體病痛時", text: "我今天身體很不舒服，心裡也很慌，請讀幾段醫治與平安的經文給我聽。" },
+      { title: "自覺無用時", text: "我覺得老了身體沒用處了，心情很沮喪，請你跟我說一些鼓勵的話。" },
+      { title: "痛到失眠時", text: "今晚我痛到睡不著，能不能陪我聊聊天，並用一段禱告結束？" },
+      { title: "感到孤單時", text: "孩子們都很忙沒空回來，我一個人覺得很孤單，請跟我說說聖經裡關於神陪伴我們的故事。" },
+      { title: "擔憂孫輩時", text: "我很擔心孫子的前途，心裡放不下，請給我一段能讓我放下焦慮的經文。" },
+      { title: "想念老伴時", text: "我想念過世的老伴了，心裡酸酸的，請讀一段關於天家盼望的話給我聽。" },
+      { title: "心靜不下來時", text: "我覺得最近生活壓力很大，心靜不下來，請帶領我做一個簡單的深呼吸靈修。" },
+      { title: "迷惘未來時", text: "我對未來感到很迷惘，請告訴我神對我的生命還有什麼美好的計畫嗎？" },
+      { title: "家中糾紛時", text: "請幫我寫一段簡短的禱告詞，求神賜給我智慧與耐心去面對家裡的糾紛。" },
+      { title: "凡事謝恩時", text: "我今天覺得很有福氣，想感謝神，請陪我一起數算恩典，說說我們可以感謝神的事。" }
+    ],
+    scripture: [
+      { title: "老年衰退 (詩71:9)", text: "讀詩篇 71:9 給我聽，並解釋神怎麼看我們老年的時候？" },
+      { title: "家事忙碌 (馬大與馬利亞)", text: "我想聽馬大與馬利亞的故事，為什麼耶穌叫馬大不要忙了？" },
+      { title: "教養孩童 (箴22:6)", text: "箴言22:6說教養孩童使他走當行的道，但我現在還能做什麼？" },
+      { title: "明日憂慮 (太6:34)", text: "我不懂什麼是『一天的難處一天當』？耶穌在想什麼？" },
+      { title: "愛的意義 (林前13)", text: "解釋哥林多前書13章的愛，對我們這種年紀的人有什麼新意義？" },
+      { title: "死蔭幽谷 (詩23)", text: "解釋詩篇23篇的『死蔭幽谷』是什麼？神真的在那裡嗎？" },
+      { title: "過去悔恨 (約一1:9)", text: "讀約翰一書1:9，我以前做錯的事，現在求神原諒還來得及嗎？" },
+      { title: "常常喜樂 (帖前5:16)", text: "為什麼聖經說『要常常喜樂，不住禱告』？我病都沒好怎麼喜樂？" },
+      { title: "生命末了 (提後4:7)", text: "解釋保羅說的『美好的仗我已經打過了』，這對我有什麼安慰？" },
+      { title: "萬事互相效力 (羅8:28)", text: "羅馬書8:28說萬事互相效力，壞事也是嗎？" }
+    ],
+    intercession: [
+      { type: "cn", title: "病友康復 (國語)", text: "幫我寫一段簡短的關懷短訊給王姊妹，她最近開完刀，求神醫治她，並祝她早日康復。" },
+      { type: "cn", title: "痛失親人 (國語)", text: "林弟兄的老伴最近過世了，請幫我寫一段溫暖貼心的安慰短訊，告訴他我們都在為他代禱。" },
+      { type: "cn", title: "子女工作 (國語)", text: "我孩子最近工作壓力大、很常加班。請寫一段溫柔的祝福禱告文，祝他出入平安、工作有智慧。" },
+      { type: "cn", title: "家庭和睦 (國語)", text: "家裡最近有些爭執，請寫一個求神賜下平安與和睦的禱告文，讓我們能彼此包容。" },
+      { type: "cn", title: "小組開場 (國語)", text: "幫我寫一段明天晚上小組聚會的開場禱告，語調要親切、熱情，歡迎新朋友。" },
+      { type: "tw", title: "身體無爽快 (台語)", text: "王姊妹平安！聽講妳這幾日身體卡無爽快，我有替妳求主耶穌，保庇妳早日清氣、身體勇健。咱的神是咱隨時的幫助，妳要安心休養喔！" },
+      { type: "tw", title: "心裡憂慮 (台語)", text: "老朋友，煩惱的事就交給主，嘸通自己擔。願主賜給妳平安的心，讓妳好睏、好眠。主耶穌惜妳，我也在遮替妳祈禱。" },
+      { type: "tw", title: "感謝照顧 (台語)", text: "李姊妹，感謝妳送來的物件，誠好食！謝謝妳這款體貼。願主加倍賜福給妳全家，恩典滿滿喔！" },
+      { type: "tw", title: "邀請聚會 (台語)", text: "這禮拜的小組聚會真精彩，大家攏真想妳。若有空作夥來坐，聽神的話，心情會變真好，等妳喔！" },
+      { type: "tw", title: "囝仔做事業 (台語)", text: "乖兒，聽講你最近工作真無閒，壓力嘛大。阿母有替你祈禱，求主賜你智慧，出入攏平安，身體要顧好喔！" }
+    ],
+    prayerq: [
+      { title: "為什麼神不聽我的病痛禱告？", text: "我每天都為了我的病痛迫切禱告，可是為什麼一直都沒有好轉？神真的有聽到我的聲音嗎？請用聖經的觀點安慰我。" },
+      { title: "年紀大了，在教會還能做什麼？", text: "我現在年紀大了，體力不好，不像年輕人可以做那麼多服事。在神眼中，我還有什麼價值？我還能為教會做些什麼？" },
+      { title: "面對死亡的陰影感到害怕...", text: "看到身邊同齡的朋友一個個離開，想到自己有天也要面對死亡，心裡總是有點害怕。請跟我說說聖經對天家的應許，讓我心裡有真正的平安。" },
+      { title: "要怎麼原諒傷害過我的家人？", text: "過去家裡有些事讓我受過很大的傷害，心裡一直放不下。雖然知道聖經教我們要饒恕，但我該怎麼做才能真的放下心中的怨恨？" }
+    ],
+    gems: [
+      { 
+        title: "漫影煉金：二階段成語漫機", 
+        text: "【核心定位】你是一位資深 AI 漫畫顧問，專門將成語轉化為具備 '現代諷刺感' 彩色漫畫。Phase 1：創意核准，接收成語後產出 3 個現代改編方案（A/B/C）。Phase 2：用戶確認後，輸出 4-6 格分鏡腳本並呼叫生圖。" 
+      },
+      { 
+        title: "直播片頭背景圖 AI 專家", 
+        text: "# 角色設定：基督教視覺傳達創意總監。任務：根據經文與主題產出「10 個視覺意象建議表」並包含 Unsplash 連結。第二階段：用戶輸入 [1-10] 觸發生成 16:9 cinematic 電影攝影風格無文字背景圖。" 
+      },
+      { 
+        title: "每日靈修、全域財經科技報導", 
+        text: "每日產出結構化簡報。包含：1) 心靈補給：基督教靈修心得。2) 全域財經：整理過去24小時全球、台灣財經新聞（事件、立場、影響）並附來源連結。3) AI科技趨勢新聞。" 
+      },
+      { 
+        title: "個人 IP 圖像設計專家 (16宮格)", 
+        text: "引導分析照片關鍵特徵。輸入 [1-18] 生成對應風格的 4x4 純白背景 IP 網格圖。輸入 [L+數字] 將原照片轉換為單張指定風格肖像。輸入 [p] 生成 4x3 職場表情網格圖。" 
+      }
+    ],
+    setup: [
+      { title: "讓你的 AI 助手稱呼你為『李大哥』", text: "請記得在接下來的對話中，一律稱呼我為『李大哥』，並且說話語調要親切、有耐心，多用溫暖的語氣來回答我的問題。" },
+      { title: "要求回答簡單易懂、字體放大", text: "請把我當作一位 70 歲的長者，回答問題時請用簡單直白的話，不要用太多英文字或複雜的科技術語，段落要分明，字數不要太多。" }
+    ]
+  };
+
+  // AI Selector buttons interaction
+  const platformBtns = document.querySelectorAll('.platform-btn');
+  platformBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      platformBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentAI = btn.getAttribute('data-platform');
+      
+      // Re-render current category to update button labels
+      renderDevotionPrompts(currentDevotionCat, currentDevotionFilter);
+    });
+  });
+
+  // Category switch for devotion
+  const devotionCatBtns = document.querySelectorAll('.devotion-nav-btn');
+  devotionCatBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      devotionCatBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentDevotionCat = btn.getAttribute('data-cat');
+
+      // Show intercession sub-filter only for 'intercession' category
+      const filterBar = document.getElementById('intercession-filter-bar');
+      if (filterBar) {
+        filterBar.style.display = (currentDevotionCat === 'intercession') ? 'flex' : 'none';
+      }
+
+      renderDevotionPrompts(currentDevotionCat, currentDevotionFilter);
+    });
+  });
+
+  // Intercession dialect filters
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentDevotionFilter = btn.getAttribute('data-filter');
+      renderDevotionPrompts('intercession', currentDevotionFilter);
+    });
+  });
+
+  // Render function for Devotion Tab cards
+  function renderDevotionPrompts(category, filter = 'all') {
+    const grid = document.getElementById('devotion-prompts-grid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+    let dataList = devotionData[category] || [];
+
+    // Filter intercession
+    if (category === 'intercession' && filter !== 'all') {
+      dataList = dataList.filter(item => item.type === filter);
+    }
+
+    if (dataList.length === 0) {
+      grid.innerHTML = '<div class="card" style="grid-column: span 3; text-align:center; color:var(--text-muted);">無相關指令</div>';
+      return;
+    }
+
+    dataList.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'devotion-card';
+
+      // Set badge style
+      let tagClass = 'tag-normal';
+      let tagLabel = category.toUpperCase();
+      if (item.type === 'tw') { tagClass = 'tag-tw'; tagLabel = '台語口吻'; }
+      else if (item.type === 'cn') { tagClass = 'tag-cn'; tagLabel = '國語口吻'; }
+      else if (category === 'gems') { tagClass = 'tag-gems'; tagLabel = 'Gems'; }
+      else if (category === 'comfort') tagLabel = '尋求安慰';
+      else if (category === 'scripture') tagLabel = '經文解讀';
+      else if (category === 'prayerq') tagLabel = '常見提問';
+      else if (category === 'setup') tagLabel = '設定';
+
+      const platformInfo = aiPlatforms[currentAI];
+
+      card.innerHTML = `
+        <div>
+          <div class="devotion-card-header">
+            <h3 class="devotion-card-title">${item.title}</h3>
+            <span class="devotion-tag ${tagClass}">${tagLabel}</span>
+          </div>
+          <div class="devotion-prompt-text" id="prompt-txt-${category}-${cleanString(item.title)}">${item.text}</div>
+        </div>
+        <div class="devotion-card-actions">
+          <button class="btn btn-primary btn-sm btn-copy-platform" data-text="${encodeURIComponent(item.text)}">
+            <i data-lucide="copy"></i> 複製並前往 ${platformInfo.name}
+          </button>
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+    // Re-bind click events for newly created devotion copy buttons
+    bindDevotionCopyButtons();
+    lucide.createIcons();
+  }
+
+  function cleanString(str) {
+    return str.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '');
+  }
+
+  function bindDevotionCopyButtons() {
+    const copyPlatBtns = document.querySelectorAll('.btn-copy-platform');
+    copyPlatBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = decodeURIComponent(btn.getAttribute('data-text'));
+        const platformInfo = aiPlatforms[currentAI];
+
+        // Copy
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(`指令已複製！即將前往 ${platformInfo.name}...`);
+          
+          // Open AI Platform in new tab after a brief delay
+          setTimeout(() => {
+            window.open(platformInfo.url, '_blank');
+          }, 800);
+        }).catch(err => {
+          console.error('複製失敗: ', err);
+        });
+      });
+    });
+  }
+
+
+  /* ==========================================================================
+     8. Multi-Search Hub Logic (Tab 6)
+     ========================================================================== */
+  const searchUrls = {
+    // AI Tools
+    perplexity: { search: "https://www.perplexity.ai/?q=", home: "https://www.perplexity.ai" },
+    colpilot: { search: "https://copilot.microsoft.com/?q=", home: "https://copilot.microsoft.com" },
+    chatgpt: { search: "https://chatgpt.com/?q=", home: "https://chatgpt.com" },
+    bard: { search: "https://gemini.google.com/app/search?q=", home: "https://gemini.google.com/app" },
+    claude: { search: "https://claude.ai/new?q=", home: "https://claude.ai/new" },
+    grok: { search: "https://grok.com/?q=", home: "https://grok.com" },
+    deepseek: { search: "https://chat.deepseek.com/?q=", home: "https://chat.deepseek.com" },
+    doubao: { search: "https://www.doubao.com/chat/?q=", home: "https://www.doubao.com" },
+    felo_ai: { search: "https://felo.ai/search?q=", home: "https://felo.ai" },
+    studio_global: { search: "https://app.studioglobal.ai/search?q=", home: "https://app.studioglobal.ai" },
+    poe: { search: "https://poe.com/search?q=", home: "https://poe.com" },
+    huggingface: { search: "https://huggingface.co/spaces/huggingface-projects/llama-2-13b-chat?q=", home: "https://huggingface.co" },
+    notegpt: { search: "https://notegpt.io/search?q=", home: "https://notegpt.io" },
+    google_ai_studio: { search: "https://aistudio.google.com/", home: "https://aistudio.google.com/" },
+    max_ai: { search: "https://www.maxai.me/", home: "https://www.maxai.me/" },
+    ChatGLM: { search: "https://chatglm.cn/main/gdetail/5f97977054f15d2a23ebccfa?q=", home: "https://chatglm.cn" },
+    yiyan: { search: "https://yiyan.baidu.com/", home: "https://yiyan.baidu.com/" },
+    kimi: { search: "https://kimi.moonshot.cn/", home: "https://kimi.moonshot.cn/" },
+    NBklm: { search: "https://notebooklm.google.com/", home: "https://notebooklm.google.com/" },
+    lovable: { search: "https://lovable.dev/", home: "https://lovable.dev/" },
+
+    // Search Engines
+    google: { search: "https://www.google.com/search?q=", home: "https://www.google.com" },
+    bing: { search: "https://www.bing.com/search?q=", home: "https://www.bing.com" },
+    duckduckgo: { search: "https://duckduckgo.com/?q=", home: "https://duckduckgo.com" },
+    yahoo: { search: "https://tw.search.yahoo.com/search?p=", home: "https://tw.yahoo.com" },
+    baidu: { search: "https://www.baidu.com/s?wd=", home: "https://www.baidu.com" },
+    萌典: { search: "https://www.moedict.tw/", home: "https://www.moedict.tw" },
+    找台語: { search: "https://chhoe.taigi.info/search.jsp?keyword=", home: "https://chhoe.taigi.info" },
+    itaigi: { search: "https://itaigi.tw/k/", home: "https://itaigi.tw" },
+    台語辭典: { search: "https://sutian.moe.edu.tw/und-hani/tshiau/?lui=tai_su&tsha=", home: "https://sutian.moe.edu.tw" },
+    客語辭典: { search: "https://hakkadict.moe.edu.tw/search?q=", home: "https://hakkadict.moe.edu.tw" },
+
+    // News
+    udn: { search: "https://udn.com/search/word/2/", home: "https://udn.com" },
+    chinatimes: { search: "https://www.chinatimes.com/search/", home: "https://www.chinatimes.com" },
+    ltn: { search: "https://search.ltn.com.tw/list?keyword=", home: "https://search.ltn.com.tw" },
+    ettoday: { search: "https://www.ettoday.net/news_search/doSearch.php?keywords=", home: "https://www.ettoday.net" },
+    yahoo_news: { search: "https://tw.news.yahoo.com/search?p=", home: "https://tw.news.yahoo.com" },
+    cna: { search: "https://www.cna.com.tw/search/hysearchws.aspx?q=", home: "https://www.cna.com.tw" },
+    google_news: { search: "https://news.google.com/search?q=", home: "https://news.google.com" },
+
+    // Images
+    freepik: { search: "https://www.freepik.com/search?query=", home: "https://www.freepik.com" },
+    Pexels: { search: "https://www.pexels.com/zh-tw/search/", home: "https://www.pexels.com" },
+    Pixabay: { search: "https://pixabay.com/zh/images/search/", home: "https://pixabay.com" },
+    Unsplash: { search: "https://unsplash.com/s/photos/", home: "https://unsplash.com" },
+    FreeImages: { search: "https://www.freeimages.com/search/", home: "https://www.freeimages.com" },
+    cc0_fengjing: { search: "https://cc0.cn/image/fengjing/", home: "https://cc0.cn/image/fengjing/" },
+    NASA_APOD: { search: "https://apod.nasa.gov/apod/astropix.html", home: "https://apod.nasa.gov/apod/astropix.html" },
+    wiki_daily: { search: "https://zh.m.wikipedia.org/zh-tw/Wikipedia:%E6%AF%8F%E6%97%A5%E5%9B%BE%E7%89%87", home: "https://zh.m.wikipedia.org/zh-tw/Wikipedia:%E6%AF%8F%E6%97%A5%E5%9B%BE%E7%89%87" },
+    photo_ac: { search: "https://zh-tw.photo-ac.com/", home: "https://zh-tw.photo-ac.com/" },
+
+    // Shopping
+    momo: { search: "https://www.momoshop.com.tw/search/searchShop.jsp?keyword=", home: "https://www.momoshop.com.tw" },
+    shopee: { search: "https://shopee.tw/search?keyword=", home: "https://shopee.tw" },
+    pchome24: { search: "https://ecshweb.pchome.com.tw/search/v3.3/?q=", home: "https://shopping.pchome.com.tw" },
+    yahoo_shop: { search: "https://tw.buy.yahoo.com/search/product?p=", home: "https://tw.buy.yahoo.com" },
+    ruten: { search: "https://www.ruten.com.tw/find/?q=", home: "https://www.ruten.com.tw" },
+    books: { search: "https://www.books.com.tw/web/sys_search?key=", home: "https://www.books.com.tw" },
+    etmall: { search: "https://www.etmall.com.tw/Search?keyword=", home: "https://www.etmall.com.tw" },
+    rakuten: { search: "https://www.rakuten.com.tw/search/", home: "https://www.rakuten.com.tw" },
+    coupang: { search: "https://www.coupang.com.tw/search?q=", home: "https://www.coupang.com.tw" },
+    fridays: { search: "https://shopping.friday.tw/ec2/search?sid=&hotKey=", home: "https://shopping.friday.tw" },
+    鮮拾: { search: "https://www.10mart.com.tw/v2/Search?q=", home: "https://www.10mart.com.tw" },
+    信源電器: { search: "https://www.xinyuan.com.tw/index.php?q=", home: "https://www.xinyuan.com.tw" },
+    findprice: { search: "https://www.findprice.com.tw/g/", home: "https://www.findprice.com.tw" },
+    priceTW: { search: "https://biggo.com.tw/s/?q=", home: "https://biggo.com.tw" },
+    ezprice: { search: "https://feebee.com.tw/s/?q=", home: "https://feebee.com.tw" },
+    sogi: { search: "https://www.sogi.com.tw/search?q=", home: "https://www.sogi.com.tw" },
+    eprice: { search: "https://www.eprice.com.tw/search/?q=", home: "https://www.eprice.com.tw" },
+    findbook: { search: "https://findbook.tw/search?q=", home: "https://findbook.tw" },
+    funtime: { search: "https://www.funtime.com.tw/search.php?q=", home: "https://www.funtime.com.tw" },
+    taiwango: { search: "https://www.taiwango.com.tw/search?q=", home: "https://www.taiwango.com.tw" },
+    backpackers: { search: "https://www.backpackers.com.tw/forum/sitesearch.php?q=", home: "https://www.backpackers.com.tw" },
+    agoda: { search: "https://www.agoda.com/zh-tw/search?asq=", home: "https://www.agoda.com" },
+    booking: { search: "https://www.booking.com/searchresults.html?ss=", home: "https://www.booking.com" },
+    trip: { search: "https://tw.trip.com/search/?keyword=", home: "https://tw.trip.com" },
+
+    // Music
+    Suno: { search: "https://suno.com/create", home: "https://suno.com" },
+    Genape: { search: "https://app.genape.ai/chatApe", home: "https://app.genape.ai" },
+    Aiva: { search: "https://creators.aiva.ai/", home: "https://creators.aiva.ai/" },
+    Veedio: { search: "https://www.veed.io/", home: "https://www.veed.io/" },
+    Napkin: { search: "https://app.napkin.ai/", home: "https://app.napkin.ai/" },
+
+    // Art Gen
+    Midjourney: { search: "https://www.midjourney.com", home: "https://www.midjourney.com" },
+    BingArt: { search: "https://www.bing.com/images/create?q=", home: "https://www.bing.com/images/create" },
+    ideogram: { search: "https://ideogram.ai/", home: "https://ideogram.ai/" },
+    Recraft: { search: "https://www.recraft.ai/", home: "https://www.recraft.ai/" },
+    klingai: { search: "https://klingai.com/", home: "https://klingai.com/" },
+    dreamina: { search: "https://dreamina.capcut.com/", home: "https://dreamina.capcut.com/" },
+    Leonardo: { search: "https://leonardo.ai/", home: "https://leonardo.ai/" },
+    Raphael: { search: "https://artbreeder.com/", home: "https://artbreeder.com/" },
+    Playground: { search: "https://playground.com/", home: "https://playground.com/" },
+    Writesonic: { search: "https://writesonic.com/", home: "https://writesonic.com/" },
+    Simplified: { search: "https://simplified.com/ai-image-generator/", home: "https://simplified.com" },
+    LovoAI: { search: "https://lovo.ai/", home: "https://lovo.ai/" },
+    Artguru: { search: "https://www.artguru.ai/", home: "https://www.artguru.ai/" },
+    NightCafe_Creator: { search: "https://creator.nightcafe.studio/", home: "https://creator.nightcafe.studio/" },
+    Magic_Studio: { search: "https://magicstudio.com/", home: "https://magicstudio.com/" },
+    Craiyon: { search: "https://www.craiyon.com/?q=", home: "https://www.craiyon.com" },
+    Hotpot_AI: { search: "https://hotpot.ai/", home: "https://hotpot.ai/" },
+    DeepAI: { search: "https://deepai.org/machine-learning-model/text2img", home: "https://deepai.org" },
+    Fotor: { search: "https://www.fotor.com/features/ai-image-generator/", home: "https://www.fotor.com" },
+    OpenArt: { search: "https://openart.ai/", home: "https://openart.ai/" },
+    Pixverse: { search: "https://pixverse.ai/", home: "https://pixverse.ai/" },
+    clipdrop: { search: "https://clipdrop.co/", home: "https://clipdrop.co/" },
+    photo_to_anime: { search: "https://www.imglarger.com/", home: "https://www.imglarger.com/" }
+  };
+
+  const searchInput = document.getElementById('search-input');
+  const searchClearBtn = document.getElementById('search-clear-btn');
+  const searchHistoryList = document.getElementById('search-history-list');
+  const historySectionWrapper = document.getElementById('history-section-wrapper');
+
+  // Load Search History from localStorage
+  let searchHistory = JSON.parse(localStorage.getItem('gemini_search_history')) || [];
+
+  // Toggle X clear button visibility
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      toggleClearButton();
+    });
+  }
+
+  function toggleClearButton() {
+    if (!searchClearBtn || !searchInput) return;
+    searchClearBtn.style.display = (searchInput.value.trim().length > 0) ? 'flex' : 'none';
+  }
+
+  // Clear Input Box
+  if (searchClearBtn) {
+    searchClearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      toggleClearButton();
+      searchInput.focus();
+    });
+  }
+
+  // Handle Search Platform button clicks
+  const searchButtons = document.querySelectorAll('.search-btn');
+  searchButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const engine = btn.getAttribute('data-engine');
+      const config = searchUrls[engine];
+      if (!config) return;
+
+      const val = searchInput ? searchInput.value.trim() : '';
+
+      if (val.length > 0) {
+        // Save Search History
+        addToHistory(val);
+        
+        // Open search page
+        window.open(config.search + encodeURIComponent(val), '_blank');
+      } else {
+        // Open homepage
+        window.open(config.home, '_blank');
+      }
+    });
+  });
+
+  // Add items to history list
+  function addToHistory(text) {
+    // Filter duplicates
+    searchHistory = searchHistory.filter(h => h.text !== text);
+    searchHistory.unshift({
+      text: text,
+      time: Date.now()
+    });
+
+    // Cap at 15 items
+    if (searchHistory.length > 15) {
+      searchHistory.pop();
+    }
+
+    localStorage.setItem('gemini_search_history', JSON.stringify(searchHistory));
+    renderSearchHistory();
+  }
+
+  // Render history list cards
+  function renderSearchHistory() {
+    if (!searchHistoryList || !historySectionWrapper) return;
+
+    if (searchHistory.length === 0) {
+      historySectionWrapper.style.display = 'none';
+      return;
+    }
+
+    historySectionWrapper.style.display = 'block';
+    searchHistoryList.innerHTML = '';
+
+    searchHistory.forEach((item, index) => {
+      const historyItem = document.createElement('div');
+      historyItem.className = 'history-item';
+
+      historyItem.innerHTML = `
+        <span class="history-text">${item.text}</span>
+        <button class="history-del-btn" data-index="${index}"><i data-lucide="x"></i></button>
+      `;
+
+      // Click on text auto-populates search box
+      historyItem.querySelector('.history-text').addEventListener('click', () => {
+        if (searchInput) {
+          searchInput.value = item.text;
+          toggleClearButton();
+          searchInput.focus();
+        }
+      });
+
+      // Click on X deletes single history
+      historyItem.querySelector('.history-del-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteHistoryItem(index);
+      });
+
+      searchHistoryList.appendChild(historyItem);
+    });
+
+    lucide.createIcons();
+  }
+
+  function deleteHistoryItem(index) {
+    searchHistory.splice(index, 1);
+    localStorage.setItem('gemini_search_history', JSON.stringify(searchHistory));
+    renderSearchHistory();
+  }
+
+  // Clear all search history
+  const btnClearHistory = document.getElementById('btn-clear-history');
+  if (btnClearHistory) {
+    btnClearHistory.addEventListener('click', () => {
+      if (confirm('確定要清空所有搜尋歷史紀錄嗎？')) {
+        searchHistory = [];
+        localStorage.removeItem('gemini_search_history');
+        renderSearchHistory();
+      }
+    });
+  }
+
+  /* ==========================================================================
+     9. Initialization & Load
+     ========================================================================== */
+  // Render Photo Wall on start
   renderPhotoWall();
 
-  // Load canvas after a short delay to ensure elements are sized
+  // Load default canvas after short delay
   setTimeout(initCanvas, 100);
 });

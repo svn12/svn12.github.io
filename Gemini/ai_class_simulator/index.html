@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 課堂實作與班級互動照片牆</title>
+  <title>AI 課堂實作與綜合導航平台</title>
   <!-- Google Fonts: Noto Sans TC, Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- FontAwesome for original compatibility if needed -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -22,7 +24,7 @@
   <header>
     <div class="container header-container">
       <div class="logo-area">
-        <h1>AI 課堂實作模擬器</h1>
+        <h1>AI 課堂實作與綜合導航平台</h1>
         <p class="subtitle">新一代美圖秀秀 - 不一樣的我 | 講師：黃子恬 Althea 理事長</p>
       </div>
       <div class="header-stats">
@@ -36,12 +38,14 @@
 
   <main class="container">
     
-    <!-- Tab Navigation -->
+    <!-- Tab Navigation (Extended to 6 tabs) -->
     <div class="tabs-container">
       <button class="tab-btn active" data-tab="guide"><i data-lucide="book-open"></i> 學習導覽與公式</button>
       <button class="tab-btn" data-tab="prompt"><i data-lucide="sparkles"></i> AI 指令填空器</button>
       <button class="tab-btn" data-tab="camera"><i data-lucide="camera"></i> 風格相機模擬</button>
       <button class="tab-btn" data-tab="wall"><i data-lucide="image"></i> 班級互動照片牆</button>
+      <button class="tab-btn" data-tab="devotion"><i data-lucide="heart-pulse"></i> AI 靈修伴侶</button>
+      <button class="tab-btn" data-tab="search"><i data-lucide="search"></i> 多功能搜尋</button>
     </div>
 
     <!-- Tab 1: 學習導覽 -->
@@ -373,6 +377,241 @@
       </div>
     </section>
 
+    <!-- Tab 5: AI 靈修伴侶 (New) -->
+    <section id="tab-devotion" class="tab-content">
+      <div class="card hero-card devotion-hero">
+        <div class="hero-content">
+          <h2>⛪ AI 靈修伴侶指令庫</h2>
+          <p>專為弟兄姊妹與長輩設計的靈修指令，當您感到軟弱、需要經文解讀或撰寫代禱關懷信時，AI 是您隨時的傾聽者與助手。</p>
+          
+          <!-- AI Platform Selection Row -->
+          <div class="ai-platform-selector">
+            <span class="platform-label">選擇你要對話的 AI：</span>
+            <div class="platform-buttons">
+              <button class="platform-btn active" data-platform="gemini">
+                <img src="https://www.gstatic.com/lamda/images/favicon_v1_150160d13988654bc0e0.svg" alt="Gemini"> Gemini
+              </button>
+              <button class="platform-btn" data-platform="chatgpt">
+                <i class="fa-solid fa-bolt text-emerald-500"></i> ChatGPT
+              </button>
+              <button class="platform-btn" data-platform="claude">
+                <i class="fa-solid fa-feather text-amber-500"></i> Claude
+              </button>
+              <button class="platform-btn" data-platform="perplexity">
+                <i class="fa-solid fa-magnifying-glass text-sky-500"></i> Perplexity
+              </button>
+              <button class="platform-btn" data-platform="grok">
+                <i class="fa-solid fa-x text-white"></i> Grok
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Devotion Category Navigation -->
+      <div class="devotion-nav">
+        <button class="devotion-nav-btn active" data-cat="comfort"><i data-lucide="heart"></i> 尋求安慰</button>
+        <button class="devotion-nav-btn" data-cat="scripture"><i data-lucide="book-open"></i> 經文解讀</button>
+        <button class="devotion-nav-btn" data-cat="intercession"><i data-lucide="mail"></i> 代禱與關懷範本</button>
+        <button class="devotion-nav-btn" data-cat="prayerq"><i data-lucide="help-circle"></i> 禱告常見提問</button>
+        <button class="devotion-nav-btn" data-cat="gems"><i data-lucide="gem"></i> Gems 高級指令</button>
+        <button class="devotion-nav-btn" data-cat="setup"><i data-lucide="settings"></i> 設定教學</button>
+      </div>
+
+      <!-- Intercession Dialect filter (hidden by default, shown only when intercession category active) -->
+      <div class="intercession-filter-bar" id="intercession-filter-bar" style="display: none;">
+        <span class="filter-label">選擇口吻：</span>
+        <button class="filter-btn active" data-filter="all">全部</button>
+        <button class="filter-btn" data-filter="tw">台語口吻</button>
+        <button class="filter-btn" data-filter="cn">國語口吻</button>
+      </div>
+
+      <!-- Prompts Grid Container -->
+      <div class="devotion-prompts-grid" id="devotion-prompts-grid">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Tab 6: 多功能搜尋與工具箱 (New) -->
+    <section id="tab-search" class="tab-content">
+      
+      <!-- Central Search Input Box -->
+      <div class="card search-input-card">
+        <div class="card-header">
+          <i data-lucide="search" class="card-icon-main"></i>
+          <h2>多功能智慧搜尋</h2>
+        </div>
+        <p class="search-tip">在下方輸入框鍵入文字，並點擊任意平台按鈕即可搜尋。留空直接訪問該官網。</p>
+        <div class="search-bar-wrapper">
+          <input type="text" id="search-input" class="search-input-field" placeholder="請輸入搜索內容，如：『溪頭一日健行』或『AI生成圖片』..." autocomplete="off">
+          <button class="search-clear-btn" id="search-clear-btn" style="display: none;"><i data-lucide="x"></i></button>
+        </div>
+      </div>
+
+      <!-- Search History list -->
+      <div class="card search-history-card" id="history-section-wrapper" style="display: none;">
+        <div class="history-header">
+          <h3><i data-lucide="history"></i> 搜尋歷史記錄</h3>
+          <button class="btn btn-secondary btn-sm" id="btn-clear-history"><i data-lucide="trash-2"></i> 清空歷史</button>
+        </div>
+        <div class="history-list" id="search-history-list">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Platforms Grid categorized -->
+      <div class="search-sections-container">
+        
+        <!-- Category: AI Tools -->
+        <div class="card search-section-card">
+          <div class="search-section-title stroke-ai"><i data-lucide="cpu"></i> AI 智慧對話工具</div>
+          <div class="search-buttons-flex">
+            <button class="search-btn btn-ai" data-engine="perplexity">Perplexity</button>
+            <button class="search-btn btn-ai" data-engine="colpilot">Copilot</button>
+            <button class="search-btn btn-ai" data-engine="chatgpt">ChatGPT</button>
+            <button class="search-btn btn-ai" data-engine="bard">Gemini</button>
+            <button class="search-btn btn-ai" data-engine="claude">Claude</button>
+            <button class="search-btn btn-ai" data-engine="grok">Grok</button>
+            <button class="search-btn btn-ai" data-engine="deepseek">DeepSeek</button>
+            <button class="search-btn btn-ai" data-engine="doubao">豆包 Doubao</button>
+            <button class="search-btn btn-ai" data-engine="felo_ai">Felo AI</button>
+            <button class="search-btn btn-ai" data-engine="studio_global">Studio Global</button>
+            <button class="search-btn btn-ai" data-engine="poe">Poe</button>
+            <button class="search-btn btn-ai" data-engine="huggingface">Hugging Face</button>
+            <button class="search-btn btn-ai" data-engine="notegpt">NoteGPT</button>
+            <button class="search-btn btn-ai" data-engine="google_ai_studio">Google AI Studio</button>
+            <button class="search-btn btn-ai" data-engine="max_ai">Max AI</button>
+            <button class="search-btn btn-ai" data-engine="ChatGLM">智譜清言</button>
+            <button class="search-btn btn-ai" data-engine="yiyan">文心一言</button>
+            <button class="search-btn btn-ai" data-engine="kimi">Kimi AI</button>
+            <button class="search-btn btn-ai" data-engine="NBklm">NotebookLM</button>
+            <button class="search-btn btn-ai" data-engine="lovable">Lovable AI</button>
+          </div>
+        </div>
+
+        <!-- Category: Search Engines -->
+        <div class="card search-section-card">
+          <div class="search-section-title stroke-engine"><i data-lucide="globe"></i> 傳統與語言搜尋</div>
+          <div class="search-buttons-flex">
+            <button class="search-btn btn-engine" data-engine="google">Google 搜尋</button>
+            <button class="search-btn btn-engine" data-engine="bing">Bing 搜尋</button>
+            <button class="search-btn btn-engine" data-engine="duckduckgo">DuckDuckGo</button>
+            <button class="search-btn btn-engine" data-engine="yahoo">Yahoo 奇摩</button>
+            <button class="search-btn btn-engine" data-engine="baidu">百度搜尋</button>
+            <button class="search-btn btn-engine" data-engine="萌典">萌典 (中文)</button>
+            <button class="search-btn btn-engine" data-engine="找台語">找台語</button>
+            <button class="search-btn btn-engine" data-engine="itaigi">iTaigi 愛台語</button>
+            <button class="search-btn btn-engine" data-engine="台語辭典">教育部台語辭典</button>
+            <button class="search-btn btn-engine" data-engine="客語辭典">教育部客語辭典</button>
+          </div>
+        </div>
+
+        <!-- Category: News -->
+        <div class="card search-section-card">
+          <div class="search-section-title stroke-news"><i data-lucide="newspaper"></i> 即時新聞媒體</div>
+          <div class="search-buttons-flex">
+            <button class="search-btn btn-news" data-engine="udn">聯合新聞網</button>
+            <button class="search-btn btn-news" data-engine="chinatimes">中時新聞網</button>
+            <button class="search-btn btn-news" data-engine="ltn">自由時報</button>
+            <button class="search-btn btn-news" data-engine="ettoday">ETtoday</button>
+            <button class="search-btn btn-news" data-engine="yahoo_news">Yahoo 新聞</button>
+            <button class="search-btn btn-news" data-engine="cna">中央通訊社</button>
+            <button class="search-btn btn-news" data-engine="google_news">Google 新聞</button>
+          </div>
+        </div>
+
+        <!-- Category: Free Images -->
+        <div class="card search-section-card">
+          <div class="search-section-title stroke-images"><i data-lucide="image"></i> 免費無版權圖檔</div>
+          <div class="search-buttons-flex">
+            <button class="search-btn btn-images" data-engine="freepik">Freepik</button>
+            <button class="search-btn btn-images" data-engine="Pexels">Pexels</button>
+            <button class="search-btn btn-images" data-engine="Pixabay">Pixabay</button>
+            <button class="search-btn btn-images" data-engine="Unsplash">Unsplash</button>
+            <button class="search-btn btn-images" data-engine="FreeImages">FreeImages</button>
+            <button class="search-btn btn-images" data-engine="cc0_fengjing">CC0 風景圖片</button>
+            <button class="search-btn btn-images" data-engine="NASA_APOD">NASA 天文圖</button>
+            <button class="search-btn btn-images" data-engine="wiki_daily">維基每日圖片</button>
+            <button class="search-btn btn-images" data-engine="photo_ac">Photo AC</button>
+          </div>
+        </div>
+
+        <!-- Category: Shopping -->
+        <div class="card search-section-card">
+          <div class="search-section-title stroke-shopping"><i data-lucide="shopping-cart"></i> 購物與商務比價</div>
+          <div class="search-buttons-flex">
+            <button class="search-btn btn-shopping" data-engine="momo">momo 購物網</button>
+            <button class="search-btn btn-shopping" data-engine="shopee">蝦皮購物</button>
+            <button class="search-btn btn-shopping" data-engine="pchome24">PChome 24h</button>
+            <button class="search-btn btn-shopping" data-engine="yahoo_shop">Yahoo 購物</button>
+            <button class="search-btn btn-shopping" data-engine="ruten">露天拍賣</button>
+            <button class="search-btn btn-shopping" data-engine="books">博客來</button>
+            <button class="search-btn btn-shopping" data-engine="etmall">東森購物</button>
+            <button class="search-btn btn-shopping" data-engine="rakuten">台灣樂天市場</button>
+            <button class="search-btn btn-shopping" data-engine="coupang">Coupang 酷澎</button>
+            <button class="search-btn btn-shopping" data-engine="fridays">friDay 購物</button>
+            <button class="search-btn btn-shopping" data-engine="鮮拾">鮮拾</button>
+            <button class="search-btn btn-shopping" data-engine="信源電器">信源電器</button>
+            <button class="search-btn btn-shopping" data-engine="findprice">FindPrice 比價</button>
+            <button class="search-btn btn-shopping" data-engine="priceTW">BigGo 比價</button>
+            <button class="search-btn btn-shopping" data-engine="ezprice">飛比價格</button>
+            <button class="search-btn btn-shopping" data-engine="sogi">Sogi 手機王</button>
+            <button class="search-btn btn-shopping" data-engine="eprice">ePrice 比價</button>
+            <button class="search-btn btn-shopping" data-engine="findbook">Findbook 找書</button>
+            <button class="search-btn btn-shopping" data-engine="funtime">FunTime 旅遊比價</button>
+            <button class="search-btn btn-shopping" data-engine="taiwango">TaiwanGo 輕鬆比</button>
+            <button class="search-btn btn-shopping" data-engine="backpackers">背包客棧 論壇</button>
+            <button class="search-btn btn-shopping" data-engine="agoda">Agoda 訂房</button>
+            <button class="search-btn btn-shopping" data-engine="booking">Booking.com</button>
+            <button class="search-btn btn-shopping" data-engine="trip">Trip.com</button>
+          </div>
+        </div>
+
+        <!-- Category: AI Music & Generators -->
+        <div class="card search-section-card">
+          <div class="search-section-title stroke-music"><i data-lucide="music"></i> AI 音樂與資料整理</div>
+          <div class="search-buttons-flex">
+            <button class="search-btn btn-music" data-engine="Suno">Suno (AI 音樂)</button>
+            <button class="search-btn btn-music" data-engine="Genape">歌詞 Genape</button>
+            <button class="search-btn btn-music" data-engine="Aiva">Aiva</button>
+            <button class="search-btn btn-music" data-engine="Veedio">Veed.io</button>
+            <button class="search-btn btn-music" data-engine="Napkin">Napkin AI</button>
+          </div>
+        </div>
+
+        <!-- Category: AI Image Gen -->
+        <div class="card search-section-card">
+          <div class="search-section-title stroke-artgen"><i data-lucide="palette"></i> AI 生成圖與畫畫</div>
+          <div class="search-buttons-flex">
+            <button class="search-btn btn-artgen" data-engine="Midjourney">Midjourney</button>
+            <button class="search-btn btn-artgen" data-engine="BingArt">Bing Create (DALL-E)</button>
+            <button class="search-btn btn-artgen" data-engine="ideogram">Ideogram</button>
+            <button class="search-btn btn-artgen" data-engine="Recraft">Recraft</button>
+            <button class="search-btn btn-artgen" data-engine="klingai">Kling AI 快手可靈</button>
+            <button class="search-btn btn-artgen" data-engine="dreamina">Dreamina 即夢</button>
+            <button class="search-btn btn-artgen" data-engine="Leonardo">Leonardo AI</button>
+            <button class="search-btn btn-artgen" data-engine="Raphael">Raphael</button>
+            <button class="search-btn btn-artgen" data-engine="Playground">Playground</button>
+            <button class="search-btn btn-artgen" data-engine="Writesonic">Writesonic</button>
+            <button class="search-btn btn-artgen" data-engine="Simplified">Simplified</button>
+            <button class="search-btn btn-artgen" data-engine="LovoAI">Lovo.ai</button>
+            <button class="search-btn btn-artgen" data-engine="Artguru">Artguru</button>
+            <button class="search-btn btn-artgen" data-engine="NightCafe_Creator">NightCafe</button>
+            <button class="search-btn btn-artgen" data-engine="Magic_Studio">Magic Studio</button>
+            <button class="search-btn btn-artgen" data-engine="Craiyon">Craiyon</button>
+            <button class="search-btn btn-artgen" data-engine="Hotpot_AI">Hotpot AI</button>
+            <button class="search-btn btn-artgen" data-engine="DeepAI">DeepAI</button>
+            <button class="search-btn btn-artgen" data-engine="Fotor">Fotor</button>
+            <button class="search-btn btn-artgen" data-engine="OpenArt">OpenArt</button>
+            <button class="search-btn btn-artgen" data-engine="Pixverse">Pixverse</button>
+            <button class="search-btn btn-artgen" data-engine="clipdrop">Clipdrop</button>
+            <button class="search-btn btn-artgen" data-engine="photo_to_anime">Photo to Anime</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <footer>
@@ -407,6 +646,9 @@
       </div>
     </div>
   </div>
+
+  <!-- Devotion toast popup -->
+  <div id="toast" class="copy-toast">指令已複製！</div>
 
   <script src="app.js"></script>
 </body>
