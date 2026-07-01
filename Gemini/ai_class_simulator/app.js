@@ -280,6 +280,31 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.strokeRect(dx, dy, halfW, halfH);
       }
     } 
+    else if (style === 'clay') {
+      ctx.filter = 'saturate(1.5) contrast(1.15) brightness(1.05) blur(1.5px)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.filter = 'none';
+
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+      for (let j = 0; j < data.length; j += 4) {
+        data[j]   = Math.round(data[j] / 51) * 51;
+        data[j+1] = Math.round(data[j+1] / 51) * 51;
+        data[j+2] = Math.round(data[j+2] / 51) * 51;
+      }
+      ctx.putImageData(imgData, 0, 0);
+
+      ctx.globalAlpha = 0.15;
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.globalAlpha = 1.0;
+
+      const gradient = ctx.createRadialGradient(w * 0.3, h * 0.3, 0, w * 0.5, h * 0.5, Math.max(w, h) * 0.7);
+      gradient.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+      gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.45)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, w, h);
+    }
     else if (style === 'artnouveau') {
       ctx.filter = 'sepia(0.55) contrast(1.1) brightness(1.05) saturate(1.25)';
       ctx.drawImage(img, 0, 0, w, h);
@@ -614,7 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const modalPromptInput = document.getElementById('modal-uploader-prompt');
       let curPrompt = '';
-      if (selectedStyle === 'popart') {
+      if (['popart', 'artnouveau', 'clay', 'ukiyoe', 'impressionism'].includes(selectedStyle)) {
         curPrompt = document.getElementById('preview-style-text').innerText;
       } else {
         curPrompt = document.getElementById('preview-formula-text').innerText;
@@ -645,6 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let displayStyleName = 'AI 變身';
       if (selectedStyle === 'popart') displayStyleName = '波普藝術';
       else if (selectedStyle === 'artnouveau') displayStyleName = '新藝術風格';
+      else if (selectedStyle === 'clay') displayStyleName = '3D黏土風';
       else if (selectedStyle === 'ukiyoe') displayStyleName = '浮世繪';
       else if (selectedStyle === 'impressionism') displayStyleName = '印象派';
       else if (selectedStyle === 'vintage') displayStyleName = '復古老片';
