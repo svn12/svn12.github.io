@@ -210,14 +210,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const cameraStyleSelect = document.getElementById('camera-style-select');
   const styleBtns = document.querySelectorAll('.style-select-btn');
+
   styleBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       styleBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       selectedStyle = btn.getAttribute('data-style');
+      if (cameraStyleSelect) cameraStyleSelect.selectedIndex = 0;
     });
   });
+
+  if (cameraStyleSelect) {
+    cameraStyleSelect.addEventListener('change', () => {
+      styleBtns.forEach(b => b.classList.remove('active'));
+      selectedStyle = cameraStyleSelect.value;
+    });
+  }
 
   if (btnProcess) {
     btnProcess.addEventListener('click', () => {
@@ -422,6 +432,153 @@ document.addEventListener('DOMContentLoaded', () => {
       gradient.addColorStop(1, 'rgba(0,0,0,0.65)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, w, h);
+    }
+    else if (['chibi', 'line', 'sticker', 'dietsticker'].includes(style)) {
+      ctx.filter = 'saturate(1.4) contrast(1.1) brightness(1.02)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.filter = 'none';
+
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 14;
+      ctx.strokeRect(7, 7, w - 14, h - 14);
+      ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(14, 14, w - 28, h - 28);
+    }
+    else if (['plushie', 'marshmallow', 'softanime', 'baby'].includes(style)) {
+      ctx.filter = 'brightness(1.05) saturate(1.2) contrast(0.95)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.globalAlpha = 0.45;
+      ctx.filter = 'blur(6px) brightness(1.1)';
+      ctx.drawImage(canvas, 0, 0);
+      ctx.globalAlpha = 1.0;
+      ctx.filter = 'none';
+    }
+    else if (style === 'gummy') {
+      ctx.filter = 'saturate(1.6) contrast(1.2) blur(0.5px)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.filter = 'none';
+
+      const grad = ctx.createRadialGradient(w * 0.25, h * 0.25, 5, w * 0.3, h * 0.3, w * 0.5);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+      grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.1)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0.35)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+    }
+    else if (['watercolor', 'picturebook'].includes(style)) {
+      ctx.filter = 'contrast(0.85) saturate(0.95) brightness(1.02)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.filter = 'none';
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+      for (let i = 0; i < 40; i++) {
+        ctx.beginPath();
+        ctx.arc(Math.random() * w, Math.random() * h, Math.random() * 50 + 15, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+    }
+    else if (['flat', 'infographic', 'geometric'].includes(style)) {
+      ctx.drawImage(img, 0, 0, w, h);
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+      for (let j = 0; j < data.length; j += 4) {
+        data[j]   = Math.round(data[j] / 85) * 85;
+        data[j+1] = Math.round(data[j+1] / 85) * 85;
+        data[j+2] = Math.round(data[j+2] / 85) * 85;
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+    else if (['korean', 'doodle', 'monochrome', 'graffiti', 'chalkboard'].includes(style)) {
+      ctx.filter = 'contrast(1.6) grayscale(1.0)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.filter = 'none';
+
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+      const threshold = 120;
+      for (let j = 0; j < data.length; j += 4) {
+        const v = (data[j] + data[j+1] + data[j+2]) / 3;
+        const color = v > threshold ? 255 : 0;
+        data[j] = data[j+1] = data[j+2] = color;
+      }
+      ctx.putImageData(imgData, 0, 0);
+
+      if (style === 'chalkboard') {
+        const d = ctx.getImageData(0, 0, w, h).data;
+        ctx.fillStyle = '#1e3a1e';
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#ffffff';
+        for (let y = 0; y < h; y += 2) {
+          for (let x = 0; x < w; x += 2) {
+            const idx = (y * w + x) * 4;
+            if (d[idx] === 0) {
+              ctx.fillRect(x, y, 1.5, 1.5);
+            }
+          }
+        }
+      }
+    }
+    else if (['retroanime', 'lightleak'].includes(style)) {
+      ctx.filter = 'sepia(0.25) contrast(0.9) brightness(1.05) saturate(1.2)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.filter = 'none';
+
+      const gradient = ctx.createRadialGradient(w, h / 2, 10, w, h / 2, w * 0.8);
+      gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
+      gradient.addColorStop(0.5, 'rgba(249, 115, 22, 0.15)');
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, w, h);
+    }
+    else if (['cyberpunk', 'vaporwave'].includes(style)) {
+      ctx.filter = 'contrast(1.2) brightness(0.9) saturate(1.4)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.filter = 'none';
+
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+      for (let j = 0; j < data.length; j += 4) {
+        const gray = 0.299 * data[j] + 0.587 * data[j+1] + 0.114 * data[j+2];
+        data[j]   = Math.max(0, Math.min(255, gray + 60));
+        data[j+1] = Math.max(0, Math.min(255, gray - 50));
+        data[j+2] = Math.max(0, Math.min(255, gray + 140));
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+    else if (['collage', 'washitape'].includes(style)) {
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(0, 0); ctx.lineTo(w, h);
+      ctx.moveTo(w, 0); ctx.lineTo(0, h);
+      ctx.stroke();
+    }
+    else if (style === 'botanical') {
+      ctx.filter = 'saturate(1.2) contrast(1.05) hue-rotate(15deg)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.filter = 'none';
+
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
+      ctx.beginPath();
+      ctx.ellipse(35, 35, 20, 8, Math.PI / 4, 0, 2 * Math.PI);
+      ctx.ellipse(w - 35, h - 35, 20, 8, -Math.PI / 4, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+    else if (style === 'bread') {
+      ctx.filter = 'sepia(0.35) contrast(1.1) brightness(0.96) saturate(1.35)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.filter = 'none';
+    }
+    else if (['fashion', 'portrait', 'mascot', 'miniature', 'western', 'gamerender', 'socialfilter', 'poster'].includes(style)) {
+      ctx.filter = 'contrast(1.15) brightness(1.02) saturate(1.22)';
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.filter = 'none';
+
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 12;
+      ctx.strokeRect(6, 6, w - 12, h - 12);
     }
   }
 
@@ -652,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const modalPromptInput = document.getElementById('modal-uploader-prompt');
       let curPrompt = '';
-      if (['popart', 'artnouveau', 'clay', 'ukiyoe', 'impressionism'].includes(selectedStyle)) {
+      if (selectedStyle !== 'vintage') {
         curPrompt = document.getElementById('preview-style-text').innerText;
       } else {
         curPrompt = document.getElementById('preview-formula-text').innerText;
@@ -680,13 +837,52 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      let displayStyleName = 'AI 變身';
-      if (selectedStyle === 'popart') displayStyleName = '波普藝術';
-      else if (selectedStyle === 'artnouveau') displayStyleName = '新藝術風格';
-      else if (selectedStyle === 'clay') displayStyleName = '3D黏土風';
-      else if (selectedStyle === 'ukiyoe') displayStyleName = '浮世繪';
-      else if (selectedStyle === 'impressionism') displayStyleName = '印象派';
-      else if (selectedStyle === 'vintage') displayStyleName = '復古老片';
+      const styleNameMap = {
+        popart: '波普藝術',
+        artnouveau: '新藝術風格',
+        clay: '3D黏土風',
+        ukiyoe: '浮世繪',
+        impressionism: '印象派',
+        vintage: '復古老片',
+        chibi: 'Q版貼紙風',
+        line: 'LINE貼圖風',
+        plushie: '毛絨娃娃風',
+        chibi2: '半寫實Q版',
+        marshmallow: '棉花糖空氣',
+        gummy: '果凍軟糖風',
+        watercolor: '溫暖手繪',
+        picturebook: '森林繪本風',
+        baby: '變裝寶寶風',
+        flat: '扁平設計風',
+        infographic: '資訊圖表風',
+        korean: '韓系極簡線條',
+        doodle: '塗鴉日記風',
+        washitape: '紙膠帶拼貼',
+        botanical: '植栽共生風',
+        bread: '剛出爐麵包色',
+        dietsticker: '實體貼紙風',
+        chibi3: '半寫實Q版(自然)',
+        chalkboard: '粉筆黑板畫',
+        retroanime: '90s復古動漫',
+        collage: '拼貼藝術',
+        geometric: '幾何抽象風',
+        cyberpunk: '賽博龐克',
+        vaporwave: '迷幻蒸汽波',
+        lightleak: '底片漏光感',
+        portrait: '寫實人像風',
+        mascot: '角色IP品牌',
+        miniature: '微縮模型風',
+        stopmotionclay: '黏土動畫風',
+        softanime: '柔光戀愛風',
+        western: '歐美劇場風',
+        gamerender: '遊戲建模風',
+        socialfilter: '濾鏡美顏風',
+        poster: '海報插畫風',
+        graffiti: '街頭塗鴉風',
+        fashion: '時尚插畫風'
+      };
+
+      let displayStyleName = styleNameMap[selectedStyle] || 'AI 變身';
 
       const newArt = {
         id: 'user-cam-' + Date.now(),

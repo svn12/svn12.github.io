@@ -1608,6 +1608,45 @@ header {
   to { bottom: 0; opacity: 0; visibility: hidden; }
 }
 
+.style-select-more {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.style-select-more label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+}
+
+.style-select-more .form-select {
+  width: 100%;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.style-select-more .form-select option {
+  background-color: #111827;
+  color: #fff;
+}
+
+.style-select-more .form-select:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  background: rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
 /* Footer styling */
 footer {
   text-align: center;
