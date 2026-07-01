@@ -457,6 +457,41 @@ header {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
 }
 
+.input-helper-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.input-helper-group .form-input {
+  flex: 1;
+}
+
+.form-select-helper {
+  width: 140px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 11px 8px;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.form-select-helper option {
+  background-color: #111827;
+  color: #fff;
+}
+
+.form-select-helper:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  background: rgba(99, 102, 241, 0.15);
+}
+
 /* Prompt Preview & Output */
 .output-preview-container {
   margin-top: 24px;

@@ -2,6 +2,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Lucide Icons
   lucide.createIcons();
 
+  // Bind Select Helper values to text inputs
+  const selectHelpers = document.querySelectorAll('.form-select-helper');
+  selectHelpers.forEach(select => {
+    select.addEventListener('change', () => {
+      const targetId = select.getAttribute('data-target');
+      const targetInput = document.getElementById(targetId);
+      if (targetInput) {
+        targetInput.value = select.value;
+        select.selectedIndex = 0; // reset
+      }
+    });
+  });
+
   /* ==========================================================================
      1. General Tab Navigation Logic (6 tabs now)
      ========================================================================== */

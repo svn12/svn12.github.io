@@ -137,25 +137,79 @@
           </div>
           <div class="form-group">
             <label for="formula-target">轉變目標：</label>
-            <select id="formula-target" class="form-select">
-              <option value="更健康活力">更健康活力</option>
-              <option value="更快樂無憂">更快樂無憂</option>
-              <option value="更自由自在">更自由自在</option>
-              <option value="含著金湯匙出生的嬰兒時期">含著金湯匙出生的嬰兒時期</option>
-              <option value="環遊世界的百萬富翁">環遊世界的百萬富翁</option>
-            </select>
+            <div class="input-helper-group">
+              <input type="text" id="formula-target" class="form-input" value="更健康活力">
+              <select class="form-select-helper" data-target="formula-target">
+                <option value="" disabled selected>快速挑選...</option>
+                <option value="更健康活力">1. 更健康活力</option>
+                <option value="更快樂無憂">2. 更快樂無憂</option>
+                <option value="更自由自在">3. 更自由自在</option>
+                <option value="含著金湯匙出生的嬰兒時期">4. 含著金湯匙出生的嬰兒時期</option>
+                <option value="環遊世界的百萬富翁">5. 環遊世界的百萬富翁</option>
+                <option value="滿頭銀髮但神采奕奕的智者">6. 滿頭銀髮但神采奕奕的智者</option>
+                <option value="穿著登山裝的專業探險家">7. 穿著登山裝的專業探險家</option>
+                <option value="在森林木屋享受午後清閒的隱士">8. 在森林木屋享受午後清閒的隱士</option>
+                <option value="開著敞篷跑車兜風的年輕小夥子">9. 開著敞篷跑車兜風的年輕小夥子</option>
+                <option value="身手矯健的運動員">10. 身手矯健的運動員</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
             <label for="formula-scene">放在什麼【場景】：</label>
-            <input type="text" id="formula-scene" class="form-input" value="翠綠的溪頭森林步道中">
+            <div class="input-helper-group">
+              <input type="text" id="formula-scene" class="form-input" value="翠綠的溪頭森林步道中">
+              <select class="form-select-helper" data-target="formula-scene">
+                <option value="" disabled selected>快速挑選...</option>
+                <option value="翠綠的溪頭森林步道中">1. 翠綠的溪頭森林步道中</option>
+                <option value="充滿櫻花盛開的日式庭園">2. 充滿櫻花盛開的日式庭園</option>
+                <option value="陽光灑落的沙灘海岸">3. 陽光灑落的沙灘海岸</option>
+                <option value="鋪滿楓紅的秋天公園步道">4. 鋪滿楓紅的秋天公園步道</option>
+                <option value="熱鬧的傳統年貨大街">5. 熱鬧的傳統年貨大街</option>
+                <option value="寧靜祥和的阿里山茶園">6. 寧靜祥和的阿里山茶園</option>
+                <option value="雲霧繚繞的合歡山頂">7. 雲霧繚繞的合歡山頂</option>
+                <option value="懷舊溫馨的紅磚老街">8. 懷舊溫馨的紅磚老街</option>
+                <option value="繁星點點的露營營地">9. 繁星點點的露營營地</option>
+                <option value="金黃色稻浪翻滾的池上農田">10. 金黃色稻浪翻滾的池上農田</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
             <label for="formula-action">正在做什麼【動作】：</label>
-            <input type="text" id="formula-action" class="form-input" value="開心地健行，雙手比讚">
+            <div class="input-helper-group">
+              <input type="text" id="formula-action" class="form-input" value="開心地健行，雙手比讚">
+              <select class="form-select-helper" data-target="formula-action">
+                <option value="" disabled selected>快速挑選...</option>
+                <option value="開心地健行，雙手比讚">1. 開心地健行，雙手比讚</option>
+                <option value="悠閒地喝著熱茶聊天">2. 悠閒地喝著熱茶聊天</option>
+                <option value="牽著手漫步，臉上洋溢著笑容">3. 牽著手漫步，臉上洋溢著笑容</option>
+                <option value="拿著相機開心地拍照留念">4. 拿著相機開心地拍照留念</option>
+                <option value="與家人一起吃團圓飯，氣氛融洽">5. 與家人一起吃團圓飯，氣氛融洽</option>
+                <option value="專注地在畫布上寫生繪畫">6. 專注地在畫布上寫生繪畫</option>
+                <option value="開懷大笑，揮手向鏡頭打招呼">7. 開懷大笑，揮手向鏡頭打招呼</option>
+                <option value="坐在木椅上閉目養神，神情安詳">8. 坐在木椅上閉目養神，神情安詳</option>
+                <option value="一起整理小花園，澆水種花">9. 一起整理小花園，澆水種花</option>
+                <option value="手拿著春聯，喜氣洋洋地迎接新年">10. 手拿著春聯，喜氣洋洋地迎接新年</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
             <label for="formula-mood">整體氛圍【情緒/氛圍】：</label>
-            <input type="text" id="formula-mood" class="form-input" value="溫馨、陽光、有故事感">
+            <div class="input-helper-group">
+              <input type="text" id="formula-mood" class="form-input" value="溫馨、陽光、有故事感">
+              <select class="form-select-helper" data-target="formula-mood">
+                <option value="" disabled selected>快速挑選...</option>
+                <option value="溫馨、陽光、有故事感">1. 溫馨、陽光、有故事感</option>
+                <option value="復古、懷舊、充滿歲月情懷">2. 復古、懷舊、充滿歲月情懷</option>
+                <option value="寧靜、祥和、與世無爭">3. 寧靜、祥和、與世無爭</option>
+                <option value="歡樂、喜慶、朝氣蓬勃">4. 歡樂、喜慶、朝氣蓬勃</option>
+                <option value="唯美、浪漫、如夢似幻">5. 唯美、浪漫、如夢似幻</option>
+                <option value="簡約、現代、乾淨明亮">6. 簡約、現代、乾淨明亮</option>
+                <option value="孤獨、深邃、帶有一絲禪意">7. 孤獨、深邃、帶有一絲禪意</option>
+                <option value="活力、熱情、動感十足">8. 活力、熱情、動感十足</option>
+                <option value="溫暖、柔和、日系療癒">9. 溫暖、柔和、日系療癒</option>
+                <option value="奇幻、神祕、色彩斑斕">10. 奇幻、神祕、色彩斑斕</option>
+              </select>
+            </div>
           </div>
           <button class="btn btn-primary btn-block" id="btn-gen-formula">
             <i data-lucide="refresh-cw"></i> 生成變身指令
@@ -225,15 +279,60 @@
           </div>
           <div class="form-group">
             <label for="style-people">畫面中的【人物】：</label>
-            <input type="text" id="style-people" class="form-input" value="一位戴著墨鏡的開朗長者">
+            <div class="input-helper-group">
+              <input type="text" id="style-people" class="form-input" value="一位戴著墨鏡的開朗長者">
+              <select class="form-select-helper" data-target="style-people">
+                <option value="" disabled selected>快速挑選...</option>
+                <option value="一位戴著墨鏡的開朗長者">1. 一位戴著墨鏡的開朗長者</option>
+                <option value="一對牽手微笑的慈祥老夫婦">2. 一對牽手微笑的慈祥老夫婦</option>
+                <option value="一位神采奕奕、戴著草帽的農夫">3. 一位神采奕奕、戴著草帽的農夫</option>
+                <option value="一位氣質高雅、穿著旗袍的女士">4. 一位氣質高雅、穿著旗袍的女士</option>
+                <option value="一個胖嘟嘟、含著金湯匙的可愛嬰兒">5. 一個胖嘟嘟、含著金湯匙的可愛嬰兒</option>
+                <option value="一位活潑可愛、穿著雨衣的小女孩">6. 一位活潑可愛、穿著雨衣的小女孩</option>
+                <option value="一位戴著圓框眼鏡、正在看書的紳士">7. 一位戴著圓框眼鏡、正在看書的紳士</option>
+                <option value="一群開懷大笑的小學生與寵物狗">8. 一群開懷大笑的小學生與寵物狗</option>
+                <option value="一位身穿廚師服、捧著剛出爐麵包的職人">9. 一位身穿廚師服、捧著剛出爐麵包的職人</option>
+                <option value="一個身穿森林變裝斗篷的Ｑ版寶寶">10. 一個身穿森林變裝斗篷的Ｑ版寶寶</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
             <label for="style-item">帶著什麼【物品】：</label>
-            <input type="text" id="style-item" class="form-input" value="登山杖與相機">
+            <div class="input-helper-group">
+              <input type="text" id="style-item" class="form-input" value="登山杖與相機">
+              <select class="form-select-helper" data-target="style-item">
+                <option value="" disabled selected>快速挑選...</option>
+                <option value="登山杖與相機">1. 登山杖與相機</option>
+                <option value="復古大紅色雨傘與竹籃">2. 復古大紅色雨傘與竹籃</option>
+                <option value="精緻的手作陶瓷茶具組">3. 精緻的手作陶瓷茶具組</option>
+                <option value="一束剛摘下的向日葵花束">4. 一束剛摘下的向日葵花束</option>
+                <option value="一隻金光閃閃的抓週金湯匙">5. 一隻金光閃閃的抓週金湯匙</option>
+                <option value="一個冒著熱氣的美味剛出爐麵包">6. 一個冒著熱氣的美味剛出爐麵包</option>
+                <option value="一個裝滿彩色糖果的玻璃罐">7. 一個裝滿彩色糖果的玻璃罐</option>
+                <option value="一本厚厚的復古羊皮紙手札">8. 一本厚厚的復古羊皮紙手札</option>
+                <option value="一把裝飾精美的有機雕刻吉他">9. 一把裝飾精美的有機雕刻吉他</option>
+                <option value="一個散發微光的森林手提汽化燈">10. 一個散發微光的森林手提汽化燈</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
             <label for="style-location">在什麼【地點】：</label>
-            <input type="text" id="style-location" class="form-input" value="在復古的火車頭前">
+            <div class="input-helper-group">
+              <input type="text" id="style-location" class="form-input" value="在復古的火車頭前">
+              <select class="form-select-helper" data-target="style-location">
+                <option value="" disabled selected>快速挑選...</option>
+                <option value="在復古的火車頭前">1. 在復古的火車頭前</option>
+                <option value="在典雅的紅磚洋樓拱門下">2. 在典雅的紅磚洋樓拱門下</option>
+                <option value="在日式木造車站的月台上">3. 在日式木造車站的月台上</option>
+                <option value="在波光粼粼的碧綠湖畔旁">4. 在波光粼粼的碧綠湖畔旁</option>
+                <option value="在開滿繡球花的山坡小徑">5. 在開滿繡球花的山坡小徑</option>
+                <option value="在掛滿紅色燈籠的九份茶樓前">6. 在掛滿紅色燈籠的九份茶樓前</option>
+                <option value="在煙霧裊裊的溫泉老街溪畔">7. 在煙霧裊裊的溫泉老街溪畔</option>
+                <option value="在巨大的銀杏樹金色落葉地毯上">8. 在巨大的銀杏樹金色落葉地毯上</option>
+                <option value="在色彩繽紛的童話小木屋前">9. 在色彩繽紛的童話小木屋前</option>
+                <option value="在繁華都市的霓虹街角咖啡廳">10. 在繁華都市的霓虹街角咖啡廳</option>
+              </select>
+            </div>
           </div>
           <button class="btn btn-primary btn-block" id="btn-gen-style">
             <i data-lucide="refresh-cw"></i> 生成公版指令
