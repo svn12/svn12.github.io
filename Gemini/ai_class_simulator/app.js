@@ -792,6 +792,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const styleNameMap = {
+    popart: '波普藝術',
+    artnouveau: '新藝術風格',
+    clay: '3D黏土風',
+    ukiyoe: '浮世繪',
+    impressionism: '印象派',
+    vintage: '復古老片',
+    chibi: 'Q版貼紙風',
+    line: 'LINE貼圖風',
+    plushie: '毛絨娃娃風',
+    chibi2: '半寫實Q版',
+    marshmallow: '棉花糖空氣',
+    gummy: '果凍軟糖風',
+    watercolor: '溫暖手繪',
+    picturebook: '森林繪本風',
+    baby: '變裝寶寶風',
+    flat: '扁平設計風',
+    infographic: '資訊圖表風',
+    korean: '韓系極簡線條',
+    doodle: '塗鴉日記風',
+    washitape: '紙膠帶拼貼',
+    botanical: '植栽共生風',
+    bread: '剛出爐麵包色',
+    dietsticker: '實體貼紙風',
+    chibi3: '半寫實Q版(自然)',
+    chalkboard: '粉筆黑板畫',
+    retroanime: '90s復古動漫',
+    collage: '拼貼藝術',
+    geometric: '幾何抽象風',
+    cyberpunk: '賽博龐克',
+    vaporwave: '迷幻蒸汽波',
+    lightleak: '底片漏光感',
+    portrait: '寫實人像風',
+    mascot: '角色IP品牌',
+    miniature: '微縮模型風',
+    stopmotionclay: '黏土動畫風',
+    softanime: '柔光戀愛風',
+    western: '歐美劇場風',
+    gamerender: '遊戲建模風',
+    socialfilter: '濾鏡美顏風',
+    poster: '海報插畫風',
+    graffiti: '街頭塗鴉風',
+    fashion: '時尚插畫風'
+  };
+
   /* ==========================================================================
      6. Modal Publish Flow (From Camera Tab Directly to Wall)
      ========================================================================== */
@@ -810,9 +855,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const modalPromptInput = document.getElementById('modal-uploader-prompt');
       let curPrompt = '';
       if (selectedStyle !== 'vintage') {
-        curPrompt = document.getElementById('preview-style-text').innerText;
+        const styleName = styleNameMap[selectedStyle] || '指定風格';
+        const people = document.getElementById('style-people').value.trim();
+        const item = document.getElementById('style-item').value.trim();
+        const location = document.getElementById('style-location').value.trim();
+        curPrompt = `請幫我畫一張【${styleName}】的圖片，畫面中有一位【${people}】帶著【${item}】在【${location}】。`;
       } else {
-        curPrompt = document.getElementById('preview-formula-text').innerText;
+        const target = document.getElementById('formula-target').value.trim();
+        const scene = document.getElementById('formula-scene').value.trim();
+        const action = document.getElementById('formula-action').value.trim();
+        const mood = document.getElementById('formula-mood').value.trim();
+        curPrompt = `請把這張照片中的人物呈現【${target}】的狀態，放在【${scene}】，正在做【${action}】，整體氛圍是【${mood}】。畫面要自然、溫馨、有故事感，像真實生活照片。臉要保持原本人物的樣子。`;
       }
       modalPromptInput.value = curPrompt;
 
@@ -836,51 +889,6 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('請輸入您的名字！');
         return;
       }
-
-      const styleNameMap = {
-        popart: '波普藝術',
-        artnouveau: '新藝術風格',
-        clay: '3D黏土風',
-        ukiyoe: '浮世繪',
-        impressionism: '印象派',
-        vintage: '復古老片',
-        chibi: 'Q版貼紙風',
-        line: 'LINE貼圖風',
-        plushie: '毛絨娃娃風',
-        chibi2: '半寫實Q版',
-        marshmallow: '棉花糖空氣',
-        gummy: '果凍軟糖風',
-        watercolor: '溫暖手繪',
-        picturebook: '森林繪本風',
-        baby: '變裝寶寶風',
-        flat: '扁平設計風',
-        infographic: '資訊圖表風',
-        korean: '韓系極簡線條',
-        doodle: '塗鴉日記風',
-        washitape: '紙膠帶拼貼',
-        botanical: '植栽共生風',
-        bread: '剛出爐麵包色',
-        dietsticker: '實體貼紙風',
-        chibi3: '半寫實Q版(自然)',
-        chalkboard: '粉筆黑板畫',
-        retroanime: '90s復古動漫',
-        collage: '拼貼藝術',
-        geometric: '幾何抽象風',
-        cyberpunk: '賽博龐克',
-        vaporwave: '迷幻蒸汽波',
-        lightleak: '底片漏光感',
-        portrait: '寫實人像風',
-        mascot: '角色IP品牌',
-        miniature: '微縮模型風',
-        stopmotionclay: '黏土動畫風',
-        softanime: '柔光戀愛風',
-        western: '歐美劇場風',
-        gamerender: '遊戲建模風',
-        socialfilter: '濾鏡美顏風',
-        poster: '海報插畫風',
-        graffiti: '街頭塗鴉風',
-        fashion: '時尚插畫風'
-      };
 
       let displayStyleName = styleNameMap[selectedStyle] || 'AI 變身';
 
