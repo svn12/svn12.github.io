@@ -625,21 +625,25 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       ctx.save();
       const styleName = styleNameMap[style] || 'AI 變身';
+      const text = `✨ AI 畫風：${styleName}`;
+      
+      ctx.font = 'bold 12px sans-serif';
+      const textWidth = ctx.measureText(text).width;
+      const rectWidth = textWidth + 30;
       
       // Draw semi-transparent dark glass background
-      ctx.fillStyle = 'rgba(17, 24, 39, 0.75)';
-      ctx.fillRect(w - 225, h - 45, 205, 33);
+      ctx.fillStyle = 'rgba(17, 24, 39, 0.8)';
+      ctx.fillRect(w - rectWidth - 15, h - 45, rectWidth, 33);
       
       // Draw golden boundary stroke
-      ctx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.45)';
       ctx.lineWidth = 1;
-      ctx.strokeRect(w - 225, h - 45, 205, 33);
+      ctx.strokeRect(w - rectWidth - 15, h - 45, rectWidth, 33);
       
       // Draw golden typography text
       ctx.fillStyle = '#fbbf24'; 
-      ctx.font = 'bold 13px sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText(`✨ AI 畫風：${styleName}`, w - 30, h - 23);
+      ctx.fillText(text, w - 30, h - 24);
       ctx.restore();
     } catch (e) {
       console.warn("Watermark error:", e);
@@ -857,48 +861,49 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const styleNameMap = {
-    popart: '波普藝術',
-    artnouveau: '新藝術風格',
-    clay: '3D黏土風',
-    ukiyoe: '浮世繪',
-    impressionism: '印象派',
-    vintage: '復古老片',
-    chibi: 'Q版貼紙風',
-    line: 'LINE貼圖風',
-    plushie: '毛絨娃娃風',
-    chibi2: '半寫實Q版',
-    marshmallow: '棉花糖空氣',
-    gummy: '果凍軟糖風',
-    watercolor: '溫暖手繪',
-    picturebook: '森林繪本風',
-    baby: '變裝寶寶風',
-    flat: '扁平設計風',
-    infographic: '資訊圖表風',
-    korean: '韓系極簡線條',
-    doodle: '塗鴉日記風',
-    washitape: '紙膠帶拼貼',
-    botanical: '植栽共生風',
-    bread: '剛出爐麵包色',
-    dietsticker: '實體貼紙風',
-    chibi3: '半寫實Q版(自然)',
-    chalkboard: '粉筆黑板畫',
-    retroanime: '90s復古動漫',
-    collage: '拼貼藝術',
-    geometric: '幾何抽象風',
-    cyberpunk: '賽博龐克',
-    vaporwave: '迷幻蒸汽波',
-    lightleak: '底片漏光感',
-    portrait: '寫實人像風',
-    mascot: '角色IP品牌',
-    miniature: '微縮模型風',
-    stopmotionclay: '黏土動畫風',
-    softanime: '柔光戀愛風',
-    western: '歐美劇場風',
-    gamerender: '遊戲建模風',
-    socialfilter: '濾鏡美顏風',
-    poster: '海報插畫風',
-    graffiti: '街頭塗鴉風',
-    fashion: '時尚插畫風'
+    popart: '美式復古漫畫/普普藝術 (Pop Art)',
+    artnouveau: '新藝術風格 (Art Nouveau)',
+    clay: '3D 黏土/皮克斯風 (3D Clay/Pixar Style)',
+    ukiyoe: '現代浮世繪 (Modern Ukiyo-e)',
+    impressionism: '後印象派油畫 (Post-Impressionism)',
+    vintage: '懷舊老照片',
+    chibi: '1: 可愛 Q 版卡通人物插畫 / 貼紙風 (Chibi/Sticker style)',
+    line: '2: 可愛Q版LINE貼圖風格 (Line sticker style)',
+    plushie: '4: 療癒系毛絨娃娃 (Fluffy/Plushie Style)',
+    chibi2: '5: 半寫實 Q 版插畫 (1.5–2頭身，精緻質感)',
+    marshmallow: '6: 棉花糖空氣感 (Marshmallow Airbrush)',
+    gummy: '7: Q彈果凍/軟糖風 (Gummy/Jelly Texture)',
+    watercolor: '8: 溫暖手繪/水彩/蠟筆風 (Hand-Drawn & Healing)',
+    picturebook: '9: 森林繪本風 (Picture Book Style)',
+    baby: '10: 變裝寶寶風 (Baby Costume Style)',
+    flat: '11: 扁平設計風 (Flat Design/Kurzgesagt)',
+    infographic: '12: 扁平化資訊圖表風 (Flat Infographic)',
+    korean: '13: 韓系極簡線條風 (Korean Minimalist)',
+    doodle: '14: 隨手塗鴉日記風 (Doodle/Journal Style)',
+    washitape: '15: 紙膠帶拼貼風 (Washi Tape/Scrapbook)',
+    botanical: '16: 植栽花草共生風 (Botanical Buddy)',
+    bread: '17: 剛出爐麵包色系 (Warm Bread Tones)',
+    dietsticker: '18: 實體貼紙/白邊風 (Die-cut Sticker)',
+    chibi3: '19: 半寫實 Q 版插畫 (2.5–3頭身，自然比例)',
+    chalkboard: '20: 粉筆黑板畫 (Chalkboard Art)',
+    retroanime: '21: 90 年代復古動漫風 (90s Retro Anime)',
+    collage: '24: 拼貼藝術風格 (Collage/Mixed Media)',
+    geometric: '25: 極簡幾何抽象 (Geometric Abstract)',
+    cyberpunk: '26: 數位賽博龐克 (Cyberpunk/Neon)',
+    vaporwave: '27: 迷幻蒸汽波 (Vaporwave)',
+    lightleak: '28: 底片漏光感 (Film Light Leak Style)',
+    portrait: '29: AI寫實人像插畫風 (AI Realistic Portrait)',
+    mascot: '30: 角色IP品牌風 (Mascot Branding Style)',
+    miniature: '31: 微縮模型場景 (Miniature Diorama)',
+    stopmotionclay: '32: 童趣黏土動畫風 (Stop Motion Clay Style)',
+    softanime: '33: 日系柔光戀愛風 (Soft Anime Romance)',
+    western: '34: 歐美動畫劇場風 (Western Animation Style)',
+    gamerender: '35: 遊戲角色建模風 (Game Character Render)',
+    socialfilter: '36: 手機濾鏡美顏風 (Social Filter Style)',
+    poster: '37: 插畫＋字體整合海報風 (Illustration Poster Style)',
+    monochrome: '38: 黑白極簡漫畫風 (Monochrome Comic)',
+    graffiti: '39: 塗鴉街頭藝術風 (Street Graffiti)',
+    fashion: '40: 高級雜誌時尚插畫風 (Fashion Editorial Illustration)'
   };
 
   /* ==========================================================================
