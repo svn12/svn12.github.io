@@ -120,6 +120,231 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ==========================================================================
+     3.5 World News Command Generator (Form 3)
+     ========================================================================== */
+  // Date operations for news generator
+  const newsNow = new Date();
+  const newsYesterday = new Date(newsNow.getTime() - 86400000);
+  const formatDateYMD = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  
+  const newsTodayStr = formatDateYMD(newsNow);
+  const newsYdayStr = formatDateYMD(newsYesterday);
+
+  // Reference table rows data
+  const newsRefRows = [
+    { need: '全方位懶人包', cmd: `總結最近 24 小時全球發生的大事，包含政治、科技與經濟各一則。`, desc: '適合每日晨間快速掌握最新動態' },
+    { need: '特定領域追蹤', cmd: `搜尋過去 24 小時內與 Nvidia 或 OpenAI 相關的最新國際新聞。`, desc: '替換公司/人物名稱即可精準查詢' },
+    { need: '多角度對比', cmd: `針對 [某國際事件]，請列出過去一天內路透社與美聯社的不同報導重點。`, desc: '比較媒體立場與敘事差異' },
+    { need: '數據與股市', cmd: `過去 24 小時內，全球金融市場最顯著的變動與相關新聞為何？`, desc: '適合開盤前或盤後做宏觀研究' },
+    { need: 'Google 搜尋', cmd: `world news after:${newsYdayStr}`, desc: '直接貼入 Google 搜尋列過濾舊聞' },
+    { need: '指定媒體', cmd: `world news site:bbc.com after:${newsYdayStr}`, desc: '限定 BBC 官方報導的全球新聞' },
+    { need: '排除雜訊', cmd: `world news -sports after:${newsYdayStr}`, desc: '去除體育相關或娛樂八卦報導' },
+    { need: 'Google Trends', cmd: `Google Trends Global Real-time`, desc: '尋找 24h 內搜尋量爆升的熱議話題' }
+  ];
+
+  // Render news reference table
+  const newsTableBody = document.querySelector('#news-ref-table tbody');
+  if (newsTableBody) {
+    newsRefRows.forEach(row => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="font-weight: 700;">${row.need}</td>
+        <td class="news-table-cmd-cell" title="點擊直接複製">${row.cmd}</td>
+        <td style="color: var(--text-muted); font-size: 0.9rem;">${row.desc}</td>
+      `;
+      tr.querySelector('.news-table-cmd-cell').addEventListener('click', () => {
+        copyTextContent(row.cmd);
+      });
+      newsTableBody.appendChild(tr);
+    });
+  }
+
+  // Highlight syntax helper
+  function highlightNewsSyntax(str) {
+    return str
+      .replace(/after:\d{4}-\d{2}-\d{2}/g, m => `<strong>${m}</strong>`)
+      .replace(/"[^"]+"/g, m => `<strong>${m}</strong>`)
+      .replace(/site:\S+/g, m => `<strong>${m}</strong>`);
+  }
+
+  // Generate News Commands function
+  function generateNews() {
+    const cat = document.getElementById('news-category').value;
+    const time = document.getElementById('news-timerange').value;
+    const source = document.getElementById('news-source').value;
+    const kw = document.getElementById('news-keyword').value.trim();
+    const exclude = document.getElementById('news-exclude').value.trim();
+
+    const catLabel = cat || '全球';
+    const kwPart = kw ? `與「${kw}」相關的` : '';
+    const excPart = exclude ? `（排除 ${exclude}）` : '';
+    const srcLabel = source ? source.replace('site:', '').replace('.com', '') : '';
+    const srcNote = srcLabel ? `，來源限定 ${srcLabel}` : '';
+
+    const dateOp = source ? `${source} ` : '';
+    const kwOp = kw ? `"${kw}" ` : '';
+    const exOp = exclude ? exclude.split(/[\s,，]+/).map(e => `-${e}`).join(' ') + ' ' : '';
+    const catOp = cat ? `${cat} ` : 'world news ';
+
+    // Build commands array
+    const newsCmdList = [
+      {
+        type: '💬 對話提示詞（推薦）',
+        cmd: `請幫我整理過去${time}內${catLabel}最重要的 10 則${kwPart}頭條新聞${srcNote}${excPart}，並提供每則的一句摘要。`,
+        desc: '直接對 AI 提問，最方便省力'
+      },
+      {
+        type: '🔍 Google 搜尋指令',
+        cmd: `${catOp}${kwOp}after:${newsYdayStr} ${dateOp}${exOp}`.trim(),
+        desc: `貼入 Google 搜尋列，精確過濾 ${time}內的新聞`
+      },
+      {
+        type: '📰 多角度分析提示',
+        cmd: `針對過去${time}內${kwPart || '全球重要'}${catLabel}新聞，請分別整理：① 事件摘要 ② 各方立場 ③ 可能影響${excPart}。`,
+        desc: '用於深度理解複雜國際事件脈絡'
+      },
+      {
+        type: '📊 數據摘要提示',
+        cmd: `過去${time}內，${catLabel}領域${kwPart}最重要的數字、統計或市場變動是什麼？請列出 3 個關鍵數據並說明其意義。`,
+        desc: '快速掌握量化資訊與核心指標'
+      },
+      {
+        type: '⚡ 速報格式提示',
+        cmd: `以「速報」格式整理過去${time}的${catLabel}新聞${kwPart}，每則不超過 30 字，列出最多 15 則${excPart}。`,
+        desc: '適合碎片時間極速瀏覽'
+      },
+      {
+        type: '🌐 RSS / Trends 指令',
+        cmd: `Google Trends Global Real-time — 搜尋 "${cat || 'world'} ${kw || 'news'}" 並篩選過去 24 小時 Breakout 話題`,
+        desc: '用於發現社群最熱門的爆點話題'
+      }
+    ];
+
+    const cardsOutput = document.getElementById('news-cards-output');
+    if (!cardsOutput) return;
+    
+    cardsOutput.innerHTML = '';
+
+    newsCmdList.forEach((c, idx) => {
+      const card = document.createElement('div');
+      card.className = 'news-cmd-card';
+      card.style.animationDelay = `${idx * 0.05}s`;
+      
+      card.innerHTML = `
+        <div>
+          <div class="news-cmd-card-type">${c.type}</div>
+          <div class="news-cmd-card-text">${highlightNewsSyntax(c.cmd)}</div>
+          <div class="news-cmd-card-desc">${c.desc}</div>
+        </div>
+        <div class="news-cmd-btn-group">
+          <button class="btn-news-action btn-copy-cmd" data-text="${c.cmd.replace(/"/g, '&quot;')}">
+            <i data-lucide="copy" style="width:13px;height:13px;"></i> 複製
+          </button>
+          <button class="btn-news-action btn-copy-url" data-text="${c.cmd.replace(/"/g, '&quot;')}">
+            <i data-lucide="link" style="width:13px;height:13px;"></i> URL
+          </button>
+          <button class="btn-news-action btn-news-chatgpt" data-text="${c.cmd.replace(/"/g, '&quot;')}">
+            <i data-lucide="external-link" style="width:13px;height:13px;"></i> 前往 AI
+          </button>
+        </div>
+      `;
+      
+      cardsOutput.appendChild(card);
+    });
+
+    // Re-initialize lucide icons inside generated cards
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+
+    // Bind event listeners for actions on cards
+    cardsOutput.querySelectorAll('.news-cmd-card').forEach(cardEl => {
+      const btnCopy = cardEl.querySelector('.btn-copy-cmd');
+      const btnUrl = cardEl.querySelector('.btn-copy-url');
+      const btnChat = cardEl.querySelector('.btn-news-chatgpt');
+
+      const cmdText = btnCopy.getAttribute('data-text');
+
+      btnCopy.addEventListener('click', (e) => {
+        e.stopPropagation();
+        copyTextContent(cmdText);
+        showActionStatus(btnCopy, '✓ 已複製');
+      });
+
+      btnUrl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const encoded = encodeURIComponent(cmdText);
+        copyTextContent(encoded);
+        showActionStatus(btnUrl, '✓ URL-safe');
+      });
+
+      btnChat.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const encoded = encodeURIComponent(cmdText);
+        let aiUrl = `https://chatgpt.com/?q=${encoded}`;
+        const platform = document.getElementById('companion-platform')?.value;
+        if (platform === 'gemini') {
+          aiUrl = `https://gemini.google.com/`;
+        } else if (platform === 'claude') {
+          aiUrl = `https://claude.ai/`;
+        }
+        window.open(aiUrl, '_blank');
+      });
+
+      // Click card itself to copy main command
+      cardEl.addEventListener('click', () => {
+        copyTextContent(cmdText);
+        showActionStatus(btnCopy, '✓ 已複製');
+      });
+    });
+  }
+
+  // Action status switcher
+  function showActionStatus(btn, successText) {
+    const origText = btn.innerHTML;
+    btn.innerHTML = successText;
+    btn.style.borderColor = '#10b981';
+    btn.style.color = '#34d399';
+    setTimeout(() => {
+      btn.innerHTML = origText;
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }, 1500);
+  }
+
+  // Clipboard copy implementation with toast
+  function copyTextContent(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      showGlobalToast();
+    }).catch(() => {
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      showGlobalToast();
+    });
+  }
+
+  function showGlobalToast() {
+    const toast = document.getElementById('copy-toast');
+    if (toast) {
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+  }
+
+  // Bind trigger button for news generation
+  const btnGenNews = document.getElementById('btn-gen-news');
+  if (btnGenNews) {
+    btnGenNews.addEventListener('click', generateNews);
+  }
+
+  // Pre-generate news on page load
+  setTimeout(generateNews, 200);
+
 
   /* ==========================================================================
      4. AI Style Camera / Canvas Filter Simulator

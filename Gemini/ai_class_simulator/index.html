@@ -349,6 +349,142 @@
           </div>
         </div>
       </div>
+
+      <!-- Form 3: 世界新聞指令產生器 (100% 寬度) -->
+      <div class="card card-fullwidth" style="margin-top: 30px;">
+        <div class="card-header">
+          <i data-lucide="newspaper" class="card-icon"></i>
+          <h2>3. 世界新聞指令產生器</h2>
+        </div>
+        
+        <div class="news-controls-container">
+          <div class="news-ctrl-group">
+            <label for="news-category">新聞類別：</label>
+            <select id="news-category" class="form-select">
+              <option value="">全方位（All）</option>
+              <option value="AI 技術">🤖 AI 技術</option>
+              <option value="地緣政治">🌍 地緣政治</option>
+              <option value="金融市場">📈 金融市場</option>
+              <option value="氣候環境">🌿 氣候環境</option>
+              <option value="科技產業">💻 科技產業</option>
+              <option value="衝突戰爭">⚔️ 衝突與戰爭</option>
+              <option value="健康醫療">🏥 健康醫療</option>
+              <option value="體育新聞">⚽ 體育新聞</option>
+              <option value="娛樂新聞">🎬 娛樂新聞</option>
+            </select>
+          </div>
+
+          <div class="news-ctrl-group">
+            <label for="news-timerange">時間範圍：</label>
+            <select id="news-timerange" class="form-select">
+              <option value="12小時">過去 12 小時</option>
+              <option value="24小時" selected>過去 24 小時</option>
+              <option value="48小時">過去 48 小時</option>
+              <option value="一週">過去一週</option>
+            </select>
+          </div>
+
+          <div class="news-ctrl-group">
+            <label for="news-source">新聞來源：</label>
+            <select id="news-source" class="form-select">
+              <option value="">所有來源</option>
+              <option value="site:bbc.com">BBC</option>
+              <option value="site:reuters.com">Reuters 路透社</option>
+              <option value="site:apnews.com">AP News 美聯社</option>
+              <option value="site:nytimes.com">NY Times</option>
+              <option value="site:theguardian.com">The Guardian</option>
+              <option value="site:cna.com.tw">中央社 (CNA)</option>
+              <option value="site:udn.com">聯合新聞網 (UDN)</option>
+              <option value="site:ltn.com.tw">自由時報 (Liberty Times)</option>
+              <option value="site:cnyes.com">鉅亨網 (cnyes)</option>
+            </select>
+          </div>
+
+          <div class="news-ctrl-group flex-grow">
+            <label for="news-keyword">關鍵字（選填）：</label>
+            <div class="input-helper-group">
+              <input type="text" id="news-keyword" class="form-input" placeholder="例：Nvidia / 台灣 / 聯準會">
+              <select class="form-select-helper" data-target="news-keyword">
+                <option value="" disabled selected>快速挑選...</option>
+                <option value="Nvidia">1. Nvidia (輝達)</option>
+                <option value="OpenAI">2. OpenAI (人工智慧)</option>
+                <option value="台積電TSMC">3. 台積電 (TSMC)</option>
+                <option value="台灣">4. 台灣 (Taiwan)</option>
+                <option value="聯準會Fed">5. 聯準會 (Fed)</option>
+                <option value="AI PC">6. AI PC (AI個人電腦)</option>
+                <option value="Apple Vision Pro">7. Apple Vision Pro (蘋果頭顯)</option>
+                <option value="氣候變遷">8. 氣候變遷 (Climate Change)</option>
+                <option value="生成式AI技術">9. 生成式AI技術 (Generative AI)</option>
+                <option value="美國大選">10. 美國大選 (US Election)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="news-ctrl-group">
+            <label for="news-exclude">排除（選填）：</label>
+            <input type="text" id="news-exclude" class="form-input" placeholder="例：sports" style="max-width: 120px;">
+          </div>
+
+          <button class="btn btn-primary" id="btn-gen-news" style="align-self: flex-end; height: 42px; margin-bottom: 2px;">
+            <i data-lucide="play"></i> 產生新聞指令
+          </button>
+        </div>
+
+        <div class="news-divider">
+          <span>⚡ 隨選產生的 6 種新聞指令</span>
+        </div>
+
+        <!-- 6張產生的新聞指令卡片 -->
+        <div class="news-cards-grid" id="news-cards-output">
+          <!-- 透過 JS 動態產生卡片 -->
+        </div>
+
+        <div class="news-divider" style="margin-top: 40px;">
+          <span>📋 常用新聞指令速查表 (點擊直接複製)</span>
+        </div>
+
+        <!-- 常用速查表 -->
+        <div class="news-table-wrap">
+          <table class="news-table" id="news-ref-table">
+            <thead>
+              <tr>
+                <th style="width: 20%; text-align: left;">需求類型</th>
+                <th style="width: 55%; text-align: left;">指令範例（點擊複製）</th>
+                <th style="width: 25%; text-align: left;">說明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 透過 JS 動態產生資料 -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 進階技巧 -->
+        <div class="news-tips-box">
+          <div class="news-tips-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+            <i data-lucide="info" style="color: #fbbf24; width: 18px; height: 18px;"></i>
+            <h3 style="color: #fbbf24; font-size: 16px; font-weight: 600; margin: 0;">讓 Google / AI 新聞指令更精準的 4 個訣竅</h3>
+          </div>
+          <ul class="news-tips-list" style="list-style: none; padding-left: 0; margin: 0;">
+            <li style="position: relative; padding-left: 18px; margin-bottom: 6px; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.75);">
+              <span style="position: absolute; left: 0; color: #fbbf24;">›</span>
+              使用 <strong>after:YYYY-MM-DD</strong> 時間運算子，確保只取特定日期之後的最新結果。
+            </li>
+            <li style="position: relative; padding-left: 18px; margin-bottom: 6px; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.75);">
+              <span style="position: absolute; left: 0; color: #fbbf24;">›</span>
+              加上 <strong>site:</strong> 限定優質媒體（如 <code>site:reuters.com</code>）可大幅提升報導的專業性與真實度。
+            </li>
+            <li style="position: relative; padding-left: 18px; margin-bottom: 6px; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.75);">
+              <span style="position: absolute; left: 0; color: #fbbf24;">›</span>
+              使用 <strong>-</strong> 減號排除無關的雜訊，例如 <code>-sports -entertainment</code> 去除體育和娛樂新聞。
+            </li>
+            <li style="position: relative; padding-left: 18px; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.75);">
+              <span style="position: absolute; left: 0; color: #fbbf24;">›</span>
+              配合 <strong>Google Trends Global Real-time</strong> 觀察過去 24 小時內搜尋量 <em>Breakout</em> 的關鍵詞，快速鎖定當日爆點話題。
+            </li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <!-- Tab 3: 風格相機模擬 -->

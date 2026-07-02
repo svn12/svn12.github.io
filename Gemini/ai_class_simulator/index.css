@@ -1656,3 +1656,215 @@ footer {
   font-size: 0.95rem;
   margin-top: 50px;
 }
+
+/* ==========================================================================
+   世界新聞指令產生器 (Form 3) CSS
+   ========================================================================== */
+.card-fullwidth {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.news-controls-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+.news-ctrl-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 200px;
+}
+
+.news-ctrl-group.flex-grow {
+  flex: 2 1 320px;
+}
+
+.news-ctrl-group label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.news-divider {
+  display: flex;
+  align-items: center;
+  margin: 30px 0 20px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary-light);
+}
+
+.news-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.4), rgba(255, 255, 255, 0.05));
+  margin-left: 15px;
+}
+
+/* 新聞指令卡片排版 */
+.news-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.news-cmd-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(5px);
+}
+
+.news-cmd-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.news-cmd-card-type {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.news-cmd-card-text {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  margin-bottom: 20px;
+  word-break: break-all;
+}
+
+.news-cmd-card-text strong {
+  color: #f43f5e; /* 高亮紅色字樣 */
+  font-weight: 700;
+}
+
+.news-cmd-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 10px;
+  margin-bottom: 15px;
+}
+
+.news-cmd-btn-group {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.btn-news-action {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.btn-news-action:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-news-action.btn-news-chatgpt {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+}
+
+.btn-news-action.btn-news-chatgpt:hover {
+  background: #10b981;
+  color: #fff;
+  border-color: #10b981;
+}
+
+/* 新聞速查表 */
+.news-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  margin-bottom: 25px;
+}
+
+.news-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.news-table th {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary-light);
+  font-weight: 700;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.news-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+  vertical-align: middle;
+}
+
+.news-table tr:last-child td {
+  border-bottom: none;
+}
+
+.news-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.news-table-cmd-cell {
+  font-family: var(--font-mono);
+  color: #34d399;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.news-table-cmd-cell:hover {
+  color: #10b981;
+  text-decoration: underline;
+}
+
+/* 新聞進階技巧提示框 */
+.news-tips-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 30px;
+  backdrop-filter: blur(5px);
+}
