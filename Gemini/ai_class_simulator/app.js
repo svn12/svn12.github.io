@@ -1763,6 +1763,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Save Search History
         addToHistory(val);
         
+        // Copy text to clipboard for easy pasting
+        copyTextContent(val);
+        
         // Open search page
         window.open(config.search + encodeURIComponent(val), '_blank');
       } else {
