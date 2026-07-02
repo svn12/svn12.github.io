@@ -1851,6 +1851,90 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ==========================================================================
+     8.5 30 Quick Prompts For Multi-Search (New)
+     ========================================================================== */
+  const quickPrompts = [
+    // 生活旅遊 (8)
+    { category: 'life', text: '規劃 [5] 天的 [日本東京] 自助旅行行程，步調要放慢，交通以大眾運輸為主。' },
+    { category: 'life', text: '推薦 [南投溪頭] 適合 [60歲長者] 的 5 個必去私房景點與當地美食。' },
+    { category: 'life', text: '我想在 [秋天] 去 [阿里山] 玩，請幫我規劃一份適合的攜帶物品與穿搭清單。' },
+    { category: 'life', text: '介紹 [台南安平] 當地的特色歷史背景與必須體驗的在地文化。' },
+    { category: 'life', text: '推薦 [牛肉麵] 在 [台北市] 最受歡迎的 3 家道地老店或口碑餐廳。' },
+    { category: 'life', text: '推薦一條適合 [新手] 的 [陽明山] 週邊登山步道，包含路程與難度。' },
+    { category: 'life', text: '在 [宜蘭] 遇到下雨天時，有哪些推薦的室內景點、博物館或文青咖啡廳？' },
+    { category: 'life', text: '以台灣導遊身份，向外國旅客介紹 [九份老街] 最迷人的地方與背後故事。' },
+
+    // 工作生產力 (8)
+    { category: 'work', text: '請幫我草擬一封給主管的 [請假/專案延期] 報告信，語氣要簡潔有禮。' },
+    { category: 'work', text: '針對 [第二季產品開發] 會議，請規劃一份包含主要討論問題與時間分配的議程大綱。' },
+    { category: 'work', text: '我需要委婉拒絕 [合作夥伴] 的 [演講邀請]，請幫我寫一封商務拒絕郵件。' },
+    { category: 'work', text: '請將以下零散的工作項目整理成給主管的週報/進度報告：[本週寫了三個介面、修了兩個Bug]' },
+    { category: 'work', text: '請扮演行銷專家，為 [AI修圖軟體] 產生 3 個具有吸引力的社群推廣貼文標題。' },
+    { category: 'work', text: '我需要向主管爭取 [升遷/加薪]，請幫我梳理出 3 個具說服力的談判要點。' },
+    { category: 'work', text: '請為 [精品手工麵包店] 設計 3 個響亮、溫暖且好記的 brand slogan。' },
+    { category: 'work', text: '請幫我撰寫一封向潛在合作夥伴開發商務聯名機會的 Cold Email，字數要精簡。' },
+
+    // 寫作學習 (8)
+    { category: 'learn', text: '請以費曼學習法向我解釋 [區塊鏈/量子力學]，用簡單的比喻，並假裝我是 10 歲小孩。' },
+    { category: 'learn', text: '請幫我優化以下文字的語氣，使其更顯得 [溫暖文青/專業得體]：[貼上你的文字]' },
+    { category: 'learn', text: '我想在最短時間內了解 [生成式AI] 的核心原理。請為我規劃一條從零開始的學習路徑。' },
+    { category: 'learn', text: '在學習 [Python程式語言] 時，初學者最容易犯的 5 個核心誤區是什麼？' },
+    { category: 'learn', text: '請推薦 3 本深入了解 [心理學/商業策略] 的必讀書籍，並說明推薦的理由與收穫。' },
+    { category: 'learn', text: '請幫我將以下這段長文提煉出 3 個核心要點，並以條列式呈現：[貼上長文]' },
+    { category: 'learn', text: '請幫我創作一個以 [退休警探] 為主角，在 [倫敦霧夜] 下展開的 [懸疑推理] 小說大綱。' },
+    { category: 'learn', text: '請幫我檢查以下這段英文商務郵件的文法與用語，並給出修改建議：[貼上英文郵件]' },
+
+    // 趣味創意 (6)
+    { category: 'fun', text: '你現在是 20 年資歷的職涯導師，請解答我目前面臨的職場挑戰：[貼上挑戰]' },
+    { category: 'fun', text: '請扮演我的英文口說練習夥伴，用日常英文與我對話，如果有文法錯誤請在括號內糾正我。' },
+    { category: 'fun', text: '幫我為 [媽媽] 發想一個 [2000] 元以內、實用且有創意的生日禮物點子。' },
+    { category: 'fun', text: '我家裡冰箱目前只有 [雞蛋] 和 [番茄]，請幫我設計兩道能在 15 分鐘內做好的創意菜。' },
+    { category: 'fun', text: '設計 3 個適合 [8-10] 個人參加的室內家庭聚會破冰遊戲，不需要繁計的道具。' },
+    { category: 'fun', text: '你現在是專門講冷笑話的 AI 助手，請給我講 3 個關於 [工程師/香蕉] 的冷笑話。' }
+  ];
+
+  const quickPromptsList = document.getElementById('quick-prompts-list');
+  const quickPromptCategory = document.getElementById('quick-prompt-category');
+  const searchInput = document.getElementById('search-input');
+  const searchClearBtn = document.getElementById('search-clear-btn');
+
+  function renderQuickPrompts(category) {
+    if (!quickPromptsList) return;
+    quickPromptsList.innerHTML = '';
+
+    const filtered = category === 'all' 
+      ? quickPrompts 
+      : quickPrompts.filter(p => p.category === category);
+
+    filtered.forEach(item => {
+      const tag = document.createElement('button');
+      tag.className = 'quick-prompt-tag';
+      tag.innerText = item.text;
+      
+      tag.addEventListener('click', () => {
+        if (searchInput) {
+          searchInput.value = item.text;
+          searchInput.focus();
+          
+          if (searchClearBtn) {
+            searchClearBtn.style.display = 'block';
+          }
+          
+          showToast('💡 已填入！你可以直接在輸入框中進行修改編輯');
+        }
+      });
+
+      quickPromptsList.appendChild(tag);
+    });
+  }
+
+  if (quickPromptCategory) {
+    quickPromptCategory.addEventListener('change', () => {
+      renderQuickPrompts(quickPromptCategory.value);
+    });
+  }
+
+  /* ==========================================================================
      9. Initialization & Load
      ========================================================================== */
   // Render Photo Wall on start
@@ -1858,4 +1942,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load default canvas after short delay
   setTimeout(initCanvas, 100);
+
+  // Initialize search quick prompts
+  renderQuickPrompts('all');
 });

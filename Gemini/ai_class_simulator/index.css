@@ -2000,3 +2000,64 @@ footer {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.25);
 }
+
+/* ==========================================================================
+   30個常用智慧提示詞標籤樣式
+   ========================================================================== */
+.quick-prompts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* 自定義滾動條以適應深色毛玻璃風格 */
+.quick-prompts-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.quick-prompts-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.quick-prompts-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.quick-prompts-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.quick-prompt-tag {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: normal;
+  text-align: left;
+  line-height: 1.4;
+  word-break: break-all;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quick-prompt-tag:hover {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.quick-prompt-tag:active {
+  transform: scale(0.98);
+}
