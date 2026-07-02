@@ -118,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const promptText = `請幫我畫一張【${art}】的圖片，畫面中有一位【${people}】帶著【${item}】在【${location}】。`;
       document.getElementById('preview-style-text').innerText = promptText;
     });
-    });
   }
 
   /* ==========================================================================
