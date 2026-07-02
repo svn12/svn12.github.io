@@ -122,6 +122,33 @@
               <p>設定邊界。例如：「不需走太多路、列出3個地點...」</p>
             </div>
           </div>
+      </div>
+
+      <!-- ChatGPT / AI 實用指令大全 -->
+      <div class="news-divider" style="margin-top: 40px; margin-bottom: 20px;">
+        <span>📚 ChatGPT / AI 實用指令大全</span>
+      </div>
+
+      <div class="card card-fullwidth" style="margin-bottom: 30px;">
+        <!-- 分類膠囊切換器 -->
+        <div class="explain-tabs">
+          <button class="explain-tab-btn active" data-cat="interview">求職面試 💼</button>
+          <button class="explain-tab-btn" data-cat="productivity">工作生產力 ⚡</button>
+          <button class="explain-tab-btn" data-cat="data">資料整理 📊</button>
+          <button class="explain-tab-btn" data-cat="develop">程式開發 💻</button>
+          <button class="explain-tab-btn" data-cat="write">寫作幫手 ✍️</button>
+          <button class="explain-tab-btn" data-cat="marketing">行銷社群 📣</button>
+          <button class="explain-tab-btn" data-cat="life">日常生活 🏠</button>
+          <button class="explain-tab-btn" data-cat="roleplay">角色扮演 🎭</button>
+        </div>
+
+        <div class="explain-cards-header" style="margin-bottom: 18px; color: var(--text-muted); font-size: 0.95rem;">
+          💡 提示：點擊卡片或複製按鈕可一鍵複製指令，指令中的 <span style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 4px; padding: 1px 6px; color: #38bdf8; font-weight: 700;">[括號文字]</span> 為建議替換的自訂變數！
+        </div>
+
+        <!-- 卡片展示容器 -->
+        <div class="explain-cards-grid" id="explain-cards-output">
+          <!-- 透過 JS 動態渲染 -->
         </div>
       </div>
     </section>

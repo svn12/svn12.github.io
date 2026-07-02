@@ -118,7 +118,216 @@ document.addEventListener('DOMContentLoaded', () => {
       const promptText = `請幫我畫一張【${art}】的圖片，畫面中有一位【${people}】帶著【${item}】在【${location}】。`;
       document.getElementById('preview-style-text').innerText = promptText;
     });
+    });
   }
+
+  /* ==========================================================================
+     3.2 ExplainThis ChatGPT Prompt Database (Category Tabs)
+     ========================================================================== */
+  const explainData = {
+    interview: [
+      {
+        title: '尋求履歷的反饋',
+        prompt: '這份 [職位] 的履歷，有哪邊可以寫更好? 請以專業面試官的角度，提出具體改進建議。接著以你提出的建議來改寫這段經歷，改寫時請維持列點的形式。[附上履歷]'
+      },
+      {
+        title: '為履歷加上量化數據',
+        prompt: '改寫以下履歷，為每一點加上量化的數據，改寫時請維持列點的形式。[附上履歷]'
+      },
+      {
+        title: '為不同公司客製化撰寫履歷',
+        prompt: '我今天要申請 [公司] 的 [職位]，改寫以下經歷，讓我能更符合 [公司] 的企業文化。[附上經歷]'
+      },
+      {
+        title: '求職信 Cover Letter',
+        prompt: '你扮演一名專業的求職信寫手。我會給你相關的資訊，你要確保用繁體中文撰寫一封完整的求職信，並且美化和改寫。面試公司：[公司]、面試職位：[職位]、強項：[填入你的強項]，如：[實際舉例]。'
+      },
+      {
+        title: 'STAR 原則面試模擬',
+        prompt: '你扮演一名專業行為面試專家。請根據 STAR（情境、任務、行動、結果）格式，為我面試 [公司] [職位] 時最常問的行為問題「[面試問題]」，以 [語言] 撰寫一個 3 分鐘的優秀模擬回答。'
+      }
+    ],
+    productivity: [
+      {
+        title: '撰寫專業離職信',
+        prompt: '你扮演一名專業的離職信寫手，幫助我寫一封專業且友善的離職信。職位是 [職位]，公司是 [公司]，最後一天是 [日期]。因 [離職原因] 必須離職，可提供 [可以提供的協助] 協助交接。'
+      },
+      {
+        title: '委婉拒絕信件撰寫',
+        prompt: '請幫我撰寫一封郵件，委婉且客氣地拒絕 [對象] 的 [事件]，說明由於 [原因/排程衝突] 無法參與，但期待未來有機會合作。'
+      },
+      {
+        title: '高效會議議程擬定',
+        prompt: '我們即將召開關於 [主題] 的會議。請幫我擬定一份專業的會議議程大綱，包含時間分配、主要討論問題、報告人角色，以及預期的產出目標。'
+      },
+      {
+        title: '工作進度匯報撰寫',
+        prompt: '請以 [語氣，如：簡潔專業] 的語氣，幫我把以下這段零散的工作項目整理成給主管的週報/進度報告：[貼上工作清單]'
+      }
+    ],
+    data: [
+      {
+        title: '長文章重點摘要',
+        prompt: '請將以下長文提煉出 [數字] 個最重要的核心要點，並以列點方式呈現，字數要精簡但完整保留重要資訊：[貼上長文]'
+      },
+      {
+        title: '資訊表格化整理',
+        prompt: '請將以下凌亂的資訊整理成一個結構清晰的 markdown 表格，包含 [欄位1]、[欄位2]、[欄位3] 等欄位：[貼上資訊]'
+      },
+      {
+        title: '文章切入角度發想',
+        prompt: '產生 [數字] 個具有說服力和描述性的文章主題想法，主題為「[某個主題]」，並附上每個想法的簡短大綱。'
+      },
+      {
+        title: '長逐字稿精靈',
+        prompt: '你是一位內容情報分析專家。請閱讀以下影片逐字稿，提取其中所有的核心論點、具體操作建議與專有名詞解釋：[貼上逐字稿]'
+      }
+    ],
+    develop: [
+      {
+        title: '程式碼偵錯與修正',
+        prompt: '以下這段 [語言] 程式碼出現了 Bug，請幫我找出問題發生的位置與原因，並提供修正後且安全的程式碼：[貼上程式碼]'
+      },
+      {
+        title: '程式碼重構與加註解',
+        prompt: '請優化並重構以下 [語言] 程式碼，使其符合 clean code 與最優化效能，並在關鍵邏輯處補上繁體中文註解：[貼上程式碼]'
+      },
+      {
+        title: '自動化單元測試編寫',
+        prompt: '請為以下這段 [語言] 函數，編寫完整且包含各種極端情況 (edge cases) 的單元測試程式碼：[貼上程式碼]'
+      },
+      {
+        title: 'SQL 查詢語句生成',
+        prompt: '我有一個資料庫，包含 [資料表與欄位結構說明]，請幫我寫一個 SQL 語句來查詢 [期望達到的查詢目標]。'
+      }
+    ],
+    write: [
+      {
+        title: '文章潤飾與語意修飾',
+        prompt: '請潤飾並美化以下這段文字，使其顯得更加 [語氣，如：生動有趣/商務專業/溫暖文青]，同時修正任何語意不順的地方：[貼上文字]'
+      },
+      {
+        title: '故事/小說大綱創作',
+        prompt: '請幫我創作一個以 [主角背景] 為主角，在 [故事設定] 下，圍繞 [核心衝突] 展開的 [風格，如：奇幻/懸疑] 故事大綱與角色設定。'
+      },
+      {
+        title: '電子報/推廣信件擬定',
+        prompt: '請為我們的 [產品/服務] 撰寫一封電子報推廣信件，目的是促使讀者 [行動，如：註冊/購買]，語氣要具有說服力且簡潔。'
+      }
+    ],
+    marketing: [
+      {
+        title: '社群推廣貼文撰寫',
+        prompt: '請幫我為 [產品/服務] 撰寫 3 篇適合發布在 [平台，如：FB/IG] 的推廣貼文，每篇要包含吸睛標題、Emoji 以及推薦的 hashtag。'
+      },
+      {
+        title: '品牌文案 Slogan 生成',
+        prompt: '請為定位為 [定位與特色] 的 [品牌/產品名稱]，生成 [數字] 個簡短、有力量且好記的品牌標語 (Slogan)。'
+      },
+      {
+        title: '行銷推廣企劃草案',
+        prompt: '請為即將推出的 [新產品/活動] 擬定一份推廣企劃草案，包含目標受眾 (TA) 特徵、核心價值主張、宣傳渠道與時程規劃。'
+      }
+    ],
+    life: [
+      {
+        title: '客製化旅遊行程規劃',
+        prompt: '請幫我規劃一份 [天數] 的 [地點] 自助旅行行程。我希望每天行程安排 [風格，如：輕鬆悠閒/充實緊湊]，交通方式是 [交通工具]，每天必去 [景點]。'
+      },
+      {
+        title: '運動與健身飲食計畫',
+        prompt: '我是一位 [性別]、體重 [數字] 公斤，希望能達到 [目標，如：增肌/減脂] 效果。請為我規劃一週的無氧與有氧運動菜單，以及對應的飲食建議。'
+      },
+      {
+        title: '個人閱讀/書單推薦',
+        prompt: '我想深入了解 [領域，如：理財/心靈成長]，請為我推薦 5 本必讀的經典書籍，並說明推薦的理由與每本書的核心收穫。'
+      }
+    ],
+    roleplay: [
+      {
+        title: '科技業職涯導師',
+        prompt: '你現在扮演一位擁有 20 年全球科技業主管經驗的資深職涯導師。請以溫和且具建設性的語氣，針對我目前面臨的挑戰提供指導：[貼上你的挑戰]'
+      },
+      {
+        title: '英文口說對話夥伴',
+        prompt: '你現在是我的英文口說練習夥伴。請用簡單日常的英文與我對話，每次回答不要超過 3 句話。對話時，如果我的英文有文法或用語錯誤，請在括號中糾正我。現在請開始第一句打招呼。'
+      },
+      {
+        title: '簡報/演講教練',
+        prompt: '你現在是專業演講與 TED 簡報教練。我將提供簡報主題「[主題]」與目標受眾「[受眾]」，請幫我設計一個引人入勝的開場白，並給出三個核心報告技巧。'
+      }
+    ]
+  };
+
+  // Render ExplainThis prompt cards
+  const explainOutput = document.getElementById('explain-cards-output');
+  const explainTabBtns = document.querySelectorAll('.explain-tab-btn');
+
+  function renderExplainCards(category) {
+    if (!explainOutput) return;
+    
+    explainOutput.innerHTML = '';
+    const items = explainData[category] || [];
+
+    items.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'explain-card';
+      card.style.animationDelay = `${idx * 0.05}s`;
+
+      // Convert [括號變數] to <span class="prompt-var">[括號變數]</span>
+      const highlightedPrompt = item.prompt.replace(/(\[[^\]]+\])/g, '<span class="prompt-var">$1</span>');
+
+      card.innerHTML = `
+        <div>
+          <div class="explain-card-title">${item.title}</div>
+          <div class="explain-card-prompt">${highlightedPrompt}</div>
+        </div>
+        <div class="explain-card-actions">
+          <button class="btn-explain-copy" data-raw-prompt="${item.prompt.replace(/"/g, '&quot;')}">
+            <i data-lucide="copy" style="width: 13px; height: 13px;"></i> 一鍵複製
+          </button>
+        </div>
+      `;
+
+      explainOutput.appendChild(card);
+    });
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+
+    // Bind event listener to cards and buttons
+    explainOutput.querySelectorAll('.explain-card').forEach(cardEl => {
+      const copyBtn = cardEl.querySelector('.btn-explain-copy');
+      const rawPrompt = copyBtn.getAttribute('data-raw-prompt');
+
+      copyBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        copyTextContent(rawPrompt);
+        showActionStatus(copyBtn, '✓ 已複製');
+      });
+
+      cardEl.addEventListener('click', () => {
+        copyTextContent(rawPrompt);
+        showActionStatus(copyBtn, '✓ 已複製');
+      });
+    });
+  }
+
+  // Bind category tabs listener
+  explainTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      explainTabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.getAttribute('data-cat');
+      renderExplainCards(cat);
+    });
+  });
+
+  // Pre-render default category
+  setTimeout(() => {
+    renderExplainCards('interview');
+  }, 300);
 
   /* ==========================================================================
      3.5 World News Command Generator (Form 3)
