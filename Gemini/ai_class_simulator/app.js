@@ -1895,8 +1895,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const quickPromptsList = document.getElementById('quick-prompts-list');
   const quickPromptCategory = document.getElementById('quick-prompt-category');
-  const searchInput = document.getElementById('search-input');
-  const searchClearBtn = document.getElementById('search-clear-btn');
 
   function renderQuickPrompts(category) {
     if (!quickPromptsList) return;
