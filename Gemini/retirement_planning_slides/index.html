@@ -210,6 +210,34 @@
       .title-slide .subtitle { font-size: 0.95em !important; opacity: 1 !important; color: rgba(255, 255, 255, 0.9) !important; }
       .title-slide .author { font-size: 0.85em !important; }
 
+      /* 強制增大所有卡片與圖框內之行內字體 */
+      .motif-flat-card div[style*="font-size"],
+      .motif-flat-card[style*="font-size"] {
+        font-size: 0.95em !important;
+      }
+      /* 微調卡片標題為較大字級 */
+      .motif-flat-card div[style*="font-size:0.55em"],
+      .motif-flat-card div[style*="font-size:0.5em"],
+      .motif-flat-card div[style*="font-size:0.6em"],
+      .motif-flat-card div[style*="font-size: 0.55em"],
+      .motif-flat-card div[style*="font-size: 0.5em"],
+      .motif-flat-card div[style*="font-size: 0.6em"] {
+        font-size: 1.1em !important;
+      }
+      /* 例外排除大尺寸裝飾元素（如 emoji、大字） */
+      .motif-flat-card div[style*="font-size:2.8em"],
+      .motif-flat-card div[style*="font-size: 2.8em"] {
+        font-size: 2.5em !important;
+      }
+      .motif-flat-card div[style*="font-size:1.8em"],
+      .motif-flat-card div[style*="font-size: 1.8em"] {
+        font-size: 1.8em !important;
+      }
+      .mindmap-container[style*="font-size"],
+      .mindmap-container div[style*="font-size"] {
+        font-size: 0.85em !important;
+      }
+
       .adv-grid, .two-col-grid, .vs-grid, .conclusion-grid, .three-card-grid {
         grid-template-columns: 1fr !important;
         gap: 12px !important;
