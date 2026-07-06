@@ -180,6 +180,90 @@
     /* === 封底 === */
     .end-slide { text-align: center; }
     .end-slide .tagline { font-size: 0.65em; color: var(--text-muted); }
+
+    /* === 手機版 (Mobile Portrait) RWD 最佳化 === */
+    @media (max-width: 560px), (max-device-width: 560px) and (orientation: portrait) {
+      .reveal { font-size: 1.65em !important; }
+      .reveal h1 { font-size: 1.8em !important; line-height: 1.2 !important; }
+      .reveal h2 { font-size: 1.45em !important; }
+      .reveal h3 { font-size: 1.1em !important; }
+      .reveal p, .reveal li { font-size: 0.95em !important; line-height: 1.6 !important; }
+      
+      /* 全面大幅度部增強各組件字型尺寸，最小接受字型為 h2 大小 */
+      .two-col-grid .col-text { font-size: 0.95em !important; }
+      .adv-card .adv-title { font-size: 1.05em !important; }
+      .adv-card .adv-desc { font-size: 0.95em !important; }
+      .timeline-item { font-size: 0.95em !important; }
+      .quote-box { font-size: 1.05em !important; }
+      .conclusion-card { font-size: 0.95em !important; }
+      .stat-card .num { font-size: 2.3em !important; }
+      .stat-card .label { font-size: 0.95em !important; }
+      .vs-col ul { font-size: 0.95em !important; }
+      .vs-label { font-size: 1.1em !important; }
+      .mindmap-container { font-size: 0.85em !important; }
+      .title-slide .subtitle { font-size: 0.95em !important; opacity: 1 !important; color: rgba(255, 255, 255, 0.9) !important; }
+      .title-slide .author { font-size: 0.85em !important; }
+
+      /* 強制增大所有卡片與圖框內之行內字體 */
+      .motif-flat-card div[style*="font-size"],
+      .motif-flat-card[style*="font-size"] {
+        font-size: 0.95em !important;
+      }
+      /* 微調卡片標題為較大字級 */
+      .motif-flat-card div[style*="font-size:0.55em"],
+      .motif-flat-card div[style*="font-size:0.5em"],
+      .motif-flat-card div[style*="font-size:0.6em"],
+      .motif-flat-card div[style*="font-size: 0.55em"],
+      .motif-flat-card div[style*="font-size: 0.5em"],
+      .motif-flat-card div[style*="font-size: 0.6em"] {
+        font-size: 1.1em !important;
+      }
+      /* 例外排除大尺寸裝飾元素（如 emoji、大字） */
+      .motif-flat-card div[style*="font-size:2.8em"],
+      .motif-flat-card div[style*="font-size: 2.8em"] {
+        font-size: 2.5em !important;
+      }
+      .motif-flat-card div[style*="font-size:1.8em"],
+      .motif-flat-card div[style*="font-size: 1.8em"] {
+        font-size: 1.8em !important;
+      }
+      .mindmap-container[style*="font-size"],
+      .mindmap-container div[style*="font-size"] {
+        font-size: 0.85em !important;
+      }
+
+      .adv-grid, .two-col-grid, .vs-grid, .conclusion-grid, .three-card-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+      .vs-center {
+        padding: 10px 0;
+        font-size: 1.2em;
+      }
+      .stat-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      /* 讓特定寬度元素在手機端自適應 */
+      div[style*="width:800px"], div[style*="width: 800px"] {
+        width: 100% !important;
+        height: 240px !important;
+      }
+      input[style*="width:500px"], input[style*="width: 500px"] {
+        width: 90% !important;
+      }
+      div[style*="width:500px"], div[style*="width: 500px"] {
+        width: 100% !important;
+      }
+      /* 讓文字雲在手機上垂直排版 */
+      div[style*="grid-template-columns:250px 1fr"], div[style*="grid-template-columns: 250px 1fr"] {
+        grid-template-columns: 1fr !important;
+        height: auto !important;
+      }
+      #wc-canvas {
+        height: 220px !important;
+      }
+    }
   </style>
 </head>
 <body class="theme-coral">
@@ -465,7 +549,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script>
+  // 偵測是否為手機/垂直螢幕，如果是，調整投影片基礎尺寸為 450x800 (9:16) 適合手機垂直觀看
+  const isMobile = window.innerHeight > window.innerWidth || window.innerWidth < 600;
   Reveal.initialize({
+    width: isMobile ? 450 : 960,
+    height: isMobile ? 800 : 700,
+    margin: isMobile ? 0.05 : 0.1,
     hash: true,
     transition: 'slide',
     transitionSpeed: 'default',
@@ -474,6 +563,7 @@
     progress: true,
     controls: true,
     slideNumber: 'c/t',
+    touch: true,
     plugins: []
   });
 
