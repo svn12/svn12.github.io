@@ -189,23 +189,26 @@
 
     /* === 手機版 (Mobile Portrait) RWD 最佳化 === */
     @media (max-width: 560px), (max-device-width: 560px) and (orientation: portrait) {
-      .reveal { font-size: 1.45em !important; }
+      .reveal { font-size: 1.65em !important; }
       .reveal h1 { font-size: 1.8em !important; line-height: 1.2 !important; }
       .reveal h2 { font-size: 1.45em !important; }
       .reveal h3 { font-size: 1.1em !important; }
+      .reveal p, .reveal li { font-size: 0.95em !important; line-height: 1.6 !important; }
       
-      /* 全面大幅度部增強各組件字型尺寸 */
-      .two-col-grid .col-text { font-size: 0.72em !important; }
-      .adv-card .adv-title { font-size: 0.82em !important; }
-      .adv-card .adv-desc { font-size: 0.68em !important; }
-      .timeline-item { font-size: 0.72em !important; }
-      .quote-box { font-size: 0.82em !important; }
-      .conclusion-card { font-size: 0.72em !important; }
+      /* 全面大幅度部增強各組件字型尺寸，最小接受字型為 h2 大小 */
+      .two-col-grid .col-text { font-size: 0.95em !important; }
+      .adv-card .adv-title { font-size: 1.05em !important; }
+      .adv-card .adv-desc { font-size: 0.95em !important; }
+      .timeline-item { font-size: 0.95em !important; }
+      .quote-box { font-size: 1.05em !important; }
+      .conclusion-card { font-size: 0.95em !important; }
       .stat-card .num { font-size: 2.3em !important; }
-      .stat-card .label { font-size: 0.68em !important; }
-      .vs-col ul { font-size: 0.68em !important; }
-      .vs-label { font-size: 0.95em !important; }
-      .mindmap-container { font-size: 0.62em !important; }
+      .stat-card .label { font-size: 0.95em !important; }
+      .vs-col ul { font-size: 0.95em !important; }
+      .vs-label { font-size: 1.1em !important; }
+      .mindmap-container { font-size: 0.85em !important; }
+      .title-slide .subtitle { font-size: 0.95em !important; opacity: 1 !important; color: rgba(255, 255, 255, 0.9) !important; }
+      .title-slide .author { font-size: 0.85em !important; }
 
       .adv-grid, .two-col-grid, .vs-grid, .conclusion-grid, .three-card-grid {
         grid-template-columns: 1fr !important;
