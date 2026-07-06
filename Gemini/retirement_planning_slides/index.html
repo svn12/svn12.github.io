@@ -189,21 +189,35 @@
 
     /* === 手機版 (Mobile Portrait) RWD 最佳化 === */
     @media (max-width: 560px), (max-device-width: 560px) and (orientation: portrait) {
-      .reveal { font-size: 0.8em; }
-      .reveal h1 { font-size: 1.5em !important; line-height: 1.2 !important; }
-      .reveal h2 { font-size: 1.15em !important; }
-      .reveal h3 { font-size: 0.85em !important; }
+      .reveal { font-size: 1.15em !important; }
+      .reveal h1 { font-size: 1.6em !important; line-height: 1.2 !important; }
+      .reveal h2 { font-size: 1.3em !important; }
+      .reveal h3 { font-size: 1.0em !important; }
+      
+      /* 全面增大各組件字型尺寸 */
+      .two-col-grid .col-text { font-size: 0.6em !important; }
+      .adv-card .adv-title { font-size: 0.7em !important; }
+      .adv-card .adv-desc { font-size: 0.55em !important; }
+      .timeline-item { font-size: 0.6em !important; }
+      .quote-box { font-size: 0.7em !important; }
+      .conclusion-card { font-size: 0.6em !important; }
+      .stat-card .num { font-size: 2.0em !important; }
+      .stat-card .label { font-size: 0.55em !important; }
+      .vs-col ul { font-size: 0.55em !important; }
+      .vs-label { font-size: 0.85em !important; }
+      .mindmap-container { font-size: 0.48em !important; }
+
       .adv-grid, .two-col-grid, .vs-grid, .conclusion-grid, .three-card-grid {
         grid-template-columns: 1fr !important;
-        gap: 10px !important;
+        gap: 12px !important;
       }
       .vs-center {
         padding: 10px 0;
-        font-size: 1em;
+        font-size: 1.2em;
       }
       .stat-row {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
       }
       /* 讓特定寬度元素在手機端自適應 */
       div[style*="width:800px"], div[style*="width: 800px"] {
@@ -222,16 +236,15 @@
         height: auto !important;
       }
       #wc-canvas {
-        height: 200px !important;
+        height: 220px !important;
       }
       /* 限制心智圖組件寬度 */
       .mindmap-container {
         max-width: 100% !important;
-        font-size: 0.35em !important;
       }
       .mindmap-container div[style*="grid-template-columns"] {
         grid-template-columns: 1fr !important;
-        gap: 10px !important;
+        gap: 12px !important;
       }
     }
   </style>
