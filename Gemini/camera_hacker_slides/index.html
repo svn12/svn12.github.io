@@ -606,6 +606,12 @@
   const COLORS = ['#f96167', '#f9e795', '#2f3c7e', '#81c784', '#ce93d8', '#80deea', '#ffb74d'];
   let wcData = [];
 
+  // LocalStorage Fallback
+  const localWcKey = 'camera_hacker_local_wc';
+  let localWcData = JSON.parse(localStorage.getItem(localWcKey)) || [
+    '皺紋', '顯老', '不自然', '銳化', '背景太亂', '光線暗', '臉太大', '皮膚差'
+  ];
+
   window.wcSubmit = async function() {
     const input = document.getElementById('wc-input');
     const word = input.value.trim();
@@ -615,8 +621,15 @@
     try {
       await addDoc(wordsRef, { word, created_at: serverTimestamp() });
       input.value = '';
-    } catch(e) { console.error(e); }
-    finally { btn.disabled = false; }
+    } catch(e) {
+      console.warn("Firebase 文字雲寫入失敗，使用本地儲存：", e);
+      localWcData.push(word);
+      localStorage.setItem(localWcKey, JSON.stringify(localWcData));
+      input.value = '';
+      processWcData(localWcData);
+    } finally {
+      btn.disabled = false;
+    }
   };
 
   document.getElementById('wc-input')?.addEventListener('keypress', e => {
@@ -624,16 +637,14 @@
   });
   document.getElementById('wc-btn')?.addEventListener('click', window.wcSubmit);
 
-  onSnapshot(query(wordsRef, orderBy('created_at', 'asc')), snap => {
-    const words = [];
-    snap.forEach(doc => words.push(doc.data().word));
+  function processWcData(wordsList) {
     const counts = {};
-    words.forEach(w => counts[w] = (counts[w] || 0) + 1);
+    wordsList.forEach(w => counts[w] = (counts[w] || 0) + 1);
     wcData = Object.entries(counts).sort((a, b) => b[1] - a[1]);
 
     const wcTotal = document.getElementById('wc-total');
     const wcUnique = document.getElementById('wc-unique');
-    if (wcTotal) wcTotal.textContent = words.length;
+    if (wcTotal) wcTotal.textContent = wordsList.length;
     if (wcUnique) wcUnique.textContent = wcData.length;
 
     const listEl = document.getElementById('wc-list');
@@ -649,6 +660,16 @@
     const empty = document.getElementById('wc-empty');
     if (empty) empty.style.display = wcData.length > 0 ? 'none' : '';
     drawWordCloud();
+  }
+
+  onSnapshot(query(wordsRef, orderBy('created_at', 'asc')), snap => {
+    const words = [];
+    snap.forEach(doc => words.push(doc.data().word));
+    const combinedWords = [...localWcData, ...words];
+    processWcData(combinedWords);
+  }, err => {
+    console.warn("無法連接 Firebase 文字雲監聽，使用 LocalStorage 本地資料：", err);
+    processWcData(localWcData);
   });
 
   function drawWordCloud() {
@@ -680,7 +701,17 @@
   ];
   const pollRef = doc(fdb, 'camera_hacker_poll', 'results');
   const userId = 'user_' + Math.random().toString(36).slice(2, 9);
-  let myVote = null;
+  
+  // LocalStorage Fallback
+  const localPollKey = 'camera_hacker_local_poll';
+  let localPollData = JSON.parse(localStorage.getItem(localPollKey)) || {
+    votes: {
+      'user_init_1': 'a', 'user_init_2': 'a', 'user_init_3': 'a',
+      'user_init_4': 'b', 'user_init_5': 'b',
+      'user_init_6': 'c'
+    }
+  };
+  let myVote = localStorage.getItem('camera_hacker_my_vote') || null;
 
   const container = document.getElementById('poll-options');
   if (container) {
@@ -708,20 +739,10 @@
     });
   }
 
-  async function vote(optId) {
-    myVote = optId;
-    const data = {};
-    data[`votes.${userId}`] = optId;
-    data.updated_at = serverTimestamp();
-    await setDoc(pollRef, data, { merge: true });
-  }
-
-  onSnapshot(pollRef, snap => {
-    const data = snap.data() || {};
-    const votes = data.votes || {};
+  function updatePollUI(votesMap) {
     const counts = {};
     OPTIONS.forEach(o => counts[o.id] = 0);
-    Object.values(votes).forEach(v => { if (counts[v] !== undefined) counts[v]++; });
+    Object.values(votesMap).forEach(v => { if (counts[v] !== undefined) counts[v]++; });
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
 
     const pollTotal = document.getElementById('poll-total');
@@ -749,6 +770,32 @@
         }
       }
     });
+  }
+
+  async function vote(optId) {
+    myVote = optId;
+    localStorage.setItem('camera_hacker_my_vote', optId);
+    try {
+      const data = {};
+      data[`votes.${userId}`] = optId;
+      data.updated_at = serverTimestamp();
+      await setDoc(pollRef, data, { merge: true });
+    } catch(e) {
+      console.warn("Firebase 投票失敗，改用 LocalStorage：", e);
+      localPollData.votes[userId] = optId;
+      localStorage.setItem(localPollKey, JSON.stringify(localPollData));
+      updatePollUI(localPollData.votes);
+    }
+  }
+
+  onSnapshot(pollRef, snap => {
+    const data = snap.data() || {};
+    const votes = data.votes || {};
+    const combinedVotes = { ...localPollData.votes, ...votes };
+    updatePollUI(combinedVotes);
+  }, err => {
+    console.warn("無法連接 Firebase 投票監聽，使用 LocalStorage：", err);
+    updatePollUI(localPollData.votes);
   });
 
   // Reveal.js 切頁重新繪製 Wordcloud
