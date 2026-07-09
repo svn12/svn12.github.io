@@ -246,8 +246,8 @@
           let txt1 = '<table border="1" cellspacing="0" cellpadding="7"> ';
           const detail = !($('#brief').is(':checked'));
 
-          // http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}
-          // http://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.TW
+          // https://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}
+          // https://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=8&cw=600&ch=450&a=${code}.TW
           //  https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=270&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=MFI
           // https://stock.wearn.com/finance_chart.asp?stockid=${code}&timekind=0&timeblock=365&sma1=5&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None
           txt1 += '<tr>';
@@ -255,7 +255,7 @@
           txt1 += ` <td>  <a id="link1" href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=${code}" target="_blank"> <img id="img1" width="100%" alt="台灣股市資" title="台灣股市資訊網_${remark}" src=
             "https://stock.capital.com.tw/rtgif/gifstkchartasp2.djgif?w=600&h=450&id=${code}"></a> </td>`;
             // "https://concords.moneydj.com/z/zc/zc0/zc08/ZC08GIF_${code}_600_450.djgif"></a> </td>`;
-            // "http://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
+            // "https://kgieworld.moneydj.com/rt/gif/gifstkchart2.djgif?w=600&h=450&id=${code}"></a> </td>`;
           /* href2 = `https://statementdog.com/analysis/${code}`;
           title2 = "財報狗"; */
 
@@ -272,13 +272,13 @@
           }
           txt1 += '</tr>';
           if (`${code.toString().substr(0, 1)}` != "0") {
-            // http://stock.wearn.com/sale_chart.asp?stockid=${code}
+            // https://stock.wearn.com/sale_chart.asp?stockid=${code}
             //  https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_5434.gif
             //https://goodinfo.tw/tw/image/StockMargin/MARGIN_DATE_4938.gif
             txt1 += '<tr>';
-            txt1 += ` <td> <a href="https://www.wantgoo.com/stock/${code}" target="_blank"><img  width="100%" alt="玩股網" title="玩股網"  src="http://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
-            //txt1 += ` <td> <a id="link6" href="https://stock.wearn.com/a${code}.html" target="_blank"> <img id="img6" width="100%" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
-            txt1 += ` <td> <a id="link6" href="https://www.cnyes.com/twstock/${code}" target="_blank"> <img id="img6" width="100%" alt="聚財網" title="聚財網" src="http://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
+            txt1 += ` <td> <a href="https://www.wantgoo.com/stock/${code}" target="_blank"><img  width="100%" alt="玩股網" title="玩股網"  src="https://stock.wearn.com/sale_chart.asp?stockid=${code}"></a> </td>`;
+            //txt1 += ` <td> <a id="link6" href="https://stock.wearn.com/a${code}.html" target="_blank"> <img id="img6" width="100%" alt="聚財網" title="聚財網" src="https://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
+            txt1 += ` <td> <a id="link6" href="https://www.cnyes.com/twstock/${code}" target="_blank"> <img id="img6" width="100%" alt="聚財網" title="聚財網" src="https://stock.wearn.com/income_chart.asp?stockid=${code}"></a> </td>`;
             txt1 += '</tr>';
 
             // if(!($('#brief').is(':checked'))){
@@ -293,7 +293,7 @@
 
           if (detail) {
             txt1 += '<tr>';
-            //txt1+=` <td> <a id="link5" href="http://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> 
+            //txt1+=` <td> <a id="link5" href="https://www.money-link.com.tw/stxba/index5.asp?id=${code}" target="_blank"> 
             // https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId=1434
             txt1 += ` <td> <a id="link5" href="https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId=${code}" target="_blank"> 
 			<img id="img5" width="100%" alt="精誠資訊" title="精誠資訊" src="https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_${code}.gif"></a> </td>`;
@@ -302,10 +302,10 @@
             txt1 += '</tr>';
           }
           // https://goodinfo.tw/StockInfo/image/StockBearish/BEARISH_DATE_${code}.gif
-          // http://stock.wearn.com/acre.asp?stockid=${code}
+          // https://stock.wearn.com/acre.asp?stockid=${code}
           txt1 += '<tr>';
           if (`${code.toString().substr(0, 1)}` != "0") {
-            href4 = `http://www.cmoney.tw/finance/f00025.aspx?s=${code}`;
+            href4 = `https://www.cmoney.tw/finance/f00025.aspx?s=${code}`;
 
           }
 
@@ -313,7 +313,7 @@
 
           txt1 += `<td>  <a id="link4" href=${href4} target="_blank">
             <img id="img4" width="100%" alt="Cmoney 股市分析" title="Cmoney 股市分析" src="https://stock.wearn.com/acre.asp?stockid=${code}"></a> </td>`;
-          txt1 += ' <td> <a id="link3" href="https://histock.tw/stock/' + code + '" target="_blank"> <img id="img3" width="100%"  alt="Hi Stock" title="Hi Stock" src="http://stock.wearn.com/foreign_buy.asp?stockid=' + code + '"></a> </td>';
+          txt1 += ' <td> <a id="link3" href="https://histock.tw/stock/' + code + '" target="_blank"> <img id="img3" width="100%"  alt="Hi Stock" title="Hi Stock" src="https://stock.wearn.com/foreign_buy.asp?stockid=' + code + '"></a> </td>';
           txt1 += '</tr>';
 
           if (detail) {
@@ -321,9 +321,9 @@
               /* href2 = `https://statementdog.com/analysis/${code}`;
           title2 = "財報狗"; */
 
-            //txt1 += ' <td> <a id="link7" href="http://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=' + code + '" target="_blank"><img id="img7" width="100%" alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid=' + code + '"></a> </td>';
+            //txt1 += ' <td> <a id="link7" href="https://www.capital.com.tw/rank/index3.asp?l=StkPrice.html&xy=0&a=' + code + '" target="_blank"><img id="img7" width="100%" alt="群益網" title="群益網" src="https://stock.wearn.com/foreign_chart.asp?stockid=' + code + '"></a> </td>';
             txt1 += ' <td> <a id="link7" href="https://statementdog.com/analysis/' + code  + '" target="_blank"><img id="img7" width="100%" alt="財報狗" title="財報狗" src="https://stock.wearn.com/foreign_chart.asp?stockid=' + code + '"></a> </td>';
-            txt1 += '<td> <a id="link8" href="http://pchome.megatime.com.tw/stock/sid' + code + '.html" target="_blank"> <img id="img8" width="100%"  alt="PChome" title="PCHome股" src="https://stock.wearn.com/zhuli_chart.asp?stockid=' + code + '"></a> </td>';
+            txt1 += '<td> <a id="link8" href="https://pchome.megatime.com.tw/stock/sid' + code + '.html" target="_blank"> <img id="img8" width="100%"  alt="PChome" title="PCHome股" src="https://stock.wearn.com/zhuli_chart.asp?stockid=' + code + '"></a> </td>';
             txt1 += '</tr>';
           }
           // https://goodinfo.tw/StockInfo/image/StockFinanceX/FINX_Dividend_5434.gif
@@ -586,7 +586,7 @@
     </div>
     <div id="abgne_float_ad_1" style="display: none;">
       <span class="abgne_close_ad fa  fa-arrow-circle-up" style="font-size:5rem;color:blue;"></span>
-      <!-- <a href="http://vv0817.byethost3.com" target="_blank"> -->
+      <!-- <a href="https://vv0817.byethost3.com" target="_blank"> -->
       <!-- <img src="./img/cell-phone.svg" title="Test~遊戲天地" class="abgne_close_ad"  /> -->
       </a>
     </div>
