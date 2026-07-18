@@ -1,12 +1,42 @@
+# 原有自訂忽略規則
 readme.txt
 github.bat
 *.xlsx
-.gitignore
-*.py
 *.xlsm
+*.py
 .tmp.*
 ._*
 youtube/._*
 .DS_Store
 !scripts/get_all_591_v3.py
 !scripts/generate_web_files.py
+
+# 敏感資料與憑證 (高風險)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.secret
+*.key
+*.pem
+*.cert
+credentials.json
+client_secret.json
+
+# 系統垃圾檔案
+Thumbs.db
+Desktop.ini
+**/.DS_Store
+**/._*
+
+# 編輯器設定
+.vscode/
+.idea/
+*.suo
+*.workspace
+
+# 暫存與日誌
+*.log
+tmp/
+temp/
