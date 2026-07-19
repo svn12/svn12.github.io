@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Remark: 聚會/活動報到與出席狀況管理 | 關聯: 無本地資源關聯 -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -72,59 +73,45 @@
         vertical-align: middle;
       }
 
-      .container .Header,
-      .container h2 {
+      .container .Header {
         position: absolute;
-        /* bottom: 0; */
         top: 2vh;
-        /* background: rgb(0, 0, 0); */
-        /* Fallback color */
-        /* background: rgba(5, 46, 158, 0.3); */
-        /* Black background with 0.5 opacity 
-        font-family: 蘋方黑體, 華康麗黑體, DFKai-SB, Helvetica, Arial, sans-serif, serif;
-        */
-        color: #f1f1f1;
+        left: 0;
         width: 100%;
-        /* padding: 20px; */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2vw;
+        box-sizing: border-box;
+        z-index: 10;
+      }
+
+      .container h2 {
+        color: #f1f1f1;
         margin: 0%;
         font-size: 2.5rem;
+        text-align: center;
+        flex: 0 0 auto;
       }
       #CurTime {
-        position: absolute;
-        top: -1em;
-        left: 0.7em;
         color: rgb(54, 185, 199);
-        margin: 1.4em;
-         z-index: 5;
-        font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica Arial,
+        z-index: 5;
+        font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica, Arial,
           sans-serif, serif;
-        /*
-        font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica,
-          Arial, sans-serif, serif;
-          text-shadow: 2px 2px 1px white;
-         letter-spacing: 10px; */
-        font-size: 0.7em;
+        font-size: 1.75rem;
         text-shadow: 2px 1px 1px black;
-        text-align: left;
-        /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
+        text-align: center;
+        flex: 1;
+        margin: 0;
       }
       #Bdate {
-        position: fixed;
-        right: 0.7em;
-        top: 1.3em;
         color: white;
-        /* text-shadow: 5px 5px 3px black; */
         text-shadow: 2px 1px 1px black;
-        /* margin: 0.7em; 
-        color: rgb(94, 147, 208);
-        font-family: 華康麗黑體, 思源黑體, 蘋方黑體, 微軟正黑體, Helvetica,
-          Arial, sans-serif, serif;
-        */
-        /* letter-spacing: 10px; */
-        font-size: 0.6em;
+        font-size: 1.5rem;
         text-shadow: 2px 2px 1px rgb(12, 1, 1);
-        text-align: right;
-        /* text-shadow: 1px 1px 2px rgb(243, 238, 238), 0 0 25px rgb(230, 13, 42), 0 0 5px rgb(9, 9, 238); */
+        text-align: center;
+        flex: 1;
+        margin: 0;
       }
       #barcode {
         position: fixed;
@@ -339,8 +326,8 @@
         <p id="CurTime" style="display: none"></p>
         -->
 
+        <p id="CurTime"></p>
         <h2>
-          <p id="CurTime"></p>
           <a
             href="https://www.youtube.com/channel/UCdBgZC0GhG7uEdn9oEx1L8g"
             id="church"
