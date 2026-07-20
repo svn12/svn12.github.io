@@ -108,12 +108,14 @@
         }
 
         .track-info {
-            text-align: center;
+            display: flex;
+            gap: 15px;
             margin-bottom: 25px;
         }
 
-        #selectSub {
-            width: 100%;
+        #selectSub, #selectVideo {
+            flex: 1;
+            width: 50%;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
@@ -125,7 +127,27 @@
             transition: 0.3s;
         }
 
-        #selectSub:focus {
+        #selectSub:focus, #selectVideo:focus {
+            border-color: var(--accent-color);
+        }
+
+        .search-container {
+            margin-bottom: 15px;
+        }
+
+        #searchVideo {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            padding: 10px 15px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        #searchVideo:focus {
             border-color: var(--accent-color);
         }
 
@@ -275,8 +297,13 @@
             <i class="material-icons" style="font-size: 4rem; opacity: 0.2;">music_note</i>
         </div>
 
+        <div class="search-container">
+            <input type="text" id="searchVideo" placeholder="🔍 搜尋影片關鍵字..." oninput="FilterVideos()">
+        </div>
+
         <div class="track-info">
             <select id="selectSub" onchange="ChangeAudio()"></select>
+            <select id="selectVideo" onchange="PlaySelectedVideo()"></select>
         </div>
 
         <div class="progress-container">
@@ -298,7 +325,7 @@
         <div class="settings-bar">
             <div class="setting-item">
                 <i class="material-icons">volume_up</i>
-                <input type="range" id="volume" min="0" max="100" step="1" value="100">
+                <input type="range" id="volume" min="0" max="100" step="1" value="50">
                 <div class="setting-item" style="margin-left: 10px;">
                     <label class="switch">
                         <input type="checkbox" id="toggleMute">
@@ -347,26 +374,112 @@
             onYouTubeIframeAPIReady();
         }
 
+        function getItemUrl(e) {
+            if (!e) return '';
+            const keys = Object.keys(e);
+            const targetKey = keys.find(k => /^(href|url|link|youtube)$/i.test(k.trim()));
+            return targetKey ? e[targetKey] : (e.href || e.URL || e.url || e.link || '');
+        }
+
+        function getItemTitle(e, idx) {
+            if (!e) return `影片 ${idx + 1}`;
+            const keys = Object.keys(e);
+            const titleKey = keys.find(k => k && /^(title|標題)$/i.test(k.trim())) ||
+                             keys.find(k => k && /^(name|sname)$/i.test(k.trim()));
+            const titleVal = titleKey ? e[titleKey] : null;
+            if (titleVal !== null && titleVal !== undefined && String(titleVal).trim() !== "") {
+                return String(titleVal).trim();
+            }
+            const url = getItemUrl(e);
+            return url ? `${idx + 1}. ${url}` : `影片 ${idx + 1}`;
+        }
+
+        let allPlaylistItems = [];
+        let currentPlaylistIds = [];
+        let currentIndex = 0;
+
         async function onYouTubeIframeAPIReady() {
             const videoId = $('#selectSub option:selected').val();
             const playlistData = await RsheetData(fl1, videoId);
-            const playlistIds = Array2Json(playlistData).map(e => get_video_id(e.href));
+            const items = Array2Json(playlistData);
 
-            player = new YT.Player('youtube-player', {
-                height: '360',
-                width: '640',
-                videoId: playlistIds[0],
-                playerVars: {
-                    autoplay: 0,
-                    loop: 1,
-                    controls: 0,
-                    playlist: playlistIds.join(',')
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
+            const searchInput = document.getElementById('searchVideo');
+            if (searchInput) searchInput.value = '';
+
+            allPlaylistItems = items.map((e, idx) => {
+                const url = getItemUrl(e);
+                const title = getItemTitle(e, idx);
+                const vId = get_video_id(url);
+                return { title, url, vId, originalIndex: idx };
+            }).filter(item => item.vId);
+
+            currentPlaylistIds = allPlaylistItems.map(item => item.vId);
+            currentIndex = 0;
+
+            renderVideoSelect(allPlaylistItems);
+
+            if (currentPlaylistIds.length === 0) return;
+
+            if (player && player.loadVideoById) {
+                player.loadVideoById(currentPlaylistIds[0]);
+            } else {
+                player = new YT.Player('youtube-player', {
+                    height: '360',
+                    width: '640',
+                    videoId: currentPlaylistIds[0],
+                    playerVars: {
+                        autoplay: 0,
+                        loop: 0,
+                        controls: 0
+                    },
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            }
+        }
+
+        function renderVideoSelect(itemsList) {
+            const selectVideo = $("#selectVideo");
+            selectVideo.empty();
+            itemsList.forEach((item) => {
+                selectVideo.append($('<option>', { value: item.originalIndex, text: item.title }));
             });
+        }
+
+        function FilterVideos() {
+            const keyword = $('#searchVideo').val().trim().toLowerCase();
+            if (!keyword) {
+                renderVideoSelect(allPlaylistItems);
+                return;
+            }
+            const filtered = allPlaylistItems.filter(item =>
+                item.title.toLowerCase().includes(keyword) ||
+                item.url.toLowerCase().includes(keyword)
+            );
+            renderVideoSelect(filtered);
+        }
+
+        function PlaySelectedVideo() {
+            const idx = parseInt($('#selectVideo').val(), 10);
+            if (idx >= 0 && idx < allPlaylistItems.length) {
+                currentIndex = idx;
+                if (player && player.loadVideoById) {
+                    player.loadVideoById(allPlaylistItems[currentIndex].vId);
+                }
+            }
+        }
+
+        function playVideoAtIndex(index) {
+            if (index >= 0 && index < allPlaylistItems.length) {
+                currentIndex = index;
+                const selectVideo = document.getElementById('selectVideo');
+                if (selectVideo) selectVideo.value = currentIndex;
+                if (player && player.loadVideoById) {
+                    player.loadVideoById(allPlaylistItems[currentIndex].vId);
+                }
+            }
         }
 
         function onPlayerReady(event) {
@@ -383,10 +496,14 @@
             }
 
             if (event.data === YT.PlayerState.ENDED) {
-                const select = document.getElementById("selectSub");
-                if (select.selectedIndex < select.options.length - 1) {
-                    select.selectedIndex++;
-                    ChangeAudio();
+                if (currentIndex < currentPlaylistIds.length - 1) {
+                    playVideoAtIndex(currentIndex + 1);
+                } else {
+                    const select = document.getElementById("selectSub");
+                    if (select.selectedIndex < select.options.length - 1) {
+                        select.selectedIndex++;
+                        ChangeAudio();
+                    }
                 }
             }
         }
@@ -398,14 +515,31 @@
             const progressBar = document.getElementById('progress-bar');
             const muteToggle = document.getElementById('toggleMute');
 
+            // 預設設定音量
+            p.setVolume(Number(volSlider.value));
+
             playPauseBtn.onclick = () => {
                 const state = p.getPlayerState();
                 if (state === YT.PlayerState.PLAYING) p.pauseVideo();
                 else p.playVideo();
             };
 
-            document.getElementById('next').onclick = () => p.nextVideo();
-            document.getElementById('previous').onclick = () => p.previousVideo();
+            document.getElementById('next').onclick = () => {
+                if (currentIndex < currentPlaylistIds.length - 1) {
+                    playVideoAtIndex(currentIndex + 1);
+                } else {
+                    const select = document.getElementById("selectSub");
+                    if (select.selectedIndex < select.options.length - 1) {
+                        select.selectedIndex++;
+                        ChangeAudio();
+                    }
+                }
+            };
+            document.getElementById('previous').onclick = () => {
+                if (currentIndex > 0) {
+                    playVideoAtIndex(currentIndex - 1);
+                }
+            };
             document.getElementById('back').onclick = () => p.seekTo(p.getCurrentTime() - 10);
             document.getElementById('forward').onclick = () => p.seekTo(p.getCurrentTime() + 10);
 
