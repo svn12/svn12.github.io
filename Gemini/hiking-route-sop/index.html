@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>健行路徑建立 SOP — 操作指南</title>
+  <meta name="description" content="健行路徑建立標準作業流程（SOP），從建立路徑、上傳 Google 我的地圖到分享給隊友的完整操作指南。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --clr-bg: #0f1923;
+      --clr-bg-card: #1a2736;
+      --clr-bg-card-hover: #223344;
+      --clr-surface: rgba(255,255,255,0.04);
+      --clr-primary: #34d399;
+      --clr-primary-dim: #059669;
+      --clr-accent: #38bdf8;
+      --clr-accent2: #a78bfa;
+      --clr-warning: #fbbf24;
+      --clr-text: #e2e8f0;
+      --clr-text-dim: #94a3b8;
+      --clr-text-bright: #f8fafc;
+      --clr-border: rgba(255,255,255,0.08);
+      --clr-glow-green: rgba(52,211,153,0.15);
+      --clr-glow-blue: rgba(56,189,248,0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.3);
+      --shadow-glow: 0 0 40px rgba(52,211,153,0.08);
+      --font-sans: 'Noto Sans TC', 'Inter', system-ui, sans-serif;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--clr-bg);
+      color: var(--clr-text);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── Animated Background ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: 
+        radial-gradient(ellipse at 20% 20%, var(--clr-glow-green) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, var(--clr-glow-blue) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite alternate;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    @keyframes bgFloat {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-5%, -3%) rotate(3deg); }
+    }
+
+    /* ─── Header / Hero ─── */
+    .hero {
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--clr-primary-dim), transparent);
+    }
+
+    .hero-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      display: inline-block;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--clr-primary), var(--clr-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero .subtitle {
+      font-size: 1.15rem;
+      color: var(--clr-text-dim);
+      font-weight: 300;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .hero .meta-badges {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      color: var(--clr-text-dim);
+      backdrop-filter: blur(8px);
+    }
+
+    .badge--green { border-color: var(--clr-primary-dim); color: var(--clr-primary); }
+    .badge--blue  { border-color: rgba(56,189,248,0.3); color: var(--clr-accent); }
+
+    /* ─── Flow Overview ─── */
+    .flow-overview {
+      max-width: 900px;
+      margin: 0 auto 60px;
+      padding: 0 24px;
+    }
+
+    .flow-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      padding: 20px;
+      background: var(--clr-bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--clr-border);
+      overflow-x: auto;
+    }
+
+    .flow-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .flow-node .icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .flow-node:nth-child(1) .icon { background: linear-gradient(135deg, #059669, #34d399); }
+    .flow-node:nth-child(3) .icon { background: linear-gradient(135deg, #2563eb, #38bdf8); }
+    .flow-node:nth-child(5) .icon { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+
+    .flow-node .label {
+      font-size: 0.82rem;
+      color: var(--clr-text-dim);
+      font-weight: 500;
+    }
+
+    .flow-arrow {
+      font-size: 24px;
+      color: var(--clr-text-dim);
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+
+    /* ─── Main Container ─── */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ─── Timeline ─── */
+    .timeline {
+      position: relative;
+      padding-left: 60px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--clr-primary), var(--clr-accent), var(--clr-accent2));
+      border-radius: 2px;
+    }
+
+    /* ─── Step Card ─── */
+    .step {
+      position: relative;
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .step:nth-child(1) { animation-delay: 0.1s; }
+    .step:nth-child(2) { animation-delay: 0.25s; }
+    .step:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-dot {
+      position: absolute;
+      left: -48px;
+      top: 28px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 3px solid var(--clr-primary);
+      background: var(--clr-bg);
+      z-index: 2;
+    }
+
+    .step:nth-child(2) .step-dot { border-color: var(--clr-accent); }
+    .step:nth-child(3) .step-dot { border-color: var(--clr-accent2); }
+
+    .step-card {
+      background: var(--clr-bg-card);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
+
+    .step-card:hover {
+      border-color: rgba(52,211,153,0.2);
+      box-shadow: var(--shadow), var(--shadow-glow);
+      transform: translateY(-2px);
+    }
+
+    .step-header {
+      padding: 24px 28px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--clr-border);
+    }
+
+    .step-number {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .step:nth-child(1) .step-number { background: linear-gradient(135deg, #059669, #34d399); }
+    .step:nth-child(2) .step-number { background: linear-gradient(135deg, #2563eb, #38bdf8); }
+    .step:nth-child(3) .step-number { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+
+    .step-title-group h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--clr-text-bright);
+      margin-bottom: 2px;
+    }
+
+    .step-title-group .tool-tag {
+      font-size: 0.78rem;
+      color: var(--clr-text-dim);
+      font-weight: 400;
+    }
+
+    .step-title-group .tool-tag a {
+      color: var(--clr-accent);
+      text-decoration: none;
+    }
+
+    .step-title-group .tool-tag a:hover {
+      text-decoration: underline;
+    }
+
+    .step-body {
+      padding: 24px 28px;
+    }
+
+    /* ─── Sub-steps ─── */
+    .substeps {
+      list-style: none;
+      counter-reset: substep;
+    }
+
+    .substeps li {
+      counter-increment: substep;
+      position: relative;
+      padding: 14px 0 14px 40px;
+      border-bottom: 1px solid var(--clr-border);
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    .substeps li:last-child { border-bottom: none; }
+
+    .substeps li::before {
+      content: counter(substep, decimal-leading-zero);
+      position: absolute;
+      left: 0; top: 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--clr-primary);
+      background: var(--clr-glow-green);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: 'Inter', monospace;
+    }
+
+    .step:nth-child(2) .substeps li::before { color: var(--clr-accent); background: var(--clr-glow-blue); }
+    .step:nth-child(3) .substeps li::before { color: var(--clr-accent2); background: rgba(167,139,250,0.12); }
+
+    .substeps li strong {
+      color: var(--clr-text-bright);
+      font-weight: 600;
+    }
+
+    .substeps li code {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--clr-border);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.85em;
+      color: var(--clr-warning);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* ─── Image Container ─── */
+    .step-image {
+      margin: 20px 0 8px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--clr-border);
+      position: relative;
+    }
+
+    .step-image img {
+      width: 100%;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .step-image:hover img {
+      transform: scale(1.02);
+    }
+
+    .step-image .img-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0; right: 0;
+      padding: 10px 16px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+    }
+
+    /* ─── Tip / Note boxes ─── */
+    .tip-box {
+      margin: 16px 0;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .tip-box--info {
+      background: rgba(56,189,248,0.08);
+      border: 1px solid rgba(56,189,248,0.2);
+      color: var(--clr-accent);
+    }
+
+    .tip-box--warn {
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.2);
+      color: var(--clr-warning);
+    }
+
+    .tip-box--success {
+      background: rgba(52,211,153,0.08);
+      border: 1px solid rgba(52,211,153,0.2);
+      color: var(--clr-primary);
+    }
+
+    .tip-box .tip-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      line-height: 1.5;
+    }
+
+    /* ─── Links Section ─── */
+    .links-section {
+      margin-top: 60px;
+      padding: 32px;
+      background: var(--clr-bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--clr-border);
+    }
+
+    .links-section h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: var(--clr-text-bright);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--clr-text);
+      transition: var(--transition);
+    }
+
+    .link-card:hover {
+      border-color: var(--clr-primary-dim);
+      background: var(--clr-bg-card-hover);
+      transform: translateY(-2px);
+    }
+
+    .link-card .link-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .link-card .link-info .link-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--clr-text-bright);
+    }
+
+    .link-card .link-info .link-desc {
+      font-size: 0.8rem;
+      color: var(--clr-text-dim);
+      margin-top: 2px;
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--clr-text-dim);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--clr-border);
+      margin-top: 60px;
+    }
+
+    .footer a {
+      color: var(--clr-primary);
+      text-decoration: none;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 640px) {
+      .hero { padding: 50px 16px 40px; }
+      .timeline { padding-left: 40px; }
+      .timeline::before { left: 14px; }
+      .step-dot { left: -34px; }
+      .step-header { padding: 16px 18px 14px; flex-wrap: wrap; }
+      .step-body { padding: 16px 18px; }
+      .substeps li { padding-left: 36px; }
+      .flow-bar { flex-direction: column; gap: 4px; }
+      .flow-arrow { transform: rotate(90deg); font-size: 18px; }
+      .links-section { padding: 20px; }
+    }
+
+    /* ─── Print ─── */
+    @media print {
+      body { background: #fff; color: #1a1a1a; }
+      body::before { display: none; }
+      .step-card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+      .step-image img { max-height: 300px; object-fit: contain; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Hero ═══ -->
+  <header class="hero">
+    <div class="hero-icon">🥾</div>
+    <h1>健行路徑建立 SOP</h1>
+    <p class="subtitle">從路徑規劃、地圖上傳到分享給隊友 — 三步驟完成你的健行路線準備</p>
+    <div class="meta-badges">
+      <span class="badge badge--green">🗺️ OnTheGoMap</span>
+      <span class="badge badge--blue">📍 Google My Maps</span>
+      <span class="badge">📄 GPX / KML</span>
+      <span class="badge">⏱️ 約 10 分鐘完成</span>
+    </div>
+  </header>
+
+  <!-- ═══ Flow Overview ═══ -->
+  <section class="flow-overview">
+    <div class="flow-bar">
+      <div class="flow-node">
+        <div class="icon">1</div>
+        <span class="label">建立路徑</span>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">
+        <div class="icon">2</div>
+        <span class="label">上傳地圖</span>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">
+        <div class="icon">3</div>
+        <span class="label">分享路線</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Timeline Steps ═══ -->
+  <main class="container">
+    <div class="timeline">
+
+      <!-- ──── Step 1 ──── -->
+      <article class="step">
+        <div class="step-dot"></div>
+        <div class="step-card">
+          <div class="step-header">
+            <div class="step-number">1</div>
+            <div class="step-title-group">
+              <h2>建立步行路徑 & 下載路線檔</h2>
+              <span class="tool-tag">🔧 工具：<a href="https://onthegomap.com/#/create" target="_blank" rel="noopener">OnTheGoMap</a></span>
+            </div>
+          </div>
+          <div class="step-body">
+
+            <ol class="substeps">
+              <li>開啟 <a href="https://onthegomap.com/#/create" target="_blank" rel="noopener" style="color:var(--clr-accent)">onthegomap.com/#/create</a></li>
+              <li>左上角選擇 <strong>步行模式（Walking）🚶</strong>，確認圖標呈選中狀態</li>
+              <li><strong>點擊地圖設定起點</strong>，沿著預定健行路線逐步點擊新增路點，系統會自動沿道路規劃路徑</li>
+              <li>完成路徑後，確認左下角顯示的 <strong>總距離</strong>（如 <code>6.3 km</code>）與 <strong>預估時間</strong></li>
+              <li>點擊 <strong>「Export Route」</strong> 或 <strong>「Save」</strong> 按鈕</li>
+              <li>選擇檔案格式 <strong>GPX</strong>（或 KML），點擊下載</li>
+              <li>確認下載完成：<code>onthegomap-6.3-km-route.gpx</code></li>
+            </ol>
+
+            <div class="step-image">
+              <img src="images/step1_create_route.jpg" alt="OnTheGoMap 建立路徑介面" loading="lazy">
+              <div class="img-caption">▲ 在 OnTheGoMap 上選擇步行模式，沿路線逐步點擊建立路徑</div>
+            </div>
+
+            <div class="step-image">
+              <img src="images/step1_download_gpx.jpg" alt="下載 GPX 路線檔" loading="lazy">
+              <div class="img-caption">▲ 匯出路線檔案，選擇 GPX 格式下載</div>
+            </div>
+
+            <div class="tip-box tip-box--info">
+              <span class="tip-icon">💡</span>
+              <span><strong>小技巧：</strong>按住拖曳可微調已建立的路點位置，雙擊路線可插入新的中繼點。</span>
+            </div>
+
+            <div class="tip-box tip-box--warn">
+              <span class="tip-icon">⚠️</span>
+              <span><strong>注意：</strong>建議同時下載 <strong>GPX</strong> 和 <strong>KML</strong> 兩種格式，GPX 適用於登山 APP，KML 適用於 Google Maps。</span>
+            </div>
+
+          </div>
+        </div>
+      </article>
+
+      <!-- ──── Step 2 ──── -->
+      <article class="step">
+        <div class="step-dot"></div>
+        <div class="step-card">
+          <div class="step-header">
+            <div class="step-number">2</div>
+            <div class="step-title-group">
+              <h2>上傳至 Google 我的地圖 & 設定分享</h2>
+              <span class="tool-tag">🔧 工具：<a href="https://www.google.com/maps/d/" target="_blank" rel="noopener">Google My Maps</a></span>
+            </div>
+          </div>
+          <div class="step-body">
+
+            <ol class="substeps">
+              <li>開啟 <a href="https://www.google.com/maps/d/u/0/edit?hl=zh-TW&mid=1Sdw7oj5S2IQoF0qkpXuJNkRhkT-0vQY&ll=25.064328049242896%2C121.56998817591388&z=20" target="_blank" rel="noopener" style="color:var(--clr-accent)">Google My Maps 編輯頁面</a>（或建立新地圖）</li>
+              <li>點擊左側面板的 <strong>「匯入」(Import)</strong> 按鈕</li>
+              <li><strong>拖曳 GPX 檔案</strong>至上傳區域，或點選「選擇檔案」手動上傳</li>
+              <li>匯入完成後，路線會自動顯示在地圖上，可點擊修改 <strong>線條顏色</strong> 與 <strong>圖層名稱</strong></li>
+              <li>（選用）新增 <strong>地標 📍</strong>：起點、終點、休息站、補水點等標記</li>
+              <li>點擊左上角 <strong>「分享」</strong> 按鈕</li>
+              <li>在分享設定中，將存取權限改為 <strong>「知道連結的任何人都能查看」</strong></li>
+              <li>點擊 <strong>「複製連結」</strong> 保存分享網址</li>
+            </ol>
+
+            <div class="step-image">
+              <img src="images/step2_upload_mymap.jpg" alt="匯入 GPX 至 Google My Maps" loading="lazy">
+              <div class="img-caption">▲ 在 Google My Maps 點擊「匯入」上傳 GPX 路線檔</div>
+            </div>
+
+            <div class="step-image">
+              <img src="images/step2_share_settings.jpg" alt="設定 Google My Maps 分享權限" loading="lazy">
+              <div class="img-caption">▲ 設定分享權限為「知道連結的任何人都能查看」並複製連結</div>
+            </div>
+
+            <div class="tip-box tip-box--success">
+              <span class="tip-icon">✅</span>
+              <span><strong>建議：</strong>為地圖加上描述性名稱（如「2026/07 松山南港河濱健行」），方便日後管理與辨識。</span>
+            </div>
+
+          </div>
+        </div>
+      </article>
+
+      <!-- ──── Step 3 ──── -->
+      <article class="step">
+        <div class="step-dot"></div>
+        <div class="step-card">
+          <div class="step-header">
+            <div class="step-number">3</div>
+            <div class="step-title-group">
+              <h2>分享路線檔案 & 地圖連結</h2>
+              <span class="tool-tag">🔧 LINE / Email / 雲端硬碟</span>
+            </div>
+          </div>
+          <div class="step-body">
+
+            <ol class="substeps">
+              <li>準備兩樣東西：<strong>GPX/KML 路線檔</strong> + <strong>Google My Maps 分享連結</strong></li>
+              <li>開啟 LINE 群組（或 Email），<strong>附加路線檔案</strong>（.gpx 或 .kml）</li>
+              <li><strong>貼上 Google My Maps 連結</strong>，隊友點擊即可在手機瀏覽器查看完整路線</li>
+              <li>（選用）加註說明：集合時間、攜帶裝備、注意事項等</li>
+              <li>（選用）將 GPX 上傳至 <strong>Google Drive</strong> 共用資料夾，方便隊友下載至 APP 使用</li>
+            </ol>
+
+            <div class="step-image">
+              <img src="images/step3_share_route.jpg" alt="分享路線給隊友" loading="lazy">
+              <div class="img-caption">▲ 透過通訊軟體分享 Google Maps 連結與 GPX 路線檔</div>
+            </div>
+
+            <div class="tip-box tip-box--info">
+              <span class="tip-icon">📱</span>
+              <span><strong>APP 推薦：</strong>隊友可用 <strong>綠野遊蹤</strong>、<strong>Hikingbook</strong> 或 <strong>OruxMaps</strong> 匯入 GPX 檔案，實現離線導航與軌跡記錄。</span>
+            </div>
+
+            <div class="tip-box tip-box--warn">
+              <span class="tip-icon">⚠️</span>
+              <span><strong>安全提醒：</strong>Google My Maps 連結預設「查看」權限即可，<strong>不要</strong>開放「編輯」權限以免路線被意外修改。</span>
+            </div>
+
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /timeline -->
+
+    <!-- ═══ Quick Links ═══ -->
+    <section class="links-section">
+      <h3>🔗 相關連結快速存取</h3>
+      <div class="link-grid">
+        <a href="https://onthegomap.com/#/create" target="_blank" rel="noopener" class="link-card">
+          <span class="link-icon">🗺️</span>
+          <div class="link-info">
+            <div class="link-name">OnTheGoMap</div>
+            <div class="link-desc">線上路徑規劃工具</div>
+          </div>
+        </a>
+        <a href="https://www.google.com/maps/d/u/0/edit?hl=zh-TW&mid=1Sdw7oj5S2IQoF0qkpXuJNkRhkT-0vQY&ll=25.064328049242896%2C121.56998817591388&z=20" target="_blank" rel="noopener" class="link-card">
+          <span class="link-icon">📍</span>
+          <div class="link-info">
+            <div class="link-name">Google My Maps（編輯）</div>
+            <div class="link-desc">健行路線地圖 — 編輯模式</div>
+          </div>
+        </a>
+        <a href="https://www.google.com/maps/d/" target="_blank" rel="noopener" class="link-card">
+          <span class="link-icon">🌐</span>
+          <div class="link-info">
+            <div class="link-name">Google My Maps 首頁</div>
+            <div class="link-desc">管理所有自訂地圖</div>
+          </div>
+        </a>
+        <a href="https://hiking.biji.co/" target="_blank" rel="noopener" class="link-card">
+          <span class="link-icon">🥾</span>
+          <div class="link-info">
+            <div class="link-name">健行筆記</div>
+            <div class="link-desc">台灣健行路線資料庫</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="footer">
+    <p>健行路徑建立 SOP v1.0 &nbsp;·&nbsp; 最後更新：2026/07/22</p>
+    <p style="margin-top:6px">Made with 🥾 for hiking lovers</p>
+  </footer>
+
+</body>
+</html>
