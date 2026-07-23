@@ -56,13 +56,15 @@
       .autocomplete-items {
         position: absolute;
         border: 1px solid #d4d4d4;
-        border-bottom: none;
         border-top: none;
-        z-index: 99;
+        z-index: 999;
         /*position the autocomplete items to be the same width as the container:*/
         top: 100%;
         left: 0;
         right: 0;
+        max-height: 400px;
+        overflow-y: auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       }
 
       .autocomplete-items div {
@@ -121,12 +123,16 @@
       }
 
       function Query_stk() {
-        // var findString = document.getElementById('location-input').value;
-        let findString = $("#location-input").val();
+        let findString = $("#location-input").val().trim();
         document.querySelector("#location-input").value='';
-        let pt = findString.indexOf(" ");
-        if (pt > 0) {
-          findString = findString.substr(0, pt);
+        let codeMatch = findString.match(/^([A-Za-z0-9]+)/);
+        if (codeMatch) {
+          findString = codeMatch[1];
+        } else {
+          let pt = findString.indexOf(" ");
+          if (pt > 0) {
+            findString = findString.substr(0, pt);
+          }
         }
         //console.log(findString);
         // console.log(findString);
@@ -142,9 +148,9 @@
           );
           $("#img2").attr(
             "src",
-            "http://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=9&cw=600&ch=450&a=" +
+            "https://stock.wearn.com/finance_chart.asp?stockid=" +
               findString +
-              ".TW"
+              "&timekind=0&timeblock=365&sma1=10&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"
           );
           $("#img3").attr(
             "src",
@@ -289,119 +295,98 @@
       }
       //---------------
       function autocomplete_CH(inp, arr) {
-        // -----------------------
-        /*the autocomplete function takes two arguments,
-		  the text field element and an array of possible autocompleted values:*/
         var currentFocus;
-        /*execute a function when someone writes in the text field:*/
-        inp.addEventListener("input", function (e) {
-          let start_pos,
-            mmatch,
-            a,
-            b,
-            i,
-            val = this.value;
-          /*close any already open lists of autocompleted values*/
+
+        function showList(val) {
           closeAllLists();
-          if (!val) {
-            return false;
-          }
+          val = val ? val.trim() : "";
           currentFocus = -1;
-          /*create a DIV element that will contain the items (values):*/
-          a = document.createElement("DIV");
-          a.setAttribute("id", this.id + "autocomplete-list");
+
+          let a = document.createElement("DIV");
+          a.setAttribute("id", inp.id + "autocomplete-list");
           a.setAttribute("class", "autocomplete-items");
-          /*append the DIV element as a child of the autocomplete container:*/
-          this.parentNode.appendChild(a);
-          /*for each item in the array...*/
-          for (i = 0; i < arr.length; i++) {
-            /*check if the item starts with the same letters as the text field value:
-				if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {  
-				mmatch=arr[i].toUpperCase().match(val.toUpperCase())*/
-            mmatch = arr[i].match(val);
-            if (mmatch) {
-              start_pos = mmatch?.index;
-              /*create a DIV element for each matching element:*/
-              b = document.createElement("DIV");
-              /*make the matching letters bold:*/
-              if (start_pos == 0) {
-                b.innerHTML =
-                  "<strong>" +
-                  arr[i].substr(start_pos, val.length) +
-                  "</strong>";
-                b.innerHTML += arr[i].substr(val.length);
+          inp.parentNode.appendChild(a);
+
+          let count = 0;
+          let valUpper = val.toUpperCase();
+
+          for (let i = 0; i < arr.length; i++) {
+            let itemStr = String(arr[i]);
+            let itemUpper = itemStr.toUpperCase();
+            let isMatch = (val === "") || (itemUpper.indexOf(valUpper) !== -1);
+
+            if (isMatch) {
+              let b = document.createElement("DIV");
+              if (val !== "") {
+                let pos = itemUpper.indexOf(valUpper);
+                let matchOriginal = itemStr.substr(pos, val.length);
+                b.innerHTML = itemStr.substr(0, pos) +
+                  "<strong>" + matchOriginal + "</strong>" +
+                  itemStr.substr(pos + val.length);
               } else {
-                b.innerHTML = arr[i].substr(0, start_pos);
-                b.innerHTML +=
-                  "<strong>" +
-                  arr[i].substr(start_pos, val.length) +
-                  "</strong>";
-                b.innerHTML += arr[i].substr(start_pos + val.length);
+                b.innerHTML = itemStr;
               }
 
-              /*insert a input field that will hold the current array item's value:*/
-              b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-              // b.innerHTML = arr[i]+"<input type='hidden' value='" + arr[i] + "'>";
-              /*execute a function when someone clicks on the item value (DIV element):*/
+              b.innerHTML += "<input type='hidden' value='" + itemStr + "'>";
               b.addEventListener("click", function (e) {
-                /*insert the value for the autocomplete text field:*/
                 inp.value = this.getElementsByTagName("input")[0].value;
-                //qTel();
                 Query_stk();
-                /*close the list of autocompleted values,
-					  (or any other open lists of autocompleted values:*/
                 closeAllLists();
               });
               a.appendChild(b);
+              count++;
+              if (count >= 200) break;
             }
           }
+        }
+
+        inp.addEventListener("input", function (e) {
+          showList(this.value);
         });
-        /*execute a function presses a key on the keyboard:*/
+
+        inp.addEventListener("focus", function (e) {
+          showList(this.value);
+        });
+
+        inp.addEventListener("click", function (e) {
+          showList(this.value);
+        });
+
         inp.addEventListener("keydown", function (e) {
           var x = document.getElementById(this.id + "autocomplete-list");
           if (x) x = x.getElementsByTagName("div");
           if (e.keyCode == 40) {
-            /*If the arrow DOWN key is pressed,
-				increase the currentFocus variable:*/
             currentFocus++;
-            /*and and make the current item more visible:*/
             addActive(x);
           } else if (e.keyCode == 38) {
-            //up
-            /*If the arrow UP key is pressed,
-				decrease the currentFocus variable:*/
             currentFocus--;
-            /*and and make the current item more visible:*/
             addActive(x);
           } else if (e.keyCode == 13) {
-            /*If the ENTER key is pressed, prevent the form from being submitted,*/
             e.preventDefault();
             if (currentFocus > -1) {
-              /*and simulate a click on the "active" item:*/
               if (x) x[currentFocus].click();
             }
           }
         });
 
         function addActive(x) {
-          /*a function to classify an item as "active":*/
           if (!x) return false;
-          /*start by removing the "active" class on all items:*/
           removeActive(x);
           if (currentFocus >= x.length) currentFocus = 0;
           if (currentFocus < 0) currentFocus = x.length - 1;
-          /*add class "autocomplete-active":*/
           x[currentFocus].classList.add("autocomplete-active");
+          if (x[currentFocus].scrollIntoView) {
+            x[currentFocus].scrollIntoView({ block: "nearest" });
+          }
         }
+
         function removeActive(x) {
-          /*a function to remove the "active" class from all autocomplete items:*/
           for (var i = 0; i < x.length; i++) {
             x[i].classList.remove("autocomplete-active");
           }
         }
+
         function closeAllLists(elmnt) {
-          /*close all autocomplete lists in the document,
-			except the one passed as an argument:*/
           var x = document.getElementsByClassName("autocomplete-items");
           for (var i = 0; i < x.length; i++) {
             if (elmnt != x[i] && elmnt != inp) {
@@ -409,7 +394,7 @@
             }
           }
         }
-        /*execute a function when someone clicks in the document:*/
+
         document.addEventListener("click", function (e) {
           closeAllLists(e.target);
         });
@@ -418,33 +403,56 @@
         $('input[type="text"]').val("");
         const fmain =
           "https://docs.google.com/spreadsheets/d/1SoMEYJbCHBd3FDl8gjaiQMZ1WBCkDTazGHALGnKgMpk/edit?usp=sharing";
-        // ScrapStock_link
-
-        const a = {
-          sheetUrl: fmain,
-          sheetTag: "上市櫃2",
-          key: 2,
-        };
-        const RSheet2Json_APIV2 =
-          "https://script.google.com/macros/s/AKfycbz64VaqfqXVBwcFfDgDfehn947foLoeEOD6WXsvu3BNcXK6ZgTxjQAbzsIqSWmptLAo/exec";
-        const RSheet2Json_APIV5 =
-          "https://script.google.com/macros/s/AKfycbwFUIATzqJ3aaUP0TjLsA7WuHp9SG21RGdQ3AAFhw1lWSSSYGjQjdbC3rRfEn9Z3RPFrA/exec";
         const RSheet2Json_APIV6 =
           "https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec";
 
-        tt = await getJSON(RSheet2Json_APIV6, a).then(function (data) {
-          console.log(data);
-          return data;
-        });
-        //console.log(tt);
+        const tags = ["上市櫃", "ETF_ALL", "Active", "Active概念股", "上市櫃2"];
+        let allResults = [];
+
+        await Promise.all(
+          tags.map(async (tag) => {
+            try {
+              let data = await getJSON(RSheet2Json_APIV6, {
+                sheetUrl: fmain,
+                sheetTag: tag,
+                key: 2,
+              });
+              if (Array.isArray(data)) {
+                allResults.push(...data);
+              }
+            } catch (e) {
+              console.log("Error loading sheet tag:", tag, e);
+            }
+          })
+        );
+
         let arr = [];
-        for (t in tt) {
-          arr.push(tt[t][1]);
-        }
-        arr.shift();
+        let seenCodes = new Set();
+
+        let processItem = (t) => {
+          if (!t) return;
+          let str = "";
+          if (Array.isArray(t)) {
+            str = t.filter(item => item !== null && item !== undefined && item !== "").join(" ");
+          } else if (typeof t === "object") {
+            str = Object.values(t).filter(v => v !== null && v !== undefined && v !== "").join(" ");
+          } else {
+            str = String(t);
+          }
+          str = str.trim();
+          if (!str || str.includes("code") || str.includes("代號")) return;
+
+          let codeMatch = str.match(/^([A-Za-z0-9]+)/);
+          let codeKey = codeMatch ? codeMatch[1] : str;
+          if (!seenCodes.has(codeKey)) {
+            seenCodes.add(codeKey);
+            arr.push(str);
+          }
+        };
+
+        allResults.forEach(processItem);
 
         autocomplete_CH(document.getElementById("location-input"), arr);
-        //return tt;
       }
 
       async function getJSON(urlptr, para) {
@@ -673,9 +681,9 @@
             <img
               id="img2"
               width="470"
-              alt="群益股利"
-              title="群益股利"
-              src="http://kgieworld.moneydj.com/z/zc/zcw/zcwgif.djgif?b=9&cw=600&ch=450&a=2356.TW"
+              alt="聚財網日線"
+              title="聚財網日線"
+              src="https://stock.wearn.com/finance_chart.asp?stockid=2356&timekind=0&timeblock=365&sma1=10&sma2=35&sma3=200&volume=1&indicator1=MACD&indicator2=RSI&indicator3=None"
               /></a>
             </td>
           </tr>
