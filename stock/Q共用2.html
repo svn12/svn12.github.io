@@ -130,9 +130,12 @@ top: 30;
   }
 </style>
 <script>
-const sheet_src='https://docs.google.com/spreadsheets/d/1fbuwUUIrugob2CxjE7S7RPYYHuF-8wVQpJQNV9OJIL4/edit?usp=sharing'
+const sheet_src='https://docs.google.com/spreadsheets/d/1jx9hL4CZuyET00_6LYbcz4d23WLv7iMsLbcPR3xqGbo/edit?usp=sharing'
 $(document).ready(function() {
-  GSname();
+  GSname(function() {
+    $('#select_sh').val('底背離');
+    Google_sht_R();
+  });
   //Array_R();
   appendText();
   document.getElementById("file_href").href =sheet_src;
@@ -662,7 +665,7 @@ function  Google_sht_R(){
 //   C:\Users\TAI\Documents\Html5\金魚都能懂網頁設計入門\svn12.github.io\doc\person_by_country.tsv
 // data - 家戶所得.csv
 }
-function  GSname(){
+function  GSname(callback){
   $("#T2").html('');
   $("#T").html('');
   
@@ -686,7 +689,9 @@ function  GSname(){
                       text : item.Sname 
                 }));
 				});
-                   
+                if (typeof callback === 'function') {
+                    callback();
+                }
                 });
   
 }
