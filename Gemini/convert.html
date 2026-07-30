@@ -589,27 +589,114 @@
           }
         });
 
+        function getYouTubeId(url) {
+          const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+          const match = url.match(regExp);
+          return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function formatTime(seconds) {
+          const hrs = Math.floor(seconds / 3600);
+          const mins = Math.floor((seconds % 3600) / 60);
+          const secs = Math.floor(seconds % 60);
+          return [
+            hrs > 0 ? String(hrs).padStart(2, '0') : null,
+            String(hrs > 0 ? mins : mins).padStart(2, '0'),
+            String(secs).padStart(2, '0')
+          ].filter(Boolean).join(':');
+        }
+
+        async function fetchSubtitlesFromTimedText(videoId) {
+          const langs = ['zh-Hant', 'zh-TW', 'zh-HK', 'zh-Hans', 'zh-CN', 'zh', 'en'];
+          for (const lang of langs) {
+            try {
+              const targetUrl = `https://video.google.com/timedtext?v=${videoId}&lang=${lang}`;
+              const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+              
+              const res = await fetch(proxyUrl);
+              if (!res.ok) continue;
+              
+              const json = await res.json();
+              const xmlText = json.contents;
+              
+              if (!xmlText || xmlText.includes('class="error"') || xmlText.trim().length < 50) {
+                continue;
+              }
+              
+              const parser = new DOMParser();
+              const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+              const texts = xmlDoc.getElementsByTagName("text");
+              
+              if (texts.length === 0) continue;
+              
+              let result = "";
+              for (let i = 0; i < texts.length; i++) {
+                const start = parseFloat(texts[i].getAttribute("start") || "0");
+                const timeStr = formatTime(start);
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = texts[i].textContent;
+                const txt = tempDiv.textContent || tempDiv.innerText || "";
+                result += `[${timeStr}] ${txt}\n`;
+              }
+              
+              if (result.trim()) {
+                console.log(`[Frontend TimedText] Successfully fetched subtitles for language: ${lang}`);
+                return result;
+              }
+            } catch (e) {
+              console.warn(`Failed to fetch timedtext for lang ${lang}:`, e);
+            }
+          }
+          return null;
+        }
+
         // YouTube API 串接
         async function handleYouTubeTranscript(url) {
+          const videoId = getYouTubeId(url);
+          if (!videoId) {
+            alert("❌ 請貼上有效的 YouTube 影片網址！");
+            return;
+          }
+
           showLoader("正在為您抓取 YouTube 影片字幕...");
           try {
+            console.log("[Frontend YT] Attempting frontend timedtext fetch...");
+            const frontendSubtitles = await fetchSubtitlesFromTimedText(videoId);
+            if (frontendSubtitles) {
+              markdownOutput.value = frontendSubtitles;
+              showToast("🎉 字幕提取成功！(前端直接解析)");
+              ytUrlInput.value = "";
+              return;
+            }
+
+            console.log("[Frontend YT] No official subtitles found. Falling back to backend...");
             const response = await fetch("/api/yt-transcript", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ url: url })
             });
 
-            const data = await response.json();
+            const text = await response.text();
+            let data;
+            try {
+              data = JSON.parse(text);
+            } catch (jsonErr) {
+              if (text.trim().startsWith("<")) {
+                throw new Error("此網頁在目前部署環境（Firebase/GitHub Pages）下為純靜態運行，僅支援抓取帶有官方/自動字幕的影片。如需使用 Gemini 語音聽寫無字幕影片，請在本地執行開發伺服器。");
+              }
+              throw new Error("無法解析伺服器回應為 JSON");
+            }
+
             if (response.ok && data.text) {
               markdownOutput.value = data.text;
-              showToast("🎉 字幕提取成功！");
-              ytUrlInput.value = ""; // 清空輸入框
+              showToast("🎉 字幕提取成功！(Gemini 聽寫)");
+              ytUrlInput.value = "";
             } else {
               alert(`❌ 提取失敗: ${data.error || "可能是影片沒有包含字幕或不支援此連結"}`);
             }
           } catch (err) {
             console.error("YT API Error:", err);
-            alert(`❌ 請求失敗: ${err.message || err}`);
+            alert(`❌ 提取失敗: ${err.message || err}`);
           } finally {
             hideLoader();
           }
