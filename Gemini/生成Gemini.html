@@ -439,7 +439,7 @@
 
         <!-- 返回文字雲 -->
         <div class="footer-nav">
-          <a href="/" class="nav-link">
+          <a href="/" id="backLink" class="nav-link">
             <span>⬅️</span> 返回即時協作文字雲
           </a>
         </div>
@@ -650,6 +650,16 @@
           document.body.removeChild(link);
           showToast("💾 檔案已下載！");
         });
+
+        // 自適應返回連結 (若在 Gemini 子目錄下則退回上一層，否則退回首頁)
+        const backLink = document.getElementById("backLink");
+        if (backLink) {
+          if (window.location.pathname.includes("/Gemini/")) {
+            backLink.href = "../";
+          } else {
+            backLink.href = "./";
+          }
+        }
       });
     </script>
   </body>
