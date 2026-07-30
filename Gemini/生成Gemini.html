@@ -1,618 +1,656 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Gemini AI 生成的各類專案與科普資訊圖總導覽頁面。">
-    <title>Gemini 專案總覽</title>
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Microsoft MarkItDown 與 YouTube 字幕線上轉換器，支援將 PDF、Word、Excel、PPT 檔案與 YT 影片轉換為 Markdown 格式以節省 Token。" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+    <title>MarkItDown & YouTube 萬能轉換器</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+      :root {
+        --font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+        --bg-gradient: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #090d16 100%);
+        --panel-bg: rgba(255, 255, 255, 0.02);
+        --panel-border: rgba(255, 255, 255, 0.08);
+        --text-primary: #f3f4f6;
+        --text-secondary: #9ca3af;
+        --accent-blue: #3b82f6;
+        --accent-purple: #8b5cf6;
+        --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        --accent-hover: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        --glow-shadow: 0 0 25px rgba(139, 92, 246, 0.25);
+      }
 
-        :root {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #020617 100%);
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --primary-color: #38bdf8;
-            --primary-glow: rgba(56, 189, 248, 0.15);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+      body {
+        font-family: var(--font-family);
+        background: var(--bg-gradient);
+        color: var(--text-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+      }
 
-        body {
-            font-family: 'Outfit', 'Noto Sans TC', sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 3rem 1.5rem;
-        }
+      header {
+        text-align: center;
+        margin: 3rem 1rem 2rem 1rem;
+        max-width: 800px;
+      }
 
+      h1 {
+        font-size: 2.75rem;
+        font-weight: 800;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.03em;
+        filter: drop-shadow(0 2px 10px rgba(59, 130, 246, 0.2));
+      }
+
+      header p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        padding: 0 1.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      @media (max-width: 900px) {
         .container {
-            width: 100%;
-            max-width: 800px;
+          grid-template-columns: 1fr;
         }
+      }
 
-        header {
-            text-align: center;
-            margin-bottom: 3.5rem;
-        }
+      /* 通用卡片外觀 */
+      .card {
+        background: var(--panel-bg);
+        border: 1px solid var(--panel-border);
+        border-radius: 24px;
+        backdrop-filter: blur(16px);
+        padding: 2rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
 
-        h1 {
-            font-size: 2.75rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.75rem;
-            letter-spacing: -0.5px;
-        }
+      /* 拖放上傳區 */
+      .upload-zone {
+        border: 2.5px dashed var(--panel-border);
+        border-radius: 16px;
+        padding: 3rem 2rem;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
 
-        header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            font-weight: 300;
-        }
+      .upload-zone:hover {
+        border-color: var(--accent-blue);
+        background: rgba(59, 130, 246, 0.04);
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.08);
+      }
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
+      .upload-zone.dragover {
+        border-color: var(--accent-purple);
+        background: rgba(139, 92, 246, 0.08);
+        box-shadow: 0 0 25px rgba(139, 92, 246, 0.15);
+        transform: scale(1.02);
+      }
 
-        .project-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 1.75rem 2rem;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
+      .upload-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 4px 10px rgba(139, 92, 246, 0.3));
+      }
 
-        .project-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(56, 189, 248, 0.4);
-            box-shadow: 0 20px 40px -15px rgba(56, 189, 248, 0.2);
-            background: rgba(30, 41, 59, 0.85);
-        }
+      .upload-text {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
 
-        .project-info {
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-        }
+      .upload-text .highlight {
+        color: var(--accent-blue);
+        text-decoration: underline;
+        font-weight: 700;
+      }
 
-        .project-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-main);
-            transition: var(--transition);
-        }
+      .upload-hint {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+      }
 
-        .project-card:hover .project-title {
-            color: var(--primary-color);
-        }
+      /* YouTube 輸入框 */
+      .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
 
-        .project-desc {
-            font-size: 0.925rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
+      .divider::before,
+      .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid var(--panel-border);
+      }
 
-        .project-tag {
-            align-self: flex-start;
-            padding: 0.25rem 0.75rem;
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--primary-color);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
+      .divider:not(:empty)::before {
+        margin-right: 1rem;
+      }
 
-        .arrow {
-            font-size: 1.5rem;
-            color: var(--text-muted);
-            transition: var(--transition);
-            margin-left: 1.5rem;
-        }
+      .divider:not(:empty)::after {
+        margin-left: 1rem;
+      }
 
-        .project-card:hover .arrow {
-            color: var(--primary-color);
-            transform: translateX(6px);
-        }
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
 
-        /* 篩選與搜尋列樣式 */
-        .filter-search-bar {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 2.5rem;
-            width: 100%;
-        }
+      label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
 
-        .filter-select, .search-input {
-            font-family: inherit;
-            font-size: 0.95rem;
-            padding: 0.65rem 1.25rem;
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid var(--card-border);
-            color: var(--text-main);
-            border-radius: 12px;
-            outline: none;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: var(--transition);
-        }
+      .yt-input-wrapper {
+        display: flex;
+        gap: 0.75rem;
+      }
 
-        .filter-select:focus, .search-input:focus {
-            border-color: rgba(56, 189, 248, 0.5);
-            box-shadow: 0 0 15px var(--primary-glow);
-            background: rgba(30, 41, 59, 0.7);
-        }
+      input[type="text"] {
+        flex: 1;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--panel-border);
+        border-radius: 12px;
+        padding: 0.875rem 1rem;
+        color: var(--text-primary);
+        font-family: inherit;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+      }
 
-        .filter-select {
-            cursor: pointer;
-            min-width: 140px;
-        }
+      input[type="text"]:focus {
+        outline: none;
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
+      }
 
-        .filter-select option {
-            background: #1e293b;
-            color: var(--text-main);
-        }
+      .btn {
+        background: var(--accent-gradient);
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: var(--glow-shadow);
+        white-space: nowrap;
+      }
 
-        .search-input {
-            flex: 1;
-            max-width: 320px;
-        }
+      .btn:hover {
+        background: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 0 30px rgba(139, 92, 246, 0.45);
+      }
 
-        .project-card.hidden {
-            display: none !important;
-        }
+      .btn:active {
+        transform: translateY(0);
+      }
 
-        @media (max-width: 480px) {
-            .filter-search-bar {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-            .search-input {
-                max-width: 100%;
-            }
-        }
+      /* 輸出展示區 */
+      .output-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
 
-        footer {
-            margin-top: 5rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 300;
-        }
+      .output-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--panel-border);
+        padding-bottom: 1rem;
+      }
+
+      .output-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .output-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--panel-border);
+        color: var(--text-primary);
+        border-radius: 8px;
+        padding: 0.5rem 0.875rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--accent-blue);
+      }
+
+      .output-content-wrapper {
+        flex: 1;
+        position: relative;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      textarea.markdown-output {
+        flex: 1;
+        width: 100%;
+        min-height: 400px;
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px solid var(--panel-border);
+        border-radius: 16px;
+        padding: 1.25rem;
+        color: #e5e7eb;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        resize: none;
+        transition: all 0.3s ease;
+      }
+
+      textarea.markdown-output:focus {
+        outline: none;
+        border-color: var(--accent-purple);
+      }
+
+      /* 全局載入遮罩 */
+      .loader-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(9, 13, 22, 0.95);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        z-index: 10;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .loader-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .spinner {
+        width: 45px;
+        height: 45px;
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        border-top-color: var(--accent-purple);
+        animation: spin 1s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .loader-text {
+        font-size: 1.05rem;
+        font-weight: 600;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* 返回連結 */
+      .footer-nav {
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      .nav-link {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: color 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+      }
+
+      .nav-link:hover {
+        color: var(--accent-blue);
+      }
+
+      /* Toast 提示 */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(139, 92, 246, 0.95);
+        color: #ffffff;
+        padding: 0.75rem 2rem;
+        border-radius: 30px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 100;
+      }
+
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
     </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Gemini Projects</h1>
-            <p>Gemini AI 生成的各類專案與科普資訊圖列表</p>
-        </header>
+  </head>
+  <body>
+    <header>
+      <h1>⚡ MarkItDown & YouTube 萬能轉換器</h1>
+      <p>採用 Microsoft MarkItDown 技術與高效率 YouTube 字幕抓取引擎，將各類多媒體文檔一鍵轉為乾淨的 Markdown 格式，為您的 AI 模型提供最高效的文字輸入並節省高達 90% 的 Token！</p>
+    </header>
 
-        <div class="filter-search-bar">
-            <select id="category-filter" class="filter-select">
-                <option value="全部">全部類別</option>
-            </select>
-            <input type="text" id="keyword-search" class="search-input" placeholder="搜尋專案名稱或描述...">
+    <div class="container">
+      <!-- 左欄：輸入與控制區 -->
+      <div class="card">
+        <!-- 檔案拖放上傳 -->
+        <div class="input-group">
+          <label>文檔檔案轉換</label>
+          <div class="upload-zone" id="uploadZone">
+            <div class="upload-content">
+              <div class="upload-icon">📥</div>
+              <div class="upload-text">
+                <span class="highlight">點擊選擇檔案</span> 或將檔案拖曳至此
+              </div>
+              <div class="upload-hint">支援 PDF, DOCX, XLSX, PPTX, TXT, MD 等格式</div>
+            </div>
+            <input type="file" id="fileInput" accept=".pdf,.docx,.xlsx,.pptx,.txt,.md" style="display: none;" />
+          </div>
         </div>
 
-        <main class="grid">
-            <a href="./interactive_anatomy/index.html" class="project-card" id="link-interactive_anatomy">
-                <div class="project-info">
-                    <span class="project-tag">醫療科普</span>
-                    <div class="project-title">互動式解剖學探索器</div>
-                    <div class="project-desc">基於 EBI Anatomogram 的互動式解剖與大腦探索器，融合物理音效與醫學解說。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./stock-scanner/index.html" class="project-card" id="link-stock-scanner">
-                <div class="project-info">
-                    <span class="project-tag">量化投資</span>
-                    <div class="project-title">台股底背離每日自動掃描報表 (MACD + KD)</div>
-                    <div class="project-desc">每日收盤自動掃描全台股 (上市+上櫃) 之 MACD 與 KD 底背離轉折訊號互動報表。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./hiking-route-sop/index.html" class="project-card" id="link-hiking-route-sop">
-                <div class="project-info">
-                    <span class="project-tag">SOP指南</span>
-                    <div class="project-title">健行路徑建立 SOP</div>
-                    <div class="project-desc">從 OnTheGoMap 路徑規劃、Google My Maps 上傳到分享給隊友的三步驟完整操作指南，含操作示意圖。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./fcp-score-sync/index.html" class="project-card" id="link-fcp-score-sync">
-                <div class="project-info">
-                    <span class="project-tag">Final Cut Pro</span>
-                    <div class="project-title">FCP 歌譜×音樂同步製作 SOP</div>
-                    <div class="project-desc">Final Cut Pro 教學：MP3 + 直式歌譜 JPG 同步製作完整 SOP，掌握 Mark、Crop、Blade、Snapping 四大核心工具</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./antigravity-report/index.html" class="project-card" id="link-antigravity-report">
-                <div class="project-info">
-                    <span class="project-tag">AI Agent,Antigravity,Gemini</span>
-                    <div class="project-title">Google Antigravity 30天社群監測與技術爭議報告</div>
-                    <div class="project-desc">深入探討 Google Antigravity (agy) 1.0.9 認證 Bug、限額鎖死 (Single-Model Lock) 及第三方生態整合的交鋒歷程。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./obsidian_llm_wiki/index.html" class="project-card" id="link-obsidian_llm_wiki">
-                <div class="project-info">
-                    <span class="project-tag">AI 知識</span>
-                    <div class="project-title">LLM Wiki x Obsidian 實戰指南</div>
-                    <div class="project-desc">打造 AI 協同的個人與企業知識網路。包含 Markdown 核心語法、雙向連結機制，以及導入 AI 助理的自動化工作流心智圖。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./codex_slide/index.html" class="project-card" id="link-codex_slide">
-                <div class="project-info">
-                    <span class="project-tag">AI教學</span>
-                    <div class="project-title">Codex 網頁文章轉簡報教學</div>
-                    <div class="project-desc">介紹如何跟 Codex 討論 PPT 簡報設計樣式跟輸出規則，以及自動化生成的實戰工作流。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./retirement_planning_slides/index.html" class="project-card" id="link-retirement_planning_slides">
-                <div class="project-info">
-                    <span class="project-tag">互動簡報</span>
-                    <div class="project-title">破解退休神話：從財務安全到老老照顧的生命必修課</div>
-                    <div class="project-desc">分析高股息存股退休隱憂、老老安養長照資源、被迫退休身心調適與新生活重塑的生命教育互動簡報。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./camera_hacker_slides/index.html" class="project-card" id="link-camera_hacker_slides">
-                <div class="project-info">
-                    <span class="project-tag">互動簡報</span>
-                    <div class="project-title">手機原相機拍照太顯老？打開隱藏設定，免修圖瞬間逆齡10歲！</div>
-                    <div class="project-desc">解開手機演算法的照妖鏡魔咒，利用光線與人像模式還原長輩最溫馨自然的容顏。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./sanguo-poem-battle/index.html" class="project-card" id="link-sanguo-poem-battle">
-                <div class="project-info">
-                    <span class="project-tag">三國 互動簡報 歷史</span>
-                    <div class="project-title">既生瑜何生亮：三國宴會吟詩大決鬥</div>
-                    <div class="project-desc">以幽默與智慧拆解三國經典宴會詩，並附有現代抗疫順口溜。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./ai_class_simulator/index.html" class="project-card" id="link-ai_class_simulator">
-                <div class="project-info">
-                    <span class="project-tag">AI應用</span>
-                    <div class="project-title">AI 課堂實作與班級互動照片牆</div>
-                    <div class="project-desc">重現中華民國AI教育協會課程操作，包含AI描述公式、藝術風格畫風指令產生器、Canvas即時風格化濾鏡（波普、新藝術風格等）以及班級互動照片牆。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./tenant-rules/index.html" class="project-card" id="link-tenant-rules">
-                <div class="project-info">
-                    <span class="project-tag">Life</span>
-                    <div class="project-title">租客注意規約</div>
-                    <div class="project-desc">租屋生活管理公約、垃圾分類指南與水電Wifi資訊簡報。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./bible_verses_gallery/index.html" class="project-card" id="link-bible_verses_gallery">
-                <div class="project-info">
-                    <span class="project-tag">實用工具</span>
-                    <div class="project-title">聖經金句照片瀏覽器</div>
-                    <div class="project-desc">收錄了 166 個主題，共 4912 張金句圖片大圖，支援鍵盤與手機滑動切換、複製網址及下載。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./idiom-crossword/index.html" class="project-card" id="link-idiom-crossword">
-                <div class="project-info">
-                    <span class="project-tag">教育遊戲</span>
-                    <div class="project-title">成語十字接龍 (1000關)</div>
-                    <div class="project-desc">古風現代水墨視覺系統的成語十字接龍填字遊戲，包含 1000 個挑戰關卡，支持金幣提示、LocalStorage 進度存檔與 Web Audio 音效合成。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./zushi-photography-composition/index.html" class="project-card" id="link-zushi-photography-composition">
-                <div class="project-info">
-                    <span class="project-tag">Photography</span>
-                    <div class="project-title">Zushi 攝影美學：醒醒吧，你真的不懂構圖！</div>
-                    <div class="project-desc">打破公式填格子，掌握引導視線的視覺決策教學簡報</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./pinyin-game/index.html" class="project-card" id="link-pinyin-game">
-                <div class="project-info">
-                    <span class="project-tag">教育遊戲</span>
-                    <div class="project-title">拼音島大冒險</div>
-                    <div class="project-desc">中文 Hanyu Pinyin 與 注音雙向對照學習的毛玻璃霓虹風互動小遊戲。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./idiom_game/index.html" class="project-card" id="link-idiom_game">
-                <div class="project-info">
-                    <span class="project-tag">兒童教育</span>
-                    <div class="project-title">《成語動物森林》兒童四字成語互動遊戲</div>
-                    <div class="project-desc">適合低年級小朋友的四字成語猜字拼字遊戲，包含可愛插圖、注音配置、Web Audio 合成音效與 TTS 語音朗讀。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./d3_taiwan_map/index.html" class="project-card" id="link-d3_taiwan_map">
-                <div class="project-info">
-                    <span class="project-tag">資料視覺化</span>
-                    <div class="project-title">台灣歷年人口分布地圖</div>
-                    <div class="project-desc">D3.js 互動式台灣各縣市人口地圖，含年份滑桿動態切換與各縣市排名比較表。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./twipcam_link_generator/index.html" class="project-card" id="link-twipcam_link_generator">
-                <div class="project-info">
-                    <span class="project-tag">工具應用</span>
-                    <div class="project-title">Twipcam 座標連結產生器</div>
-                    <div class="project-desc">提供 Twipcam 座標連結的生成工具，方便地圖座標定位與連結生成。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./bookend-hacks/index.html" class="project-card" id="link-bookend-hacks">
-                <div class="project-info">
-                    <span class="project-tag">極簡生活</span>
-                    <div class="project-title">書擋的 45 種創意用法</div>
-                    <div class="project-desc">一個書擋，改造全場域！廚房、牆面、書桌、床邊 45 種極簡零成本收納術，附即時互動投票與文字雲。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./antigravity-voice-cloning/index.html" class="project-card" id="link-antigravity-voice-cloning">
-                <div class="project-info">
-                    <span class="project-tag">AI Agent</span>
-                    <div class="project-title">Antigravity基本功EP08：Agent代理/複製你的聲音！</div>
-                    <div class="project-desc">完全免費 AI 語音克隆，一鍵自動安裝與本地運行教學簡報</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./morning-habits/index.html" class="project-card" id="link-morning-habits">
-                <div class="project-info">
-                    <span class="project-tag">健康長壽</span>
-                    <div class="project-title">長壽醫師的 5 個晨間習慣</div>
-                    <div class="project-desc">起床後的黃金 90 分鐘，決定你一整天的活力與長遠健康</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./future-html-slides/index.html" class="project-card" id="link-future-html-slides">
-                <div class="project-info">
-                    <span class="project-tag">AI/簡報技術</span>
-                    <div class="project-title">別再被傳統簡報軟體綁架！帶你看見未來教學簡報的完全體</div>
-                    <div class="project-desc">打破死板排版與單向輸出，開啟極致互動與自動化的新時代</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./html-vs-markdown/index.html" class="project-card" id="link-html-vs-markdown">
-                <div class="project-info">
-                    <span class="project-tag">AI 工程趨勢</span>
-                    <div class="project-title">HTML 取代 Markdown？AI 輸出格式 the revolution</div>
-                    <div class="project-desc">探討 AI Agent 時代，為什麼 Anthropic 工程師提出改用 HTML 代替 Markdown 的社群大論戰與實務對比。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./presentation-ultimate-form/index.html" class="project-card" id="link-presentation-ultimate-form">
-                <div class="project-info">
-                    <span class="project-tag">教學簡報</span>
-                    <div class="project-title">別再被傳統簡報軟體綁架！未來教學簡報的完全體</div>
-                    <div class="project-desc">摘要自三師爸 Sense Bar 影片，剖析傳統簡報軟體痛點、探討 HTML 簡報在即時資料連線與 AI 協同開發上的完全體優勢。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./senior_courses/index.html" class="project-card" id="link-senior_courses">
-                <div class="project-info">
-                    <span class="project-tag">生活資訊</span>
-                    <div class="project-title">雙北樂齡學堂課程大百科</div>
-                    <div class="project-desc">整合台北市終身學習網、北市圖與新北市樂學網的 839 筆去重樂齡課程，提供行政區、費用與上課時段的互動式篩選。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./591_rent_list/index.html" class="project-card" id="link-591_rent_list">
-                <div class="project-info">
-                    <span class="project-tag">生活工具</span>
-                    <div class="project-title">591租屋特搜 - 松山與大安區</div>
-                    <div class="project-desc">精選松山區與大安區 1 萬到 2 萬之間的優質套房，支援多條件篩選與大圖預覽。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./lv3-firebase/index.html" class="project-card" id="link-lv3-firebase">
-                <div class="project-info">
-                    <span class="project-tag">教學工具</span>
-                    <div class="project-title">教學應用程式的五個等級 - Lv.3 Firebase 即時同步</div>
-                    <div class="project-desc">即時競賽版。採用 Firebase Firestore 即時資料庫與 onSnapshot 監聽，讓學生作答完成後，成績秒級同步大螢幕排行榜。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./lv2-google-sheets/index.html" class="project-card" id="link-lv2-google-sheets">
-                <div class="project-info">
-                    <span class="project-tag">教學工具</span>
-                    <div class="project-title">教學應用程式的五個等級 - Lv.2 試算表後端測驗</div>
-                    <div class="project-desc">課後回收版。學生姓名、作答答案與得分會自動登錄至 Google Sheets，方便老師收集數據。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="https://script.google.com/macros/s/AKfycbwKzj20_WhnsZoFdGEJR--gIheFdZT4YSo43XJSfNC9Ol-Ffq_qQBZWXcb222puyIMg/exec" class="project-card" id="link-gas_web_app_api">
-                <div class="project-info">
-                    <span class="project-tag">後端 API</span>
-                    <div class="project-title">教學應用程式 - Lv.2 GAS 接收端點</div>
-                    <div class="project-desc">用於接收並記錄學生測驗作答數據的 Google Apps Script (GAS) Web App 串接 API。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="https://senseba-five-levels.netlify.app" class="project-card" id="link-senseba_five_levels">
-                <div class="project-info">
-                    <span class="project-tag">影片學習筆記</span>
-                    <div class="project-title">教學應用程式的五個等級</div>
-                    <div class="project-desc">看完三師爸的影片，這頁幫你複習：寫教學工具的五種架構，以及你該停在哪一階。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="https://sensebar-teaching-levels-quiz.netlify.app" class="project-card" id="link-sensebar_teaching_levels_quiz">
-                <div class="project-info">
-                    <span class="project-tag">互動測驗</span>
-                    <div class="project-title">教學應用程式的五個等級 - 互動測驗</div>
-                    <div class="project-desc">以影片腳本為素材的五個等級測驗，體驗從「純前端單機」到「AI 全端資料庫」五種不同架構的實作成效。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./word_cloud/index.html" class="project-card" id="link-word_cloud">
-                <div class="project-info">
-                    <span class="project-tag">文字雲</span>
-                    <div class="project-title">即時線上文字雲 (Realtime Word Cloud)</div>
-                    <div class="project-desc">一款專為多人協作與即時互動設計的線上文字雲網站。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./manga_ebook_wake_up/index.html" class="project-card" id="link-manga_ebook_wake_up">
-                <div class="project-info">
-                    <span class="project-tag">互動漫畫</span>
-                    <div class="project-title">深夜裸醒謎案 - 互動式漫畫電子書</div>
-                    <div class="project-desc">一位美女深夜醒來驚覺身上涼涼的... 互動式點擊播放 TTS 繁中台詞與翻頁的趣味四格漫畫電子書。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./grade_buddy/index.html" class="project-card" id="link-grade_buddy">
-                <div class="project-info">
-                    <span class="project-tag">教學工具</span>
-                    <div class="project-title">學生成績管理系統 | GradeBuddy</div>
-                    <div class="project-desc">ClassBuddy 專屬學生成績登錄與管理系統，搭載 Google Sheets 資料庫與高階毛玻璃面版。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./class_tools/index.html" class="project-card" id="link-class_tools">
-                <div class="project-info">
-                    <span class="project-tag">教學工具</span>
-                    <div class="project-title">ClassBuddy | 課堂隨機抽籤與常用教學工具箱</div>
-                    <div class="project-desc">課堂專用的教學互動平台。包含幸運大轉盤、電子拉霸機、分組計分板、倒數與秒錶、趣味泡泡噪音偵測器與隨機分組，為課堂帶來趣味與活力。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./life_motivation/index.html" class="project-card" id="link-life_motivation">
-                <div class="project-info">
-                    <span class="project-tag">心靈勵志</span>
-                    <div class="project-title">生活再難也要自律自強穩步向前</div>
-                    <div class="project-desc">人生哲理與箴言，提供生活動力的網頁。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./satan_permission/index.html" class="project-card" id="link-satan_permission">
-                <div class="project-info">
-                    <span class="project-tag">神學探討</span>
-                    <div class="project-title">上帝容許撒旦的理由 - 心智圖架構海報</div>
-                    <div class="project-desc">探討上帝容許撒旦存在的神學觀點心智圖海報。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./etf_mindmap/index.html" class="project-card" id="link-etf_mindmap">
-                <div class="project-info">
-                    <span class="project-tag">投資理財</span>
-                    <div class="project-title">0050/0056 換股與主動式 ETF 深度解析 - 心智圖</div>
-                    <div class="project-desc">ETF 換股策略及主動式 ETF 的解析心智圖海報。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            <a href="./okc_surgery/index.html" class="project-card" id="link-okc-surgery">
-                <div class="project-info">
-                    <span class="project-tag">醫療科普</span>
-                    <div class="project-title">牙源性角化囊腫 (OKC) 復發處理與手術策略</div>
-                    <div class="project-desc">深入剖析生長機轉、預防復發的手術步驟以及術後長期隨訪指南的互動式資訊圖。</div>
-                </div>
-                <div class="arrow">→</div>
-            </a>
-            
-            <!-- 未來移入的項目可直接加在此處 -->
-        </main>
+        <div class="divider">或</div>
 
-        <footer>
-            <p>&copy; 2026 svn12.github.io. Powered by Gemini AI.</p>
-        </footer>
+        <!-- YouTube 連結解析 -->
+        <div class="input-group">
+          <label for="ytUrlInput">YouTube 影片字幕提取</label>
+          <div class="yt-input-wrapper">
+            <input type="text" id="ytUrlInput" placeholder="請貼上 YouTube 影片網址..." />
+            <button class="btn" id="ytBtn">⚡ 提取字幕</button>
+          </div>
+          <div class="upload-hint" style="margin-top: 0.25rem;">支援一般影片與 YouTube Shorts，將自動優選繁體中文、簡體中文與英文字幕。</div>
+        </div>
+
+        <!-- 返回文字雲 -->
+        <div class="footer-nav">
+          <a href="/" class="nav-link">
+            <span>⬅️</span> 返回即時協作文字雲
+          </a>
+        </div>
+      </div>
+
+      <!-- 右欄：輸出結果展示區 -->
+      <div class="card output-card">
+        <div class="output-header">
+          <div class="output-title">
+            <span>📝</span> 轉換結果 (Markdown)
+          </div>
+          <div class="output-actions">
+            <button class="btn-secondary" id="copyBtn">📋 複製內容</button>
+            <button class="btn-secondary" id="downloadBtn">💾 下載 .md 檔案</button>
+          </div>
+        </div>
+
+        <div class="output-content-wrapper">
+          <textarea class="markdown-output" id="markdownOutput" readonly placeholder="轉換後的 Markdown 文字將在此顯示..."></textarea>
+          
+          <!-- 內部 Loader 遮罩 -->
+          <div class="loader-overlay" id="loaderOverlay">
+            <div class="spinner"></div>
+            <div class="loader-text" id="loaderText">正在解析轉換中...</div>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- Toast 彈窗 -->
+    <div class="toast" id="toastEl">已成功複製到剪貼簿！</div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cards = document.querySelectorAll('.project-card');
-            const categoryFilter = document.getElementById('category-filter');
-            const keywordSearch = document.getElementById('keyword-search');
-            
-            // 收集所有標籤，並取得不重複的標籤列表
-            const tags = new Set();
-            cards.forEach(card => {
-                const tagSpan = card.querySelector('.project-tag');
-                if (tagSpan) {
-                    tags.add(tagSpan.textContent.trim());
-                }
-            });
+      document.addEventListener("DOMContentLoaded", () => {
+        const uploadZone = document.getElementById("uploadZone");
+        const fileInput = document.getElementById("fileInput");
+        const ytUrlInput = document.getElementById("ytUrlInput");
+        const ytBtn = document.getElementById("ytBtn");
+        const markdownOutput = document.getElementById("markdownOutput");
+        const copyBtn = document.getElementById("copyBtn");
+        const downloadBtn = document.getElementById("downloadBtn");
+        const loaderOverlay = document.getElementById("loaderOverlay");
+        const loaderText = document.getElementById("loaderText");
+        const toastEl = document.getElementById("toastEl");
 
-            // 依序建立各種類別 option
-            tags.forEach(tag => {
-                const option = document.createElement('option');
-                option.value = tag;
-                option.textContent = tag;
-                categoryFilter.appendChild(option);
-            });
+        // 顯示載入遮罩
+        const showLoader = (text) => {
+          loaderText.textContent = text;
+          loaderOverlay.classList.add("active");
+        };
 
-            // 共同篩選邏輯 (AND 關係)
-            function filterProjects() {
-                const selectedCategory = categoryFilter.value;
-                const keyword = keywordSearch.value.trim().toLowerCase();
+        // 隱藏載入遮罩
+        const hideLoader = () => {
+          loaderOverlay.classList.remove("active");
+        };
 
-                cards.forEach(card => {
-                    // 1. 類別篩選
-                    let isCategoryMatch = false;
-                    if (selectedCategory === '全部') {
-                        isCategoryMatch = true;
-                    } else {
-                        const tagSpan = card.querySelector('.project-tag');
-                        if (tagSpan && tagSpan.textContent.trim() === selectedCategory) {
-                            isCategoryMatch = true;
-                        }
-                    }
+        // 顯示 Toast 訊息
+        const showToast = (message) => {
+          toastEl.textContent = message;
+          toastEl.classList.add("show");
+          setTimeout(() => {
+            toastEl.classList.remove("show");
+          }, 2500);
+        };
 
-                    // 2. 關鍵字篩選 (搜尋標題與描述)
-                    let isKeywordMatch = false;
-                    const titleText = card.querySelector('.project-title')?.textContent.toLowerCase() || '';
-                    const descText = card.querySelector('.project-desc')?.textContent.toLowerCase() || '';
-                    if (keyword === '' || titleText.includes(keyword) || descText.includes(keyword)) {
-                        isKeywordMatch = true;
-                    }
-
-                    // 3. 同時符合才顯示
-                    if (isCategoryMatch && isKeywordMatch) {
-                        card.classList.remove('hidden');
-                    } else {
-                        card.classList.add('hidden');
-                    }
-                });
-            }
-
-            // 監聽變更事件
-            categoryFilter.addEventListener('change', filterProjects);
-            keywordSearch.addEventListener('input', filterProjects);
+        // 點擊上傳區觸發
+        uploadZone.addEventListener("click", () => {
+          fileInput.click();
         });
+
+        // 檔案選擇變更
+        fileInput.addEventListener("change", () => {
+          if (fileInput.files && fileInput.files.length > 0) {
+            handleFileConversion(fileInput.files[0]);
+          }
+        });
+
+        // 處理拖曳事件
+        uploadZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          uploadZone.classList.add("dragover");
+        });
+
+        uploadZone.addEventListener("dragleave", () => {
+          uploadZone.classList.remove("dragover");
+        });
+
+        uploadZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          uploadZone.classList.remove("dragover");
+          if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+            handleFileConversion(e.dataTransfer.files[0]);
+          }
+        });
+
+        // 檔案上傳 API 串接
+        function handleFileConversion(file) {
+          showLoader("正在讀取檔案...");
+          const reader = new FileReader();
+          reader.onload = async () => {
+            const result = reader.result;
+            const base64 = result.split(",")[1]; // 獲取 Base64
+
+            showLoader("正在使用 MarkItDown 解析文檔...");
+            try {
+              const response = await fetch("/api/convert", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  fileName: file.name,
+                  base64: base64
+                })
+              });
+
+              const data = await response.json();
+              if (response.ok && data.text) {
+                markdownOutput.value = data.text;
+                showToast("🎉 檔案轉換成功！");
+              } else {
+                alert(`❌ 轉換失敗: ${data.error || "未知錯誤"}`);
+              }
+            } catch (err) {
+              console.error("API Error:", err);
+              alert(`❌ 連線伺服器失敗: ${err.message || err}`);
+            } finally {
+              hideLoader();
+              fileInput.value = ""; // 清空，使可重複選取同一檔案
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+
+        // 點擊 YouTube 提取字幕
+        ytBtn.addEventListener("click", () => {
+          const url = ytUrlInput.value.trim();
+          if (!url) {
+            alert("請先貼上 YouTube 影片網址！");
+            return;
+          }
+          handleYouTubeTranscript(url);
+        });
+
+        // 支援 Enter 鍵解析 YouTube
+        ytUrlInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            ytBtn.click();
+          }
+        });
+
+        // YouTube API 串接
+        async function handleYouTubeTranscript(url) {
+          showLoader("正在為您抓取 YouTube 影片字幕...");
+          try {
+            const response = await fetch("/api/yt-transcript", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ url: url })
+            });
+
+            const data = await response.json();
+            if (response.ok && data.text) {
+              markdownOutput.value = data.text;
+              showToast("🎉 字幕提取成功！");
+              ytUrlInput.value = ""; // 清空輸入框
+            } else {
+              alert(`❌ 提取失敗: ${data.error || "可能是影片沒有包含字幕或不支援此連結"}`);
+            }
+          } catch (err) {
+            console.error("YT API Error:", err);
+            alert(`❌ 請求失敗: ${err.message || err}`);
+          } finally {
+            hideLoader();
+          }
+        }
+
+        // 複製 Markdown 內容
+        copyBtn.addEventListener("click", () => {
+          const text = markdownOutput.value.trim();
+          if (!text) {
+            showToast("⚠️ 沒有可複製的內容！");
+            return;
+          }
+          navigator.clipboard.writeText(text).then(() => {
+            showToast("📋 已複製到剪貼簿！");
+          }).catch(err => {
+            console.error("Copy failed:", err);
+            // Fallback for older browsers
+            markdownOutput.select();
+            document.execCommand("copy");
+            showToast("📋 已複製到剪貼簿！");
+          });
+        });
+
+        // 下載 .md 檔案
+        downloadBtn.addEventListener("click", () => {
+          const text = markdownOutput.value.trim();
+          if (!text) {
+            showToast("⚠️ 沒有可下載的內容！");
+            return;
+          }
+          const blob = new Blob([text], { type: "text/markdown;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `markitdown_converted_${Date.now()}.md`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          showToast("💾 檔案已下載！");
+        });
+      });
     </script>
-</body>
+  </body>
 </html>
