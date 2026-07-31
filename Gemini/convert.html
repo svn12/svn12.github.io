@@ -611,15 +611,14 @@
           for (const lang of langs) {
             try {
               const targetUrl = `https://video.google.com/timedtext?v=${videoId}&lang=${lang}`;
-              const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+              const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
               
               const res = await fetch(proxyUrl);
               if (!res.ok) continue;
               
-              const json = await res.json();
-              const xmlText = json.contents;
+              const xmlText = await res.text();
               
-              if (!xmlText || xmlText.includes('class="error"') || xmlText.trim().length < 50) {
+              if (!xmlText || xmlText.includes('class="error"') || xmlText.trim().length < 50 || xmlText.startsWith('{')) {
                 continue;
               }
               
