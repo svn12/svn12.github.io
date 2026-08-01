@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>台股底背離掃描 2026-08-01</title>
+<title>台股底背離掃描 2026-07-31</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0e1a;--bg2:#111827;--card:#1a2035;--bdr:#2a3555;--t1:#e8ecf4;--t2:#8892a8;--t3:#5a6580;--red:#ef4444;--grn:#22c55e;--gold:#f59e0b;--blue:#3b82f6;--purp:#a855f7}
@@ -58,15 +58,15 @@ td a[title]:hover{opacity:1}
 <body>
 <div class="hero"><div class="hc">
 <h1>📉📈 台股底背離 / 頭背離自動掃描報表 <a href="https://www.jktai123.com/stock/Q%E5%85%B1%E7%94%A82.html" target="_blank" class="btn-link">線圖 ↗</a></h1>
-<div class="sub">掃描日期：2026-08-01 ｜ MACD + KD 雙指標高低轉折偵測 ｜ 資料來源：Yahoo Finance</div>
+<div class="sub">掃描日期：2026-07-31 ｜ MACD + KD 雙指標高低轉折偵測 ｜ 資料來源：Yahoo Finance</div>
 </div></div>
 
 <div class="sg">
 <div class="sc"><div class="lb">掃描股票數</div><div class="vl pp">1944</div></div>
-<div class="sc"><div class="lb">總背離訊號</div><div class="vl gd">0</div></div>
-<div class="sc"><div class="lb">📉 底背離 (抄底)</div><div class="vl gn">0</div></div>
-<div class="sc"><div class="lb">📈 頭背離 (避險/警訊)</div><div class="vl" style="color:var(--red)">0</div></div>
-<div class="sc"><div class="lb">🔥 雙指標共振</div><div class="vl gd">0</div></div>
+<div class="sc"><div class="lb">總背離訊號</div><div class="vl gd">10</div></div>
+<div class="sc"><div class="lb">📉 底背離 (抄底)</div><div class="vl gn">2</div></div>
+<div class="sc"><div class="lb">📈 頭背離 (避險/警訊)</div><div class="vl" style="color:var(--red)">8</div></div>
+<div class="sc"><div class="lb">🔥 雙指標共振</div><div class="vl gd">6</div></div>
 </div>
 
 <div class="mc"><div class="tc">
@@ -79,12 +79,112 @@ td a[title]:hover{opacity:1}
 <button class="fb" onclick="F('雙指標')">🔥 雙指標</button>
 </div>
 </div>
-<div class="empty"><div class="ei">🔍</div>今日未偵測到背離訊號</div>
+<table id="T"><thead><tr><th onclick="S(0)">代號 <span class="si">⇅</span></th><th onclick="S(1)">名稱 <span class="si">⇅</span></th><th onclick="S(2)">市場 <span class="si">⇅</span></th><th onclick="S(3)">收盤價 <span class="si">⇅</span></th><th onclick="S(4)">漲跌幅 <span class="si">⇅</span></th><th onclick="S(5)">日均量(張) <span class="si">⇅</span></th><th onclick="S(6)">背離類型 <span class="si">⇅</span></th><th>背離細節</th><th>查看</th></tr></thead><tbody><tr data-dir="底背離" data-sig="底雙指標">
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=1215" target="_blank" class="sl">1215</a></td>
+<td>卜蜂</td><td>上市</td>
+<td class="n">104.00</td>
+<td class="n neg">-2.80%</td>
+<td class="n">1,124</td>
+<td><span class="badge badge-dir">底背離</span> <span class="badge badge-dual">底雙指標</span></td>
+<td class="det"><span class="det-m">📉底MACD 價:112.5→103.5 柱:-1.9→-0.19</span><br><span class="det-k">📉底KD 價:112.5→103.5 K:13.76→24.28</span></td>
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=1215" target="_blank" title="Goodinfo">📊</a> <a href="https://tw.stock.yahoo.com/quote/1215" target="_blank" title="Yahoo">📈</a></td>
+</tr>
+<tr data-dir="底背離" data-sig="底MACD">
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6606" target="_blank" class="sl">6606</a></td>
+<td>建德工業</td><td>上市</td>
+<td class="n">26.00</td>
+<td class="n pos">+0.97%</td>
+<td class="n">145</td>
+<td><span class="badge badge-dir">底背離</span> <span class="badge badge-macd">底MACD</span></td>
+<td class="det"><span class="det-m">📉底MACD 價:24.85→24.4 柱:0.01→0.04</span></td>
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6606" target="_blank" title="Goodinfo">📊</a> <a href="https://tw.stock.yahoo.com/quote/6606" target="_blank" title="Yahoo">📈</a></td>
+</tr>
+<tr data-dir="頭背離" data-sig="頂雙指標">
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2359" target="_blank" class="sl">2359</a></td>
+<td>所羅門</td><td>上市</td>
+<td class="n">121.00</td>
+<td class="n neg">-2.02%</td>
+<td class="n">5,715</td>
+<td><span class="badge badge-dir">頭背離</span> <span class="badge badge-top">頂雙指標</span></td>
+<td class="det"><span class="det-top">📈頭MACD 價:151.5→152.0 柱:0.82→0.08</span><br><span class="det-top">📈頭KD 價:151.5→152.0 K:61.03→56.91</span></td>
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2359" target="_blank" title="Goodinfo">📊</a> <a href="https://tw.stock.yahoo.com/quote/2359" target="_blank" title="Yahoo">📈</a></td>
+</tr>
+<tr data-dir="頭背離" data-sig="頂雙指標">
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2897" target="_blank" class="sl">2897</a></td>
+<td>王道銀行</td><td>上市</td>
+<td class="n">10.25</td>
+<td class="n pos">+0.00%</td>
+<td class="n">5,776</td>
+<td><span class="badge badge-dir">頭背離</span> <span class="badge badge-top">頂雙指標</span></td>
+<td class="det"><span class="det-top">📈頭MACD 價:10.17→10.35 柱:0.03→0.02</span><br><span class="det-top">📈頭KD 價:10.17→10.35 K:81.55→78.49</span></td>
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2897" target="_blank" title="Goodinfo">📊</a> <a href="https://tw.stock.yahoo.com/quote/2897" target="_blank" title="Yahoo">📈</a></td>
+</tr>
+<tr data-dir="頭背離" data-sig="頂雙指標">
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=5388" target="_blank" class="sl">5388</a></td>
+<td>中磊</td><td>上市</td>
+<td class="n">82.30</td>
+<td class="n pos">+4.05%</td>
+<td class="n">5,367</td>
+<td><span class="badge badge-dir">頭背離</span> <span class="badge badge-top">頂雙指標</span></td>
+<td class="det"><span class="det-top">📈頭MACD 價:91.1→94.7 柱:0.87→0.66</span><br><span class="det-top">📈頭KD 價:91.1→94.7 K:74.12→63.78</span></td>
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=5388" target="_blank" title="Goodinfo">📊</a> <a href="https://tw.stock.yahoo.com/quote/5388" target="_blank" title="Yahoo">📈</a></td>
+</tr>
+<tr data-dir="頭背離" data-sig="頂雙指標">
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6136" target="_blank" class="sl">6136</a></td>
+<td>富爾特</td><td>上市</td>
+<td class="n">24.50</td>
+<td class="n pos">+1.66%</td>
+<td class="n">149</td>
+<td><span class="badge badge-dir">頭背離</span> <span class="badge badge-top">頂雙指標</span></td>
+<td class="det"><span class="det-top">📈頭MACD 價:24.5→24.7 柱:0.03→0.03</span><br><span class="det-top">📈頭KD 價:24.5→24.7 K:71.77→62.03</span></td>
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6136" target="_blank" title="Goodinfo">📊</a> <a href="https://tw.stock.yahoo.com/quote/6136" target="_blank" title="Yahoo">📈</a></td>
+</tr>
+<tr data-dir="頭背離" data-sig="頂雙指標">
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6416" target="_blank" class="sl">6416</a></td>
+<td>瑞祺電通</td><td>上市</td>
+<td class="n">87.10</td>
+<td class="n pos">+0.69%</td>
+<td class="n">1,271</td>
+<td><span class="badge badge-dir">頭背離</span> <span class="badge badge-top">頂雙指標</span></td>
+<td class="det"><span class="det-top">📈頭MACD 價:99.69→106.98 柱:2.05→1.15</span><br><span class="det-top">📈頭KD 價:99.69→106.98 K:83.23→68.95</span></td>
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6416" target="_blank" title="Goodinfo">📊</a> <a href="https://tw.stock.yahoo.com/quote/6416" target="_blank" title="Yahoo">📈</a></td>
+</tr>
+<tr data-dir="頭背離" data-sig="頂MACD">
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2009" target="_blank" class="sl">2009</a></td>
+<td>第一銅</td><td>上市</td>
+<td class="n">35.10</td>
+<td class="n pos">+2.33%</td>
+<td class="n">1,207</td>
+<td><span class="badge badge-dir">頭背離</span> <span class="badge badge-top">頂MACD</span></td>
+<td class="det"><span class="det-top">📈頭MACD 價:38.48→39.07 柱:-0.01→-0.03</span></td>
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2009" target="_blank" title="Goodinfo">📊</a> <a href="https://tw.stock.yahoo.com/quote/2009" target="_blank" title="Yahoo">📈</a></td>
+</tr>
+<tr data-dir="頭背離" data-sig="頂KD">
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6579" target="_blank" class="sl">6579</a></td>
+<td>研揚</td><td>上市</td>
+<td class="n">154.00</td>
+<td class="n pos">+3.36%</td>
+<td class="n">1,281</td>
+<td><span class="badge badge-dir">頭背離</span> <span class="badge badge-top">頂KD</span></td>
+<td class="det"><span class="det-top">📈頭KD 價:181.5→186.5 K:72.06→71.45</span></td>
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6579" target="_blank" title="Goodinfo">📊</a> <a href="https://tw.stock.yahoo.com/quote/6579" target="_blank" title="Yahoo">📈</a></td>
+</tr>
+<tr data-dir="頭背離" data-sig="頂KD">
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6669" target="_blank" class="sl">6669</a></td>
+<td>緯穎</td><td>上市</td>
+<td class="n">5390.00</td>
+<td class="n pos">+10.00%</td>
+<td class="n">1,564</td>
+<td><span class="badge badge-dir">頭背離</span> <span class="badge badge-top">頂KD</span></td>
+<td class="det"><span class="det-top">📈頭KD 價:5325.0→5835.0 K:75.89→75.0</span></td>
+<td><a href="https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6669" target="_blank" title="Goodinfo">📊</a> <a href="https://tw.stock.yahoo.com/quote/6669" target="_blank" title="Yahoo">📈</a></td>
+</tr>
+</tbody></table>
 </div></div>
 
 <div class="ft">
 <p>⚠️ 本報表僅供技術分析參考，不構成投資建議。底背離/頭背離為技術面轉折訊號，需搭配基本面與量能判斷。</p>
-<p>Generated by 台股底背離/頭背離自動掃描工具 · 2026-08-01</p>
+<p>Generated by 台股底背離/頭背離自動掃描工具 · 2026-07-31</p>
 </div>
 
 <script>
