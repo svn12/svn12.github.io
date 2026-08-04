@@ -137,7 +137,7 @@ $(document).ready(function() {
     Google_sht_R();
   });
   //Array_R();
-  appendText();
+  // appendText();
   document.getElementById("file_href").href =sheet_src;
   let $win = $(window),
 			$ad = $('#abgne_float_ad').css('opacity', 0).show(),	// 讓廣告區塊變透明且顯示出來
@@ -576,7 +576,8 @@ $("#T").html('');
 $("#T2").html('');
 $("#T4").html('');
 
-let codeA=['4938','2412','0050','2357','2330','2303','1101','2002'];
+// let codeA=['4938','2412','0050','2357','2330','2303','1101','2002'];
+let codeA=['4938'];
 codeA.map(appendText1);
 codeA.map(appendText4);
 document.documentElement.scrollTop = 0; 
@@ -717,6 +718,7 @@ function  GSname(callback){
 <button type="button" onclick="ShowT2_A()">ShowList</button>
 <select id="select_sh" onchange="Google_sht_R()";>
 	<!--  <option value="" selected="selected">請選擇Sheet</option>  -->
+    <option value="底背離" selected="selected">底背離</option>
     <option value="List">List</option>
             
 </select>
