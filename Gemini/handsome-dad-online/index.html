@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>帥爸 On Line - 父親節主日證道簡報</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css" />
+  <style>
+    /* === 全域變數與設計系統 === */
+    :root {
+      --accent:  #e8643a;   /* 橘紅 (主強調) */
+      --accent2: #4fc3f7;   /* 青 (次強調) */
+      --success: #81c784;   /* 綠 (正面) */
+      --warn:    #ffb74d;   /* 琥珀 (提示) */
+      --bg-dark: #0d1117;   /* 深暗背景 */
+    }
+
+    .reveal {
+      font-family: 'Segoe UI', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+      background: var(--bg-dark);
+      color: #e2e8f0;
+    }
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      text-transform: none;
+    }
+    .reveal h1 { 
+      font-size: 2.2em; 
+      line-height: 1.2;
+      text-shadow: 0 0 20px rgba(232, 100, 58, 0.4);
+    }
+    .reveal h2 { 
+      font-size: 1.5em; 
+      color: var(--accent2); 
+      margin-bottom: 0.6em;
+      text-shadow: 0 0 15px rgba(79, 195, 247, 0.3);
+    }
+    .reveal .progress { color: var(--accent); }
+    .reveal .controls { color: var(--accent2); }
+
+    /* === 封面 === */
+    .title-slide { 
+      text-align: center; 
+      padding: 30px;
+    }
+    .title-slide .tag {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), #f78e69);
+      color: #fff;
+      padding: 6px 18px;
+      border-radius: 30px;
+      font-size: 0.5em;
+      letter-spacing: 0.1em;
+      margin-bottom: 1em;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(232, 100, 58, 0.4);
+    }
+    .title-slide .subtitle { 
+      font-size: 0.75em; 
+      color: #cbd5e1; 
+      margin-top: 0.8em; 
+      font-weight: 400;
+    }
+    .title-slide .author { 
+      margin-top: 2.5em; 
+      font-size: 0.5em; 
+      color: #94a3b8; 
+      letter-spacing: 0.05em;
+    }
+
+    /* === 優勢卡 (並列特點) === */
+    .adv-grid { 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 20px; 
+      margin-top: 0.8em; 
+    }
+    .adv-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-top: 4px solid var(--accent2);
+      border-radius: 12px;
+      padding: 24px 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      backdrop-filter: blur(10px);
+    }
+    .adv-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 15px 35px rgba(79, 195, 247, 0.15);
+    }
+    .adv-card.accent-card {
+      border-top-color: var(--accent);
+    }
+    .adv-card.accent-card:hover {
+      box-shadow: 0 15px 35px rgba(232, 100, 58, 0.15);
+    }
+    .adv-card .adv-icon { 
+      margin-bottom: 15px; 
+    }
+    .adv-card .adv-icon img {
+      width: 64px; 
+      height: 64px; 
+      object-fit: contain;
+      display: block; 
+      margin: 0 auto;
+      filter: drop-shadow(0 0 12px rgba(79,195,247,0.5));
+    }
+    .adv-card.accent-card .adv-icon img {
+      filter: drop-shadow(0 0 12px rgba(232,100,58,0.5));
+    }
+    .adv-card .adv-title { 
+      font-size: 0.65em; 
+      font-weight: 700; 
+      color: #fff; 
+      margin-bottom: 10px; 
+    }
+    .adv-card .adv-desc { 
+      font-size: 0.45em; 
+      color: #94a3b8; 
+      line-height: 1.7; 
+    }
+
+    /* === VS 對比網格 === */
+    .vs-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 60px 1fr; 
+      gap: 15px; 
+      align-items: center; 
+      margin-top: 0.8em; 
+    }
+    .vs-col { 
+      background: rgba(255,255,255,0.02); 
+      border-radius: 16px; 
+      padding: 26px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.05);
+      backdrop-filter: blur(8px);
+      text-align: left;
+    }
+    .vs-col.left-col { 
+      border-top: 4px solid var(--accent2); 
+    }
+    .vs-col.right-col { 
+      border-top: 4px solid var(--accent); 
+    }
+    .vs-label { 
+      font-size: 0.75em; 
+      font-weight: 700; 
+      margin-bottom: 15px; 
+      letter-spacing: 0.05em; 
+      text-align: center;
+    }
+    .vs-label.left { color: var(--accent2); }
+    .vs-label.right { color: var(--accent); }
+    .vs-center { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 1.5em; 
+      font-weight: 900; 
+      color: rgba(255,255,255,0.15); 
+      text-shadow: 0 0 10px rgba(255,255,255,0.05);
+    }
+    .vs-col ul { 
+      font-size: 0.52em; 
+      list-style: none; 
+      padding: 0; 
+      margin: 0; 
+    }
+    .vs-col ul li { 
+      padding: 8px 0; 
+      border-bottom: 1px solid rgba(255,255,255,0.05); 
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .vs-col ul li:last-child { border-bottom: none; }
+    .vs-col ul li::before { 
+      content: "✦ "; 
+      color: var(--accent2);
+      opacity: 0.8; 
+      margin-right: 6px;
+    }
+    .vs-col.right-col ul li::before {
+      color: var(--accent);
+    }
+
+    /* === 遊戲角色面板 === */
+    .char-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .char-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      border: 2px solid var(--accent2);
+    }
+    .vs-col.right-col .char-avatar {
+      border-color: var(--accent);
+    }
+    .char-avatar img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+    .char-stat {
+      width: 100%;
+      margin-top: 15px;
+    }
+    .stat-bar-container {
+      background: rgba(255,255,255,0.08);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 4px;
+      margin-bottom: 10px;
+    }
+    .stat-bar {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    /* === 引用區塊 === */
+    .quote-box {
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 4px solid var(--accent);
+      border-radius: 4px 12px 12px 4px;
+      padding: 24px 30px;
+      margin: 1em 0;
+      font-size: 0.65em;
+      color: #e2e8f0;
+      line-height: 1.8;
+      text-align: left;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .quote-box::before {
+      content: "“";
+      position: absolute;
+      left: 10px;
+      top: 5px;
+      font-size: 3em;
+      color: rgba(232, 100, 58, 0.15);
+      font-family: Georgia, serif;
+    }
+    .quote-author { 
+      font-size: 0.7em; 
+      color: #94a3b8; 
+      text-align: right; 
+      margin-top: 12px; 
+      font-style: normal; 
+      font-weight: 600;
+    }
+
+    /* === 系統更新進度條 === */
+    .update-box {
+      background: rgba(255,255,255,0.03);
+      border-radius: 16px;
+      padding: 30px;
+      width: 80%;
+      margin: 1.5em auto;
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+    .progress-bar-wrap {
+      background: rgba(255,255,255,0.08);
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px 0;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent2), #00e5ff);
+      width: 0%;
+      border-radius: 10px;
+      box-shadow: 0 0 15px var(--accent2);
+    }
+    .update-status {
+      font-size: 0.5em;
+      color: var(--accent2);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    /* === VIZ 滑桿揭露效果 === */
+    .viz-container {
+      position: relative; 
+      height: 420px; 
+      border-radius: 16px; 
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      margin-top: 20px;
+    }
+    .viz-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .viz-overlay-text {
+      background: rgba(13, 17, 23, 0.75);
+      backdrop-filter: blur(5px);
+      padding: 20px 30px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+    .viz-overlay-text h3 {
+      margin: 0;
+      font-size: 1.1em;
+    }
+    .viz-overlay-text p {
+      margin: 8px 0 0 0;
+      font-size: 0.6em;
+      color: #cbd5e1;
+    }
+    #viz-before {
+      background-color: #1a1a2e;
+    }
+    #viz-after {
+      background-color: #2e1a1a;
+      clip-path: inset(0 100% 0 0);
+      z-index: 2;
+    }
+    #viz-divider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, var(--accent2), transparent);
+      box-shadow: 0 0 15px var(--accent2);
+      pointer-events: none;
+      z-index: 3;
+    }
+    .viz-slider-input {
+      width: 80%;
+      margin-top: 25px;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+      height: 6px;
+      border-radius: 3px;
+      -webkit-appearance: none;
+    }
+    .viz-slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent2);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--accent2);
+      transition: transform 0.1s;
+    }
+    .viz-slider-input::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* === 屬靈密碼文字 === */
+    .code-text {
+      font-size: 3em;
+      font-weight: 900;
+      color: var(--accent);
+      text-shadow: 0 0 30px rgba(232, 100, 58, 0.6);
+      margin: 20px 0;
+      letter-spacing: 0.2em;
+    }
+    .code-symbol {
+      display: inline-block;
+      animation: pulse 2s infinite;
+      font-size: 1.5em;
+      vertical-align: middle;
+      margin-right: 15px;
+    }
+
+    /* === 頁面排版輔助 === */
+    .flex-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+    .slide-desc {
+      font-size: 0.65em;
+      color: #94a3b8;
+      line-height: 1.8;
+      text-align: left;
+    }
+    .highlight-text {
+      color: var(--accent2);
+      font-weight: 700;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 5px var(--accent)); }
+      50% { transform: scale(1.05); opacity: 0.8; filter: drop-shadow(0 0 15px var(--accent)); }
+    }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- [Page 1: 課程開場與父親節宣告] -->
+    <section data-background-image="images/cover_slide.jpg"
+             data-background-opacity="0.35"
+             data-background-size="cover">
+      <div class="title-slide">
+        <div class="tag">父親節主日證道 · 杜崇信牧師</div>
+        <h1>帥爸 On Line</h1>
+        <h2 style="color:var(--accent2); margin-top:0.2em;">重啟與天父、與地上的爸爸愛之連線</h2>
+        <p class="subtitle">用關係的邏輯取代對錯的邏輯，在安息中重啟愛之連線</p>
+        <p class="author">今日講堂 · 2026 年 8 月</p>
+      </div>
+      <aside class="notes">
+        講師對白：各位同學，大家好！今天是個特別的日子——父親節主日。在今天這堂課中，我們要透過杜崇信牧師的證道《帥爸 On Line》，一起來探討我們與地上的爸爸、以及天上的阿爸父之間，那一條永不離線的愛之連線。首先，讓我們向所有地上的安穩父親致敬，也向天上那位永不放棄我們的天父獻上讚美。
+      </aside>
+    </section>
+
+    <!-- [Page 2: 利未記 19:3 的神聖密碼] -->
+    <section>
+      <h2>利未記 19:3 的神神聖密碼</h2>
+      <div class="vs-grid">
+        <div class="vs-col left-col">
+          <div class="vs-label left">十誡第五誡</div>
+          <div style="font-size: 1.1em; font-weight: 800; text-align: center; margin-bottom: 10px; color: #fff;">孝敬父母</div>
+          <ul>
+            <li>個人當孝敬父母</li>
+            <li>人倫關係的起點</li>
+            <li>帶應許的誡命</li>
+          </ul>
+        </div>
+        <div class="vs-center">⇄</div>
+        <div class="vs-col right-col">
+          <div class="vs-label right">十誡第四誡</div>
+          <div style="font-size: 1.1em; font-weight: 800; text-align: center; margin-bottom: 10px; color: #fff;">守安息日</div>
+          <ul>
+            <li>也要守我的安息</li>
+            <li>神人關係的起點</li>
+            <li>我是耶和華你們的神</li>
+          </ul>
+        </div>
+      </div>
+      <p style="font-size:0.5em; color:#94a3b8; margin-top:1em; line-height:1.6;">
+        「你們個人當孝敬父母，也要守我的安息，我是耶和華你們的神。」
+      </p>
+      <aside class="notes">
+        講師對白：我們今天的經文非常特別，引自《利未記》19 章 3 節：「你們個人當孝敬父母，也要守我的安息，我是耶和華你們的神。」大家有沒有想過，為什麼「孝敬父母」和「守安息日」這兩件事會被綁在一起？這背後隱藏了上帝對於家庭與信仰最核心的設計。
+      </aside>
+    </section>
+
+    <!-- [Page 3: 地上父母的無奈與張力] -->
+    <section>
+      <h2>地上父母的無奈與張力</h2>
+      <p style="font-size: 0.55em; color: #cbd5e1; margin-bottom: 20px;">
+        在談論「孝敬」之前，我們必須先看見家庭的真實面貌與父母的重擔
+      </p>
+      <div class="adv-grid">
+        <div class="adv-card accent-card">
+          <div class="adv-icon"><img src="images/icon_clock.png" alt="忙碌"></div>
+          <div class="adv-title">忙碌的身影</div>
+          <div class="adv-desc">為了維持家計與照顧孩子，每天如陀螺般線上運轉，幾乎沒有自己的時間。</div>
+        </div>
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_shield.png" alt="焦慮"></div>
+          <div class="adv-title">焦慮的重擔</div>
+          <div class="adv-desc">面對職場壓力與教育難題，父母的心中常充滿不確定性與對未來的焦慮。</div>
+        </div>
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_heart.png" alt="付出"></div>
+          <div class="adv-title">無條件的付出</div>
+          <div class="adv-desc">即便疲憊、無奈甚至感到挫折，依然默默撐起家庭的防護傘。</div>
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：牧師在證道中幽默地提到，現代的狗都過得很幸福，但地上的爸爸媽媽往往忙碌到「連狗都不如」。無論是單親還是雙親家庭，父母為了維持家計、照顧孩子，每天都承受著巨大的壓力與焦慮。他們的身影，有時疲憊，有時無奈，這是我們在談孝敬之前必須先看見的家庭真實面貌。
+      </aside>
+    </section>
+
+    <!-- [Page 4: 如朕親臨：父母的神聖授權] -->
+    <section data-background-image="images/authority_token.jpg"
+             data-background-opacity="0.25"
+             data-background-size="cover">
+      <div class="grid-2col">
+        <div style="text-align: left;">
+          <h2>如朕親臨</h2>
+          <h3 style="color:var(--accent); font-size:0.9em; margin-bottom:15px;">父母的神聖授權</h3>
+          <p class="slide-desc">
+            在聖經的設計中，地上的父母被賦予了特別的角色：<br>
+            他們是<span class="highlight-text">上帝在家庭中的代表</span>。<br><br>
+            當我們尊敬父母，我們實質上是在尊敬那位在背後授權給他們的神。這是一種屬靈的順服與尊崇。
+          </p>
+        </div>
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 25px; backdrop-filter: blur(5px);">
+          <div style="font-size: 0.8em; font-weight: 700; color: var(--accent2); margin-bottom: 15px;">神聖的代理權柄</div>
+          <ul style="font-size: 0.5em; text-align: left; line-height: 1.8; color: #cbd5e1;">
+            <li style="margin-bottom: 10px;">🛡️ <strong style="color:#fff;">管教權柄：</strong> 引導子女行在真理的道路上。</li>
+            <li style="margin-bottom: 10px;">🌱 <strong style="color:#fff;">灌顧權柄：</strong> 提供物質與情感上的安全感。</li>
+            <li style="margin-bottom: 10px;">🔑 <strong style="color:#fff;">屬靈傳承：</strong> 將信仰的薪火代代相傳。</li>
+          </ul>
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：聖經為什麼要求我們敬畏父母？因為上帝在地上設立了父母作為祂的代表。牧師用清代皇帝的「如朕親臨」令牌作比喻——看見這個令牌就如同看見皇帝本人。同樣地，上帝將管教與灌顧的權柄委託給了地上的父母。當我們尊敬父母時，我們實質上是在尊崇背後授權給他們的神。
+      </aside>
+    </section>
+
+    <!-- [Page 5: 物理防禦 vs 魔法攻擊] -->
+    <section>
+      <h2>物理防禦 vs 魔法攻擊</h2>
+      <p style="font-size: 0.55em; color: #cbd5e1; margin-bottom: 20px;">
+        父母在家庭防禦系統中截然不同但完美互補的角色
+      </p>
+      <div class="vs-grid">
+        <div class="vs-col left-col char-card">
+          <div class="char-avatar">
+            <img src="images/icon_shield.png" alt="爸爸">
+          </div>
+          <div class="vs-label left" style="margin-bottom:5px;">爸爸 (Father)</div>
+          <div style="font-size:0.5em; color:#fff; font-weight:bold;">物理防禦型人物</div>
+          
+          <div class="char-stat">
+            <div style="font-size:0.35em; color:#aaa; display:flex; justify-content:space-between;">
+              <span>物質保護 (SYS)</span><span>99%</span>
+            </div>
+            <div class="stat-bar-container">
+              <div class="stat-bar" style="width:99%; background:var(--accent2); box-shadow:0 0 8px var(--accent2);"></div>
+            </div>
+            <div style="font-size:0.35em; color:#aaa; display:flex; justify-content:space-between;">
+              <span>台詞發言 (SPK)</span><span>15%</span>
+            </div>
+            <div class="stat-bar-container">
+              <div class="stat-bar" style="width:15%; background:var(--accent2);"></div>
+            </div>
+          </div>
+          <p style="font-size:0.4em; color:#cbd5e1; font-style:italic; margin-top:8px;">「提供穩定的安全感與默默的守護」</p>
+        </div>
+        
+        <div class="vs-center">⚔️</div>
+        
+        <div class="vs-col right-col char-card">
+          <div class="char-avatar">
+            <img src="images/icon_heart.png" alt="媽媽">
+          </div>
+          <div class="vs-label right" style="margin-bottom:5px;">媽媽 (Mother)</div>
+          <div style="font-size:0.5em; color:#fff; font-weight:bold;">魔法攻擊型人物</div>
+          
+          <div class="char-stat">
+            <div style="font-size:0.35em; color:#aaa; display:flex; justify-content:space-between;">
+              <span>言語輸出 (SPK)</span><span>95%</span>
+            </div>
+            <div class="stat-bar-container">
+              <div class="stat-bar" style="width:95%; background:var(--accent); box-shadow:0 0 8px var(--accent);"></div>
+            </div>
+            <div style="font-size:0.35em; color:#aaa; display:flex; justify-content:space-between;">
+              <span>情感波動 (EMO)</span><span>85%</span>
+            </div>
+            <div class="stat-bar-container">
+              <div class="stat-bar" style="width:85%; background:var(--accent);"></div>
+            </div>
+          </div>
+          <p style="font-size:0.4em; color:#cbd5e1; font-style:italic; margin-top:8px;">「使用言語與情感進行高頻率的管教」</p>
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：在管教的過程中，爸爸和媽媽往往扮演著截然不同的角色。牧師用了非常現代的比喻：爸爸通常是「物理防禦型」人物，負責提供物質安全感與默默的保護；而媽媽則是「魔法攻擊型」人物，善於使用言語與情感進行高頻率的管教。這雖然常帶來家庭內部的張力，但也正是家庭防禦的完美互補。
+      </aside>
+    </section>
+
+    <!-- [Page 6: 溝通的牆：固執與難溝通] -->
+    <section>
+      <h2>溝通的牆：固執與難溝通</h2>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:20px; margin-top:30px;">
+        <div style="width: 80%; display: flex; align-items: stretch; height: 180px; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+          <div style="flex: 1; background: rgba(79, 195, 247, 0.15); display: flex; align-items: center; justify-content: center; font-size: 0.8em; font-weight: 700; color: var(--accent2);">
+            父親
+          </div>
+          <div style="width: 25px; background: #374151; display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 0.5em; writing-mode: vertical-rl; text-orientation: mixed; font-weight: bold; letter-spacing: 0.2em;">
+            固執 · 代溝 · 不理解
+          </div>
+          <div style="flex: 1; background: rgba(232, 100, 58, 0.15); display: flex; align-items: center; justify-content: center; font-size: 0.8em; font-weight: 700; color: var(--accent);">
+            子女
+          </div>
+        </div>
+        <p class="slide-desc" style="width: 80%; text-align: center; margin-top: 15px;">
+          當我們面對固執與世代差異時，我們往往會感到挫折，甚至想要<span class="highlight-text" style="color:var(--accent);">切斷連線</span>。這道無形的牆，是我們必須面對並跨越的屬靈考驗。
+        </p>
+      </div>
+      <aside class="notes">
+        講師對白：但是，地上的父母並不是完美的。有時候，爸爸會顯得固執、古板，甚至在面臨世代差異時變得極難溝通。這往往會讓做子女的感到挫折，甚至想要切斷連線。當溝通的牆豎立起來時，我們該如何跨越？這就是我們今天需要學習的屬靈功課。
+      </aside>
+    </section>
+
+    <!-- [Page 7: 屬靈密碼（一）：停（Sabbath）] -->
+    <section>
+      <h2>屬靈密碼（一）：停（Sabbath）</h2>
+      <div class="flex-center">
+        <div class="code-text">
+          <span class="code-symbol" style="color: #ef4444;">🛑</span>停
+        </div>
+        <div style="font-size:0.8em; color:var(--accent2); font-weight:700; margin-bottom:10px;">Sabbath — 安息日的真諦</div>
+        <p class="slide-desc" style="text-align: center; width: 70%;">
+          「安息」的希伯來文原意就是「停下來」。<br>
+          在凡事追求效率、速度與經濟效益的世代，<br>
+          我們在線上狂奔，神卻呼喚我們：<br>
+          <span class="highlight-text" style="font-size: 1.1em;">「停下來，記得我是神。」</span>
+        </p>
+      </div>
+      <aside class="notes">
+        講師對白：我們要學習的第一個屬靈密碼是「停（Sabbath）」。安息日的希伯來文原意就是「停下來」。現代社會瘋狂追求效率、速度與經濟效益，我們每天都在線上狂奔。但神說：停下來。停下來看看祂，記得祂是我們的神。
+      </aside>
+    </section>
+
+    <!-- [Page 8: 為父母把時間停下來] -->
+    <section>
+      <h2>為父母把時間停下來</h2>
+      <div class="quote-box" style="width: 80%; margin: 1.2em auto;">
+        安息不只是個人睡覺休息，更是要把時間「奉獻」出來。
+        <div class="quote-author">「安息，是為愛停下腳步」</div>
+      </div>
+      <div class="adv-grid" style="grid-template-columns: 1fr 1fr; width: 80%; margin: 1em auto 0 auto;">
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_clock.png" alt="時間"></div>
+          <div class="adv-title">刻意奉獻時間</div>
+          <div class="adv-desc">解開家庭的張力，陪伴逐漸老去的父母，需要我們刻意停下追逐成就的腳步。</div>
+        </div>
+        <div class="adv-card accent-card">
+          <div class="adv-icon"><img src="images/icon_heart.png" alt="愛心"></div>
+          <div class="adv-title">最真實的孝敬</div>
+          <div class="adv-desc">你願意為父母停留的時間，就是愛最直觀、最真實的表達。</div>
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：這點非常重要！安息日不只是個人睡覺休息，更是要把時間「奉獻」出來。我們能不能為了解開家庭的張力，為了陪伴逐漸老去的父母，刻意把我們追逐工作與成就的時間「停下來」？當你願意為父母停下時間，這就是最真實的孝敬。
+      </aside>
+    </section>
+
+    <!-- [Page 9: 屬靈密碼（二）：更新（Update）] -->
+    <section id="slide-update">
+      <h2>屬靈密碼（二）：更新（Update）</h2>
+      <div class="update-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <span class="update-status" id="update-text">關係系統更新中... 0%</span>
+          <span style="font-size:0.35em; color:#888;">請勿切斷愛與耐心的電源</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="update-bar"></div>
+        </div>
+        <div style="font-size:0.42em; color:#aaa; text-align:left; line-height:1.6;">
+          ⚠️ 系統提示：我們不能一直用十年前的溝通方式，來面對已經改變的家人。
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：第二個密碼是「更新（Update）」。我們的電腦、手機需要定期更新系統，同樣地，我們的家庭關係也需要「定期進行連線測試與更新」。我們不能一直用十年前的溝通方式來面對已經改變的家人。
+      </aside>
+    </section>
+
+    <!-- [Page 10: 關係邏輯 vs 對錯邏輯] -->
+    <section>
+      <h2>關係邏輯 vs 對錯邏輯</h2>
+      <div class="vs-grid">
+        <div class="vs-col left-col">
+          <div class="vs-label left">對錯邏輯 (冰冷與對立)</div>
+          <div style="text-align:center; font-size:1.8em; margin:10px 0;">⚖️</div>
+          <ul>
+            <li>爭論誰對誰錯、理直氣壯</li>
+            <li>贏了道理，卻切斷了連線</li>
+            <li>在桌上永遠只有冰冷的界線</li>
+          </ul>
+        </div>
+        <div class="vs-center">VS</div>
+        <div class="vs-col right-col">
+          <div class="vs-label right">關係邏輯 (溫暖與接納)</div>
+          <div style="text-align:center; font-size:1.8em; margin:10px 0; color:var(--accent);">❤️</div>
+          <ul>
+            <li>以愛和接納為出發點</li>
+            <li>贏得關係，維繫愛之連線</li>
+            <li>彼此接納，更新溝通密碼</li>
+          </ul>
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：在更新關係時，牧師提醒我們一個極為關鍵的原則：在家庭中，不要用「對與錯的邏輯」，而要用「關係的邏輯」。如果我們在桌上永遠只爭誰對誰錯，最後就算你贏了道理，卻會輸掉關係、切斷連線。彼此接納，才是更新連線的唯一路徑。
+      </aside>
+    </section>
+
+    <!-- [Page 11: 地上父母的缺憾與陰影] -->
+    <section data-background-image="images/wounded_heart.jpg"
+             data-background-opacity="0.3"
+             data-background-size="cover">
+      <div class="flex-center">
+        <h2 style="color:#fff;">地上父母的缺憾與陰影</h2>
+        <p class="slide-desc" style="text-align: center; width: 70%; margin-top:20px; line-height:1.9;">
+          不可否認，許多人在成長過程中，<br>
+          因為地上父母的不完美、甚至是忽視與不解，<br>
+          心靈留下了深淺不一的傷口。<br><br>
+          地上的愛，往往是有條件的、殘缺的，<br>
+          讓我們在面對「父親」或「權威」時充滿了防禦。
+        </p>
+      </div>
+      <aside class="notes">
+        講師對白：不可否認，許多人在成長過程中，因為地上父母的不完美、甚至粗暴與忽視，心靈留下了深淺不一的傷口。這些缺憾讓我們在面對「父親」或「權威」這個詞時，心中充滿了防禦與陰影。地上的愛，往往是有條件的、殘缺的。
+      </aside>
+    </section>
+
+    <!-- [Page 12: 天父的完全之愛] -->
+    <section id="slide-viz">
+      <h2>天父的完全之愛</h2>
+      <p style="font-size:0.5em; color:#cbd5e1;">拖動滑桿，看見天父無條件完全之愛對心靈缺憾的醫治</p>
+      
+      <div class="viz-container" style="width: 80%; margin: 15px auto 0 auto;">
+        <!-- Before: 受傷帶裂痕的心 -->
+        <div class="viz-slide" id="viz-before">
+          <div class="viz-overlay-text">
+            <h3>原生家庭的缺憾</h3>
+            <p>裂痕、受傷、有條件的愛、防禦的陰影</p>
+          </div>
+        </div>
+        
+        <!-- After: 癒合與天父完全之愛 -->
+        <div class="viz-slide" id="viz-after">
+          <div class="viz-overlay-text" style="border-color: var(--accent2);">
+            <h3 style="color: var(--accent2);">天父完全的愛</h3>
+            <p>無條件的愛、永不搖擺、補足缺憾、縫合傷害</p>
+          </div>
+        </div>
+        
+        <!-- 分割線 -->
+        <div id="viz-divider"></div>
+      </div>
+      
+      <input class="viz-slider-input" id="viz-slider" type="range" min="0" max="100" value="0">
+      <aside class="notes">
+        講師對白：感謝神，雖然地上的父母會讓我們失望，但我們有一位完全的天父。祂的愛是無條件的、永不搖擺的。祂親自用祂那源源不絕的完全之愛，來補足、來縫合我們在人間所受的一切缺憾與傷害。這點非常重要，因為只有先被天父的愛填滿，我們才有力量去接納不完美的父母。
+      </aside>
+    </section>
+
+    <!-- [Page 13: 眼睛未曾看見的屬靈預備] -->
+    <section style="background: radial-gradient(circle, rgba(232,100,58,0.15) 0%, rgba(13,17,23,1) 70%);">
+      <div class="flex-center">
+        <h2>眼睛未曾看見的屬靈預備</h2>
+        <div class="quote-box" style="width: 75%; margin-top:30px;">
+          「神為愛祂的人所預備的，是眼睛未曾看見，耳朵未曾聽見，人心也未曾想到的。」
+          <div class="quote-author">—— 哥林多前書 2:9</div>
+        </div>
+        <p class="slide-desc" style="text-align: center; margin-top:20px; width: 75%;">
+          當我們願意順服神，在家庭關係中選擇<span class="highlight-text">饒恕、接納與停下時間</span>，<br>
+          神所預備的恩典與祝福，將會遠超我們的想像。
+        </p>
+      </div>
+      <aside class="notes">
+        講師對白：聖經應許我們：「神為愛祂的人所預備的，是眼睛未曾看見，耳朵未曾聽見，人心也未曾想到的。」當我們願意順服神，在家庭關係中選擇饒恕、接納與停下時間時，神在背後為我們預備的恩典與祝福，將會遠超我們的想像。
+      </aside>
+    </section>
+
+    <!-- [Page 14: 在天國裡永遠在線] -->
+    <section data-background-image="images/starry_sky.jpg"
+             data-background-opacity="0.3"
+             data-background-size="cover">
+      <div class="flex-center">
+        <h2 style="color:var(--accent2);">在天國裡永遠在線</h2>
+        <div style="font-size:3.5em; line-height:1; margin:20px 0; color:var(--accent2); filter:drop-shadow(0 0 15px rgba(79,195,247,0.8));">
+          ∞
+        </div>
+        <p class="slide-desc" style="text-align: center; width: 70%; line-height:1.9;">
+          地上的連線會斷網、會離線、會有雜訊。<br>
+          但在天國裡，我們與天父的連結是<span class="highlight-text" style="color:var(--accent);">永不離線的完美連結</span>。<br>
+          那裡沒有誤解與障礙，只有完全的愛與理解。<br>
+          世上的每次操練連線，都是在為永恆作預備。
+        </p>
+      </div>
+      <aside class="notes">
+        講師對白：地上的連線會斷網、會離線、會有雜訊。但在天國裡，我們將與天父重新連線，而且是永不離線的完美連結。那裡沒有誤解，沒有溝通的障礙，只有完全的愛與理解。我們在世上的每一次操練連線，都是在為那永恆的在線作預備。
+      </aside>
+    </section>
+
+    <!-- [Page 15: 用心靈與誠實的互動] -->
+    <section>
+      <h2>用心靈與誠實的互動</h2>
+      <p style="font-size: 0.55em; color: #cbd5e1; margin-bottom: 20px;">
+        關係的更新不是口號，而是踏出教會後的日常實踐
+      </p>
+      <div class="adv-grid">
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_heart.png" alt="擁抱"></div>
+          <div class="adv-title">一個實體的擁抱</div>
+          <div class="adv-desc">給爸爸或阿公一個溫暖的擁抱，用身體語言傳遞接納。</div>
+        </div>
+        <div class="adv-card accent-card">
+          <div class="adv-icon"><img src="images/icon_phone.png" alt="電話"></div>
+          <div class="adv-title">一通真誠的電話</div>
+          <div class="adv-desc">撥通電話，不聊嚴肅對錯，只傳達真誠的關心與問候。</div>
+        </div>
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_clock.png" alt="耐心"></div>
+          <div class="adv-title">一份耐心的傾聽</div>
+          <div class="adv-desc">放下主見，用心聆聽，用真誠耐心的態度去互動。</div>
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：我們如何開始這個更新？就從今天開始。不只是在教會裡唱唱詩歌，更是要在踏出教會後，給爸爸、給阿公一個擁抱，或者撥一通電話，用真誠與耐心的態度去互動。這就是用心靈與誠實向神獻上的敬拜。
+      </aside>
+    </section>
+
+    <!-- [Page 16: 教會生活與愛的團契] -->
+    <section>
+      <h2>教會生活與愛的團契</h2>
+      <p style="font-size: 0.55em; color: #cbd5e1; margin-bottom: 20px;">
+        在教會大家庭中，透過工具與群組拉近愛的距離
+      </p>
+      <div class="adv-grid">
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_phone.png" alt="手機班"></div>
+          <div class="adv-title">實用手機教學班</div>
+          <div class="adv-desc">幫助長輩跨越科技門檻，學會使用智慧型手機與家人連線。</div>
+        </div>
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_people.png" alt="群組"></div>
+          <div class="adv-title">關懷社群群組</div>
+          <div class="adv-desc">建立 Facebook、Instagram 和 Line 等線上緊密連結的互動管道。</div>
+        </div>
+        <div class="adv-card accent-card">
+          <div class="adv-icon"><img src="images/icon_shield.png" alt="關懷網"></div>
+          <div class="adv-title">線上的傳播力量</div>
+          <div class="adv-desc">善用科技工具傳播關懷與愛，織起一張無微不至的守護網。</div>
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：除了個人家庭，教會也是我們彼此扶持的大家庭。牧師在證道最後特別提到，教會開辦了許多實用的課程，像是手機班，還有各種FB、IG、Line的群組。這些看似簡單的工具傳播，其實是線上的傳播力量，讓我們不要小看這張關懷的網。
+      </aside>
+    </section>
+
+    <!-- [Page 17: 主動關懷與小組連結] -->
+    <section>
+      <h2>主動關懷與小組連結</h2>
+      <p style="font-size: 0.55em; color: #cbd5e1; margin-bottom: 20px;">
+        彼此分享、代禱，織成一張堅韌有愛的支持網絡
+      </p>
+      <div class="adv-grid">
+        <div class="adv-card accent-card">
+          <div class="adv-icon"><img src="images/icon_people.png" alt="分享"></div>
+          <div class="adv-title">小組彼此分享</div>
+          <div class="adv-desc">在小組中敞開心扉分享家庭張力，傾聽彼此的軟弱與掙扎。</div>
+        </div>
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_heart.png" alt="代禱"></div>
+          <div class="adv-title">按手彼此代禱</div>
+          <div class="adv-desc">藉著同心合意的禱告，將受傷的心與家庭的重擔交託給神。</div>
+        </div>
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_shield.png" alt="支持"></div>
+          <div class="adv-title">家庭守護與支持</div>
+          <div class="adv-desc">讓單親家庭、固執長輩在愛的網絡中找到支持與理解。</div>
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：當我們在小組中彼此分享、彼此代禱時，我們就是在織一張愛的網。在這個網裡，單親的家庭得到支持，受傷的心靈得到安慰，固執的長輩得到理解。這就是上帝要在地上建立的聖潔國度。
+      </aside>
+    </section>
+
+    <!-- [Page 18: 安息與信仰的日常操練] -->
+    <section>
+      <h2>安息與信仰的日常操練</h2>
+      <p style="font-size: 0.55em; color: #cbd5e1; margin-bottom: 20px;">
+        安息不是一個教條，而是日常生命節奏的刻意對齊
+      </p>
+      <div class="adv-grid">
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_clock.png" alt="停下"></div>
+          <div class="adv-title">刻意停下 15 分鐘</div>
+          <div class="adv-desc">在一天工作最忙碌、效率最高的時候，刻意為神停下來。</div>
+        </div>
+        <div class="adv-card accent-card">
+          <div class="adv-icon"><img src="images/icon_phone.png" alt="斷網"></div>
+          <div class="adv-title">暫時離線與靜止</div>
+          <div class="adv-desc">不看手機、不回信件，拒絕外界資訊的喧囂與干擾。</div>
+        </div>
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_book.png" alt="對齊"></div>
+          <div class="adv-title">單單來到神面前</div>
+          <div class="adv-desc">宣告「你是我的神」，將生命的主權與節奏重新交託給祂。</div>
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：安息不是一個教條，而是一個日常的操練。下週開始，當你在工作最忙碌、效率最高的時候，試著刻意停下 15 分鐘，不看手機、不回信件，單單來到神面前說：「主啊，我停下來，因為你是我的神。」這會徹底改變你的生命節奏。
+      </aside>
+    </section>
+
+    <!-- [Page 19: 父親節的終極屬靈實踐] -->
+    <section>
+      <h2>父親節的終極屬靈實踐</h2>
+      <p style="font-size: 0.55em; color: #cbd5e1; margin-bottom: 20px;">
+        今年父親節最好的禮物，是一份真誠的「注意力」
+      </p>
+      <div class="adv-grid">
+        <div class="adv-card accent-card">
+          <div class="adv-icon"><img src="images/icon_clock.png" alt="注意力"></div>
+          <div class="adv-title">專注的注意力</div>
+          <div class="adv-desc">放下手邊的事物，用完整的目光和耳朵，給予家人最珍貴的專注陪伴。</div>
+        </div>
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_heart.png" alt="接納"></div>
+          <div class="adv-title">無條件的接納</div>
+          <div class="adv-desc">為了家庭關係，願意放下自己的對錯邏輯，接納家人的不完美。</div>
+        </div>
+        <div class="adv-card">
+          <div class="adv-icon"><img src="images/icon_shield.png" alt="天父樣式"></div>
+          <div class="adv-title">活出天父樣式</div>
+          <div class="adv-desc">在地上的家庭中，效法天父那無條件、永不離線的完全之愛。</div>
+        </div>
+      </div>
+      <aside class="notes">
+        講師對白：所以，今年父親節最好的禮物，不是昂貴的襯衫或刮鬍刀，而是你的一份「注意力」。是你願意為了關係，放下自己的對錯與主見，為家人「停下來」的這份心意。當你這樣做，你就是在地上的家庭中，活出了天父的樣式。
+      </aside>
+    </section>
+
+    <!-- [Page 20: 總結與祝福禱告] -->
+    <section data-background-image="images/ending_slide.jpg"
+             data-background-opacity="0.3"
+             data-background-size="cover">
+      <div class="end-slide flex-center">
+        <h2>地上的連線偶有雜訊<br>天父的愛永遠在線</h2>
+        <div class="quote-box" style="width: 80%; border-left-color: var(--accent2);">
+          「用關係的邏輯取代對錯的邏輯，在安息中重啟與神、與人的愛之連線。」
+          <div class="quote-author">—— 杜崇信牧師 證道金句</div>
+        </div>
+        <p style="font-size:0.5em; color:var(--accent2); font-weight:700; margin-top:20px; text-shadow:0 0 10px rgba(79,195,247,0.3);">
+          祝天下所有地上的爸爸們，父親節快樂！阿們！
+        </p>
+      </div>
+      <aside class="notes">
+        講師對白：最後，讓我們一起來總結今天的證道。「地上的連線偶有雜訊，天父的愛永遠在線。」願上帝祝福我們每一位地上的父親，也賜給每一位做兒女的足夠的耐心與愛心，去更新我們家裡的連線。讓我們一起低頭禱告，求神醫治我們的缺憾，引導我們的家庭。阿們！
+      </aside>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  // 初始化 Reveal.js
+  Reveal.initialize({
+    hash: true,
+    transition: 'slide',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    center: true,
+    progress: true,
+    controls: true,
+    slideNumber: 'c/t',
+    width: 960,
+    height: 700,
+    margin: 0.1,
+    minScale: 0.2,
+    maxScale: 2.0,
+    plugins: []
+  });
+
+  // Page 9: 動態進度條動畫
+  Reveal.on('slidechanged', event => {
+    const isUpdateSlide = event.currentSlide && event.currentSlide.id === 'slide-update';
+    const barFill = document.getElementById('update-bar');
+    const textEl = document.getElementById('update-text');
+    
+    if (isUpdateSlide && barFill && textEl) {
+      // 重置並執行動畫
+      barFill.style.transition = 'none';
+      barFill.style.width = '0%';
+      textEl.textContent = '關係系統更新中... 0%';
+      
+      setTimeout(() => {
+        barFill.style.transition = 'width 3s cubic-bezier(0.1, 0.8, 0.3, 1)';
+        barFill.style.width = '100%';
+        
+        // 數字漸變動畫
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 4;
+          if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            textEl.textContent = '更新完成！系統已重啟 🚀';
+            textEl.style.color = 'var(--success)';
+            barFill.style.background = 'linear-gradient(90deg, var(--success), #a5d6a7)';
+            barFill.style.boxShadow = '0 0 15px var(--success)';
+          } else {
+            textEl.textContent = `關係系統更新中... ${progress}%`;
+          }
+        }, 100);
+      }, 100);
+    } else {
+      // 切離該頁時重置樣式
+      if (barFill && textEl) {
+        barFill.style.transition = 'none';
+        barFill.style.width = '0%';
+        barFill.style.background = 'linear-gradient(90deg, var(--accent2), #00e5ff)';
+        barFill.style.boxShadow = '0 0 15px var(--accent2)';
+        textEl.textContent = '關係系統更新中... 0%';
+        textEl.style.color = 'var(--accent2)';
+      }
+    }
+  });
+
+  // Page 12: VIZ 滑桿揭露效果
+  const vizSlider = document.getElementById('viz-slider');
+  const vizAfter = document.getElementById('viz-after');
+  const vizDivider = document.getElementById('viz-divider');
+  
+  if (vizSlider && vizAfter && vizDivider) {
+    vizSlider.addEventListener('input', function() {
+      const v = +this.value;
+      vizAfter.style.clipPath = `inset(0 ${100 - v}% 0 0)`;
+      vizDivider.style.left = v + '%';
+    });
+    
+    // 初始化位置
+    vizAfter.style.clipPath = 'inset(0 100% 0 0)';
+    vizDivider.style.left = '0%';
+  }
+</script>
+</body>
+</html>
