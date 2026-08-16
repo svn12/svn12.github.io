@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聖歌隊歌詞排版產生器</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-start: #0a0813;
+            --bg-end: #100d22;
+            --panel-bg: rgba(255, 255, 255, 0.03);
+            --panel-border: rgba(255, 255, 255, 0.07);
+            --primary-glow: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+            --button-hover: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%);
+            --accent-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --success-hover: linear-gradient(135deg, #059669 0%, #047857 100%);
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 2rem 1rem;
+        }
+
+        .glow-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: #4f46e5;
+            top: -100px;
+            left: -100px;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: #3b82f6;
+            bottom: -150px;
+            right: -150px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 40%, var(--text-sub) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--panel-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.005);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .drop-zone p {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        .drop-zone-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 380px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--text-main);
+            font-family: 'Courier New', Courier, monospace, 'Noto Sans TC';
+            font-size: 0.9rem;
+            line-height: 1.5;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .preview-area {
+            width: 100%;
+            height: 380px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #38bdf8;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            background: rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .control-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .control-desc {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .3s;
+            border-radius: 20px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 12px;
+            width: 12px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: var(--primary-glow);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .number-input {
+            width: 60px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            padding: 0.3rem;
+            border-radius: 6px;
+            text-align: center;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        @media (max-width: 500px) {
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            border: none;
+            padding: 1rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-copy {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--panel-border);
+        }
+
+        .btn-copy:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-download {
+            background: var(--accent-success);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-download:hover {
+            background: var(--success-hover);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+
+    <div class="container">
+        <header>
+            <h1>聖歌隊歌詞排版產生器</h1>
+            <p class="subtitle">自動解析作者、自動斷行、自動切頁與編排頁碼，只輸出純文字檔</p>
+        </header>
+
+        <main>
+            <div class="drop-zone" id="drop-zone">
+                <div class="drop-zone-icon">📄</div>
+                <p>將歌詞文字檔 (.txt) 拖曳到此處，或<strong>點擊選擇檔案</strong></p>
+                <input type="file" id="file-input" accept=".txt" style="display: none;">
+            </div>
+
+            <div class="main-layout">
+                <!-- Input Panel -->
+                <div>
+                    <div class="panel-title">📝 原始歌詞輸入</div>
+                    <textarea id="lyrics-textarea" placeholder="請貼上歌詞。&#10;如果啟用了「自動解析介紹」，前 5 行應為：歌名、團體、日期、指揮、司琴。"></textarea>
+                </div>
+                <!-- Output Panel -->
+                <div>
+                    <div class="panel-title">✨ 排版預覽結果</div>
+                    <div class="preview-area" id="preview-area"></div>
+                </div>
+            </div>
+
+            <!-- Controls Row -->
+            <div class="controls-row">
+                <div class="control-item">
+                    <div class="control-label">
+                        <span class="control-title">自動解析介紹</span>
+                        <span class="control-desc">自動分析前5行基本資訊與詞曲作者</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="auto-header" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="control-item">
+                    <div class="control-label">
+                        <span class="control-title">單行字數限制</span>
+                        <span class="control-desc">超過將自動於語意標點換行</span>
+                    </div>
+                    <input type="number" id="max-len" class="number-input" value="15" min="5" max="35">
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button class="btn btn-copy" id="btn-copy">📋 複製排版文字</button>
+                <button class="btn btn-download" id="btn-download">💾 下載排版檔案 (.txt)</button>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>南門教會聖歌隊專屬自動化工具 • Antigravity 2.0 Web SPA</p>
+    </footer>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const textarea = document.getElementById('lyrics-textarea');
+        const previewArea = document.getElementById('preview-area');
+        const btnCopy = document.getElementById('btn-copy');
+        const btnDownload = document.getElementById('btn-download');
+
+        // 監聽輸入即時渲染排版
+        textarea.addEventListener('input', updateLayout);
+        document.getElementById('auto-header').addEventListener('change', updateLayout);
+        document.getElementById('max-len').addEventListener('input', updateLayout);
+
+        // Drag & Drop
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        ['dragleave', 'drop'].forEach(evName => {
+            dropZone.addEventListener(evName, () => dropZone.classList.remove('dragover'));
+        });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file || !file.name.endsWith('.txt')) {
+                alert('請上傳純文字檔 (.txt)');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                textarea.value = e.target.result;
+                updateLayout();
+            };
+            reader.readAsText(file);
+        }
+
+        // 歌詞語意超長行分行演算法
+        function splitLongLine(line, maxLen = 15) {
+            line = line.trim();
+            if (line.length <= maxLen) {
+                return [line];
+            }
+            
+            const delimiters = [
+                /[，,；;！!？?。.]/,
+                /[\s　]/
+            ];
+            
+            let bestSplitIdx = -1;
+            let minDistToCenter = line.length;
+            const center = line.length / 2;
+            
+            for (let pattern of delimiters) {
+                let match;
+                const regex = new RegExp(pattern, 'g');
+                while ((match = regex.exec(line)) !== null) {
+                    const idx = match.index + match[0].length;
+                    const dist = Math.abs(idx - center);
+                    if (dist < minDistToCenter) {
+                        minDistToCenter = dist;
+                        bestSplitIdx = idx;
+                    }
+                }
+                if (bestSplitIdx !== -1) break;
+            }
+            
+            if (bestSplitIdx === -1 || bestSplitIdx === 0 || bestSplitIdx === line.length) {
+                bestSplitIdx = Math.floor(center);
+            }
+            
+            const left = line.substring(0, bestSplitIdx).trim();
+            const right = line.substring(bestSplitIdx).trim();
+            
+            return splitLongLine(left, maxLen).concat(splitLongLine(right, maxLen));
+        }
+
+        // 歌詞切頁 (每頁 linesPerPage 行)
+        function chunkRawLyrics(text, linesPerPage = 2, maxLen = 15) {
+            const rawLines = text.split('\n').map(l => l.trim()).filter(l => l);
+            const processedLines = [];
+            for (let line of rawLines) {
+                processedLines.push(...splitLongLine(line, maxLen));
+            }
+            
+            const pages = [];
+            let pageIdx = 1;
+            for (let i = 0; i < processedLines.length; i += linesPerPage) {
+                pages.push({
+                    page: `P${pageIdx}`,
+                    lines: processedLines.slice(i, i + linesPerPage)
+                });
+                pageIdx++;
+            }
+            return pages;
+        }
+
+        // 解析 Header 與作者
+        function parseAutoHeaderFile(content) {
+            const lines = content.split('\n').map(l => l.trim()).filter(l => l);
+            const metadata = {};
+            const lyricsLines = [];
+            
+            if (lines.length >= 1) metadata.title = lines[0];
+            if (lines.length >= 2) metadata.group = lines[1];
+            if (lines.length >= 3) metadata.date = lines[2];
+            if (lines.length >= 4) metadata.conductor_line = lines[3];
+            if (lines.length >= 5) metadata.accompanist_line = lines[4];
+            
+            let inHeader = true;
+            for (let i = 5; i < lines.length; i++) {
+                const line = lines[i];
+                if (inHeader) {
+                    let isIntro = false;
+                    if (line === metadata.title) {
+                        isIntro = true;
+                    } else if (/(words by|music_by|music by|詞曲|台語|翻譯|譯詞|指揮|司琴|伴奏|配器|arr\.|arranged by)/i.test(line)) {
+                        isIntro = true;
+                        if (/words\s+by/i.test(line)) {
+                            metadata.words_by = line.replace(/words\s+by\s*/i, '').trim();
+                        } else if (/music\s+by/i.test(line)) {
+                            metadata.music_by = line.replace(/music\s+by\s*/i, '').trim();
+                        } else if (/詞曲/.test(line)) {
+                            metadata.composer = line.replace(/^詞曲\s*/, '').trim();
+                        } else if (/台語/.test(line)) {
+                            metadata.translator = line.replace(/^台語\s*/, '').trim();
+                        }
+                    }
+                    
+                    if (isIntro) continue;
+                    else inHeader = false;
+                }
+                lyricsLines.push(line);
+            }
+            
+            return {
+                metadata: metadata,
+                lyricsText: lyricsLines.join('\n')
+            };
+        }
+
+        // 格式化輸出純文字排版
+        function formatOutputText(metadata, lyricsPages, autoHeader) {
+            let outputLines = [];
+            
+            if (autoHeader) {
+                const hasComposer = metadata.composer || metadata.translator || metadata.words_by || metadata.music_by;
+                const totalPages = hasComposer ? 4 : 3;
+                let pageIdx = 1;
+                
+                // 介紹頁 1: 歌名
+                outputLines.push(`P0-${pageIdx}/${totalPages}`);
+                outputLines.push(`\t${metadata.title || ''}`);
+                pageIdx++;
+                
+                // 介紹頁 2: 詞曲
+                if (hasComposer) {
+                    outputLines.push(`P0-${pageIdx}/${totalPages}`);
+                    if (metadata.words_by) outputLines.push(`\tWords by ${metadata.words_by}`);
+                    if (metadata.music_by) outputLines.push(`\tMusic by ${metadata.music_by}`);
+                    if (metadata.composer) outputLines.push(`\t詞曲 ${metadata.composer}`);
+                    if (metadata.translator) outputLines.push(`\t台語 ${metadata.translator}`);
+                    pageIdx++;
+                }
+                
+                // 介紹頁 3: 團體與日期
+                outputLines.push(`P0-${pageIdx}/${totalPages}`);
+                if (metadata.group) outputLines.push(`\t${metadata.group}`);
+                if (metadata.date) outputLines.push(`\t${metadata.date}`);
+                pageIdx++;
+                
+                // 介紹頁 4: 指揮與伴奏
+                outputLines.push(`P0-${pageIdx}/${totalPages}`);
+                if (metadata.conductor_line) outputLines.push(`\t${metadata.conductor_line}`);
+                if (metadata.accompanist_line) outputLines.push(`\t${metadata.accompanist_line}`);
+            }
+            
+            // 歌詞頁面
+            lyricsPages.forEach(page => {
+                outputLines.push(page.page);
+                page.lines.forEach(l => {
+                    outputLines.push(`\t${l}`);
+                });
+            });
+            
+            return outputLines.join('\n');
+        }
+
+        // 核心更新渲染函式
+        function updateLayout() {
+            const rawText = textarea.value.trim();
+            if (!rawText) {
+                previewArea.textContent = "";
+                return;
+            }
+
+            const autoHeader = document.getElementById('auto-header').checked;
+            const maxLen = parseInt(document.getElementById('max-len').value, 10) || 15;
+
+            let metadata = {};
+            let lyricsPages = [];
+
+            if (autoHeader) {
+                const parsed = parseAutoHeaderFile(rawText);
+                metadata = parsed.metadata;
+                lyricsPages = chunkRawLyrics(parsed.lyricsText, 2, maxLen);
+            } else {
+                metadata = { title: rawText.split('\n')[0].trim() || '歌詞字幕' };
+                lyricsPages = chunkRawLyrics(rawText, 2, maxLen);
+            }
+
+            const formattedText = formatOutputText(metadata, lyricsPages, autoHeader);
+            previewArea.textContent = formattedText;
+        }
+
+        // 複製排版文字
+        btnCopy.addEventListener('click', async () => {
+            const text = previewArea.textContent;
+            if (!text) {
+                alert('無排版文字可供複製！');
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(text);
+                alert('📋 複製成功！');
+            } catch (err) {
+                alert('複製失敗，請手動全選複製');
+            }
+        });
+
+        // 下載 UTF-16LE 帶 BOM 的 TXT 檔案 (確保 Notepad / PPTX 不亂碼)
+        btnDownload.addEventListener('click', () => {
+            const text = previewArea.textContent;
+            if (!text) {
+                alert('無排版文字可供下載！');
+                return;
+            }
+
+            const rawText = textarea.value.trim();
+            let title = '聖歌隊歌詞';
+            const firstLine = rawText.split('\n')[0].trim();
+            if (firstLine && firstLine.length < 30) {
+                title = firstLine;
+            }
+
+            // 將 JS 字串轉為 UTF-16LE 帶 BOM (0xFEFF) 結構
+            const buffer = new ArrayBuffer(2 + text.length * 2);
+            const view = new DataView(buffer);
+            
+            // 寫入 BOM
+            view.setUint16(0, 0xFEFF, true); // true = Little-Endian
+            
+            for (let i = 0; i < text.length; i++) {
+                view.setUint16(2 + i * 2, text.charCodeAt(i), true);
+            }
+
+            const blob = new Blob([buffer], { type: 'text/plain;charset=utf-16le' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${title}_排版後.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>
