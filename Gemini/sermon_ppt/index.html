@@ -103,7 +103,6 @@
             color: var(--text-sub);
         }
 
-        /* Tabs styling */
         .tabs-header {
             display: flex;
             background: rgba(0, 0, 0, 0.25);
@@ -231,7 +230,6 @@
             word-break: break-all;
         }
 
-        /* Scripture search styles */
         .bible-input-group {
             display: flex;
             flex-direction: column;
@@ -492,7 +490,7 @@
         </div>
 
         <main>
-            <!-- 1. 歌詞模式內容 -->
+            <!-- 歌詞模式檔案上傳 -->
             <div class="tab-content active" id="content-lyrics">
                 <div class="drop-zone" id="drop-zone">
                     <div class="drop-zone-icon">📄</div>
@@ -517,7 +515,7 @@
                         <div class="bible-input-group">
                             <div class="input-item">
                                 <label for="bible-qstr" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">引用經文範圍</label>
-                                <input type="text" id="bible-qstr" class="text-input" placeholder="例如: 馬太福音 5:14-16 或 太5:14.約17:14">
+                                <input type="text" id="bible-qstr" class="text-input" placeholder="例如: 耶利米書 36:1-8 或 耶36:1-8.林前1:21">
                             </div>
                             
                             <div class="input-item">
@@ -557,10 +555,10 @@
                     </label>
                 </div>
 
-                <div class="control-item">
+                <div class="control-item" id="ctrl-max-len">
                     <div class="control-label">
-                        <span class="control-title">單行字數限制</span>
-                        <span class="control-desc">超過將自動於語意標點換行</span>
+                        <span class="control-title">單行字數限制 (僅歌詞)</span>
+                        <span class="control-desc">歌詞超過將自動於語意標點換行</span>
                     </div>
                     <input type="number" id="max-len" class="number-input" value="15" min="5" max="35">
                 </div>
@@ -649,7 +647,7 @@
             "啟示錄": "啟", "Revelation": "啟", "Rev": "啟", "Re": "啟"
         };
 
-        let currentTab = 'lyrics'; // 'lyrics' | 'scripture'
+        let currentTab = 'lyrics'; 
         let currentFormattedResult = '';
 
         const dropZone = document.getElementById('drop-zone');
@@ -659,7 +657,6 @@
         const btnCopy = document.getElementById('btn-copy');
         const btnDownload = document.getElementById('btn-download');
 
-        // Tab 切換事件
         document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
         document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
 
@@ -673,16 +670,17 @@
                 document.getElementById('content-lyrics').classList.add('active');
                 document.getElementById('input-lyrics').classList.add('active');
                 document.getElementById('ctrl-auto-header').style.display = 'flex';
+                document.getElementById('ctrl-max-len').style.display = 'flex';
                 updateLyricsLayout();
             } else {
                 document.getElementById('tab-scripture').classList.add('active');
                 document.getElementById('input-scripture').classList.add('active');
                 document.getElementById('ctrl-auto-header').style.display = 'none';
+                document.getElementById('ctrl-max-len').style.display = 'none'; // 經文不需字數限制折行，直接提供
                 previewArea.textContent = currentFormattedResult;
             }
         }
 
-        // 歌詞輸入監聽即時排版
         textarea.addEventListener('input', updateLyricsLayout);
         document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
         document.getElementById('max-len').addEventListener('input', () => {
@@ -717,7 +715,7 @@
             reader.readAsText(file);
         }
 
-        // 歌詞語意分行
+        // 歌詞超長分分行
         function splitLongLine(line, maxLen = 15) {
             line = line.trim();
             if (line.length <= maxLen) {
@@ -821,7 +819,7 @@
             };
         }
 
-        // 歌詞格式化輸出
+        // 歌詞排版輸出
         function formatOutputText(metadata, lyricsPages, autoHeader) {
             let outputLines = [];
             
@@ -949,7 +947,8 @@
             return allRecords;
         }
 
-        function formatScriptureOutput(recordsZh, recordsTw, mode, maxLen = 15) {
+        // 經文排版輸出 (不用斷句，直接提供)
+        function formatScriptureOutput(recordsZh, recordsTw, mode) {
             let lines = [];
             
             if (mode === 'parallel') {
@@ -957,53 +956,39 @@
                     return "❌ 錯誤：中文與台語譯本節數不對等，無法進行逐節對照！";
                 }
                 
+                let outputLines = [];
+                let pageIdx = 1;
                 for (let i = 0; i < recordsZh.length; i++) {
                     const rZh = recordsZh[i];
                     const rTw = recordsTw[i];
                     const ref = `${rZh.book_short}${rZh.chapter}:${rZh.verse}`;
                     
-                    const zhPrefix = `${ref} 漢：`;
-                    const twPrefix = `${ref} 羅：`;
-                    
-                    // 防禦性長度
-                    const zhSubLen = Math.max(5, maxLen - zhPrefix.length);
-                    const twSubLen = Math.max(5, maxLen - twPrefix.length);
-                    
-                    const zhLines = splitLongLine(rZh.text, zhSubLen);
-                    const twLines = splitLongLine(rTw.text, twSubLen);
-                    
-                    lines.push(zhPrefix + zhLines[0]);
-                    for (let j = 1; j < zhLines.length; j++) lines.push(zhLines[j]);
-                    
-                    lines.push(twPrefix + twLines[0]);
-                    for (let j = 1; j < twLines.length; j++) lines.push(twLines[j]);
+                    outputLines.push(`P${pageIdx}`);
+                    outputLines.push(`\t${ref} 漢：${rZh.text}`);
+                    outputLines.push(`\t${ref} 羅：${rTw.text}`);
+                    pageIdx++;
                 }
+                return outputLines.join('\n');
             } else {
                 const records = (mode === 'tghg') ? recordsTw : recordsZh;
                 for (let r of records) {
                     const ref = `${r.book_short}${r.chapter}:${r.verse}`;
-                    const prefix = `${ref} `;
-                    const subLen = Math.max(5, maxLen - prefix.length);
-                    const subLines = splitLongLine(r.text, subLen);
-                    
-                    lines.push(prefix + subLines[0]);
-                    for (let j = 1; j < subLines.length; j++) lines.push(subLines[j]);
+                    lines.push(`${ref} ${r.text}`);
                 }
+                
+                // 單譯本：每兩節經文切分一頁
+                let outputLines = [];
+                let pageIdx = 1;
+                for (let i = 0; i < lines.length; i += 2) {
+                    const pageLines = lines.slice(i, i + 2);
+                    outputLines.push(`P${pageIdx}`);
+                    pageLines.forEach(l => {
+                        outputLines.push(`\t${l}`);
+                    });
+                    pageIdx++;
+                }
+                return outputLines.join('\n');
             }
-            
-            // 每 2 行切分投影片
-            let outputLines = [];
-            let pageIdx = 1;
-            for (let i = 0; i < lines.length; i += 2) {
-                const pageLines = lines.slice(i, i + 2);
-                outputLines.push(`P${pageIdx}`);
-                pageLines.forEach(l => {
-                    outputLines.push(`\t${l}`);
-                });
-                pageIdx++;
-            }
-            
-            return outputLines.join('\n');
         }
 
         // 點擊抓取並排版經文
@@ -1024,7 +1009,6 @@
             previewArea.textContent = "正在聯絡信望愛聖經 API...";
 
             const mode = document.getElementById('bible-version').value;
-            const maxLen = parseInt(document.getElementById('max-len').value, 10) || 15;
 
             try {
                 let recordsZh = [];
@@ -1037,7 +1021,7 @@
                     recordsTw = await fetchScripture(qstr, "tghg");
                 }
 
-                const resultText = formatScriptureOutput(recordsZh, recordsTw, mode, maxLen);
+                const resultText = formatScriptureOutput(recordsZh, recordsTw, mode);
                 previewArea.textContent = resultText;
                 currentFormattedResult = resultText;
             } catch (err) {
@@ -1091,11 +1075,8 @@
                 }
             }
 
-            // 將 JS 字串轉為 UTF-16LE 帶 BOM (0xFEFF)
             const buffer = new ArrayBuffer(2 + text.length * 2);
             const view = new DataView(buffer);
-            
-            // 寫入 BOM
             view.setUint16(0, 0xFEFF, true);
             
             for (let i = 0; i < text.length; i++) {
