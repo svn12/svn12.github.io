@@ -501,7 +501,7 @@
 
             <!-- 主排版區 -->
             <div class="main-layout">
-                <!-- 左側輸入區 (歌詞模式/經文模式動態切換) -->
+                <!-- 左側輸入區 -->
                 <div>
                     <!-- 歌詞輸入面板 -->
                     <div class="tab-content active" id="input-lyrics">
@@ -535,15 +535,15 @@
                     </div>
                 </div>
 
-                <!-- 右側輸出預覽區 (共用) -->
+                <!-- 右側輸出預覽區 -->
                 <div>
                     <div class="panel-title">✨ 排版預覽結果</div>
                     <div class="preview-area" id="preview-area"></div>
                 </div>
             </div>
 
-            <!-- 控制列 (共用 & 歌詞模式專屬) -->
-            <div class="controls-row">
+            <!-- 控制列 (歌詞模式專屬) -->
+            <div class="controls-row" id="controls-row-lyrics">
                 <div class="control-item" id="ctrl-auto-header">
                     <div class="control-label">
                         <span class="control-title">自動解析介紹</span>
@@ -557,7 +557,7 @@
 
                 <div class="control-item" id="ctrl-max-len">
                     <div class="control-label">
-                        <span class="control-title">單行字數限制 (僅歌詞)</span>
+                        <span class="control-title">單行字數限制</span>
                         <span class="control-desc">歌詞超過將自動於語意標點換行</span>
                     </div>
                     <input type="number" id="max-len" class="number-input" value="15" min="5" max="35">
@@ -669,14 +669,12 @@
                 document.getElementById('tab-lyrics').classList.add('active');
                 document.getElementById('content-lyrics').classList.add('active');
                 document.getElementById('input-lyrics').classList.add('active');
-                document.getElementById('ctrl-auto-header').style.display = 'flex';
-                document.getElementById('ctrl-max-len').style.display = 'flex';
+                document.getElementById('controls-row-lyrics').style.display = 'flex';
                 updateLyricsLayout();
             } else {
                 document.getElementById('tab-scripture').classList.add('active');
                 document.getElementById('input-scripture').classList.add('active');
-                document.getElementById('ctrl-auto-header').style.display = 'none';
-                document.getElementById('ctrl-max-len').style.display = 'none'; // 經文不需字數限制折行，直接提供
+                document.getElementById('controls-row-lyrics').style.display = 'none'; // 經文不需控制列
                 previewArea.textContent = currentFormattedResult;
             }
         }
@@ -715,7 +713,7 @@
             reader.readAsText(file);
         }
 
-        // 歌詞超長分分行
+        // 歌詞語意分行
         function splitLongLine(line, maxLen = 15) {
             line = line.trim();
             if (line.length <= maxLen) {
@@ -888,7 +886,7 @@
             currentFormattedResult = formattedText;
         }
 
-        // 聖經經文抓取與排版邏輯
+        // 聖經經文抓取與對照
         function cleanHtml(rawHtml) {
             if (!rawHtml) return "";
             let clean = rawHtml.replace(/<.*?>/g, "");
@@ -918,7 +916,7 @@
             for (let sq of subQueries) {
                 const normalizedQ = normalizeQstr(sq);
                 const encodedQ = encodeURIComponent(normalizedQ);
-                const url = `https://bible.fhl.net/json/qsb.php?version=${version}&qstr=${encodedQ}`;
+                const url = `https://bible.fhl.net/json/qsb.php?version={version}&qstr=${encodedQ}`.replace('{version}', version);
                 
                 try {
                     const res = await fetch(url);
@@ -947,48 +945,32 @@
             return allRecords;
         }
 
-        // 經文排版輸出 (不用斷句，直接提供)
+        // 經文格式化輸出 (不用斷句，不用切頁，直接整段輸出)
         function formatScriptureOutput(recordsZh, recordsTw, mode) {
-            let lines = [];
+            let outputLines = [];
             
             if (mode === 'parallel') {
                 if (recordsZh.length !== recordsTw.length) {
                     return "❌ 錯誤：中文與台語譯本節數不對等，無法進行逐節對照！";
                 }
                 
-                let outputLines = [];
-                let pageIdx = 1;
                 for (let i = 0; i < recordsZh.length; i++) {
                     const rZh = recordsZh[i];
                     const rTw = recordsTw[i];
                     const ref = `${rZh.book_short}${rZh.chapter}:${rZh.verse}`;
                     
-                    outputLines.push(`P${pageIdx}`);
-                    outputLines.push(`\t${ref} 漢：${rZh.text}`);
-                    outputLines.push(`\t${ref} 羅：${rTw.text}`);
-                    pageIdx++;
+                    outputLines.push(`${ref} 漢：${rZh.text}`);
+                    outputLines.push(`${ref} 羅：${rTw.text}`);
                 }
-                return outputLines.join('\n');
             } else {
                 const records = (mode === 'tghg') ? recordsTw : recordsZh;
                 for (let r of records) {
                     const ref = `${r.book_short}${r.chapter}:${r.verse}`;
-                    lines.push(`${ref} ${r.text}`);
+                    outputLines.push(`${ref} ${r.text}`);
                 }
-                
-                // 單譯本：每兩節經文切分一頁
-                let outputLines = [];
-                let pageIdx = 1;
-                for (let i = 0; i < lines.length; i += 2) {
-                    const pageLines = lines.slice(i, i + 2);
-                    outputLines.push(`P${pageIdx}`);
-                    pageLines.forEach(l => {
-                        outputLines.push(`\t${l}`);
-                    });
-                    pageIdx++;
-                }
-                return outputLines.join('\n');
             }
+            
+            return outputLines.join('\n');
         }
 
         // 點擊抓取並排版經文
