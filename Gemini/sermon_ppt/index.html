@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>聖歌隊歌詞排版產生器</title>
+    <title>南門教會主日排版助手</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,8 +11,8 @@
     
     <style>
         :root {
-            --bg-start: #0a0813;
-            --bg-end: #100d22;
+            --bg-start: #080612;
+            --bg-end: #0f0c20;
             --panel-bg: rgba(255, 255, 255, 0.03);
             --panel-border: rgba(255, 255, 255, 0.07);
             --primary-glow: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
@@ -32,7 +32,7 @@
         }
 
         body {
-            font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
             color: var(--text-main);
             min-height: 100vh;
@@ -50,7 +50,7 @@
             filter: blur(120px);
             z-index: 0;
             pointer-events: none;
-            opacity: 0.3;
+            opacity: 0.25;
         }
 
         .blob-1 {
@@ -71,14 +71,14 @@
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border-radius: 24px;
             padding: 2.5rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
             z-index: 10;
             position: relative;
         }
@@ -103,10 +103,52 @@
             color: var(--text-sub);
         }
 
+        /* Tabs styling */
+        .tabs-header {
+            display: flex;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 0.35rem;
+            margin-bottom: 1.8rem;
+            gap: 0.3rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-glow);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .drop-zone {
             border: 2px dashed var(--panel-border);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.3rem;
             text-align: center;
             background: rgba(255, 255, 255, 0.005);
             cursor: pointer;
@@ -120,20 +162,20 @@
         }
 
         .drop-zone p {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-sub);
         }
 
         .drop-zone-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
         }
 
         .main-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.8rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
         }
 
         @media (max-width: 768px) {
@@ -187,6 +229,99 @@
             overflow-y: auto;
             white-space: pre-wrap;
             word-break: break-all;
+        }
+
+        /* Scripture search styles */
+        .bible-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            height: 380px;
+            justify-content: flex-start;
+        }
+
+        .input-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            color: white;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: #100e23;
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            color: white;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .select-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn-action {
+            width: 100%;
+            background: var(--primary-glow);
+            border: none;
+            padding: 1rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-action:hover {
+            background: var(--button-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-action:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .controls-row {
@@ -346,33 +481,72 @@
 
     <div class="container">
         <header>
-            <h1>聖歌隊歌詞排版產生器</h1>
-            <p class="subtitle">自動解析作者、自動斷行、自動切頁與編排頁碼，只輸出純文字檔</p>
+            <h1>南門教會主日排版助手</h1>
+            <p class="subtitle">歌詞與經文的一鍵排版工具，專門輸出免跑版的純文字字幕對照檔</p>
         </header>
 
+        <!-- Tabs Header -->
+        <div class="tabs-header">
+            <button class="tab-btn active" id="tab-lyrics">🎵 聖歌隊歌詞排版</button>
+            <button class="tab-btn" id="tab-scripture">📖 聖經經文抓取</button>
+        </div>
+
         <main>
-            <div class="drop-zone" id="drop-zone">
-                <div class="drop-zone-icon">📄</div>
-                <p>將歌詞文字檔 (.txt) 拖曳到此處，或<strong>點擊選擇檔案</strong></p>
-                <input type="file" id="file-input" accept=".txt" style="display: none;">
+            <!-- 1. 歌詞模式內容 -->
+            <div class="tab-content active" id="content-lyrics">
+                <div class="drop-zone" id="drop-zone">
+                    <div class="drop-zone-icon">📄</div>
+                    <p>將歌詞文字檔 (.txt) 拖曳到此處，或<strong>點擊選擇檔案</strong></p>
+                    <input type="file" id="file-input" accept=".txt" style="display: none;">
+                </div>
             </div>
 
+            <!-- 主排版區 -->
             <div class="main-layout">
-                <!-- Input Panel -->
+                <!-- 左側輸入區 (歌詞模式/經文模式動態切換) -->
                 <div>
-                    <div class="panel-title">📝 原始歌詞輸入</div>
-                    <textarea id="lyrics-textarea" placeholder="請貼上歌詞。&#10;如果啟用了「自動解析介紹」，前 5 行應為：歌名、團體、日期、指揮、司琴。"></textarea>
+                    <!-- 歌詞輸入面板 -->
+                    <div class="tab-content active" id="input-lyrics">
+                        <div class="panel-title">📝 原始歌詞輸入</div>
+                        <textarea id="lyrics-textarea" placeholder="請在此貼上歌詞。&#10;如果啟用了「自動解析介紹」，前 5 行應為：歌名、團體、日期、指揮、司琴。"></textarea>
+                    </div>
+
+                    <!-- 經文輸入面板 -->
+                    <div class="tab-content" id="input-scripture">
+                        <div class="panel-title">🔍 經文抓取設定</div>
+                        <div class="bible-input-group">
+                            <div class="input-item">
+                                <label for="bible-qstr" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">引用經文範圍</label>
+                                <input type="text" id="bible-qstr" class="text-input" placeholder="例如: 馬太福音 5:14-16 或 太5:14.約17:14">
+                            </div>
+                            
+                            <div class="input-item">
+                                <label for="bible-version" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">譯本選擇</label>
+                                <select id="bible-version" class="select-input">
+                                    <option value="parallel">中台譯本逐節對照 (和合本2010 + 台語巴克禮)</option>
+                                    <option value="rcuv">中文和合本2010 (rcuv)</option>
+                                    <option value="tghg">台語巴克禮台漢本 (tghg)</option>
+                                </select>
+                            </div>
+
+                            <button class="btn-action" id="btn-fetch-bible">
+                                <div class="spinner" id="fetch-spinner"></div>
+                                <span id="fetch-btn-text">🚀 抓取並排版經文</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <!-- Output Panel -->
+
+                <!-- 右側輸出預覽區 (共用) -->
                 <div>
                     <div class="panel-title">✨ 排版預覽結果</div>
                     <div class="preview-area" id="preview-area"></div>
                 </div>
             </div>
 
-            <!-- Controls Row -->
+            <!-- 控制列 (共用 & 歌詞模式專屬) -->
             <div class="controls-row">
-                <div class="control-item">
+                <div class="control-item" id="ctrl-auto-header">
                     <div class="control-label">
                         <span class="control-title">自動解析介紹</span>
                         <span class="control-desc">自動分析前5行基本資訊與詞曲作者</span>
@@ -392,7 +566,7 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
+            <!-- 共用操作按鈕 -->
             <div class="button-group">
                 <button class="btn btn-copy" id="btn-copy">📋 複製排版文字</button>
                 <button class="btn btn-download" id="btn-download">💾 下載排版檔案 (.txt)</button>
@@ -401,10 +575,83 @@
     </div>
 
     <footer>
-        <p>南門教會聖歌隊專屬自動化工具 • Antigravity 2.0 Web SPA</p>
+        <p>南門教會主日專屬自動化工具 • Antigravity 2.0 Web SPA</p>
     </footer>
 
     <script>
+        // 聖經卷名對照表
+        const BIBLE_BOOKS_MAP = {
+            "創世記": "創", "Genesis": "創", "Gen": "創", "Ge": "創",
+            "出埃及記": "出", "Exodus": "出", "Ex": "出",
+            "利未記": "利", "Leviticus": "利", "Lev": "利", "Le": "利",
+            "民數記": "民", "Numbers": "民", "Num": "民", "Nu": "民",
+            "申命記": "申", "Deuteronomy": "申", "Deut": "申", "De": "申",
+            "約書亞記": "書", "Joshua": "書", "Josh": "書", "Jos": "書",
+            "士師記": "士", "Judges": "士", "Judg": "士", "Jud": "士",
+            "路得記": "得", "Ruth": "得", "Ru": "得",
+            "撒母耳記上": "撒上", "First Samuel": "撒上", "1 Sam": "撒上", "1Sa": "撒上",
+            "撒母耳記下": "撒下", "Second Samuel": "撒下", "2 Sam": "撒下", "2Sa": "撒下",
+            "列王紀上": "王上", "First Kings": "王上", "1 Kin": "王上", "1Ki": "王上",
+            "列王紀下": "王下", "Second Kings": "王下", "2 Kin": "王下", "2Ki": "王下",
+            "歷代志上": "代上", "First Chronicles": "代上", "1 Chr": "代上", "1Ch": "代上",
+            "歷代志下": "代下", "Second Chronicles": "代下", "2 Chr": "代下", "2Ch": "代下",
+            "以斯拉記": "拉", "Ezra": "拉", "Ezr": "拉",
+            "尼希米記": "尼", "Neh": "尼", "Ne": "尼",
+            "以斯帖記": "斯", "Esther": "斯", "Esth": "斯", "Es": "斯",
+            "約伯記": "伯", "Job": "伯",
+            "詩篇": "詩", "Psalms": "詩", "Ps": "詩",
+            "箴言": "箴", "Proverbs": "箴", "Prov": "箴", "Pr": "箴",
+            "傳道書": "傳", "Ecclesiastes": "傳", "Eccl": "傳", "Ec": "傳",
+            "雅歌": "歌", "Song of Solomon": "歌", "Song": "歌", "So": "歌",
+            "以賽亞書": "賽", "Isaiah": "賽", "Is": "賽", "Isa": "賽",
+            "耶利米書": "耶", "Jeremiah": "耶", "Jer": "耶",
+            "耶利米哀歌": "哀", "Lamentations": "哀", "Lam": "哀", "La": "哀",
+            "以西結書": "結", "Ezekiel": "結", "Ezek": "結", "Eze": "結",
+            "但以理書": "但", "Daniel": "但", "Dan": "但", "Da": "但",
+            "何西阿書": "何", "Hosea": "何", "Hos": "何", "Ho": "何",
+            "約珥書": "珥", "Joel": "珥", "Joe": "珥",
+            "阿摩司書": "摩", "Amos": "摩", "Am": "摩",
+            "俄巴底亞書": "俄", "Obadiah": "俄", "Obad": "俄", "Ob": "俄",
+            "約拿書": "拿", "Jonah": "拿", "Jon": "拿",
+            "彌迦書": "彌", "Micah": "彌", "Mic": "彌",
+            "那鴻書": "鴻", "Nahum": "鴻", "Nah": "鴻", "Na": "鴻",
+            "哈巴谷書": "哈", "Habakkuk": "哈", "Hab": "哈",
+            "西番雅書": "番", "Zephaniah": "番", "Zeph": "番", "Zep": "番",
+            "哈該書": "該", "Haggai": "該", "Hag": "該",
+            "撒迦利亞書": "亞", "Zechariah": "亞", "Zech": "亞", "Zec": "亞",
+            "瑪拉基書": "瑪", "Malachi": "瑪", "Mal": "瑪",
+            "馬太福音": "太", "Matthew": "太", "Matt": "太", "Mt": "太",
+            "馬可福音": "可", "Mark": "可", "Mr": "可",
+            "路加福音": "路", "Luke": "路", "Lu": "路",
+            "約翰福音": "約", "約hn福音": "約", "John": "約", "Joh": "約",
+            "使徒行傳": "徒", "Acts": "徒", "Ac": "徒",
+            "羅馬書": "羅", "Romans": "羅", "Ro": "羅",
+            "哥林多前書": "林前", "First Corinthians": "林前", "1 Cor": "林前", "1Co": "林前",
+            "哥林多後書": "林後", "Second Corinthians": "林後", "2 Cor": "林後", "2Co": "林後",
+            "加拉太書": "加", "Galatians": "加", "Gal": "加", "Ga": "加",
+            "以弗所書": "弗", "Ephesians": "弗", "Eph": "弗",
+            "腓立比書": "腓", "Philippians": "腓", "Phil": "腓", "Php": "腓",
+            "歌羅西書": "西", "Colossians": "西", "Col": "西",
+            "帖撒羅尼迦前書": "帖前", "First Thessalonians": "帖前", "1 Thess": "帖前", "1Th": "帖前",
+            "帖撒羅尼迦後書": "帖後", "Second Thessalonians": "帖後", "2 Thess": "帖後", "2Th": "帖後",
+            "提摩太前書": "提前", "First Timothy": "提前", "1 Tim": "提前", "1Ti": "提前",
+            "提摩太後書": "提後", "Second Timothy": "提後", "2 Tim": "提後", "2Ti": "提後",
+            "提多書": "多", "Titus": "多", "Tit": "多",
+            "腓利門書": "門", "Philemon": "門", "Philem": "門", "Phm": "門",
+            "希伯來書": "來", "Hebrews": "來", "Heb": "來",
+            "雅各書": "雅", "James": "雅", "Jas": "雅",
+            "彼得前書": "彼前", "First Peter": "彼前", "1 Pet": "彼前", "1Pe": "彼前",
+            "彼得後書": "彼後", "Second Peter": "彼後", "2 Pet": "彼後", "2Pe": "彼後",
+            "約約一書": "約一", "約翰一書": "約一", "First John": "約一", "1 John": "約一", "1Jo": "約一",
+            "約約二書": "約二", "約翰二書": "約二", "Second John": "約二", "2 John": "約二", "2Jo": "約二",
+            "約約三書": "約三", "約翰三書": "約三", "Third John": "約三", "3 John": "約三", "3Jo": "約三",
+            "猶大書": "猶", "Jude": "猶",
+            "啟示錄": "啟", "Revelation": "啟", "Rev": "啟", "Re": "啟"
+        };
+
+        let currentTab = 'lyrics'; // 'lyrics' | 'scripture'
+        let currentFormattedResult = '';
+
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const textarea = document.getElementById('lyrics-textarea');
@@ -412,10 +659,35 @@
         const btnCopy = document.getElementById('btn-copy');
         const btnDownload = document.getElementById('btn-download');
 
-        // 監聽輸入即時渲染排版
-        textarea.addEventListener('input', updateLayout);
-        document.getElementById('auto-header').addEventListener('change', updateLayout);
-        document.getElementById('max-len').addEventListener('input', updateLayout);
+        // Tab 切換事件
+        document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
+        document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'lyrics') {
+                document.getElementById('tab-lyrics').classList.add('active');
+                document.getElementById('content-lyrics').classList.add('active');
+                document.getElementById('input-lyrics').classList.add('active');
+                document.getElementById('ctrl-auto-header').style.display = 'flex';
+                updateLyricsLayout();
+            } else {
+                document.getElementById('tab-scripture').classList.add('active');
+                document.getElementById('input-scripture').classList.add('active');
+                document.getElementById('ctrl-auto-header').style.display = 'none';
+                previewArea.textContent = currentFormattedResult;
+            }
+        }
+
+        // 歌詞輸入監聽即時排版
+        textarea.addEventListener('input', updateLyricsLayout);
+        document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
+        document.getElementById('max-len').addEventListener('input', () => {
+            if (currentTab === 'lyrics') updateLyricsLayout();
+        });
 
         // Drag & Drop
         dropZone.addEventListener('click', () => fileInput.click());
@@ -440,12 +712,12 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 textarea.value = e.target.result;
-                updateLayout();
+                updateLyricsLayout();
             };
             reader.readAsText(file);
         }
 
-        // 歌詞語意超長行分行演算法
+        // 歌詞語意分行
         function splitLongLine(line, maxLen = 15) {
             line = line.trim();
             if (line.length <= maxLen) {
@@ -485,7 +757,7 @@
             return splitLongLine(left, maxLen).concat(splitLongLine(right, maxLen));
         }
 
-        // 歌詞切頁 (每頁 linesPerPage 行)
+        // 歌詞切頁
         function chunkRawLyrics(text, linesPerPage = 2, maxLen = 15) {
             const rawLines = text.split('\n').map(l => l.trim()).filter(l => l);
             const processedLines = [];
@@ -505,7 +777,7 @@
             return pages;
         }
 
-        // 解析 Header 與作者
+        // 歌詞解析 Header
         function parseAutoHeaderFile(content) {
             const lines = content.split('\n').map(l => l.trim()).filter(l => l);
             const metadata = {};
@@ -549,7 +821,7 @@
             };
         }
 
-        // 格式化輸出純文字排版
+        // 歌詞格式化輸出
         function formatOutputText(metadata, lyricsPages, autoHeader) {
             let outputLines = [];
             
@@ -558,12 +830,10 @@
                 const totalPages = hasComposer ? 4 : 3;
                 let pageIdx = 1;
                 
-                // 介紹頁 1: 歌名
                 outputLines.push(`P0-${pageIdx}/${totalPages}`);
                 outputLines.push(`\t${metadata.title || ''}`);
                 pageIdx++;
                 
-                // 介紹頁 2: 詞曲
                 if (hasComposer) {
                     outputLines.push(`P0-${pageIdx}/${totalPages}`);
                     if (metadata.words_by) outputLines.push(`\tWords by ${metadata.words_by}`);
@@ -573,19 +843,16 @@
                     pageIdx++;
                 }
                 
-                // 介紹頁 3: 團體與日期
                 outputLines.push(`P0-${pageIdx}/${totalPages}`);
                 if (metadata.group) outputLines.push(`\t${metadata.group}`);
                 if (metadata.date) outputLines.push(`\t${metadata.date}`);
                 pageIdx++;
                 
-                // 介紹頁 4: 指揮與伴奏
                 outputLines.push(`P0-${pageIdx}/${totalPages}`);
                 if (metadata.conductor_line) outputLines.push(`\t${metadata.conductor_line}`);
                 if (metadata.accompanist_line) outputLines.push(`\t${metadata.accompanist_line}`);
             }
             
-            // 歌詞頁面
             lyricsPages.forEach(page => {
                 outputLines.push(page.page);
                 page.lines.forEach(l => {
@@ -596,8 +863,7 @@
             return outputLines.join('\n');
         }
 
-        // 核心更新渲染函式
-        function updateLayout() {
+        function updateLyricsLayout() {
             const rawText = textarea.value.trim();
             if (!rawText) {
                 previewArea.textContent = "";
@@ -621,9 +887,170 @@
 
             const formattedText = formatOutputText(metadata, lyricsPages, autoHeader);
             previewArea.textContent = formattedText;
+            currentFormattedResult = formattedText;
         }
 
-        // 複製排版文字
+        // 聖經經文抓取與排版邏輯
+        function cleanHtml(rawHtml) {
+            if (!rawHtml) return "";
+            let clean = rawHtml.replace(/<.*?>/g, "");
+            clean = clean.replace(/[#|]/g, "");
+            return clean.replace(/\s+/g, " ").trim();
+        }
+
+        function normalizeQstr(qstr) {
+            const sortedKeys = Object.keys(BIBLE_BOOKS_MAP).sort((a, b) => b.length - a.length);
+            let normalized = qstr;
+            for (let key of sortedKeys) {
+                const val = BIBLE_BOOKS_MAP[key];
+                if (/^[A-Za-z0-9 ]+$/.test(key)) {
+                    const pattern = new RegExp('\\b' + key + '\\b', 'gi');
+                    normalized = normalized.replace(pattern, val);
+                } else {
+                    normalized = normalized.split(key).join(val);
+                }
+            }
+            return normalized.replace(/\s+/g, "");
+        }
+
+        async function fetchScripture(qstr, version = "rcuv") {
+            const subQueries = qstr.split('.').map(q => q.trim()).filter(q => q);
+            let allRecords = [];
+            
+            for (let sq of subQueries) {
+                const normalizedQ = normalizeQstr(sq);
+                const encodedQ = encodeURIComponent(normalizedQ);
+                const url = `https://bible.fhl.net/json/qsb.php?version=${version}&qstr=${encodedQ}`;
+                
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) continue;
+                    const data = await res.json();
+                    if (data.status !== "success") continue;
+                    
+                    const records = data.record || [];
+                    for (let r of records) {
+                        allRecords.push({
+                            book_short: r.chineses || "",
+                            chapter: r.chap,
+                            verse: r.sec,
+                            text: cleanHtml(r.bible_text || "")
+                        });
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+            
+            if (allRecords.length === 0) {
+                throw new Error("找不到符合的經文內容，請檢查引用格式是否正確。");
+            }
+            
+            return allRecords;
+        }
+
+        function formatScriptureOutput(recordsZh, recordsTw, mode, maxLen = 15) {
+            let lines = [];
+            
+            if (mode === 'parallel') {
+                if (recordsZh.length !== recordsTw.length) {
+                    return "❌ 錯誤：中文與台語譯本節數不對等，無法進行逐節對照！";
+                }
+                
+                for (let i = 0; i < recordsZh.length; i++) {
+                    const rZh = recordsZh[i];
+                    const rTw = recordsTw[i];
+                    const ref = `${rZh.book_short}${rZh.chapter}:${rZh.verse}`;
+                    
+                    const zhPrefix = `${ref} 漢：`;
+                    const twPrefix = `${ref} 羅：`;
+                    
+                    // 防禦性長度
+                    const zhSubLen = Math.max(5, maxLen - zhPrefix.length);
+                    const twSubLen = Math.max(5, maxLen - twPrefix.length);
+                    
+                    const zhLines = splitLongLine(rZh.text, zhSubLen);
+                    const twLines = splitLongLine(rTw.text, twSubLen);
+                    
+                    lines.push(zhPrefix + zhLines[0]);
+                    for (let j = 1; j < zhLines.length; j++) lines.push(zhLines[j]);
+                    
+                    lines.push(twPrefix + twLines[0]);
+                    for (let j = 1; j < twLines.length; j++) lines.push(twLines[j]);
+                }
+            } else {
+                const records = (mode === 'tghg') ? recordsTw : recordsZh;
+                for (let r of records) {
+                    const ref = `${r.book_short}${r.chapter}:${r.verse}`;
+                    const prefix = `${ref} `;
+                    const subLen = Math.max(5, maxLen - prefix.length);
+                    const subLines = splitLongLine(r.text, subLen);
+                    
+                    lines.push(prefix + subLines[0]);
+                    for (let j = 1; j < subLines.length; j++) lines.push(subLines[j]);
+                }
+            }
+            
+            // 每 2 行切分投影片
+            let outputLines = [];
+            let pageIdx = 1;
+            for (let i = 0; i < lines.length; i += 2) {
+                const pageLines = lines.slice(i, i + 2);
+                outputLines.push(`P${pageIdx}`);
+                pageLines.forEach(l => {
+                    outputLines.push(`\t${l}`);
+                });
+                pageIdx++;
+            }
+            
+            return outputLines.join('\n');
+        }
+
+        // 點擊抓取並排版經文
+        const btnFetch = document.getElementById('btn-fetch-bible');
+        const fetchSpinner = document.getElementById('fetch-spinner');
+        const fetchBtnText = document.getElementById('fetch-btn-text');
+
+        btnFetch.addEventListener('click', async () => {
+            const qstr = document.getElementById('bible-qstr').value.trim();
+            if (!qstr) {
+                alert("請輸入要查詢的經文！");
+                return;
+            }
+
+            btnFetch.disabled = true;
+            fetchSpinner.style.display = 'block';
+            fetchBtnText.textContent = '經文抓取中...';
+            previewArea.textContent = "正在聯絡信望愛聖經 API...";
+
+            const mode = document.getElementById('bible-version').value;
+            const maxLen = parseInt(document.getElementById('max-len').value, 10) || 15;
+
+            try {
+                let recordsZh = [];
+                let recordsTw = [];
+
+                if (mode === 'parallel' || mode === 'rcuv') {
+                    recordsZh = await fetchScripture(qstr, "rcuv");
+                }
+                if (mode === 'parallel' || mode === 'tghg') {
+                    recordsTw = await fetchScripture(qstr, "tghg");
+                }
+
+                const resultText = formatScriptureOutput(recordsZh, recordsTw, mode, maxLen);
+                previewArea.textContent = resultText;
+                currentFormattedResult = resultText;
+            } catch (err) {
+                alert(`抓取失敗: ${err.message}`);
+                previewArea.textContent = `❌ 錯誤: ${err.message}`;
+            } finally {
+                btnFetch.disabled = false;
+                fetchSpinner.style.display = 'none';
+                fetchBtnText.textContent = '🚀 抓取並排版經文';
+            }
+        });
+
+        // 複製排版文字 (共用)
         btnCopy.addEventListener('click', async () => {
             const text = previewArea.textContent;
             if (!text) {
@@ -638,7 +1065,7 @@
             }
         });
 
-        // 下載 UTF-16LE 帶 BOM 的 TXT 檔案 (確保 Notepad / PPTX 不亂碼)
+        // 下載 UTF-16LE 帶 BOM 的 TXT 檔案 (共用)
         btnDownload.addEventListener('click', () => {
             const text = previewArea.textContent;
             if (!text) {
@@ -646,19 +1073,30 @@
                 return;
             }
 
-            const rawText = textarea.value.trim();
-            let title = '聖歌隊歌詞';
-            const firstLine = rawText.split('\n')[0].trim();
-            if (firstLine && firstLine.length < 30) {
-                title = firstLine;
+            let title = '排版結果';
+            if (currentTab === 'lyrics') {
+                const rawText = textarea.value.trim();
+                const firstLine = rawText.split('\n')[0].trim();
+                if (firstLine && firstLine.length < 30) {
+                    title = `${firstLine}_排版後`;
+                } else {
+                    title = '聖歌隊歌詞_排版後';
+                }
+            } else {
+                const qstr = document.getElementById('bible-qstr').value.trim();
+                if (qstr) {
+                    title = `經文_${qstr}_排版後`;
+                } else {
+                    title = '聖經經文_排版後';
+                }
             }
 
-            // 將 JS 字串轉為 UTF-16LE 帶 BOM (0xFEFF) 結構
+            // 將 JS 字串轉為 UTF-16LE 帶 BOM (0xFEFF)
             const buffer = new ArrayBuffer(2 + text.length * 2);
             const view = new DataView(buffer);
             
             // 寫入 BOM
-            view.setUint16(0, 0xFEFF, true); // true = Little-Endian
+            view.setUint16(0, 0xFEFF, true);
             
             for (let i = 0; i < text.length; i++) {
                 view.setUint16(2 + i * 2, text.charCodeAt(i), true);
@@ -668,7 +1106,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${title}_排版後.txt`;
+            a.download = `${title}.txt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
