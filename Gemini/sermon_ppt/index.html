@@ -942,7 +942,7 @@
             for (let sq of subQueries) {
                 const normalizedQ = normalizeQstr(sq);
                 const encodedQ = encodeURIComponent(normalizedQ);
-                const url = `https://bible.fhl.net/json/qsb.php?version={version}&qstr={encodedQ}`.replace('{version}', version);
+                const url = `https://bible.fhl.net/json/qsb.php?version=${version}&qstr=${encodedQ}`;
                 
                 try {
                     const res = await fetch(url);
