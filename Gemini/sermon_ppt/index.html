@@ -23,6 +23,7 @@
             --text-sub: #94a3b8;
             --accent: #3b82f6;
             --accent-glow: rgba(59, 130, 246, 0.15);
+            --accent-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
 
         * {
@@ -71,7 +72,7 @@
 
         .container {
             width: 100%;
-            max-width: 950px;
+            max-width: 980px;
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             backdrop-filter: blur(24px);
@@ -242,6 +243,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.4rem;
+            position: relative;
         }
 
         .text-input {
@@ -465,6 +467,147 @@
             transform: translateY(0);
         }
 
+        /* 聖詩/啟應文專用樣式 */
+        .hymns-table-wrapper {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            margin-top: 1.2rem;
+            overflow-x: auto;
+        }
+
+        .hymns-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .hymns-table th {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+            padding: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .hymns-table td {
+            padding: 0.8rem 0.9rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-sub);
+            vertical-align: middle;
+        }
+
+        .hymns-table tr:hover td {
+            color: white;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .hymns-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.35rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-link-db {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-link-db:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-link-gd {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-link-gd:hover {
+            background: var(--accent-warning);
+            color: white;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-link-yt {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-link-yt:hover {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+        }
+
+        .yt-player-box {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--panel-border);
+            margin-top: 1.5rem;
+            position: relative;
+            background: black;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            aspect-ratio: 16/9;
+        }
+
+        .yt-player-box iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            background: rgba(16, 14, 35, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 250px;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            margin-top: 0.3rem;
+        }
+
+        .autocomplete-items div {
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-sub);
+            transition: all 0.2s ease;
+        }
+
+        .autocomplete-items div:hover {
+            background: rgba(99, 102, 241, 0.15);
+            color: white;
+        }
+
+        .autocomplete-active {
+            background: var(--primary-glow) !important;
+            color: white !important;
+        }
+
         footer {
             margin-top: 2rem;
             font-size: 0.8rem;
@@ -487,6 +630,7 @@
         <div class="tabs-header">
             <button class="tab-btn active" id="tab-lyrics">🎵 聖歌隊歌詞排版</button>
             <button class="tab-btn" id="tab-scripture">📖 聖經經文抓取</button>
+            <button class="tab-btn" id="tab-hymns">🎵 聖詩與啟應文</button>
         </div>
 
         <main>
@@ -541,12 +685,60 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- 聖詩與啟應文面板 -->
+                    <div class="tab-content" id="input-hymns">
+                        <div class="panel-title">🔍 聖詩與啟應文查詢</div>
+                        <div class="bible-input-group" style="height: auto;">
+                            <div class="input-item">
+                                <label for="hymns-select-tag" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">詩歌類別</label>
+                                <select id="hymns-select-tag" class="select-input">
+                                    <option value="新聖詩" selected>新聖詩 (001-650)</option>
+                                    <option value="啟應文">啟應文 (01-66)</option>
+                                    <option value="聖詩">舊聖詩</option>
+                                    <option value="List">聖歌隊雅音</option>
+                                    <option value="聖歌隊2">聖歌隊自動</option>
+                                    <option value="讚美之泉">讚美之泉</option>
+                                    <option value="讚美詩網">讚美之泉約書亞</option>
+                                </select>
+                            </div>
+
+                            <div class="input-item">
+                                <label for="hymns-select-sub" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">目錄細項</label>
+                                <select id="hymns-select-sub" class="select-input">
+                                    <!-- 動態加載 -->
+                                </select>
+                            </div>
+
+                            <div class="input-item">
+                                <label for="hymns-input-query" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">歌名或首別關鍵字</label>
+                                <input type="text" id="hymns-input-query" class="text-input" placeholder="輸入歌名或數字進行檢索...">
+                            </div>
+
+                            <button class="btn-action" id="hymns-btn-search">
+                                <span id="hymns-search-text">🔍 查詢詩歌連結</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 右側輸出預覽區 -->
                 <div>
-                    <div class="panel-title">✨ 排版預覽結果</div>
-                    <div class="preview-area" id="preview-area"></div>
+                    <div class="panel-title">✨ 排版預覽與播放結果</div>
+                    <!-- 歌詞與經文預覽 -->
+                    <div id="wrapper-text-preview">
+                        <div class="preview-area" id="preview-area"></div>
+                    </div>
+                    
+                    <!-- 聖詩啟應文預覽 & 播放區 -->
+                    <div id="wrapper-hymns-preview" style="display: none;">
+                        <div class="hymns-table-wrapper">
+                            <div id="hymns-table-container"></div>
+                        </div>
+                        <div class="yt-player-box" id="hymns-player-box">
+                            <div id="youtube-player"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -572,8 +764,8 @@
                 </div>
             </div>
 
-            <!-- 共用操作按鈕 -->
-            <div class="button-group">
+            <!-- 共用操作按鈕 (歌詞與經文模式) -->
+            <div class="button-group" id="btn-group-shared">
                 <button class="btn btn-copy" id="btn-copy">📋 複製排版文字</button>
                 <button class="btn btn-download" id="btn-download">💾 下載排版檔案 (.txt)</button>
             </div>
@@ -583,6 +775,9 @@
     <footer>
         <p>南門教會主日專屬自動化工具 • Antigravity 2.0 Web SPA</p>
     </footer>
+
+    <!-- 載入 YouTube IFrame Player API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
         // 聖經卷名對照表
@@ -673,8 +868,14 @@
             "約三": "約翰三書", "猶": "猶大書", "啟": "啟示錄"
         };
 
+        // 聖詩 API 常數
+        const shURL = "https://docs.google.com/spreadsheets/d/1NrE6Ib8sE2z1P5-ey2EwvBVGb7KAJ-lZ0vOM4wwZ0H0/edit?usp=sharing";
+        const RSheet2Json_APIV6 = "https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec";
+        const Search_API = "https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec";
+
         let currentTab = 'lyrics'; 
         let currentFormattedResult = '';
+        let ytPlayer = null;
 
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -685,23 +886,39 @@
 
         document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
         document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
+        document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
 
         function switchTab(tab) {
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
+            // 重置預覽視窗
+            document.getElementById('wrapper-text-preview').style.display = 'block';
+            document.getElementById('wrapper-hymns-preview').style.display = 'none';
+            document.getElementById('btn-group-shared').style.display = 'grid';
+
             if (tab === 'lyrics') {
                 document.getElementById('tab-lyrics').classList.add('active');
                 document.getElementById('content-lyrics').classList.add('active');
                 document.getElementById('input-lyrics').classList.add('active');
                 document.getElementById('controls-row-lyrics').style.display = 'flex';
                 updateLyricsLayout();
-            } else {
+            } else if (tab === 'scripture') {
                 document.getElementById('tab-scripture').classList.add('active');
                 document.getElementById('input-scripture').classList.add('active');
                 document.getElementById('controls-row-lyrics').style.display = 'none';
                 previewArea.textContent = currentFormattedResult;
+            } else if (tab === 'hymns') {
+                document.getElementById('tab-hymns').classList.add('active');
+                document.getElementById('input-hymns').classList.add('active');
+                document.getElementById('controls-row-lyrics').style.display = 'none';
+                document.getElementById('btn-group-shared').style.display = 'none';
+                document.getElementById('wrapper-text-preview').style.display = 'none';
+                document.getElementById('wrapper-hymns-preview').style.display = 'block';
+                
+                // 初次切換至聖詩，進行初始化加載
+                initHymnsTab();
             }
         }
 
@@ -976,7 +1193,6 @@
             let outputLines = [];
             
             if (formatType === 'slide') {
-                // 🖥️ 簡報貼上格式 (每節獨立全稱標題，組間空行)
                 if (mode === 'parallel') {
                     if (recordsZh.length !== recordsTw.length) {
                         return "❌ 錯誤：中文與台語譯本節數不對等，無法進行逐節對照！";
@@ -1008,11 +1224,9 @@
                         outputLines.push(group.join('\n'));
                     }
                 }
-                // 每組經文間空一行
                 return outputLines.join('\n\n');
                 
             } else {
-                // 📋 週報複製格式 (每行開頭簡寫，無空行)
                 if (mode === 'parallel') {
                     if (recordsZh.length !== recordsTw.length) {
                         return "❌ 錯誤：中文與台語譯本節數不對等，無法進行逐節對照！";
@@ -1140,6 +1354,334 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
+
+        // ==========================================
+        // 🎵 聖詩與啟應文功能區 (Vanilla JS 整合版)
+        // ==========================================
+        let hymnsInitialized = false;
+
+        async function initHymnsTab() {
+            if (hymnsInitialized) return;
+            hymnsInitialized = true;
+            
+            const selectTag = document.getElementById('hymns-select-tag');
+            const selectSub = document.getElementById('hymns-select-sub');
+            const btnSearch = document.getElementById('hymns-btn-search');
+            
+            selectTag.addEventListener('change', loadHymnSublist);
+            selectSub.addEventListener('change', onSublistSelectChange);
+            btnSearch.addEventListener('click', onHymnSearchClick);
+            
+            // 初次加載新聖詩列表
+            await loadHymnSublist();
+        }
+
+        async function loadHymnSublist() {
+            const selectTag = document.getElementById('hymns-select-tag');
+            const selectSub = document.getElementById('hymns-select-sub');
+            const container = document.getElementById('hymns-table-container');
+            
+            container.innerHTML = `<div style="padding:1rem; color:var(--accent);">載入目錄清單中...</div>`;
+            selectSub.innerHTML = '';
+            
+            const tag = selectTag.value;
+            const queryParams = {
+                sheetUrl: shURL,
+                sheetTag: tag,
+                key: 0
+            };
+            
+            try {
+                const data = await getJsonApi(RSheet2Json_APIV6, queryParams);
+                let list = [];
+                for (let k in data) {
+                    list.push(data[k][0]);
+                }
+                list.shift(); // 移除首列標頭
+                list.sort();
+                
+                // 填充細項選單
+                list.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item;
+                    opt.textContent = item.substring(0, 32);
+                    selectSub.appendChild(opt);
+                });
+                
+                // 設定 autocomplete
+                setupHymnsAutocomplete(document.getElementById('hymns-input-query'), list);
+                
+                // 設為第一個選項並立刻載入
+                if (list.length > 0) {
+                    document.getElementById('hymns-input-query').value = list[0];
+                    await executeHymnSearch();
+                } else {
+                    container.innerHTML = `<div style="padding:1rem; color:var(--text-sub);">無目錄資料</div>`;
+                }
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div style="padding:1rem; color:#ef4444;">目錄載入失敗：${err.message}</div>`;
+            }
+        }
+
+        function onSublistSelectChange() {
+            document.getElementById('hymns-input-query').value = document.getElementById('hymns-select-sub').value;
+            executeHymnSearch();
+        }
+
+        function onHymnSearchClick() {
+            const q = document.getElementById('hymns-input-query').value.trim();
+            if (!q) {
+                alert("請輸入關鍵字再查詢！");
+                return;
+            }
+            executeHymnSearch();
+        }
+
+        async function executeHymnSearch() {
+            const selectTag = document.getElementById('hymns-select-tag');
+            const queryInput = document.getElementById('hymns-input-query');
+            const tableContainer = document.getElementById('hymns-table-container');
+            const searchBtn = document.getElementById('hymns-btn-search');
+            
+            let findString = queryInput.value.trim();
+            if (findString === '!') findString = '';
+            
+            searchBtn.disabled = true;
+            document.getElementById('hymns-search-text').textContent = '查詢中...';
+            tableContainer.innerHTML = `<div style="padding:1rem; color:var(--accent);">連線查詢中，請稍候...</div>`;
+            
+            const queryParams = {
+                sheetUrl: shURL,
+                sheetTag: selectTag.value,
+                findSting: findString
+            };
+            
+            try {
+                const responseText = await getRawApi(Search_API, queryParams);
+                if (responseText.length === 2 || !responseText) {
+                    tableContainer.innerHTML = `<div style="padding:1rem; color:#ef4444;">查無資料，請重新輸入再查詢</div>`;
+                    return;
+                }
+                
+                const data = JSON.parse(responseText);
+                if (data.length === 0) {
+                    tableContainer.innerHTML = `<div style="padding:1rem; color:var(--text-sub);">查無資料</div>`;
+                    return;
+                }
+                
+                // 動態取得所有表頭欄位
+                const headers = Object.keys(data[0]);
+                
+                // 自動播放 YouTube 伴奏
+                const ytField = data[0].YT || '';
+                if (ytField) {
+                    loadYouTubeVideo(ytField);
+                }
+                
+                // 渲染精美 Table HTML
+                let html = `<table class="hymns-table"><thead><tr>`;
+                headers.forEach(h => {
+                    html += `<th>${h}</th>`;
+                });
+                html += `</tr></thead><tbody>`;
+                
+                for (let row of data) {
+                    if (row[headers[0]].indexOf(findString) >= 0) {
+                        html += `<tr>`;
+                        headers.forEach(h => {
+                            const val = row[h] || '';
+                            if (h === headers[0]) {
+                                html += `<td><strong>${val}</strong></td>`;
+                            } else if (/you|http/gi.test(val)) {
+                                let btnClass = 'btn-link-db';
+                                let btnText = '投影片';
+                                if (h.includes('Drive') || h.includes('雲端')) {
+                                    btnClass = 'btn-link-gd';
+                                    btnText = '雲端簡報';
+                                } else if (h === 'YT' || h === '歌曲伴奏影音') {
+                                    btnClass = 'btn-link-yt';
+                                    btnText = '伴奏影片';
+                                } else if (h === '精簡') {
+                                    btnText = '精簡 PDF';
+                                }
+                                html += `<td><a class="hymns-link-btn ${btnClass}" href="${val}" target="_blank">🔗 ${btnText}</a></td>`;
+                            } else {
+                                html += `<td>${val}</td>`;
+                            }
+                        });
+                        html += `</tr>`;
+                    }
+                }
+                html += `</tbody></table>`;
+                tableContainer.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+                tableContainer.innerHTML = `<div style="padding:1rem; color:#ef4444;">查詢失敗：${err.message}</div>`;
+            } finally {
+                searchBtn.disabled = false;
+                document.getElementById('hymns-search-text').textContent = '🔍 查詢詩歌連結';
+            }
+        }
+
+        // Autocomplete 自動補全實作
+        function setupHymnsAutocomplete(inp, arr) {
+            let currentFocus = -1;
+            
+            // 移除舊的 event listener 以免重複觸發
+            const newInp = inp.cloneNode(true);
+            inp.parentNode.replaceChild(newInp, inp);
+            
+            newInp.addEventListener("input", function(e) {
+                const val = this.value;
+                closeAllLists();
+                if (!val) return false;
+                currentFocus = -1;
+                
+                const container = document.createElement("DIV");
+                container.setAttribute("id", this.id + "autocomplete-list");
+                container.setAttribute("class", "autocomplete-items");
+                this.parentNode.appendChild(container);
+                
+                for (let i = 0; i < arr.length; i++) {
+                    const match = arr[i].match(val);
+                    if (match) {
+                        const start_pos = match.index;
+                        const itemDiv = document.createElement("DIV");
+                        
+                        if (start_pos === 0) {
+                            itemDiv.innerHTML = "<strong>" + arr[i].substr(start_pos, val.length) + "</strong>" + arr[i].substr(val.length);
+                        } else {
+                            itemDiv.innerHTML = arr[i].substr(0, start_pos) + "<strong>" + arr[i].substr(start_pos, val.length) + "</strong>" + arr[i].substr(start_pos + val.length);
+                        }
+                        
+                        itemDiv.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                        itemDiv.addEventListener("click", function(e) {
+                            newInp.value = this.getElementsByTagName("input")[0].value;
+                            closeAllLists();
+                            executeHymnSearch();
+                        });
+                        container.appendChild(itemDiv);
+                    }
+                }
+            });
+            
+            newInp.addEventListener("keydown", function(e) {
+                let x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode === 40) { // 下
+                    currentFocus++;
+                    addActive(x);
+                } else if (e.keyCode === 38) { // 上
+                    currentFocus--;
+                    addActive(x);
+                } else if (e.keyCode === 13) { // Enter
+                    e.preventDefault();
+                    if (currentFocus > -1 && x) {
+                        x[currentFocus].click();
+                    }
+                }
+            });
+            
+            function addActive(x) {
+                if (!x) return false;
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = x.length - 1;
+                x[currentFocus].classList.add("autocomplete-active");
+            }
+            
+            function removeActive(x) {
+                for (let i = 0; i < x.length; i++) {
+                    x[i].classList.remove("autocomplete-active");
+                }
+            }
+            
+            function closeAllLists(elmnt) {
+                const x = document.getElementsByClassName("autocomplete-items");
+                for (let i = 0; i < x.length; i++) {
+                    if (elmnt !== x[i] && elmnt !== newInp) {
+                        x[i].parentNode.removeChild(x[i]);
+                    }
+                }
+            }
+            
+            document.addEventListener("click", (e) => {
+                closeAllLists(e.target);
+            });
+        }
+
+        // YouTube 影片 ID 解析與播放器加載
+        function extractYoutubeId(url) {
+            const match = url.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+            return match[2] !== undefined ? match[2].split(/[^0-9a-z_\-]/i)[0] : url;
+        }
+
+        function loadYouTubeVideo(url) {
+            const videoId = extractYoutubeId(url);
+            
+            if (ytPlayer) {
+                try {
+                    ytPlayer.loadVideoById({ videoId: videoId });
+                } catch (e) {
+                    console.error("YouTube Player error:", e);
+                }
+            } else {
+                // 初始化 Player API
+                ytPlayer = new YT.Player("youtube-player", {
+                    height: "100%",
+                    width: "100%",
+                    videoId: videoId,
+                    playerVars: {
+                        autoplay: 0,
+                        loop: 1,
+                        playlist: videoId
+                    },
+                    events: {
+                        onStateChange: onPlayerStateChange
+                    }
+                });
+            }
+        }
+
+        // 自動播放下一首邏輯
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                console.log("[YTPlayer] 影片播放結束，自動切換至下一首。");
+                const selectSub = document.getElementById('hymns-select-sub');
+                if (selectSub.selectedIndex < selectSub.options.length - 1) {
+                    selectSub.selectedIndex++;
+                    document.getElementById('hymns-input-query').value = selectSub.value;
+                    executeHymnSearch().then(() => {
+                        if (ytPlayer) {
+                            // 載入完成後自動播放下一首
+                            setTimeout(() => {
+                                try { ytPlayer.playVideo(); } catch(e){}
+                            }, 500);
+                        }
+                    });
+                }
+            }
+        }
+
+        // API 輔助函式
+        async function getJsonApi(urlptr, para) {
+            const url = new URL(urlptr);
+            for (let k in para) {
+                url.searchParams.append(k, para[k]);
+            }
+            const response = await fetch(url);
+            return response.json();
+        }
+
+        async function getRawApi(urlptr, para) {
+            const url = new URL(urlptr);
+            for (let k in para) {
+                url.searchParams.append(k, para[k]);
+            }
+            const response = await fetch(url);
+            return response.text();
+        }
     </script>
 </body>
 </html>
