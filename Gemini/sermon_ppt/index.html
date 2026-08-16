@@ -233,7 +233,7 @@
         .bible-input-group {
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            gap: 0.8rem;
             height: 380px;
             justify-content: flex-start;
         }
@@ -241,12 +241,12 @@
         .input-item {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .text-input {
             width: 100%;
-            padding: 0.9rem 1rem;
+            padding: 0.8rem 1rem;
             background: rgba(0, 0, 0, 0.25);
             border: 1px solid var(--panel-border);
             border-radius: 10px;
@@ -263,7 +263,7 @@
 
         .select-input {
             width: 100%;
-            padding: 0.85rem 1rem;
+            padding: 0.75rem 1rem;
             background: #100e23;
             border: 1px solid var(--panel-border);
             border-radius: 10px;
@@ -281,7 +281,7 @@
             width: 100%;
             background: var(--primary-glow);
             border: none;
-            padding: 1rem;
+            padding: 0.9rem;
             color: white;
             font-size: 1rem;
             font-weight: 600;
@@ -293,7 +293,7 @@
             gap: 0.6rem;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
             transition: all 0.2s ease;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
         }
 
         .btn-action:hover {
@@ -515,7 +515,7 @@
                         <div class="bible-input-group">
                             <div class="input-item">
                                 <label for="bible-qstr" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">引用經文範圍</label>
-                                <input type="text" id="bible-qstr" class="text-input" placeholder="例如: 耶利米書 36:1-8 或 耶36:1-8.林前1:21">
+                                <input type="text" id="bible-qstr" class="text-input" placeholder="例如: 耶利米書 36:1-8 或 耶36:1-8">
                             </div>
                             
                             <div class="input-item">
@@ -524,6 +524,14 @@
                                     <option value="parallel">中台譯本逐節對照 (和合本2010 + 台語巴克禮)</option>
                                     <option value="rcuv">中文和合本2010 (rcuv)</option>
                                     <option value="tghg">台語巴克禮台漢本 (tghg)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-item">
+                                <label for="bible-format" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">排版輸出格式</label>
+                                <select id="bible-format" class="select-input">
+                                    <option value="slide">🖥️ 簡報貼上格式 (每節獨立全稱標題 + 空行)</option>
+                                    <option value="report">📋 週報複製格式 (每行開頭簡寫，無空行)</option>
                                 </select>
                             </div>
 
@@ -647,6 +655,24 @@
             "啟示錄": "啟", "Revelation": "啟", "Rev": "啟", "Re": "啟"
         };
 
+        // 簡寫轉全稱對照表
+        const BIBLE_SHORT_TO_FULL = {
+            "創": "創世記", "出": "出埃及記", "利": "利未記", "民": "民數記", "申": "申命記",
+            "書": "約書亞記", "士": "士師記", "得": "路得記", "撒上": "撒母耳記上", "撒下": "撒母耳記下",
+            "王上": "列王紀上", "王下": "列王紀下", "代上": "歷代志上", "代下": "歷代志下",
+            "拉": "以斯拉記", "尼": "尼希米記", "斯": "以斯帖記", "伯": "約伯記", "詩": "詩篇",
+            "箴": "箴言", "傳": "傳道書", "歌": "雅歌", "賽": "以賽亞書", "耶": "耶利米書",
+            "哀": "耶利米哀歌", "結": "以西結書", "但": "但以理書", "何": "何西阿書", "珥": "約珥書",
+            "摩": "阿摩司書", "俄": "俄巴底亞書", "拿": "約拿書", "彌": "彌迦書", "鴻": "那鴻書",
+            "哈": "哈巴谷書", "番": "西番雅書", "該": "哈該書", "亞": "撒迦利亞書", "瑪": "瑪拉基書",
+            "太": "馬太福音", "可": "馬可福音", "路": "路加福音", "約": "約翰福音", "徒": "使徒行傳",
+            "羅": "羅馬書", "林前": "哥林多前書", "林後": "哥林多後書", "加": "加拉太書", "弗": "以弗所書",
+            "腓": "腓立比書", "西": "歌羅西書", "帖前": "帖撒羅尼迦前書", "帖後": "帖撒羅尼迦後書",
+            "提前": "提摩太前書", "提後": "提摩太後書", "多": "提多書", "門": "腓利門書", "來": "希伯來書",
+            "雅": "雅各書", "彼前": "彼得前書", "彼後": "彼得後書", "約一": "約翰一書", "約二": "約翰二書",
+            "約三": "約翰三書", "猶": "猶大書", "啟": "啟示錄"
+        };
+
         let currentTab = 'lyrics'; 
         let currentFormattedResult = '';
 
@@ -674,7 +700,7 @@
             } else {
                 document.getElementById('tab-scripture').classList.add('active');
                 document.getElementById('input-scripture').classList.add('active');
-                document.getElementById('controls-row-lyrics').style.display = 'none'; // 經文不需控制列
+                document.getElementById('controls-row-lyrics').style.display = 'none';
                 previewArea.textContent = currentFormattedResult;
             }
         }
@@ -916,7 +942,7 @@
             for (let sq of subQueries) {
                 const normalizedQ = normalizeQstr(sq);
                 const encodedQ = encodeURIComponent(normalizedQ);
-                const url = `https://bible.fhl.net/json/qsb.php?version={version}&qstr=${encodedQ}`.replace('{version}', version);
+                const url = `https://bible.fhl.net/json/qsb.php?version={version}&qstr={encodedQ}`.replace('{version}', version);
                 
                 try {
                     const res = await fetch(url);
@@ -945,32 +971,70 @@
             return allRecords;
         }
 
-        // 經文格式化輸出 (不用斷句，不用切頁，直接整段輸出)
-        function formatScriptureOutput(recordsZh, recordsTw, mode) {
+        // 經文格式化輸出 (支援簡報貼上與週報複製兩種格式)
+        function formatScriptureOutput(recordsZh, recordsTw, mode, formatType) {
             let outputLines = [];
             
-            if (mode === 'parallel') {
-                if (recordsZh.length !== recordsTw.length) {
-                    return "❌ 錯誤：中文與台語譯本節數不對等，無法進行逐節對照！";
-                }
-                
-                for (let i = 0; i < recordsZh.length; i++) {
-                    const rZh = recordsZh[i];
-                    const rTw = recordsTw[i];
-                    const ref = `${rZh.book_short}${rZh.chapter}:${rZh.verse}`;
+            if (formatType === 'slide') {
+                // 🖥️ 簡報貼上格式 (每節獨立全稱標題，組間空行)
+                if (mode === 'parallel') {
+                    if (recordsZh.length !== recordsTw.length) {
+                        return "❌ 錯誤：中文與台語譯本節數不對等，無法進行逐節對照！";
+                    }
                     
-                    outputLines.push(`${ref} 漢：${rZh.text}`);
-                    outputLines.push(`${ref} 羅：${rTw.text}`);
+                    for (let i = 0; i < recordsZh.length; i++) {
+                        const rZh = recordsZh[i];
+                        const rTw = recordsTw[i];
+                        const bookFull = BIBLE_SHORT_TO_FULL[rZh.book_short] || rZh.book_short;
+                        const header = `${bookFull} ${rZh.chapter}:${rZh.verse}`;
+                        
+                        let group = [];
+                        group.push(header);
+                        group.push(`${rZh.verse}. 漢：${rZh.text}`);
+                        group.push(`${rTw.verse}. 羅：${rTw.text}`);
+                        
+                        outputLines.push(group.join('\n'));
+                    }
+                } else {
+                    const records = (mode === 'tghg') ? recordsTw : recordsZh;
+                    for (let r of records) {
+                        const bookFull = BIBLE_SHORT_TO_FULL[r.book_short] || r.book_short;
+                        const header = `${bookFull} ${r.chapter}:${r.verse}`;
+                        
+                        let group = [];
+                        group.push(header);
+                        group.push(`${r.verse}. ${r.text}`);
+                        
+                        outputLines.push(group.join('\n'));
+                    }
                 }
+                // 每組經文間空一行
+                return outputLines.join('\n\n');
+                
             } else {
-                const records = (mode === 'tghg') ? recordsTw : recordsZh;
-                for (let r of records) {
-                    const ref = `${r.book_short}${r.chapter}:${r.verse}`;
-                    outputLines.push(`${ref} ${r.text}`);
+                // 📋 週報複製格式 (每行開頭簡寫，無空行)
+                if (mode === 'parallel') {
+                    if (recordsZh.length !== recordsTw.length) {
+                        return "❌ 錯誤：中文與台語譯本節數不對等，無法進行逐節對照！";
+                    }
+                    
+                    for (let i = 0; i < recordsZh.length; i++) {
+                        const rZh = recordsZh[i];
+                        const rTw = recordsTw[i];
+                        const ref = `${rZh.book_short}${rZh.chapter}:${rZh.verse}`;
+                        
+                        outputLines.push(`${ref} 漢：${rZh.text}`);
+                        outputLines.push(`${ref} 羅：${rTw.text}`);
+                    }
+                } else {
+                    const records = (mode === 'tghg') ? recordsTw : recordsZh;
+                    for (let r of records) {
+                        const ref = `${r.book_short}${r.chapter}:${r.verse}`;
+                        outputLines.push(`${ref} ${r.text}`);
+                    }
                 }
+                return outputLines.join('\n');
             }
-            
-            return outputLines.join('\n');
         }
 
         // 點擊抓取並排版經文
@@ -991,6 +1055,7 @@
             previewArea.textContent = "正在聯絡信望愛聖經 API...";
 
             const mode = document.getElementById('bible-version').value;
+            const formatType = document.getElementById('bible-format').value;
 
             try {
                 let recordsZh = [];
@@ -1003,7 +1068,7 @@
                     recordsTw = await fetchScripture(qstr, "tghg");
                 }
 
-                const resultText = formatScriptureOutput(recordsZh, recordsTw, mode);
+                const resultText = formatScriptureOutput(recordsZh, recordsTw, mode, formatType);
                 previewArea.textContent = resultText;
                 currentFormattedResult = resultText;
             } catch (err) {
