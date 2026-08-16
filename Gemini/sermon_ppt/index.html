@@ -460,7 +460,6 @@
             
             for (let pattern of delimiters) {
                 let match;
-                // 模擬 re.finditer
                 const regex = new RegExp(pattern, 'g');
                 while ((match = regex.exec(line)) !== null) {
                     const idx = match.index + match[0].length; // 切在後方
@@ -559,7 +558,6 @@
             btnSpinner.style.display = 'block';
             btnText.textContent = '簡報產生中...';
 
-            // 確保 PptxGenJS 已載入
             if (typeof PptxGenJS === 'undefined' && typeof pptxgen === 'undefined') {
                 alert('PptxGenJS 程式庫載入失敗，請檢查網路連線！');
                 btnGenerate.disabled = false;
@@ -569,9 +567,10 @@
             }
 
             try {
-                // 初始化簡報
+                // 初始化簡報，定義 16:9 的標準 13.333 x 7.5 英吋座標
                 let pptx = new PptxGenJS();
-                pptx.layout = 'LAYOUT_16x9';
+                pptx.defineLayout({ name: 'NAM_MIN_16_9', width: 13.333, height: 7.5 });
+                pptx.layout = 'NAM_MIN_16_9';
 
                 const autoHeader = document.getElementById('auto-header').checked;
                 const generateCover = document.getElementById('generate-cover').checked;
@@ -590,17 +589,36 @@
                     lyricsPages = chunkRawLyrics(lyricsText, 2, maxLen);
                 }
 
-                // 1. 產生封面頁
+                // 1. 產生封面頁 (13.333 x 7.5)
                 if (generateCover) {
                     let slide = pptx.addSlide();
                     
-                    // 畫白色背景與十字架 (image2.png)
+                    // 裝飾矩形 (白底、金色框)
+                    slide.addShape(pptx.shapes.RECTANGLE, { 
+                        x: 0.510, 
+                        y: 0.490, 
+                        w: 3.734, 
+                        h: 4.157, 
+                        fill: { color: 'FFFFFF' }, 
+                        line: { color: 'D4AF37', width: 2 } 
+                    });
+                    
+                    // 紫色橫裝飾塊
+                    slide.addShape(pptx.shapes.RECTANGLE, { 
+                        x: 0.510, 
+                        y: 4.833, 
+                        w: 3.734, 
+                        h: 2.165, 
+                        fill: { color: '7030A0' } 
+                    });
+
+                    // 畫白色背景與十字架 ( Picture 3 比例 1.112, 1.145, 2.347, 2.847 )
                     slide.addImage({ 
                         data: 'image/png;base64,' + IMAGE_LOGO_BASE64, 
-                        x: 0.23, 
-                        y: 0.28, 
-                        w: 1.15, 
-                        h: 5.06 
+                        x: 1.112, 
+                        y: 1.145, 
+                        w: 2.347, 
+                        h: 2.847
                     });
                     
                     // 右側封面文字 (讚美 / 歌名 / 聖歌隊)
@@ -612,10 +630,10 @@
                             { text: '聖歌隊', options: { color: '002060', fontSize: 28, fontFace: '標楷體', bold: true } }
                         ],
                         { 
-                            x: 1.8, 
-                            y: 1.0, 
-                            w: 7.8, 
-                            h: 3.6, 
+                            x: 4.423, 
+                            y: 0.490, 
+                            w: 8.408, 
+                            h: 6.510, 
                             align: 'center', 
                             valign: 'middle' 
                         }
@@ -633,8 +651,10 @@
                     {
                         let slide = pptx.addSlide();
                         slide.background = { data: 'image/png;base64,' + IMAGE_BG_BASE64 };
-                        slide.addText(`P0-${pageIdx}/${totalPages}`, { x: 0.5, y: 0.2, w: 9.0, h: 0.5, fontSize: 16, color: '808080', align: 'center', fontFace: 'Calibri' });
-                        slide.addText(metadata.title || '', { x: 0.5, y: 1.5, w: 9.0, h: 3.0, fontSize: 40, color: '002060', align: 'center', fontFace: '標楷體', bold: true });
+                        // 頁碼放置在底部中央 (x: 4.741, y: 6.951, w: 3.852, h: 0.399)
+                        slide.addText(`P0-${pageIdx}/${totalPages}`, { x: 4.741, y: 6.951, w: 3.852, h: 0.399, fontSize: 16, color: '595959', align: 'center', valign: 'middle', fontFace: 'Calibri' });
+                        // 歌詞文字放置在中央滿版 (x: 0.000, y: 2.763, w: 13.333, h: 1.975)
+                        slide.addText(metadata.title || '', { x: 0.000, y: 2.763, w: 13.333, h: 1.975, fontSize: 44, color: '002060', align: 'center', valign: 'middle', fontFace: '標楷體', bold: true });
                         pageIdx++;
                     }
 
@@ -642,7 +662,7 @@
                     if (hasComposer) {
                         let slide = pptx.addSlide();
                         slide.background = { data: 'image/png;base64,' + IMAGE_BG_BASE64 };
-                        slide.addText(`P0-${pageIdx}/${totalPages}`, { x: 0.5, y: 0.2, w: 9.0, h: 0.5, fontSize: 16, color: '808080', align: 'center', fontFace: 'Calibri' });
+                        slide.addText(`P0-${pageIdx}/${totalPages}`, { x: 4.741, y: 6.951, w: 3.852, h: 0.399, fontSize: 16, color: '595959', align: 'center', valign: 'middle', fontFace: 'Calibri' });
                         
                         let lines = [];
                         if (metadata.words_by) lines.push(`Words by ${metadata.words_by}`);
@@ -650,7 +670,7 @@
                         if (metadata.composer) lines.push(`詞曲 ${metadata.composer}`);
                         if (metadata.translator) lines.push(`台語 ${metadata.translator}`);
                         
-                        slide.addText(lines.join('\n'), { x: 0.5, y: 1.5, w: 9.0, h: 3.0, fontSize: 36, color: '002060', align: 'center', fontFace: '標楷體', bold: true });
+                        slide.addText(lines.join('\n'), { x: 0.000, y: 2.763, w: 13.333, h: 1.975, fontSize: 36, color: '002060', align: 'center', valign: 'middle', fontFace: '標楷體', bold: true });
                         pageIdx++;
                     }
 
@@ -658,11 +678,11 @@
                     {
                         let slide = pptx.addSlide();
                         slide.background = { data: 'image/png;base64,' + IMAGE_BG_BASE64 };
-                        slide.addText(`P0-${pageIdx}/${totalPages}`, { x: 0.5, y: 0.2, w: 9.0, h: 0.5, fontSize: 16, color: '808080', align: 'center', fontFace: 'Calibri' });
+                        slide.addText(`P0-${pageIdx}/${totalPages}`, { x: 4.741, y: 6.951, w: 3.852, h: 0.399, fontSize: 16, color: '595959', align: 'center', valign: 'middle', fontFace: 'Calibri' });
                         
                         let group = metadata.group || '台北南門教會聖歌隊';
                         let date = metadata.date || '';
-                        slide.addText(`${group}\n${date}`.trim(), { x: 0.5, y: 1.5, w: 9.0, h: 3.0, fontSize: 36, color: '002060', align: 'center', fontFace: '標楷體', bold: true });
+                        slide.addText(`${group}\n${date}`.trim(), { x: 0.000, y: 2.763, w: 13.333, h: 1.975, fontSize: 36, color: '002060', align: 'center', valign: 'middle', fontFace: '標楷體', bold: true });
                         pageIdx++;
                     }
 
@@ -670,11 +690,11 @@
                     {
                         let slide = pptx.addSlide();
                         slide.background = { data: 'image/png;base64,' + IMAGE_BG_BASE64 };
-                        slide.addText(`P0-${pageIdx}/${totalPages}`, { x: 0.5, y: 0.2, w: 9.0, h: 0.5, fontSize: 16, color: '808080', align: 'center', fontFace: 'Calibri' });
+                        slide.addText(`P0-${pageIdx}/${totalPages}`, { x: 4.741, y: 6.951, w: 3.852, h: 0.399, fontSize: 16, color: '595959', align: 'center', valign: 'middle', fontFace: 'Calibri' });
                         
                         let cond = metadata.conductor_line || '指揮：';
                         let acc = metadata.accompanist_line || '司琴：';
-                        slide.addText(`${cond}\n${acc}`.trim(), { x: 0.5, y: 1.5, w: 9.0, h: 3.0, fontSize: 36, color: '002060', align: 'center', fontFace: '標楷體', bold: true });
+                        slide.addText(`${cond}\n${acc}`.trim(), { x: 0.000, y: 2.763, w: 13.333, h: 1.975, fontSize: 36, color: '002060', align: 'center', valign: 'middle', fontFace: '標楷體', bold: true });
                     }
                 }
 
@@ -682,8 +702,8 @@
                 lyricsPages.forEach(page => {
                     let slide = pptx.addSlide();
                     slide.background = { data: 'image/png;base64,' + IMAGE_BG_BASE64 };
-                    slide.addText(page.page, { x: 0.5, y: 0.2, w: 9.0, h: 0.5, fontSize: 16, color: '808080', align: 'center', fontFace: 'Calibri' });
-                    slide.addText(page.lines.join('\n'), { x: 0.5, y: 1.5, w: 9.0, h: 3.0, fontSize: 40, color: '002060', align: 'center', fontFace: '標楷體', bold: true });
+                    slide.addText(page.page, { x: 4.741, y: 6.951, w: 3.852, h: 0.399, fontSize: 16, color: '595959', align: 'center', valign: 'middle', fontFace: 'Calibri' });
+                    slide.addText(page.lines.join('\n'), { x: 0.000, y: 2.763, w: 13.333, h: 1.975, fontSize: 44, color: '002060', align: 'center', valign: 'middle', fontFace: '標楷體', bold: true });
                 });
 
                 // 匯出下載簡報
