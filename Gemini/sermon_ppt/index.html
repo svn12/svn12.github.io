@@ -950,19 +950,25 @@
                             </div>
                             
                             <!-- 2. 台漢本掃描版容器 -->
-                            <div class="bible-reader-box" id="audio-scan-container" style="display:none; height:430px; overflow-y:auto; padding:1.2rem; flex-direction:column; align-items:center; gap:0.8rem;">
+                            <div class="bible-reader-box" id="audio-scan-container" style="display:none; height:430px; padding:1.2rem; flex-direction:column; align-items:center; gap:0.8rem; overflow:hidden;">
                                 <!-- 翻頁控制 -->
-                                <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.03); padding:0.4rem 0.8rem; border-radius:8px; border:1px solid var(--panel-border); margin-bottom:0.5rem; flex-wrap:wrap; justify-content:center;">
+                                <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.03); padding:0.4rem 0.8rem; border-radius:8px; border:1px solid var(--panel-border); margin-bottom:0.5rem; flex-wrap:wrap; justify-content:center; z-index:5;">
                                     <button class="hymns-link-btn btn-link-db" id="scan-prev-page" style="padding:0.35rem 0.6rem;">◀ 上一頁</button>
                                     <span style="font-size:0.8rem; color:var(--text-sub);">第</span>
                                     <input type="number" id="scan-page-input" class="number-input" style="width:60px;" value="1" min="1" max="1361">
                                     <span style="font-size:0.8rem; color:var(--text-sub);">/ 1361 頁</span>
                                     <button class="hymns-link-btn btn-link-db" id="scan-goto-page" style="padding:0.35rem 0.6rem;">前往</button>
                                     <button class="hymns-link-btn btn-link-db" id="scan-next-page" style="padding:0.35rem 0.6rem;">下一頁 ▶</button>
+                                    
+                                    <!-- 放大縮小重置按鈕 -->
+                                    <span style="border-left:1px solid rgba(255,255,255,0.1); height:16px; margin:0 0.3rem;"></span>
+                                    <button class="hymns-link-btn btn-link-db" id="scan-zoom-in" style="padding:0.35rem 0.6rem; font-weight:bold;" title="放大">🔍+</button>
+                                    <button class="hymns-link-btn btn-link-db" id="scan-zoom-out" style="padding:0.35rem 0.6rem; font-weight:bold;" title="縮小">🔍-</button>
+                                    <button class="hymns-link-btn btn-link-db" id="scan-zoom-reset" style="padding:0.35rem 0.6rem; font-weight:bold;" title="重置">🔄</button>
                                 </div>
-                                <!-- 圖片顯示 -->
-                                <div style="width:100%; border-radius:8px; overflow:hidden; border:1px solid var(--panel-border); background:rgba(0,0,0,0.25);">
-                                    <img id="scan-bible-img" src="" style="max-width:100%; height:auto; display:block; margin:0 auto;" alt="台漢本掃描圖片載入中...">
+                                <!-- 圖片顯示 (Viewport 容器) -->
+                                <div id="scan-img-viewport" style="width:100%; height:100%; border-radius:8px; overflow:hidden; border:1px solid var(--panel-border); background:rgba(0,0,0,0.25); position:relative; cursor:grab; user-select:none;">
+                                    <img id="scan-bible-img" src="" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); transform-origin:center center; max-width:100%; max-height:100%; display:block; transition:transform 0.15s ease-out;" alt="台漢本掃描圖片載入中...">
                                 </div>
                             </div>
 
@@ -1140,6 +1146,12 @@
         let currentSearchOffset = 0;
         let currentSearchResults = [];
         let currentSearchVer = "";
+        let zoomScale = 1.0;
+        let panX = 0;
+        let panY = 0;
+        let isDraggingScanImg = false;
+        let startDragX = 0;
+        let startDragY = 0;
 
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -2064,6 +2076,20 @@
             renderScanPage();
         }
 
+        function applyScanImgTransform() {
+            const img = document.getElementById('scan-bible-img');
+            if (img) {
+                img.style.transform = `translate(-50%, -50%) translate(${panX}px, ${panY}px) scale(${zoomScale})`;
+            }
+        }
+
+        function resetScanImgPanZoom() {
+            zoomScale = 1.0;
+            panX = 0;
+            panY = 0;
+            applyScanImgTransform();
+        }
+
         function renderScanPage() {
             if (scanBibleDetail.length === 0) return;
             const img = document.getElementById('scan-bible-img');
@@ -2071,6 +2097,7 @@
             
             const detail = scanBibleDetail[currentScanPage - 1];
             if (detail) {
+                resetScanImgPanZoom();
                 img.src = detail.imgURL;
                 input.value = currentScanPage;
             }
@@ -2386,6 +2413,55 @@
                     alert("頁碼超出範圍 (1-1361)！");
                 }
             });
+
+            // 台漢掃描圖片放大縮小與重置
+            document.getElementById('scan-zoom-in').addEventListener('click', () => {
+                zoomScale = Math.min(zoomScale + 0.2, 4.0);
+                applyScanImgTransform();
+            });
+            document.getElementById('scan-zoom-out').addEventListener('click', () => {
+                zoomScale = Math.max(zoomScale - 0.2, 0.5);
+                applyScanImgTransform();
+            });
+            document.getElementById('scan-zoom-reset').addEventListener('click', () => {
+                resetScanImgPanZoom();
+            });
+
+            // Viewport 滑鼠拖曳 (Pan) 邏輯
+            const scanViewport = document.getElementById('scan-img-viewport');
+            scanViewport.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                isDraggingScanImg = true;
+                scanViewport.style.cursor = 'grabbing';
+                startDragX = e.clientX - panX;
+                startDragY = e.clientY - panY;
+            });
+            
+            window.addEventListener('mousemove', (e) => {
+                if (!isDraggingScanImg) return;
+                panX = e.clientX - startDragX;
+                panY = e.clientY - startDragY;
+                applyScanImgTransform();
+            });
+            
+            window.addEventListener('mouseup', () => {
+                if (isDraggingScanImg) {
+                    isDraggingScanImg = false;
+                    scanViewport.style.cursor = 'grab';
+                }
+            });
+
+            // Viewport 滾輪縮放 (Zoom) 邏輯
+            scanViewport.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const zoomFactor = 0.15;
+                if (e.deltaY < 0) {
+                    zoomScale = Math.min(zoomScale + zoomFactor, 4.0);
+                } else {
+                    zoomScale = Math.max(zoomScale - zoomFactor, 0.5);
+                }
+                applyScanImgTransform();
+            }, { passive: false });
 
             // 南門手抄本翻頁與手抄者選擇
             document.getElementById('hand-prev-page').addEventListener('click', () => changeHandPage(currentHandPage - 1));
