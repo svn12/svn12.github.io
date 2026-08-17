@@ -910,10 +910,11 @@
                                 <div id="audio-youtube-player"></div>
                             </div>
                         </div>
-                        <!-- 雙模式切換 Tab -->
+                        <!-- 三模式切換 Tab -->
                         <div style="display:flex; gap:0.5rem; margin-top:1.2rem; background:rgba(0,0,0,0.2); padding:0.25rem; border-radius:8px; border:1px solid var(--panel-border);">
-                            <button class="tab-btn active" id="audio-mode-text" style="padding:0.4rem; font-size:0.8rem; border-radius:6px;">📝 譯本文字對照</button>
-                            <button class="tab-btn" id="audio-mode-scan" style="padding:0.4rem; font-size:0.8rem; border-radius:6px;">🖼️ 台漢本掃描版</button>
+                            <button class="tab-btn active" id="audio-mode-text" style="padding:0.4rem; font-size:0.8rem; border-radius:6px; flex:1;">📝 譯本文字對照</button>
+                            <button class="tab-btn" id="audio-mode-scan" style="padding:0.4rem; font-size:0.8rem; border-radius:6px; flex:1;">🖼️ 台漢本掃描版</button>
+                            <button class="tab-btn" id="audio-mode-hand" style="padding:0.4rem; font-size:0.8rem; border-radius:6px; flex:1;">✍️ 南門手抄聖經</button>
                         </div>
 
                         <div class="hymns-table-wrapper" style="margin-top: 0.8rem;">
@@ -938,6 +939,28 @@
                                 <!-- 圖片顯示 -->
                                 <div style="width:100%; border-radius:8px; overflow:hidden; border:1px solid var(--panel-border); background:rgba(0,0,0,0.25);">
                                     <img id="scan-bible-img" src="" style="max-width:100%; height:auto; display:block; margin:0 auto;" alt="台漢本掃描圖片載入中...">
+                                </div>
+                            </div>
+
+                            <!-- 3. 南門手抄聖經容器 -->
+                            <div class="bible-reader-box" id="audio-hand-container" style="display:none; height:430px; overflow-y:auto; padding:1.2rem; flex-direction:column; align-items:center; gap:0.8rem;">
+                                <!-- 翻頁與手抄者控制 -->
+                                <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.03); padding:0.4rem 0.8rem; border-radius:8px; border:1px solid var(--panel-border); margin-bottom:0.5rem; flex-wrap:wrap; justify-content:center;">
+                                    <button class="hymns-link-btn btn-link-db" id="hand-prev-page" style="padding:0.35rem 0.6rem;">◀ 上一頁</button>
+                                    <span style="font-size:0.8rem; color:var(--text-sub);">第</span>
+                                    <input type="number" id="hand-page-input" class="number-input" style="width:60px;" value="1" min="1" max="1873">
+                                    <span style="font-size:0.8rem; color:var(--text-sub);">/ 1873 頁</span>
+                                    <button class="hymns-link-btn btn-link-db" id="hand-goto-page" style="padding:0.35rem 0.6rem;">前往</button>
+                                    <button class="hymns-link-btn btn-link-db" id="hand-next-page" style="padding:0.35rem 0.6rem;">下一頁 ▶</button>
+                                    
+                                    <span style="font-size:0.8rem; color:var(--text-sub); margin-left:0.5rem;">抄寫者:</span>
+                                    <select id="hand-writer-select" class="select-input" style="font-size:0.8rem; height:28px; padding:0 0.4rem; width:120px; line-height:28px;">
+                                        <!-- 動態填充 -->
+                                    </select>
+                                </div>
+                                <!-- PDF iframe 顯示 -->
+                                <div style="width:100%; height:320px; border-radius:8px; overflow:hidden; border:1px solid var(--panel-border); background:rgba(0,0,0,0.25);">
+                                    <iframe id="hand-bible-pdf" src="" style="width:100%; height:100%; border:none; background:white;" allow="autoplay"></iframe>
                                 </div>
                             </div>
                         </div>
@@ -1084,7 +1107,11 @@
         let scanBibleInfo = []; 
         let scanBibleDetail = [];
         let currentScanPage = 1;
-        let scanMode = 'text'; // 'text' 或 'scan'
+        let scanMode = 'text'; // 'text', 'scan', 或 'hand'
+        let handBibleInfo = [];
+        let handBibleDetail = [];
+        let currentHandPage = 1;
+        let handWriters = [];
 
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -2095,37 +2122,232 @@
             loadAudioBibleText();
         }
 
+        async function loadHandBibleData() {
+            if (handBibleInfo.length > 0) return;
+            try {
+                // 1. 載入 手抄聖經 目錄
+                const dataInfo = await getJsonApi(RSheet2Json_APIV6, {
+                    sheetUrl: 'https://docs.google.com/spreadsheets/d/1yIBVav5yj0Dz3Tcr48Cql1e5n1Pn1Z5e7sjaXN-T_D0/edit',
+                    sheetTag: '手抄聖經'
+                });
+                handBibleInfo = dataInfo.slice(1).map(row => ({
+                    ptr: parseInt(row[0], 10),
+                    name: row[1],
+                    S_page: parseInt(row[2], 10),
+                    E_page: parseInt(row[3], 10),
+                    T_page: parseInt(row[4], 10),
+                    T_chap: parseInt(row[5], 10)
+                }));
+
+                // 2. 載入 手抄簡聖經 頁面詳情
+                const dataDetail = await getJsonApi(RSheet2Json_APIV6, {
+                    sheetUrl: 'https://docs.google.com/spreadsheets/d/1yIBVav5yj0Dz3Tcr48Cql1e5n1Pn1Z5e7sjaXN-T_D0/edit',
+                    sheetTag: '手抄簡聖經'
+                });
+                handBibleDetail = dataDetail.slice(1).map(row => ({
+                    title_idx: parseInt(row[0], 10),
+                    pdfURL: row[1],
+                    Lchap: parseInt(row[2], 10),
+                    Ichap: parseInt(row[3], 10),
+                    writer: row[4],
+                    Page: parseInt(row[5], 10)
+                }));
+
+                // 3. 提取手抄者名字列表並填充下拉選單
+                const rawWriters = handBibleDetail.map(row => row.writer).filter(w => w && w.trim() !== "");
+                handWriters = [...new Set(rawWriters)].sort((a, b) => a.localeCompare(b, "zh-TW"));
+                
+                const selectWriter = document.getElementById('hand-writer-select');
+                selectWriter.innerHTML = '<option value="">請選擇...</option>';
+                handWriters.forEach(writer => {
+                    const opt = document.createElement('option');
+                    opt.value = writer;
+                    const cnt = handBibleDetail.filter(x => x.writer === writer).length;
+                    opt.textContent = `${writer} (${cnt})`;
+                    selectWriter.appendChild(opt);
+                });
+
+                console.log("南門手抄本聖經數據載入成功，共 " + handBibleDetail.length + " 頁。");
+                
+                if (scanMode === 'hand') {
+                    updateHandPageByChap();
+                }
+            } catch (err) {
+                console.error("載入南門手抄本聖經數據失敗: ", err);
+            }
+        }
+
+        function updateHandPageByChap() {
+            const selectTitle = document.getElementById('audio-select-title');
+            const selectChap = document.getElementById('audio-select-chap');
+            
+            if (handBibleInfo.length === 0 || handBibleDetail.length === 0) return;
+            
+            const sel_T = selectTitle.selectedIndex;
+            const sel_C = selectChap.selectedIndex; // 0-indexed
+            
+            const bookInfo = handBibleInfo[sel_T];
+            let targetPage = bookInfo.S_page;
+            
+            for (let ptr = bookInfo.S_page; ptr <= bookInfo.E_page; ptr++) {
+                const detail = handBibleDetail[ptr - 1];
+                if (detail && detail.Lchap > sel_C) {
+                    targetPage = ptr;
+                    break;
+                }
+            }
+            
+            if (targetPage === bookInfo.S_page) {
+                targetPage = bookInfo.E_page;
+            }
+            
+            currentHandPage = targetPage;
+            renderHandPage();
+        }
+
+        function renderHandPage() {
+            if (handBibleDetail.length === 0) return;
+            const pdfIframe = document.getElementById('hand-bible-pdf');
+            const input = document.getElementById('hand-page-input');
+            const selectWriter = document.getElementById('hand-writer-select');
+            
+            const detail = handBibleDetail[currentHandPage - 1];
+            if (detail) {
+                input.value = currentHandPage;
+                selectWriter.value = detail.writer;
+                
+                // 動態加載 Google Drive 預覽，防止重複載入同一檔案
+                const fileId = detail.pdfURL;
+                const newSrc = `https://drive.google.com/file/d/${fileId}/preview`;
+                
+                let oldSrc = pdfIframe.src;
+                let oldIdMatch = oldSrc.match(/\/file\/d\/([-\w]{25,})/);
+                let oldId = oldIdMatch ? oldIdMatch[1] : "";
+                
+                if (fileId !== oldId) {
+                    pdfIframe.src = newSrc;
+                }
+            }
+        }
+
+        function changeHandPage(page) {
+            if (page < 1 || page > 1873 || handBibleDetail.length === 0) return;
+            
+            currentHandPage = page;
+            const detail = handBibleDetail[currentHandPage - 1];
+            if (!detail) return;
+            
+            const selectTitle = document.getElementById('audio-select-title');
+            const selectChap = document.getElementById('audio-select-chap');
+            
+            const bookIdx = detail.title_idx - 1; // 0-indexed
+            selectTitle.selectedIndex = bookIdx;
+            
+            selectChap.innerHTML = '';
+            const chapCount = BIBLE_66_CHAPS[bookIdx];
+            for (let i = 1; i <= chapCount; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = `第 ${i} 章`;
+                selectChap.appendChild(opt);
+            }
+            
+            selectChap.value = detail.Ichap;
+            
+            renderHandPage();
+            
+            document.getElementById('audio-playing-title').textContent = `${BIBLE_66_BOOKS[bookIdx]} 第 ${detail.Ichap} 章`;
+            
+            const audioHtmlPlayer = document.getElementById('audio-html-player');
+            const selectVer = document.getElementById('audio-select-version');
+            const ytWrapper = document.getElementById('audio-yt-player-wrapper');
+            const verPath = selectVer.value;
+            const isPlaying = !audioHtmlPlayer.paused;
+            const chapNum = detail.Ichap;
+            const bookIdx1 = bookIdx + 1;
+            
+            if (verPath === "rcuv") {
+                if (audioYtPlayer && audioYtPlayer.getPlayerState) {
+                    const isYtPlaying = audioYtPlayer.getPlayerState() === YT.PlayerState.PLAYING;
+                    const globalIdx = getBibleGlobalChapIndex(bookIdx, chapNum);
+                    if (rcuvYoutubeIds.length > globalIdx) {
+                        const videoId = rcuvYoutubeIds[globalIdx];
+                        if (isYtPlaying) {
+                            loadAudioBibleYoutubeVideo(videoId);
+                        } else {
+                            audioHtmlPlayer.style.display = 'none';
+                            ytWrapper.style.display = 'block';
+                        }
+                    }
+                }
+            } else {
+                let leadNum = "";
+                if (chapNum < 100) {
+                    leadNum = (chapNum < 10) ? "00" : "0";
+                }
+                const suffix = (verPath === "tcv") ? "C" : "";
+                const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx1}${suffix}/${bookIdx1}_${leadNum}${chapNum}.mp3`;
+                
+                audioHtmlPlayer.src = audioUrl;
+                audioHtmlPlayer.load();
+                if (isPlaying) {
+                    audioHtmlPlayer.play().catch(e => console.log(e));
+                }
+            }
+            
+            loadAudioBibleText();
+        }
+
         function initAudioBibleTab() {
             if (audioBibleInitialized) return;
             audioBibleInitialized = true;
             
             // 載入和修本 YouTube IDs
             loadRcuvYoutubeIds();
-            // 載入台漢本掃描資料
+            // 載入台漢本掃描資料與手抄資料
             loadScanBibleData();
+            loadHandBibleData();
 
             const btnModeText = document.getElementById('audio-mode-text');
             const btnModeScan = document.getElementById('audio-mode-scan');
+            const btnModeHand = document.getElementById('audio-mode-hand');
             const textContainer = document.getElementById('audio-text-container');
             const scanContainer = document.getElementById('audio-scan-container');
+            const handContainer = document.getElementById('audio-hand-container');
 
             btnModeText.addEventListener('click', () => {
                 scanMode = 'text';
                 btnModeText.classList.add('active');
                 btnModeScan.classList.remove('active');
+                btnModeHand.classList.remove('active');
                 textContainer.style.display = 'block';
                 scanContainer.style.display = 'none';
+                handContainer.style.display = 'none';
             });
 
             btnModeScan.addEventListener('click', () => {
                 scanMode = 'scan';
                 btnModeText.classList.remove('active');
                 btnModeScan.classList.add('active');
+                btnModeHand.classList.remove('active');
                 textContainer.style.display = 'none';
                 scanContainer.style.display = 'flex';
+                handContainer.style.display = 'none';
                 updateScanPageByChap();
             });
 
+            btnModeHand.addEventListener('click', () => {
+                scanMode = 'hand';
+                btnModeText.classList.remove('active');
+                btnModeScan.classList.remove('active');
+                btnModeHand.classList.add('active');
+                textContainer.style.display = 'none';
+                scanContainer.style.display = 'none';
+                handContainer.style.display = 'flex';
+                updateHandPageByChap();
+            });
+
+            // 台漢掃描版翻頁
             document.getElementById('scan-prev-page').addEventListener('click', () => changeScanPage(currentScanPage - 1));
             document.getElementById('scan-next-page').addEventListener('click', () => changeScanPage(currentScanPage + 1));
             document.getElementById('scan-goto-page').addEventListener('click', () => {
@@ -2134,6 +2356,25 @@
                     changeScanPage(pageVal);
                 } else {
                     alert("頁碼超出範圍 (1-1361)！");
+                }
+            });
+
+            // 南門手抄本翻頁與手抄者選擇
+            document.getElementById('hand-prev-page').addEventListener('click', () => changeHandPage(currentHandPage - 1));
+            document.getElementById('hand-next-page').addEventListener('click', () => changeHandPage(currentHandPage + 1));
+            document.getElementById('hand-goto-page').addEventListener('click', () => {
+                const pageVal = parseInt(document.getElementById('hand-page-input').value, 10);
+                if (pageVal >= 1 && pageVal <= 1873) {
+                    changeHandPage(pageVal);
+                } else {
+                    alert("頁碼超出範圍 (1-1873)！");
+                }
+            });
+            document.getElementById('hand-writer-select').addEventListener('change', () => {
+                const writerVal = document.getElementById('hand-writer-select').value;
+                const target = handBibleDetail.find(elem => elem.writer === writerVal);
+                if (target) {
+                    changeHandPage(target.Page);
                 }
             });
 
@@ -2267,6 +2508,8 @@
             // 如果在掃描圖模式，同步更新掃描圖片位置
             if (scanMode === 'scan') {
                 updateScanPageByChap();
+            } else if (scanMode === 'hand') {
+                updateHandPageByChap();
             }
         }
 
