@@ -1136,6 +1136,10 @@
         let handBibleDetail = [];
         let currentHandPage = 1;
         let handWriters = [];
+        let currentSearchQuery = "";
+        let currentSearchOffset = 0;
+        let currentSearchResults = [];
+        let currentSearchVer = "";
 
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -2586,7 +2590,6 @@
 
         async function executeAudioBibleKeywordSearch() {
             const keywordInput = document.getElementById('audio-input-keyword');
-            const textBox = document.getElementById('audio-bible-text-box');
             const selectText = document.getElementById('audio-select-text-ver');
             const q = keywordInput.value.trim();
 
@@ -2595,26 +2598,65 @@
                 return;
             }
 
-            textBox.innerHTML = `<div style="padding:1rem; color:var(--accent);">連線搜尋聖經中...</div>`;
+            // 重置搜尋狀態
+            currentSearchQuery = q;
+            currentSearchOffset = 0;
+            currentSearchResults = [];
+            currentSearchVer = selectText.value;
+
+            // 強制切換到文字對照分頁模式
+            scanMode = 'text';
+            const btnModeText = document.getElementById('audio-mode-text');
+            const btnModeScan = document.getElementById('audio-mode-scan');
+            const btnModeHand = document.getElementById('audio-mode-hand');
+            const textContainer = document.getElementById('audio-text-container');
+            const scanContainer = document.getElementById('audio-scan-container');
+            const handContainer = document.getElementById('audio-hand-container');
             
-            const ver = selectText.value;
-            const searchUrl = `https://bible.fhl.net/json/se.php?orig=0&limit=500&offset=0&q=${encodeURIComponent(q)}&VERSION=${ver}&strong=0&gb=0`;
+            btnModeText.classList.add('active');
+            btnModeScan.classList.remove('active');
+            btnModeHand.classList.remove('active');
+            textContainer.style.display = 'block';
+            scanContainer.style.display = 'none';
+            handContainer.style.display = 'none';
+
+            await fetchAndRenderSearchResults(false);
+        }
+
+        async function fetchAndRenderSearchResults(isLoadMore) {
+            const textBox = document.getElementById('audio-bible-text-box');
+            
+            if (!isLoadMore) {
+                textBox.innerHTML = `<div style="padding:1rem; color:var(--accent);">連線搜尋聖經中...</div>`;
+            } else {
+                const btnMore = document.getElementById('btn-search-load-more');
+                if (btnMore) {
+                    btnMore.disabled = true;
+                    btnMore.textContent = "⌛ 連線載入中...";
+                }
+            }
+
+            const searchUrl = `https://bible.fhl.net/json/se.php?orig=0&limit=500&offset=${currentSearchOffset}&q=${encodeURIComponent(currentSearchQuery)}&VERSION=${currentSearchVer}&strong=0&gb=0`;
 
             try {
                 const data = await getJsonApi(searchUrl, {});
                 const records = data.record || [];
                 
-                if (records.length === 0) {
+                if (records.length === 0 && !isLoadMore) {
                     textBox.innerHTML = `<div style="padding:1rem; color:var(--text-sub);">查無相關經文</div>`;
                     return;
                 }
 
-                let html = `<div style="padding:0 0.8rem 0.5rem; font-weight:600; color:var(--accent);">搜尋結果 (${records.length} 筆)</div>`;
+                // 合併新結果
+                currentSearchResults = currentSearchResults.concat(records);
+
+                // 開始構建 HTML 輸出
+                let html = `<div style="padding:0 0.8rem 0.5rem; font-weight:600; color:var(--accent);">搜尋結果 (${currentSearchResults.length} 筆)</div>`;
                 html += `<table><tbody>`;
                 
-                records.forEach(r => {
+                currentSearchResults.forEach(r => {
                     const bookName = BIBLE_BOOKS_MAP[r.chineses] || r.chineses;
-                    const cleanText = cleanHtml(r.bible_text).replace(new RegExp(q, 'g'), `<span class="highlight">${q}</span>`);
+                    const cleanText = cleanHtml(r.bible_text).replace(new RegExp(currentSearchQuery, 'g'), `<span class="highlight">${currentSearchQuery}</span>`);
                     
                     html += `<tr>`;
                     html += `<td><span class="verse-num">${bookName}${r.chap}:${r.sec}</span></td>`;
@@ -2623,11 +2665,36 @@
                 });
 
                 html += `</tbody></table>`;
+
+                // 如果這次回傳了 500 筆，說明可能還有更多
+                if (records.length === 500) {
+                    html += `
+                    <div style="text-align:center; padding:1.2rem 0 0.8rem;">
+                        <button class="hymns-link-btn btn-link-db" id="btn-search-load-more" style="padding:0.5rem 1.5rem; font-size:0.85rem;" onclick="loadMoreSearchResults()">
+                            ⬇ 載入更多結果 (+500)
+                        </button>
+                    </div>`;
+                }
+
                 textBox.innerHTML = html;
             } catch (err) {
                 console.error(err);
-                textBox.innerHTML = `<div style="padding:1rem; color:#ef4444;">搜尋失敗：${err.message}</div>`;
+                if (isLoadMore) {
+                    const btnMore = document.getElementById('btn-search-load-more');
+                    if (btnMore) {
+                        btnMore.disabled = false;
+                        btnMore.textContent = "❌ 載入失敗，點此重試";
+                    }
+                    alert("載入更多失敗: " + err.message);
+                } else {
+                    textBox.innerHTML = `<div style="padding:1rem; color:#ef4444;">搜尋失敗：${err.message}</div>`;
+                }
             }
+        }
+
+        async function loadMoreSearchResults() {
+            currentSearchOffset += 500;
+            await fetchAndRenderSearchResults(true);
         }
 
         function onAudioChapterEnded() {
