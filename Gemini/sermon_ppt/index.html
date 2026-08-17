@@ -840,6 +840,7 @@
                                     <option value="Taiwanese" selected>🎤 台語有聲聖經</option>
                                     <option value="unv1">🎤 和合本有聲聖經</option>
                                     <option value="tcv">🎤 現代中文有聲聖經</option>
+                                    <option value="rcuv">🎤 和合本2010 (YouTube 播放)</option>
                                 </select>
                             </div>
 
@@ -905,6 +906,9 @@
                                 <span style="font-size:0.75rem; color:var(--text-sub);">🔊 支援下一章自動播放</span>
                             </div>
                             <audio id="audio-html-player" class="custom-audio" controls></audio>
+                            <div id="audio-yt-player-wrapper" style="display:none; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1px solid var(--panel-border); margin-top:0.8rem; background:black;">
+                                <div id="audio-youtube-player"></div>
+                            </div>
                         </div>
                         <div class="hymns-table-wrapper" style="margin-top: 1.2rem;">
                             <div class="bible-reader-box" id="audio-bible-text-box">
@@ -1049,6 +1053,8 @@
         let currentTab = 'lyrics'; 
         let currentFormattedResult = '';
         let ytPlayer = null;
+        let audioYtPlayer = null;
+        let rcuvYoutubeIds = [];
 
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -1852,9 +1858,66 @@
         const BIBLE_66_CH_SHORT = ["創","出","利","民","申","書","士","得","撒上","撒下","王上","王下","代上","代下","拉","尼","斯","伯","詩","箴","傳","歌","賽","耶","哀","結","但","何","珥","摩","俄","拿","彌","鴻","哈","番","該","亞","瑪","太","可","路","約","徒","羅","林前","林後","加","弗","腓","西","帖前","帖後","提前","提後","多","門","來","雅","彼前","彼後","約一","約二","約三","猶","啟"];
         const BIBLE_66_CHAPS = [50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150, 31, 12, 8, 66, 52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4, 28, 16, 24, 21, 28, 16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22];
 
+        async function loadRcuvYoutubeIds() {
+            if (rcuvYoutubeIds.length > 0) return;
+            const params = {
+                sheetUrl: shURL,
+                sheetTag: '和修本 '
+            };
+            try {
+                const data = await getJsonApi(RSheet2Json_APIV6, params);
+                rcuvYoutubeIds = data.slice(1).map(row => row[3]);
+                console.log("和修本 YouTube ID 載入成功，共 " + rcuvYoutubeIds.length + " 筆。");
+            } catch (err) {
+                console.error("載入和修本 YouTube ID 失敗: ", err);
+            }
+        }
+
+        function getBibleGlobalChapIndex(bookIdx, chapNum) {
+            let globalIdx = 0;
+            for (let i = 0; i < bookIdx; i++) {
+                globalIdx += BIBLE_66_CHAPS[i];
+            }
+            return globalIdx + (chapNum - 1);
+        }
+
+        function loadAudioBibleYoutubeVideo(videoId) {
+            const ytWrapper = document.getElementById('audio-yt-player-wrapper');
+            ytWrapper.style.display = 'block';
+
+            if (audioYtPlayer) {
+                try {
+                    audioYtPlayer.loadVideoById({ videoId: videoId });
+                } catch (e) {
+                    console.error(e);
+                }
+            } else {
+                audioYtPlayer = new YT.Player("audio-youtube-player", {
+                    height: "100%",
+                    width: "100%",
+                    videoId: videoId,
+                    playerVars: {
+                        autoplay: 1,
+                        loop: 0
+                    },
+                    events: {
+                        onStateChange: (event) => {
+                            if (event.data === YT.PlayerState.ENDED) {
+                                console.log("Audio YouTube ended, playing next chapter...");
+                                onAudioChapterEnded();
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
         function initAudioBibleTab() {
             if (audioBibleInitialized) return;
             audioBibleInitialized = true;
+            
+            // 載入和修本 YouTube IDs
+            loadRcuvYoutubeIds();
 
             const selectTitle = document.getElementById('audio-select-title');
             const selectChap = document.getElementById('audio-select-chap');
@@ -1884,6 +1947,8 @@
                     selectText.value = "unv";
                 } else if (ver === "tcv") {
                     selectText.value = "tcv2019";
+                } else if (ver === "rcuv") {
+                    selectText.value = "rcuv";
                 }
                 onAudioSettingChange();
             });
@@ -1891,7 +1956,13 @@
             checkboxDetail.addEventListener('change', onAudioSettingChange);
 
             btnPlay.addEventListener('click', () => {
-                audioHtmlPlayer.play().catch(err => console.log("Play failed: ", err));
+                if (selectVer.value === "rcuv") {
+                    if (audioYtPlayer && audioYtPlayer.playVideo) {
+                        audioYtPlayer.playVideo();
+                    }
+                } else {
+                    audioHtmlPlayer.play().catch(err => console.log("Play failed: ", err));
+                }
             });
             btnSearch.addEventListener('click', executeAudioBibleKeywordSearch);
 
@@ -1924,30 +1995,52 @@
             const selectChap = document.getElementById('audio-select-chap');
             const selectVer = document.getElementById('audio-select-version');
             const audioHtmlPlayer = document.getElementById('audio-html-player');
-            const isPlaying = !audioHtmlPlayer.paused;
+            const ytWrapper = document.getElementById('audio-yt-player-wrapper');
 
             const bookIdx = selectTitle.selectedIndex + 1;
             const chapNum = parseInt(selectChap.value, 10);
-            
-            // 拼接有聲聖經 MP3 URL
-            let leadNum = "";
-            if (chapNum < 100) {
-                leadNum = (chapNum < 10) ? "00" : "0";
-            }
             const verPath = selectVer.value;
-            const suffix = (verPath === "tcv") ? "C" : "";
-            
-            const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx}${suffix}/${bookIdx}_${leadNum}${chapNum}.mp3`;
-            
-            // 載入音訊
-            audioHtmlPlayer.src = audioUrl;
-            audioHtmlPlayer.load();
 
             // 更新播放標題
             document.getElementById('audio-playing-title').textContent = `${BIBLE_66_BOOKS[selectTitle.selectedIndex]} 第 ${chapNum} 章`;
 
-            if (isPlaying) {
-                audioHtmlPlayer.play().catch(e => console.log(e));
+            if (verPath === "rcuv") {
+                // 顯示 YouTube 播放器，隱藏 HTML5 播放器
+                audioHtmlPlayer.style.display = 'none';
+                audioHtmlPlayer.pause();
+                ytWrapper.style.display = 'block';
+
+                const globalIdx = getBibleGlobalChapIndex(selectTitle.selectedIndex, chapNum);
+                if (rcuvYoutubeIds.length > globalIdx) {
+                    const videoId = rcuvYoutubeIds[globalIdx];
+                    console.log("Playing rcuv globalIdx: " + globalIdx + ", videoId: " + videoId);
+                    loadAudioBibleYoutubeVideo(videoId);
+                } else {
+                    console.warn("No rcuv videoId found for index " + globalIdx);
+                }
+            } else {
+                // 顯示 HTML5 播放器，隱藏 YouTube 播放器
+                audioHtmlPlayer.style.display = 'block';
+                ytWrapper.style.display = 'none';
+                if (audioYtPlayer && audioYtPlayer.pauseVideo) {
+                    try { audioYtPlayer.pauseVideo(); } catch(e){}
+                }
+
+                // 拼接有聲聖經 MP3 URL
+                let leadNum = "";
+                if (chapNum < 100) {
+                    leadNum = (chapNum < 10) ? "00" : "0";
+                }
+                const suffix = (verPath === "tcv") ? "C" : "";
+                const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx}${suffix}/${bookIdx}_${leadNum}${chapNum}.mp3`;
+
+                const isPlaying = !audioHtmlPlayer.paused;
+                audioHtmlPlayer.src = audioUrl;
+                audioHtmlPlayer.load();
+
+                if (isPlaying) {
+                    audioHtmlPlayer.play().catch(e => console.log(e));
+                }
             }
 
             // 更新顯示經文
@@ -2050,13 +2143,20 @@
         function onAudioChapterEnded() {
             const selectTitle = document.getElementById('audio-select-title');
             const selectChap = document.getElementById('audio-select-chap');
+            const selectVer = document.getElementById('audio-select-version');
             
             if (selectChap.selectedIndex < selectChap.options.length - 1) {
                 // 跳到下一章
                 selectChap.selectedIndex++;
                 onAudioSettingChange().then(() => {
-                    const player = document.getElementById('audio-html-player');
-                    setTimeout(() => { player.play().catch(e => console.log(e)); }, 500);
+                    if (selectVer.value === "rcuv") {
+                        if (audioYtPlayer && audioYtPlayer.playVideo) {
+                            setTimeout(() => { try { audioYtPlayer.playVideo(); } catch(e){} }, 500);
+                        }
+                    } else {
+                        const player = document.getElementById('audio-html-player');
+                        setTimeout(() => { player.play().catch(e => console.log(e)); }, 500);
+                    }
                 });
             } else {
                 // 跳到下一卷書第一章
@@ -2064,8 +2164,14 @@
                     selectTitle.selectedIndex++;
                     populateAudioChapters();
                     setTimeout(() => {
-                        const player = document.getElementById('audio-html-player');
-                        player.play().catch(e => console.log(e));
+                        if (selectVer.value === "rcuv") {
+                            if (audioYtPlayer && audioYtPlayer.playVideo) {
+                                try { audioYtPlayer.playVideo(); } catch(e){}
+                            }
+                        } else {
+                            const player = document.getElementById('audio-html-player');
+                            player.play().catch(e => console.log(e));
+                        }
                     }, 1000);
                 }
             }
