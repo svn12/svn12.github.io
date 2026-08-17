@@ -715,6 +715,14 @@
                                 <input type="text" id="hymns-input-query" class="text-input" placeholder="輸入歌名或數字進行檢索...">
                             </div>
 
+                            <div class="input-item">
+                                <label for="hymns-play-mode" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">自動連續播放模式</label>
+                                <select id="hymns-play-mode" class="select-input">
+                                    <option value="sequential" selected>🔁 循序播放</option>
+                                    <option value="random">🔀 隨機播放</option>
+                                </select>
+                            </div>
+
                             <button class="btn-action" id="hymns-btn-search">
                                 <span id="hymns-search-text">🔍 查詢詩歌連結</span>
                             </button>
@@ -1644,23 +1652,38 @@
             }
         }
 
-        // 自動播放下一首邏輯
+        // 隨機或循序自動播放下一首邏輯
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.ENDED) {
-                console.log("[YTPlayer] 影片播放結束，自動切換至下一首。");
+                console.log("[YTPlayer] 影片播放結束，準備切換播放下一首。");
                 const selectSub = document.getElementById('hymns-select-sub');
-                if (selectSub.selectedIndex < selectSub.options.length - 1) {
-                    selectSub.selectedIndex++;
-                    document.getElementById('hymns-input-query').value = selectSub.value;
-                    executeHymnSearch().then(() => {
-                        if (ytPlayer) {
-                            // 載入完成後自動播放下一首
-                            setTimeout(() => {
-                                try { ytPlayer.playVideo(); } catch(e){}
-                            }, 500);
-                        }
-                    });
+                const playMode = document.getElementById('hymns-play-mode').value;
+                
+                if (selectSub.options.length === 0) return;
+                
+                if (playMode === 'random') {
+                    // 隨機播放模式
+                    const randomIndex = Math.floor(Math.random() * selectSub.options.length);
+                    selectSub.selectedIndex = randomIndex;
+                } else {
+                    // 循序播放模式
+                    if (selectSub.selectedIndex < selectSub.options.length - 1) {
+                        selectSub.selectedIndex++;
+                    } else {
+                        // 播放到最後一首，重頭開始
+                        selectSub.selectedIndex = 0;
+                    }
                 }
+                
+                document.getElementById('hymns-input-query').value = selectSub.value;
+                executeHymnSearch().then(() => {
+                    if (ytPlayer) {
+                        // 載入完成後自動播放
+                        setTimeout(() => {
+                            try { ytPlayer.playVideo(); } catch(e){}
+                        }, 500);
+                    }
+                });
             }
         }
 
