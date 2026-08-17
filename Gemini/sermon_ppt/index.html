@@ -405,11 +405,11 @@
         }
 
         .number-input {
-            width: 65px;
+            width: 60px;
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--panel-border);
             color: var(--text-main);
-            padding: 0.35rem;
+            padding: 0.3rem;
             border-radius: 6px;
             text-align: center;
             font-family: inherit;
@@ -628,17 +628,18 @@
 
         <!-- Tabs Header -->
         <div class="tabs-header">
-            <button class="tab-btn active" id="tab-lyrics">🎵 歌詞與大綱排版</button>
+            <button class="tab-btn active" id="tab-lyrics">🎵 聖歌隊歌詞排版</button>
             <button class="tab-btn" id="tab-scripture">📖 聖經經文抓取</button>
+            <button class="tab-btn" id="tab-outline">📝 講道大綱排版</button>
             <button class="tab-btn" id="tab-hymns">🎵 聖詩與啟應文</button>
         </div>
 
         <main>
-            <!-- 歌詞/大綱模式檔案上傳 -->
+            <!-- 歌詞模式檔案上傳 -->
             <div class="tab-content active" id="content-lyrics">
                 <div class="drop-zone" id="drop-zone">
                     <div class="drop-zone-icon">📄</div>
-                    <p>將歌詞或大綱文字檔 (.txt) 拖曳到此處，或<strong>點擊選擇檔案</strong></p>
+                    <p>將歌詞文字檔 (.txt) 拖曳到此處，或<strong>點擊選擇檔案</strong></p>
                     <input type="file" id="file-input" accept=".txt" style="display: none;">
                 </div>
             </div>
@@ -647,10 +648,10 @@
             <div class="main-layout">
                 <!-- 左側輸入區 -->
                 <div>
-                    <!-- 歌詞與大綱輸入面板 -->
+                    <!-- 歌詞輸入面板 -->
                     <div class="tab-content active" id="input-lyrics">
-                        <div class="panel-title">📝 原始文字輸入</div>
-                        <textarea id="lyrics-textarea" placeholder="請在此貼上歌詞或講道大綱。&#10;如果使用「聖歌隊歌詞」模式並啟用「自動解析介紹」，前 5 行應為：歌名、團體、日期、指揮、司琴。"></textarea>
+                        <div class="panel-title">📝 原始歌詞輸入</div>
+                        <textarea id="lyrics-textarea" placeholder="請在此貼上歌詞。&#10;如果啟用了「自動解析介紹」，前 5 行應為：歌名、團體、日期、指揮、司琴。"></textarea>
                     </div>
 
                     <!-- 經文輸入面板 -->
@@ -684,6 +685,12 @@
                                 <span id="fetch-btn-text">🚀 抓取並排版經文</span>
                             </button>
                         </div>
+                    </div>
+
+                    <!-- 講道大綱輸入面板 -->
+                    <div class="tab-content" id="input-outline">
+                        <div class="panel-title">📝 原始大綱輸入 (使用空行分隔各頁)</div>
+                        <textarea id="outline-textarea" placeholder="請在此貼上講道大綱。每頁之間請以「空行」分隔。&#10;&#10;每個段落的第 1 行會作為該頁 Title (靠左)。&#10;其餘行會作為該頁 Text (前置 Tab 縮進)。&#10;&#10;例如：&#10;一、前言&#10;今天我們要分享上帝的恩典。&#10;這是我們生命中的力量。&#10;&#10;二、信心&#10;信心是那看不見的實底。"></textarea>
                     </div>
 
                     <!-- 聖詩與啟應文面板 -->
@@ -733,7 +740,7 @@
                 <!-- 右側輸出預覽區 -->
                 <div>
                     <div class="panel-title">✨ 排版預覽與播放結果</div>
-                    <!-- 歌詞與經文預覽 -->
+                    <!-- 歌詞、經文與大綱預覽 -->
                     <div id="wrapper-text-preview">
                         <div class="preview-area" id="preview-area"></div>
                     </div>
@@ -750,23 +757,12 @@
                 </div>
             </div>
 
-            <!-- 控制列 (歌詞/大綱模式專屬) -->
-            <div class="controls-row" id="controls-row-lyrics">
-                <div class="control-item">
-                    <div class="control-label">
-                        <span class="control-title">排版模式</span>
-                        <span class="control-desc">選擇要排版的文字類型</span>
-                    </div>
-                    <select id="lyrics-layout-mode" class="select-input" style="width: 140px; padding: 0.4rem 0.6rem; font-size: 0.85rem; height: 34px;">
-                        <option value="lyrics" selected>🎵 聖歌隊歌詞</option>
-                        <option value="outline">📝 講道大綱</option>
-                    </select>
-                </div>
-
+            <!-- 控制列 (歌詞與大綱模式共用字數折行) -->
+            <div class="controls-row" id="controls-row-shared">
                 <div class="control-item" id="ctrl-auto-header">
                     <div class="control-label">
-                        <span class="control-title">自動解析介紹</span>
-                        <span class="control-desc">分析前5行基本資訊與詞曲作者(歌詞專屬)</span>
+                        <span class="control-title">自動解析介紹 (僅限歌詞)</span>
+                        <span class="control-desc">自動分析前5行基本資訊與詞曲作者</span>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="auto-header" checked>
@@ -774,24 +770,16 @@
                     </label>
                 </div>
 
-                <div class="control-item" id="ctrl-lines-per-page">
-                    <div class="control-label">
-                        <span class="control-title">每頁行數</span>
-                        <span class="control-desc">每頁簡報顯示的文字行數</span>
-                    </div>
-                    <input type="number" id="lines-per-page" class="number-input" value="2" min="1" max="10">
-                </div>
-
                 <div class="control-item" id="ctrl-max-len">
                     <div class="control-label">
-                        <span class="control-title">單行字數限制</span>
-                        <span class="control-desc">字數超過將自動於語意標點換行</span>
+                        <span class="control-title">單行字數限制 (適用於歌詞與大綱內容)</span>
+                        <span class="control-desc">文字超過將自動於語意標點換行</span>
                     </div>
                     <input type="number" id="max-len" class="number-input" value="15" min="5" max="35">
                 </div>
             </div>
 
-            <!-- 共用操作按鈕 (歌詞與經文模式) -->
+            <!-- 共用操作按鈕 (歌詞、經文與大綱模式) -->
             <div class="button-group" id="btn-group-shared">
                 <button class="btn btn-copy" id="btn-copy">📋 複製排版文字</button>
                 <button class="btn btn-download" id="btn-download">💾 下載排版檔案 (.txt)</button>
@@ -885,7 +873,7 @@
             "拉": "以斯拉記", "尼": "尼希米記", "斯": "以斯帖記", "伯": "約伯記", "詩": "詩篇",
             "箴": "箴言", "傳": "傳道書", "歌": "雅歌", "賽": "以賽亞書", "耶": "耶利米書",
             "哀": "耶利米哀歌", "結": "以西結書", "但": "但以理書", "何": "何西阿書", "珥": "約珥書",
-            "摩": "阿摩司書", "俄": "俄底亞書", "拿": "約拿書", "彌": "彌迦書", "鴻": "那鴻書",
+            "摩": "阿摩司書", "俄": "俄巴底亞書", "拿": "約拿書", "彌": "彌迦書", "鴻": "那鴻書",
             "哈": "哈巴谷書", "番": "西番雅書", "該": "哈該書", "亞": "撒迦利亞書", "瑪": "瑪拉基書",
             "太": "馬太福音", "可": "馬可福音", "路": "路加福音", "約": "約翰福音", "徒": "使徒行傳",
             "羅": "羅馬書", "林前": "哥林多前書", "林後": "哥林多後書", "加": "加拉太書", "弗": "以弗所書",
@@ -907,12 +895,14 @@
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const textarea = document.getElementById('lyrics-textarea');
+        const outlineTextarea = document.getElementById('outline-textarea');
         const previewArea = document.getElementById('preview-area');
         const btnCopy = document.getElementById('btn-copy');
         const btnDownload = document.getElementById('btn-download');
 
         document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
         document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
+        document.getElementById('tab-outline').addEventListener('click', () => switchTab('outline'));
         document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
 
         function switchTab(tab) {
@@ -929,17 +919,24 @@
                 document.getElementById('tab-lyrics').classList.add('active');
                 document.getElementById('content-lyrics').classList.add('active');
                 document.getElementById('input-lyrics').classList.add('active');
-                document.getElementById('controls-row-lyrics').style.display = 'flex';
+                document.getElementById('controls-row-shared').style.display = 'flex';
+                document.getElementById('ctrl-auto-header').style.display = 'flex';
                 updateLyricsLayout();
             } else if (tab === 'scripture') {
                 document.getElementById('tab-scripture').classList.add('active');
                 document.getElementById('input-scripture').classList.add('active');
-                document.getElementById('controls-row-lyrics').style.display = 'none';
+                document.getElementById('controls-row-shared').style.display = 'none';
                 previewArea.textContent = currentFormattedResult;
+            } else if (tab === 'outline') {
+                document.getElementById('tab-outline').classList.add('active');
+                document.getElementById('input-outline').classList.add('active');
+                document.getElementById('controls-row-shared').style.display = 'flex';
+                document.getElementById('ctrl-auto-header').style.display = 'none'; // 大綱不需自動解析 metadata
+                updateOutlineLayout();
             } else if (tab === 'hymns') {
                 document.getElementById('tab-hymns').classList.add('active');
                 document.getElementById('input-hymns').classList.add('active');
-                document.getElementById('controls-row-lyrics').style.display = 'none';
+                document.getElementById('controls-row-shared').style.display = 'none';
                 document.getElementById('btn-group-shared').style.display = 'none';
                 document.getElementById('wrapper-text-preview').style.display = 'none';
                 document.getElementById('wrapper-hymns-preview').style.display = 'block';
@@ -950,33 +947,13 @@
         }
 
         textarea.addEventListener('input', updateLyricsLayout);
+        outlineTextarea.addEventListener('input', updateOutlineLayout);
         document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
-        document.getElementById('max-len').addEventListener('input', () => {
+        
+        const maxLenInput = document.getElementById('max-len');
+        maxLenInput.addEventListener('input', () => {
             if (currentTab === 'lyrics') updateLyricsLayout();
-        });
-        document.getElementById('lines-per-page').addEventListener('input', () => {
-            if (currentTab === 'lyrics') updateLyricsLayout();
-        });
-
-        // 排版模式切換 (歌詞 vs 大綱)
-        const layoutModeSelect = document.getElementById('lyrics-layout-mode');
-        layoutModeSelect.addEventListener('change', () => {
-            const mode = layoutModeSelect.value;
-            const autoHeaderItem = document.getElementById('ctrl-auto-header');
-            const linesInput = document.getElementById('lines-per-page');
-            
-            if (mode === 'outline') {
-                // 大綱模式：隱藏自動解析介紹，且預設改為每頁 1 行
-                autoHeaderItem.style.opacity = '0.3';
-                autoHeaderItem.style.pointerEvents = 'none';
-                linesInput.value = '1';
-            } else {
-                // 歌詞模式：啟用自動解析介紹，且預設改為每頁 2 行
-                autoHeaderItem.style.opacity = '1';
-                autoHeaderItem.style.pointerEvents = 'auto';
-                linesInput.value = '2';
-            }
-            updateLyricsLayout();
+            else if (currentTab === 'outline') updateOutlineLayout();
         });
 
         // Drag & Drop
@@ -1001,13 +978,18 @@
             }
             const reader = new FileReader();
             reader.onload = function(e) {
-                textarea.value = e.target.result;
-                updateLyricsLayout();
+                if (currentTab === 'outline') {
+                    outlineTextarea.value = e.target.result;
+                    updateOutlineLayout();
+                } else {
+                    textarea.value = e.target.result;
+                    updateLyricsLayout();
+                }
             };
             reader.readAsText(file);
         }
 
-        // 歌詞語意分行
+        // 歌詞/大綱語意分行
         function splitLongLine(line, maxLen = 15) {
             line = line.trim();
             if (line.length <= maxLen) {
@@ -1047,7 +1029,7 @@
             return splitLongLine(left, maxLen).concat(splitLongLine(right, maxLen));
         }
 
-        // 歌詞與大綱切頁
+        // 歌詞切頁
         function chunkRawLyrics(text, linesPerPage = 2, maxLen = 15) {
             const rawLines = text.split('\n').map(l => l.trim()).filter(l => l);
             const processedLines = [];
@@ -1111,7 +1093,7 @@
             };
         }
 
-        // 歌詞與大綱排版輸出
+        // 歌詞排版輸出
         function formatOutputText(metadata, lyricsPages, autoHeader) {
             let outputLines = [];
             
@@ -1120,7 +1102,7 @@
                 const totalPages = hasComposer ? 4 : 3;
                 let pageIdx = 1;
                 
-                outputLines.push(`P0-1/${totalPages}`);
+                outputLines.push(`P0-${pageIdx}/${totalPages}`);
                 outputLines.push(`\t${metadata.title || ''}`);
                 pageIdx++;
                 
@@ -1160,10 +1142,8 @@
                 return;
             }
 
-            const layoutMode = document.getElementById('lyrics-layout-mode').value;
-            const autoHeader = (layoutMode === 'lyrics') ? document.getElementById('auto-header').checked : false;
-            const maxLen = parseInt(document.getElementById('max-len').value, 10) || 15;
-            const linesPerPage = parseInt(document.getElementById('lines-per-page').value, 10) || 2;
+            const autoHeader = document.getElementById('auto-header').checked;
+            const maxLen = parseInt(maxLenInput.value, 10) || 15;
 
             let metadata = {};
             let lyricsPages = [];
@@ -1171,13 +1151,59 @@
             if (autoHeader) {
                 const parsed = parseAutoHeaderFile(rawText);
                 metadata = parsed.metadata;
-                lyricsPages = chunkRawLyrics(parsed.lyricsText, linesPerPage, maxLen);
+                lyricsPages = chunkRawLyrics(parsed.lyricsText, 2, maxLen);
             } else {
-                metadata = { title: rawText.split('\n')[0].trim() || '大綱/歌詞' };
-                lyricsPages = chunkRawLyrics(rawText, linesPerPage, maxLen);
+                metadata = { title: rawText.split('\n')[0].trim() || '歌詞字幕' };
+                lyricsPages = chunkRawLyrics(rawText, 2, maxLen);
             }
 
             const formattedText = formatOutputText(metadata, lyricsPages, autoHeader);
+            previewArea.textContent = formattedText;
+            currentFormattedResult = formattedText;
+        }
+
+        // ==========================================
+        // 📝 講道大綱排版邏輯
+        // ==========================================
+        function updateOutlineLayout() {
+            const rawText = outlineTextarea.value.trim();
+            if (!rawText) {
+                previewArea.textContent = "";
+                return;
+            }
+
+            const maxLen = parseInt(maxLenInput.value, 10) || 15;
+            
+            // 依空行切分為多個段落 (即多頁)
+            const paragraphs = rawText.split(/\n\s*\n+/);
+            let outputLines = [];
+            let pageIdx = 1;
+
+            for (let p of paragraphs) {
+                const lines = p.split('\n').map(l => l.trim()).filter(l => l);
+                if (lines.length === 0) continue;
+
+                // 頁碼行
+                outputLines.push(`P${pageIdx}`);
+                
+                // 第一行為 Title (靠左，不加縮進)
+                outputLines.push(lines[0]);
+                
+                // 其餘行為 Text (前置 \t 縮進，若字數過長會進行自動語意切分)
+                if (lines.length > 1) {
+                    const contentLines = lines.slice(1);
+                    for (let cLine of contentLines) {
+                        const splitLines = splitLongLine(cLine, maxLen);
+                        splitLines.forEach(subLine => {
+                            outputLines.push(`\t${subLine}`);
+                        });
+                    }
+                }
+                
+                pageIdx++;
+            }
+
+            const formattedText = outputLines.join('\n');
             previewArea.textContent = formattedText;
             currentFormattedResult = formattedText;
         }
@@ -1373,14 +1399,20 @@
 
             let title = '排版結果';
             if (currentTab === 'lyrics') {
-                const layoutMode = document.getElementById('lyrics-layout-mode').value;
                 const rawText = textarea.value.trim();
                 const firstLine = rawText.split('\n')[0].trim();
-                const prefix = (layoutMode === 'outline') ? '講道大綱' : '聖歌隊歌詞';
                 if (firstLine && firstLine.length < 30) {
                     title = `${firstLine}_排版後`;
                 } else {
-                    title = `${prefix}_排版後`;
+                    title = '聖歌隊歌詞_排版後';
+                }
+            } else if (currentTab === 'outline') {
+                const rawText = outlineTextarea.value.trim();
+                const firstLine = rawText.split('\n')[0].trim();
+                if (firstLine && firstLine.length < 30) {
+                    title = `${firstLine}_大綱排版後`;
+                } else {
+                    title = '講道大綱_排版後';
                 }
             } else {
                 const qstr = document.getElementById('bible-qstr').value.trim();
