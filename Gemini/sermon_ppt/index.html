@@ -223,7 +223,7 @@
             border-radius: 12px;
             padding: 1rem;
             color: #38bdf8;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace, "PingFang TC", "Lantinghei TC", "Microsoft JhengHei", DFKai-SB, sans-serif;
             font-size: 0.9rem;
             line-height: 1.5;
             overflow-y: auto;
@@ -649,6 +649,7 @@
             overflow-y: auto;
             line-height: 1.6;
             font-size: 0.9rem;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Lantinghei TC", "Microsoft JhengHei", DFKai-SB, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         .bible-reader-box table {
@@ -671,6 +672,12 @@
             font-weight: 600;
             min-width: 45px;
             display: inline-block;
+        }
+
+        .tghg-row {
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Lantinghei TC", "Microsoft JhengHei", DFKai-SB, sans-serif;
         }
 
         .checkbox-container {
@@ -1972,8 +1979,7 @@
                     if (checkboxDetail && recordsTghg[i]) {
                         html += `<tr>`;
                         html += `<td></td>`;
-                        html += `<style>#tghg-row {color: var(--text-sub); font-size:0.85rem;}</style>`;
-                        html += `<td id="tghg-row">台語：${cleanHtml(recordsTghg[i].bible_text)}</td>`;
+                        html += `<td class="tghg-row">台語：${cleanHtml(recordsTghg[i].bible_text)}</td>`;
                         html += `</tr>`;
                     }
                 }
