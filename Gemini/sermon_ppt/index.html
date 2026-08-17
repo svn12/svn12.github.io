@@ -973,9 +973,9 @@
                             </div>
 
                             <!-- 3. 南門手抄聖經容器 -->
-                            <div class="bible-reader-box" id="audio-hand-container" style="display:none; height:430px; overflow-y:auto; padding:1.2rem; flex-direction:column; align-items:center; gap:0.8rem;">
+                            <div class="bible-reader-box" id="audio-hand-container" style="display:none; height:430px; padding:1.2rem; flex-direction:column; align-items:center; gap:0.8rem; overflow:hidden;">
                                 <!-- 翻頁與手抄者控制 -->
-                                <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.03); padding:0.4rem 0.8rem; border-radius:8px; border:1px solid var(--panel-border); margin-bottom:0.5rem; flex-wrap:wrap; justify-content:center;">
+                                <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.03); padding:0.4rem 0.8rem; border-radius:8px; border:1px solid var(--panel-border); margin-bottom:0.5rem; flex-wrap:wrap; justify-content:center; z-index:5;">
                                     <button class="hymns-link-btn btn-link-db" id="hand-prev-page" style="padding:0.35rem 0.6rem;">◀ 上一頁</button>
                                     <span style="font-size:0.8rem; color:var(--text-sub);">第</span>
                                     <input type="number" id="hand-page-input" class="number-input" style="width:60px;" value="1" min="1" max="1873">
@@ -984,13 +984,22 @@
                                     <button class="hymns-link-btn btn-link-db" id="hand-next-page" style="padding:0.35rem 0.6rem;">下一頁 ▶</button>
                                     
                                     <span style="font-size:0.8rem; color:var(--text-sub); margin-left:0.5rem;">抄寫者:</span>
-                                    <select id="hand-writer-select" class="select-input" style="font-size:0.8rem; height:28px; padding:0 0.4rem; width:120px; line-height:28px;">
+                                    <select id="hand-writer-select" class="select-input" style="font-size:0.8rem; height:28px; padding:0 0.4rem; width:100px; line-height:28px;">
                                         <!-- 動態填充 -->
                                     </select>
+
+                                    <!-- 放大縮小拖曳重置按鈕 -->
+                                    <span style="border-left:1px solid rgba(255,255,255,0.1); height:16px; margin:0 0.3rem;"></span>
+                                    <button class="hymns-link-btn btn-link-db" id="hand-zoom-in" style="padding:0.35rem 0.5rem; font-weight:bold;" title="放大">🔍+</button>
+                                    <button class="hymns-link-btn btn-link-db" id="hand-zoom-out" style="padding:0.35rem 0.5rem; font-weight:bold;" title="縮小">🔍-</button>
+                                    <button class="hymns-link-btn btn-link-db" id="hand-drag-toggle" style="padding:0.35rem 0.5rem; font-weight:bold;" title="平移拖曳模式">🖐️</button>
+                                    <button class="hymns-link-btn btn-link-db" id="hand-zoom-reset" style="padding:0.35rem 0.5rem; font-weight:bold;" title="重置">🔄</button>
                                 </div>
-                                <!-- PDF iframe 顯示 -->
-                                <div style="width:100%; height:320px; border-radius:8px; overflow:hidden; border:1px solid var(--panel-border); background:rgba(0,0,0,0.25);">
-                                    <iframe id="hand-bible-pdf" src="" style="width:100%; height:100%; border:none; background:white;" allow="autoplay"></iframe>
+                                <!-- PDF iframe 顯示 (Viewport 容器) -->
+                                <div id="hand-pdf-viewport" style="width:100%; height:100%; border-radius:8px; overflow:hidden; border:1px solid var(--panel-border); background:rgba(0,0,0,0.25); position:relative;">
+                                    <iframe id="hand-bible-pdf" src="" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); transform-origin:center center; width:100%; height:100%; border:none; background:white; transition:transform 0.15s ease-out;" allow="autoplay"></iframe>
+                                    <!-- 透明拖曳遮罩層 -->
+                                    <div id="hand-iframe-mask" style="position:absolute; left:0; top:0; width:100%; height:100%; z-index:2; cursor:grab; pointer-events:none; background:rgba(0,0,0,0);"></div>
                                 </div>
                             </div>
                         </div>
@@ -1152,6 +1161,13 @@
         let isDraggingScanImg = false;
         let startDragX = 0;
         let startDragY = 0;
+        let handZoomScale = 1.0;
+        let handPanX = 0;
+        let handPanY = 0;
+        let isDraggingHandPdf = false;
+        let startDragHandX = 0;
+        let startDragHandY = 0;
+        let handDragMode = false;
 
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -2260,6 +2276,27 @@
             renderHandPage();
         }
 
+        function applyHandPdfTransform() {
+            const pdf = document.getElementById('hand-bible-pdf');
+            if (pdf) {
+                pdf.style.transform = `translate(-50%, -50%) translate(${handPanX}px, ${handPanY}px) scale(${handZoomScale})`;
+            }
+        }
+
+        function resetHandPdfPanZoom() {
+            handZoomScale = 1.0;
+            handPanX = 0;
+            handPanY = 0;
+            handDragMode = false;
+            
+            const btnDrag = document.getElementById('hand-drag-toggle');
+            const mask = document.getElementById('hand-iframe-mask');
+            if (btnDrag) btnDrag.style.backgroundColor = "";
+            if (mask) mask.style.pointerEvents = "none";
+            
+            applyHandPdfTransform();
+        }
+
         function renderHandPage() {
             if (handBibleDetail.length === 0) return;
             const pdfIframe = document.getElementById('hand-bible-pdf');
@@ -2268,6 +2305,7 @@
             
             const detail = handBibleDetail[currentHandPage - 1];
             if (detail) {
+                resetHandPdfPanZoom();
                 input.value = currentHandPage;
                 selectWriter.value = detail.writer;
                 
@@ -2481,6 +2519,70 @@
                     changeHandPage(target.Page);
                 }
             });
+
+            // 南門手抄本 PDF 放大縮小與重置/拖曳
+            document.getElementById('hand-zoom-in').addEventListener('click', () => {
+                handZoomScale = Math.min(handZoomScale + 0.2, 4.0);
+                applyHandPdfTransform();
+            });
+            document.getElementById('hand-zoom-out').addEventListener('click', () => {
+                handZoomScale = Math.max(handZoomScale - 0.2, 0.5);
+                applyHandPdfTransform();
+            });
+            document.getElementById('hand-zoom-reset').addEventListener('click', () => {
+                resetHandPdfPanZoom();
+            });
+            
+            // 拖曳模式切換
+            const btnDragHand = document.getElementById('hand-drag-toggle');
+            const handMask = document.getElementById('hand-iframe-mask');
+            btnDragHand.addEventListener('click', () => {
+                handDragMode = !handDragMode;
+                if (handDragMode) {
+                    btnDragHand.style.backgroundColor = "var(--accent)";
+                    handMask.style.pointerEvents = "auto";
+                } else {
+                    btnDragHand.style.backgroundColor = "";
+                    handMask.style.pointerEvents = "none";
+                }
+            });
+
+            // Hand Viewport 拖曳平移 (Pan) 邏輯
+            handMask.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                isDraggingHandPdf = true;
+                handMask.style.cursor = 'grabbing';
+                startDragHandX = e.clientX - handPanX;
+                startDragHandY = e.clientY - handPanY;
+            });
+            
+            window.addEventListener('mousemove', (e) => {
+                if (!isDraggingHandPdf) return;
+                handPanX = e.clientX - startDragHandX;
+                handPanY = e.clientY - startDragHandY;
+                applyHandPdfTransform();
+            });
+            
+            window.addEventListener('mouseup', () => {
+                if (isDraggingHandPdf) {
+                    isDraggingHandPdf = false;
+                    handMask.style.cursor = 'grab';
+                }
+            });
+
+            // Hand Viewport 滾輪縮放 (Zoom) 邏輯
+            const handPdfViewport = document.getElementById('hand-pdf-viewport');
+            handPdfViewport.addEventListener('wheel', (e) => {
+                if (scanMode !== 'hand') return;
+                e.preventDefault();
+                const zoomFactor = 0.15;
+                if (e.deltaY < 0) {
+                    handZoomScale = Math.min(handZoomScale + zoomFactor, 4.0);
+                } else {
+                    handZoomScale = Math.max(handZoomScale - zoomFactor, 0.5);
+                }
+                applyHandPdfTransform();
+            }, { passive: false });
 
             const selectTitle = document.getElementById('audio-select-title');
             const selectChap = document.getElementById('audio-select-chap');
