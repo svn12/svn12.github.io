@@ -116,19 +116,19 @@
 
         .tab-btn {
             flex: 1;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 0.5rem;
             background: none;
             border: none;
             color: var(--text-sub);
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .tab-btn.active {
@@ -320,10 +320,6 @@
             display: none;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         .controls-row {
             display: flex;
             flex-wrap: wrap;
@@ -461,10 +457,6 @@
             background: var(--success-hover);
             box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
             transform: translateY(-1px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
         }
 
         /* 聖詩/啟應文專用樣式 */
@@ -608,6 +600,93 @@
             color: white !important;
         }
 
+        /* 有聲聖經專用樣式 */
+        .audio-player-box {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.06) 100%);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .audio-player-header {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        audio.custom-audio {
+            width: 100%;
+            outline: none;
+            border-radius: 8px;
+            background: #111;
+        }
+
+        .highlight {
+            color: #f472b6;
+            background: rgba(244, 114, 182, 0.15);
+            padding: 0.1rem 0.25rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .bible-reader-box {
+            width: 100%;
+            height: 380px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            color: var(--text-main);
+            overflow-y: auto;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .bible-reader-box table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .bible-reader-box td {
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            vertical-align: top;
+        }
+
+        .bible-reader-box tr:hover {
+            background: rgba(255,255,255,0.01);
+        }
+
+        .bible-reader-box .verse-num {
+            color: var(--accent);
+            font-weight: 600;
+            min-width: 45px;
+            display: inline-block;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            user-select: none;
+        }
+
+        .checkbox-container input {
+            cursor: pointer;
+        }
+
         footer {
             margin-top: 2rem;
             font-size: 0.8rem;
@@ -631,6 +710,7 @@
             <button class="tab-btn active" id="tab-lyrics">🎵 聖歌隊歌詞排版</button>
             <button class="tab-btn" id="tab-scripture">📖 聖經經文抓取</button>
             <button class="tab-btn" id="tab-hymns">🎵 聖詩與啟應文</button>
+            <button class="tab-btn" id="tab-audio">🎧 聽讀有聲聖經</button>
         </div>
 
         <main>
@@ -728,6 +808,68 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- 聽讀有聲聖經面板 -->
+                    <div class="tab-content" id="input-audio">
+                        <div class="panel-title">🔍 有聲聖經播放設定</div>
+                        <div class="bible-input-group" style="height: auto;">
+                            <div class="input-item">
+                                <label for="audio-select-title" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">聖經書卷</label>
+                                <select id="audio-select-title" class="select-input">
+                                    <!-- 動態填充 -->
+                                </select>
+                            </div>
+
+                            <div class="input-item">
+                                <label for="audio-select-chap" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">章節選擇</label>
+                                <select id="audio-select-chap" class="select-input">
+                                    <!-- 動態填充 -->
+                                </select>
+                            </div>
+
+                            <div class="input-item">
+                                <label for="audio-select-version" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">有聲播放譯本</label>
+                                <select id="audio-select-version" class="select-input">
+                                    <option value="Taiwanese" selected>🎤 台語有聲聖經</option>
+                                    <option value="unv1">🎤 和合本有聲聖經</option>
+                                    <option value="tcv">🎤 現代中文有聲聖經</option>
+                                </select>
+                            </div>
+
+                            <div class="input-item">
+                                <label for="audio-select-text-ver" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">對照文字譯本</label>
+                                <select id="audio-select-text-ver" class="select-input">
+                                    <option value="bklcl" selected>巴克禮全羅</option>
+                                    <option value="bklhl">巴克禮漢羅</option>
+                                    <option value="ttvhl2021">現代台語2021漢字</option>
+                                    <option value="ttvcl2021">現代台語2021全羅</option>
+                                    <option value="unv">和合本</option>
+                                    <option value="tcv2019">現代中文譯本2019</option>
+                                    <option value="rcuv">和修本</option>
+                                </select>
+                            </div>
+
+                            <div class="input-item" style="flex-direction:row; justify-content:space-between; align-items:center; margin-top:0.3rem;">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="audio-checkbox-detail" checked> 顯示雙語對照
+                                </label>
+                            </div>
+
+                            <div class="input-item">
+                                <label for="audio-input-keyword" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">全文關鍵字檢索</label>
+                                <input type="text" id="audio-input-keyword" class="text-input" placeholder="輸入關鍵字搜尋聖經...">
+                            </div>
+
+                            <div style="display:flex; gap:0.5rem; margin-top:0.3rem;">
+                                <button class="btn-action" id="audio-btn-play" style="flex:1;">
+                                    <span>🎵 播放音訊</span>
+                                </button>
+                                <button class="btn-action" id="audio-btn-search" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--panel-border);">
+                                    <span>🔍 全文檢索</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 右側輸出預覽區 -->
@@ -745,6 +887,22 @@
                         </div>
                         <div class="yt-player-box" id="hymns-player-box">
                             <div id="youtube-player"></div>
+                        </div>
+                    </div>
+
+                    <!-- 聽讀有聲聖經預覽區 -->
+                    <div id="wrapper-audio-preview" style="display: none;">
+                        <div class="audio-player-box">
+                            <div class="audio-player-header">
+                                <span id="audio-playing-title">創世記 第 1 章</span>
+                                <span style="font-size:0.75rem; color:var(--text-sub);">🔊 支援下一章自動播放</span>
+                            </div>
+                            <audio id="audio-html-player" class="custom-audio" controls></audio>
+                        </div>
+                        <div class="hymns-table-wrapper" style="margin-top: 1.2rem;">
+                            <div class="bible-reader-box" id="audio-bible-text-box">
+                                <!-- 經文或檢索結果 -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -895,6 +1053,7 @@
         document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
         document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
         document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
+        document.getElementById('tab-audio').addEventListener('click', () => switchTab('audio'));
 
         function switchTab(tab) {
             currentTab = tab;
@@ -904,6 +1063,7 @@
             // 重置預覽視窗
             document.getElementById('wrapper-text-preview').style.display = 'block';
             document.getElementById('wrapper-hymns-preview').style.display = 'none';
+            document.getElementById('wrapper-audio-preview').style.display = 'none';
             document.getElementById('btn-group-shared').style.display = 'grid';
 
             if (tab === 'lyrics') {
@@ -924,9 +1084,15 @@
                 document.getElementById('btn-group-shared').style.display = 'none';
                 document.getElementById('wrapper-text-preview').style.display = 'none';
                 document.getElementById('wrapper-hymns-preview').style.display = 'block';
-                
-                // 初次切換至聖詩，進行初始化加載
                 initHymnsTab();
+            } else if (tab === 'audio') {
+                document.getElementById('tab-audio').classList.add('active');
+                document.getElementById('input-audio').classList.add('active');
+                document.getElementById('controls-row-lyrics').style.display = 'none';
+                document.getElementById('btn-group-shared').style.display = 'none';
+                document.getElementById('wrapper-text-preview').style.display = 'none';
+                document.getElementById('wrapper-audio-preview').style.display = 'block';
+                initAudioBibleTab();
             }
         }
 
@@ -1364,7 +1530,7 @@
         });
 
         // ==========================================
-        // 🎵 聖詩與啟應文功能區 (Vanilla JS 整合版)
+        // 🎵 聖詩與啟應文功能區
         // ==========================================
         let hymnsInitialized = false;
 
@@ -1380,7 +1546,6 @@
             selectSub.addEventListener('change', onSublistSelectChange);
             btnSearch.addEventListener('click', onHymnSearchClick);
             
-            // 初次加載新聖詩列表
             await loadHymnSublist();
         }
 
@@ -1408,7 +1573,6 @@
                 list.shift(); // 移除首列標頭
                 list.sort();
                 
-                // 填充細項選單
                 list.forEach(item => {
                     const opt = document.createElement('option');
                     opt.value = item;
@@ -1416,10 +1580,8 @@
                     selectSub.appendChild(opt);
                 });
                 
-                // 設定 autocomplete
                 setupHymnsAutocomplete(document.getElementById('hymns-input-query'), list);
                 
-                // 設為第一個選項並立刻載入
                 if (list.length > 0) {
                     document.getElementById('hymns-input-query').value = list[0];
                     await executeHymnSearch();
@@ -1478,16 +1640,12 @@
                     return;
                 }
                 
-                // 動態取得所有表頭欄位
                 const headers = Object.keys(data[0]);
-                
-                // 自動播放 YouTube 伴奏
                 const ytField = data[0].YT || '';
                 if (ytField) {
                     loadYouTubeVideo(ytField);
                 }
                 
-                // 渲染精美 Table HTML
                 let html = `<table class="hymns-table"><thead><tr>`;
                 headers.forEach(h => {
                     html += `<th>${h}</th>`;
@@ -1532,11 +1690,9 @@
             }
         }
 
-        // Autocomplete 自動補全實作
+        // Autocomplete 自動補全
         function setupHymnsAutocomplete(inp, arr) {
             let currentFocus = -1;
-            
-            // 移除舊的 event listener 以免重複觸發
             const newInp = inp.cloneNode(true);
             inp.parentNode.replaceChild(newInp, inp);
             
@@ -1577,13 +1733,13 @@
             newInp.addEventListener("keydown", function(e) {
                 let x = document.getElementById(this.id + "autocomplete-list");
                 if (x) x = x.getElementsByTagName("div");
-                if (e.keyCode === 40) { // 下
+                if (e.keyCode === 40) {
                     currentFocus++;
                     addActive(x);
-                } else if (e.keyCode === 38) { // 上
+                } else if (e.keyCode === 38) {
                     currentFocus--;
                     addActive(x);
-                } else if (e.keyCode === 13) { // Enter
+                } else if (e.keyCode === 13) {
                     e.preventDefault();
                     if (currentFocus > -1 && x) {
                         x[currentFocus].click();
@@ -1619,7 +1775,6 @@
             });
         }
 
-        // YouTube 影片 ID 解析與播放器加載
         function extractYoutubeId(url) {
             const match = url.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
             return match[2] !== undefined ? match[2].split(/[^0-9a-z_\-]/i)[0] : url;
@@ -1632,10 +1787,9 @@
                 try {
                     ytPlayer.loadVideoById({ videoId: videoId });
                 } catch (e) {
-                    console.error("YouTube Player error:", e);
+                    console.error(e);
                 }
             } else {
-                // 初始化 Player API
                 ytPlayer = new YT.Player("youtube-player", {
                     height: "100%",
                     width: "100%",
@@ -1652,25 +1806,20 @@
             }
         }
 
-        // 隨機或循序自動播放下一首邏輯
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.ENDED) {
-                console.log("[YTPlayer] 影片播放結束，準備切換播放下一首。");
                 const selectSub = document.getElementById('hymns-select-sub');
                 const playMode = document.getElementById('hymns-play-mode').value;
                 
                 if (selectSub.options.length === 0) return;
                 
                 if (playMode === 'random') {
-                    // 隨機播放模式
                     const randomIndex = Math.floor(Math.random() * selectSub.options.length);
                     selectSub.selectedIndex = randomIndex;
                 } else {
-                    // 循序播放模式
                     if (selectSub.selectedIndex < selectSub.options.length - 1) {
                         selectSub.selectedIndex++;
                     } else {
-                        // 播放到最後一首，重頭開始
                         selectSub.selectedIndex = 0;
                     }
                 }
@@ -1678,7 +1827,6 @@
                 document.getElementById('hymns-input-query').value = selectSub.value;
                 executeHymnSearch().then(() => {
                     if (ytPlayer) {
-                        // 載入完成後自動播放
                         setTimeout(() => {
                             try { ytPlayer.playVideo(); } catch(e){}
                         }, 500);
@@ -1687,7 +1835,227 @@
             }
         }
 
-        // API 輔助函式
+        // ==========================================
+        // 🎧 聽讀有聲聖經功能區
+        // ==========================================
+        let audioBibleInitialized = false;
+        
+        const BIBLE_66_BOOKS = ["創世記","出埃及記","利未記","民數記","申命記","約書亞記","士師記","路得記","撒母耳記上","撒母耳記下","列王紀上","列王紀下","歷代志上","歷代志下","以斯拉記","尼希米記","以斯帖記","約伯記","詩篇","箴言","傳道書","雅歌","以賽亞書","耶利米書","耶利米哀歌","以西結書","但以理書","何西阿書","約珥書","阿摩司書","俄巴底亞書","約拿書","彌迦書","那鴻書","哈巴谷書","西番雅書","哈該書","撒迦利亞書","瑪拉基書","馬太福音","馬可福音","路加福音","約翰福音","使徒行傳","羅馬人書","哥林多前書","哥林多後書","加拉太書","以弗所書","腓立比書","歌羅西書","帖撒羅尼迦前書","帖撒羅尼迦後書","提摩太前書","提摩太後書","提多書","腓利門書","希伯來書","雅各書","彼得前書","彼得後書","約翰一書","約翰二書","約翰三書","猶大書","啟示錄"];
+        const BIBLE_66_SHORT_PT = ["gen","exo","lev","num","deu","jos","jug","rut","1sa","2sa","1ki","2ki","1ch","2ch","ezr","neh","est","job","psm","pro","ecc","son","isa","jer","lam","eze","dan","hos","joe","amo","oba","jon","mic","nah","hab","zep","hag","zec","mal","mat","mak","luk","jhn","act","rom","1co","2co","gal","eph","phl","col","1ts","2ts","1ti","2ti","tit","mon","heb","jas","1pe","2pe","1jn","2jn","3jn","jud","rev"];
+        const BIBLE_66_CH_SHORT = ["創","出","利","民","申","書","士","得","撒上","撒下","王上","王下","代上","代下","拉","尼","斯","伯","詩","箴","傳","歌","賽","耶","哀","結","但","何","珥","摩","俄","拿","彌","鴻","哈","番","該","亞","瑪","太","可","路","約","徒","羅","林前","林後","加","弗","腓","西","帖前","帖後","提前","提後","多","門","來","雅","彼前","彼後","約一","約二","約三","猶","啟"];
+        const BIBLE_66_CHAPS = [50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150, 31, 12, 8, 66, 52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4, 28, 16, 24, 21, 28, 16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22];
+
+        function initAudioBibleTab() {
+            if (audioBibleInitialized) return;
+            audioBibleInitialized = true;
+
+            const selectTitle = document.getElementById('audio-select-title');
+            const selectChap = document.getElementById('audio-select-chap');
+            const selectVer = document.getElementById('audio-select-version');
+            const selectText = document.getElementById('audio-select-text-ver');
+            const checkboxDetail = document.getElementById('audio-checkbox-detail');
+            
+            const btnPlay = document.getElementById('audio-btn-play');
+            const btnSearch = document.getElementById('audio-btn-search');
+            const audioHtmlPlayer = document.getElementById('audio-html-player');
+
+            // 填充書卷
+            for (let i = 0; i < BIBLE_66_BOOKS.length; i++) {
+                const opt = document.createElement('option');
+                opt.value = BIBLE_66_SHORT_PT[i];
+                opt.textContent = BIBLE_66_BOOKS[i];
+                selectTitle.appendChild(opt);
+            }
+
+            selectTitle.addEventListener('change', populateAudioChapters);
+            selectChap.addEventListener('change', onAudioSettingChange);
+            selectVer.addEventListener('change', onAudioSettingChange);
+            selectText.addEventListener('change', onAudioSettingChange);
+            checkboxDetail.addEventListener('change', onAudioSettingChange);
+
+            btnPlay.addEventListener('click', () => {
+                audioHtmlPlayer.play().catch(err => console.log("Play failed: ", err));
+            });
+            btnSearch.addEventListener('click', executeAudioBibleKeywordSearch);
+
+            // 音訊播放結束自動跳章
+            audioHtmlPlayer.addEventListener('ended', onAudioChapterEnded);
+
+            populateAudioChapters();
+        }
+
+        function populateAudioChapters() {
+            const selectTitle = document.getElementById('audio-select-title');
+            const selectChap = document.getElementById('audio-select-chap');
+            const idx = selectTitle.selectedIndex;
+            
+            selectChap.innerHTML = '';
+            const chapCount = BIBLE_66_CHAPS[idx];
+            
+            for (let i = 1; i <= chapCount; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = `第 ${i} 章`;
+                selectChap.appendChild(opt);
+            }
+
+            onAudioSettingChange();
+        }
+
+        async function onAudioSettingChange() {
+            const selectTitle = document.getElementById('audio-select-title');
+            const selectChap = document.getElementById('audio-select-chap');
+            const selectVer = document.getElementById('audio-select-version');
+            const audioHtmlPlayer = document.getElementById('audio-html-player');
+            const isPlaying = !audioHtmlPlayer.paused;
+
+            const bookIdx = selectTitle.selectedIndex + 1;
+            const chapNum = parseInt(selectChap.value, 10);
+            
+            // 拼接有聲聖經 MP3 URL
+            let leadNum = "";
+            if (chapNum < 100) {
+                leadNum = (chapNum < 10) ? "00" : "0";
+            }
+            const verPath = selectVer.value;
+            const suffix = (verPath === "tcv") ? "C" : "";
+            
+            const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx}${suffix}/${bookIdx}_${leadNum}${chapNum}.mp3`;
+            
+            // 載入音訊
+            audioHtmlPlayer.src = audioUrl;
+            audioHtmlPlayer.load();
+
+            // 更新播放標題
+            document.getElementById('audio-playing-title').textContent = `${BIBLE_66_BOOKS[selectTitle.selectedIndex]} 第 ${chapNum} 章`;
+
+            if (isPlaying) {
+                audioHtmlPlayer.play().catch(e => console.log(e));
+            }
+
+            // 更新顯示經文
+            await loadAudioBibleText();
+        }
+
+        async function loadAudioBibleText() {
+            const selectTitle = document.getElementById('audio-select-title');
+            const selectChap = document.getElementById('audio-select-chap');
+            const selectText = document.getElementById('audio-select-text-ver');
+            const checkboxDetail = document.getElementById('audio-checkbox-detail').checked;
+            const textBox = document.getElementById('audio-bible-text-box');
+
+            textBox.innerHTML = `<div style="padding:1rem; color:var(--accent);">載入經文中...</div>`;
+
+            const chShort = BIBLE_66_CH_SHORT[selectTitle.selectedIndex];
+            const chap = selectChap.value;
+            const ver = selectText.value;
+
+            // 巴克禮台語對照譯本
+            const urlMain = `https://bible.fhl.net/json/qb.php?chineses=${encodeURIComponent(chShort)}&chap=${chap}&version=${ver}&strong=0&gb=0`;
+            const urlTghg = `https://bible.fhl.net/json/qb.php?chineses=${encodeURIComponent(chShort)}&chap=${chap}&version=tghg&strong=0&gb=0`;
+
+            try {
+                const mainData = await getJsonApi(urlMain, {});
+                const tghgData = await getJsonApi(urlTghg, {});
+
+                let html = `<table><tbody>`;
+                const recordsMain = mainData.record || [];
+                const recordsTghg = tghgData.record || [];
+
+                for (let i = 0; i < recordsMain.length; i++) {
+                    const rMain = recordsMain[i];
+                    html += `<tr>`;
+                    html += `<td><span class="verse-num">${chap}:${rMain.sec}</span></td>`;
+                    html += `<td>${cleanHtml(rMain.bible_text)}</td>`;
+                    html += `</tr>`;
+
+                    if (checkboxDetail && recordsTghg[i]) {
+                        html += `<tr>`;
+                        html += `<td></td>`;
+                        html += `<style>#tghg-row {color: var(--text-sub); font-size:0.85rem;}</style>`;
+                        html += `<td id="tghg-row">台語：${cleanHtml(recordsTghg[i].bible_text)}</td>`;
+                        html += `</tr>`;
+                    }
+                }
+                html += `</tbody></table>`;
+                textBox.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+                textBox.innerHTML = `<div style="padding:1rem; color:#ef4444;">經文載入失敗：${err.message}</div>`;
+            }
+        }
+
+        async function executeAudioBibleKeywordSearch() {
+            const keywordInput = document.getElementById('audio-input-keyword');
+            const textBox = document.getElementById('audio-bible-text-box');
+            const selectText = document.getElementById('audio-select-text-ver');
+            const q = keywordInput.value.trim();
+
+            if (!q) {
+                alert("請輸入搜尋關鍵字！");
+                return;
+            }
+
+            textBox.innerHTML = `<div style="padding:1rem; color:var(--accent);">連線搜尋聖經中...</div>`;
+            
+            const ver = selectText.value;
+            const searchUrl = `https://bible.fhl.net/json/se.php?orig=0&limit=500&offset=0&q=${encodeURIComponent(q)}&VERSION=${ver}&strong=0&gb=0`;
+
+            try {
+                const data = await getJsonApi(searchUrl, {});
+                const records = data.record || [];
+                
+                if (records.length === 0) {
+                    textBox.innerHTML = `<div style="padding:1rem; color:var(--text-sub);">查無相關經文</div>`;
+                    return;
+                }
+
+                let html = `<div style="padding:0 0.8rem 0.5rem; font-weight:600; color:var(--accent);">搜尋結果 (${records.length} 筆)</div>`;
+                html += `<table><tbody>`;
+                
+                records.forEach(r => {
+                    const bookName = BIBLE_BOOKS_MAP[r.chineses] || r.chineses;
+                    const cleanText = cleanHtml(r.bible_text).replace(new RegExp(q, 'g'), `<span class="highlight">${q}</span>`);
+                    
+                    html += `<tr>`;
+                    html += `<td><span class="verse-num">${bookName}${r.chap}:${r.sec}</span></td>`;
+                    html += `<td>${cleanText}</td>`;
+                    html += `</tr>`;
+                });
+
+                html += `</tbody></table>`;
+                textBox.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+                textBox.innerHTML = `<div style="padding:1rem; color:#ef4444;">搜尋失敗：${err.message}</div>`;
+            }
+        }
+
+        function onAudioChapterEnded() {
+            const selectTitle = document.getElementById('audio-select-title');
+            const selectChap = document.getElementById('audio-select-chap');
+            
+            if (selectChap.selectedIndex < selectChap.options.length - 1) {
+                // 跳到下一章
+                selectChap.selectedIndex++;
+                onAudioSettingChange().then(() => {
+                    const player = document.getElementById('audio-html-player');
+                    setTimeout(() => { player.play().catch(e => console.log(e)); }, 500);
+                });
+            } else {
+                // 跳到下一卷書第一章
+                if (selectTitle.selectedIndex < selectTitle.options.length - 1) {
+                    selectTitle.selectedIndex++;
+                    populateAudioChapters();
+                    setTimeout(() => {
+                        const player = document.getElementById('audio-html-player');
+                        player.play().catch(e => console.log(e));
+                    }, 1000);
+                }
+            }
+        }
+
+        // API 輔助
         async function getJsonApi(urlptr, para) {
             const url = new URL(urlptr);
             for (let k in para) {
