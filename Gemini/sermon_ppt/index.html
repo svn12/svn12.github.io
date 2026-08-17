@@ -2071,21 +2071,17 @@
             if (scanBibleInfo.length === 0 || scanBibleDetail.length === 0) return;
             
             const sel_T = selectTitle.selectedIndex;
-            const sel_C = selectChap.selectedIndex; // 0-indexed
+            const sel_C = parseInt(selectChap.value, 10); // 這是 1-indexed 章號
             
             const bookInfo = scanBibleInfo[sel_T];
             let targetPage = bookInfo.s_page;
             
             for (let ptr = bookInfo.s_page; ptr <= bookInfo.e_page; ptr++) {
                 const detail = scanBibleDetail[ptr - 1];
-                if (detail && detail.Lchap > sel_C) {
+                if (detail && detail.Lchap === sel_C) {
                     targetPage = ptr;
                     break;
                 }
-            }
-            
-            if (targetPage === bookInfo.s_page) {
-                targetPage = bookInfo.e_page;
             }
             
             currentScanPage = targetPage;
@@ -2277,21 +2273,17 @@
             if (handBibleInfo.length === 0 || handBibleDetail.length === 0) return;
             
             const sel_T = selectTitle.selectedIndex;
-            const sel_C = selectChap.selectedIndex; // 0-indexed
+            const sel_C = parseInt(selectChap.value, 10); // 這是 1-indexed 章號
             
             const bookInfo = handBibleInfo[sel_T];
             let targetPage = bookInfo.S_page;
             
             for (let ptr = bookInfo.S_page; ptr <= bookInfo.E_page; ptr++) {
                 const detail = handBibleDetail[ptr - 1];
-                if (detail && detail.Lchap > sel_C) {
+                if (detail && detail.Lchap === sel_C) {
                     targetPage = ptr;
                     break;
                 }
-            }
-            
-            if (targetPage === bookInfo.S_page) {
-                targetPage = bookInfo.E_page;
             }
             
             currentHandPage = targetPage;
