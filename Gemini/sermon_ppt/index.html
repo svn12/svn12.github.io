@@ -1107,7 +1107,7 @@
                 });
             });
             
-            return outputLines.join('\n');
+            return outputLines.join('\r\n');
         }
 
         function updateLyricsLayout() {
@@ -1217,7 +1217,7 @@
                         group.push(`\t${rZh.verse}. 漢：${rZh.text}`);
                         group.push(`\t${rTw.verse}. 羅：${rTw.text}`);
                         
-                        outputLines.push(group.join('\n'));
+                        outputLines.push(group.join('\r\n'));
                     }
                 } else {
                     const records = (mode === 'tghg') ? recordsTw : recordsZh;
@@ -1229,10 +1229,10 @@
                         group.push(header);
                         group.push(`\t${r.verse}. ${r.text}`);
                         
-                        outputLines.push(group.join('\n'));
+                        outputLines.push(group.join('\r\n'));
                     }
                 }
-                return outputLines.join('\n\n');
+                return outputLines.join('\r\n\r\n');
                 
             } else {
                 if (mode === 'parallel') {
@@ -1255,7 +1255,7 @@
                         outputLines.push(`${ref} ${r.text}`);
                     }
                 }
-                return outputLines.join('\n');
+                return outputLines.join('\r\n');
             }
         }
 
@@ -1305,7 +1305,7 @@
 
         // 複製排版文字 (共用)
         btnCopy.addEventListener('click', async () => {
-            const text = previewArea.textContent;
+            const text = currentFormattedResult;
             if (!text) {
                 alert('無排版文字可供複製！');
                 return;
@@ -1320,7 +1320,7 @@
 
         // 下載 UTF-16LE 帶 BOM 的 TXT 檔案 (共用)
         btnDownload.addEventListener('click', () => {
-            const text = previewArea.textContent;
+            const text = currentFormattedResult;
             if (!text) {
                 alert('無排版文字可供下載！');
                 return;
