@@ -2119,12 +2119,35 @@
             }
         }
 
+        function isAudioBiblePlaying() {
+            const selectVer = document.getElementById('audio-select-version');
+            const audioHtmlPlayer = document.getElementById('audio-html-player');
+            const verPath = selectVer ? selectVer.value : "";
+            
+            if (verPath === "rcuv") {
+                if (audioYtPlayer && audioYtPlayer.getPlayerState) {
+                    return audioYtPlayer.getPlayerState() === YT.PlayerState.PLAYING;
+                }
+                return false;
+            } else {
+                return audioHtmlPlayer ? !audioHtmlPlayer.paused : false;
+            }
+        }
+
         function changeScanPage(page) {
             if (page < 1 || page > 1361 || scanBibleDetail.length === 0) return;
             
             currentScanPage = page;
             const detail = scanBibleDetail[currentScanPage - 1];
             if (!detail) return;
+            
+            // 渲染圖片
+            renderScanPage();
+            
+            // 若音訊正在播放，則不與有聲播放器連動，直接返回以繼續背景播放
+            if (isAudioBiblePlaying()) {
+                return;
+            }
             
             const selectTitle = document.getElementById('audio-select-title');
             const selectChap = document.getElementById('audio-select-chap');
@@ -2145,8 +2168,7 @@
             
             selectChap.value = detail.Ichap;
             
-            // 渲染圖片
-            renderScanPage();
+            
             
             // 只在音軌改變時重新 load 聲音（與原網頁一樣，不需要每次手動翻頁都中斷聲音，但要同步更新播放標題與文字）
             document.getElementById('audio-playing-title').textContent = `${BIBLE_66_BOOKS[bookIdx]} 第 ${detail.Ichap} 章`;
@@ -2330,6 +2352,14 @@
             const detail = handBibleDetail[currentHandPage - 1];
             if (!detail) return;
             
+            // 渲染手抄 PDF
+            renderHandPage();
+            
+            // 若音訊正在播放，則不與有聲播放器連動，直接返回以繼續背景播放
+            if (isAudioBiblePlaying()) {
+                return;
+            }
+            
             const selectTitle = document.getElementById('audio-select-title');
             const selectChap = document.getElementById('audio-select-chap');
             
@@ -2346,8 +2376,6 @@
             }
             
             selectChap.value = detail.Ichap;
-            
-            renderHandPage();
             
             document.getElementById('audio-playing-title').textContent = `${BIBLE_66_BOOKS[bookIdx]} 第 ${detail.Ichap} 章`;
             
