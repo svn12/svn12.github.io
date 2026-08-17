@@ -1876,7 +1876,17 @@
 
             selectTitle.addEventListener('change', populateAudioChapters);
             selectChap.addEventListener('change', onAudioSettingChange);
-            selectVer.addEventListener('change', onAudioSettingChange);
+            selectVer.addEventListener('change', () => {
+                const ver = selectVer.value;
+                if (ver === "Taiwanese") {
+                    selectText.value = "bklcl";
+                } else if (ver === "unv1") {
+                    selectText.value = "unv";
+                } else if (ver === "tcv") {
+                    selectText.value = "tcv2019";
+                }
+                onAudioSettingChange();
+            });
             selectText.addEventListener('change', onAudioSettingChange);
             checkboxDetail.addEventListener('change', onAudioSettingChange);
 
