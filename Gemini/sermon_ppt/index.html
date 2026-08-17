@@ -178,6 +178,30 @@
             margin-bottom: 1.8rem;
         }
 
+        /* 桌面大螢幕版寬度與預覽高度自適應放大 */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1300px !important;
+            }
+            #audio-scan-container {
+                height: 680px !important;
+            }
+            #scan-bible-img {
+                max-height: 560px !important;
+                width: auto !important;
+            }
+            #audio-hand-container {
+                height: 680px !important;
+            }
+            #audio-hand-container div[style*="height: 320px"],
+            #audio-hand-container div[style*="height:320px"] {
+                height: 560px !important;
+            }
+            #audio-text-container {
+                height: 680px !important;
+            }
+        }
+
         @media (max-width: 768px) {
             .main-layout {
                 grid-template-columns: 1fr;
