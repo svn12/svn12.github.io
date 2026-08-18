@@ -871,13 +871,37 @@
                             <div class="input-item">
                                 <label for="audio-select-text-ver" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">對照文字譯本</label>
                                 <select id="audio-select-text-ver" class="select-input">
-                                    <option value="bklcl" selected>巴克禮全羅</option>
-                                    <option value="bklhl">巴克禮漢羅</option>
-                                    <option value="ttvhl2021">現代台語2021漢字</option>
-                                    <option value="ttvcl2021">現代台語2021全羅</option>
-                                    <option value="unv">和合本</option>
-                                    <option value="tcv2019">現代中文譯本2019</option>
-                                    <option value="rcuv">和修本</option>
+                                    <optgroup label="台語 / 客語" style="background:#1e1b4b; color:var(--text-main);">
+                                        <option value="bklcl" selected>巴克禮全羅 (台語)</option>
+                                        <option value="bklhl">巴克禮漢羅 (台語)</option>
+                                        <option value="ttvhl2021">現代台語2021漢字</option>
+                                        <option value="ttvcl2021">現代台語2021全羅</option>
+                                        <option value="chttvhl">全民台語聖經漢羅</option>
+                                        <option value="chttvcl">全民台語聖經全羅</option>
+                                        <option value="hakkahl">現代客語漢字</option>
+                                        <option value="hakka">現代客語全羅</option>
+                                    </optgroup>
+                                    <optgroup label="中文譯本" style="background:#1e1b4b; color:var(--text-main);">
+                                        <option value="unv">和合本</option>
+                                        <option value="rcuv">和修本 (和合本2010)</option>
+                                        <option value="tcv2019">現代中文譯本2019</option>
+                                        <option value="tcv">現代中文譯本1995</option>
+                                        <option value="lzz">呂振中譯本</option>
+                                        <option value="csb">中文標準譯本</option>
+                                        <option value="cnet">NET聖經中譯本</option>
+                                        <option value="recovery">恢復本</option>
+                                        <option value="sigao">思高譯本</option>
+                                        <option value="union">深文理和合本</option>
+                                        <option value="wenli">文理和合本</option>
+                                    </optgroup>
+                                    <optgroup label="英文譯本 (English)" style="background:#1e1b4b; color:var(--text-main);">
+                                        <option value="kjv">KJV (King James Version)</option>
+                                        <option value="esv">ESV (English Standard Version)</option>
+                                        <option value="asv">ASV (American Standard Version)</option>
+                                        <option value="bbe">BBE (Bible in Basic English)</option>
+                                        <option value="web">WEB (World English Bible)</option>
+                                        <option value="darby">Darby Translation</option>
+                                    </optgroup>
                                 </select>
                             </div>
 
