@@ -2654,8 +2654,8 @@
                 }
                 onAudioSettingChange();
             });
-            selectText.addEventListener('change', onAudioSettingChange);
-            checkboxDetail.addEventListener('change', onAudioSettingChange);
+            selectText.addEventListener('change', loadAudioBibleText);
+            checkboxDetail.addEventListener('change', loadAudioBibleText);
 
             btnPlay.addEventListener('click', () => {
                 if (selectVer.value === "rcuv") {
