@@ -931,6 +931,14 @@
                             <button class="btn-action" id="hymns-btn-search">
                                 <span id="hymns-search-text">🔍 查詢詩歌連結</span>
                             </button>
+                            <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+                                <button class="btn-action" id="hymns-btn-prev" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--panel-border);">
+                                    ⬆ 上一首
+                                </button>
+                                <button class="btn-action" id="hymns-btn-next" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--panel-border);">
+                                    ⬇ 下一首
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -1819,10 +1827,28 @@
             const selectTag = document.getElementById('hymns-select-tag');
             const selectSub = document.getElementById('hymns-select-sub');
             const btnSearch = document.getElementById('hymns-btn-search');
+            const btnPrev = document.getElementById('hymns-btn-prev');
+            const btnNext = document.getElementById('hymns-btn-next');
             
             selectTag.addEventListener('change', loadHymnSublist);
             selectSub.addEventListener('change', onSublistSelectChange);
             btnSearch.addEventListener('click', onHymnSearchClick);
+
+            btnPrev.addEventListener('click', () => {
+                if (selectSub.selectedIndex > 0) {
+                    selectSub.selectedIndex--;
+                    document.getElementById('hymns-input-query').value = selectSub.value;
+                    executeHymnSearch();
+                }
+            });
+
+            btnNext.addEventListener('click', () => {
+                if (selectSub.selectedIndex < selectSub.options.length - 1) {
+                    selectSub.selectedIndex++;
+                    document.getElementById('hymns-input-query').value = selectSub.value;
+                    executeHymnSearch();
+                }
+            });
             
             await loadHymnSublist();
         }
