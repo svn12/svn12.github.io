@@ -893,7 +893,12 @@
 
                     <!-- 聖詩與啟應文面板 -->
                     <div class="tab-content" id="input-hymns">
-                        <div class="panel-title">🔍 聖詩與啟應文查詢</div>
+                        <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>🔍 聖詩與啟應文查詢</span>
+                            <button id="hymns-btn-manage-categories" style="background:rgba(255,255,255,0.08); border:1px solid var(--panel-border); color:var(--text-main); padding:0.25rem 0.6rem; border-radius:8px; font-size:0.78rem; cursor:pointer; font-weight:600; transition:all 0.2s ease;">
+                                ⚙️ 增刪類別
+                            </button>
+                        </div>
                         <div class="bible-input-group" style="height: auto;">
                             <div class="input-item">
                                 <label for="hymns-select-tag" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">詩歌類別</label>
@@ -1821,15 +1826,160 @@
         // ==========================================
         let hymnsInitialized = false;
 
+        const DEFAULT_HYMN_CATEGORIES = [
+            { tag: "新聖詩", name: "新聖詩 (001-650)" },
+            { tag: "啟應文", name: "啟應文 (01-66)" },
+            { tag: "聖詩", name: "舊聖詩" },
+            { tag: "List", name: "聖歌隊雅音" },
+            { tag: "聖歌隊2", name: "聖歌隊自動" },
+            { tag: "讚美之泉", name: "讚美之泉" },
+            { tag: "讚美詩網", name: "讚美之泉約書亞" },
+            { tag: "吉他AI", name: "吉他AI" }
+        ];
+
+        function getStoredHymnCategories() {
+            const saved = localStorage.getItem('hymns-custom-categories');
+            if (saved) {
+                try { return JSON.parse(saved); } catch(e) {}
+            }
+            return DEFAULT_HYMN_CATEGORIES;
+        }
+
+        function populateHymnCategorySelect() {
+            const selectTag = document.getElementById('hymns-select-tag');
+            const categories = getStoredHymnCategories();
+            const currentValue = selectTag.value;
+            
+            selectTag.innerHTML = '';
+            categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.tag;
+                opt.textContent = cat.name || cat.tag;
+                selectTag.appendChild(opt);
+            });
+            
+            if (categories.some(c => c.tag === currentValue)) {
+                selectTag.value = currentValue;
+            } else if (categories.length > 0) {
+                selectTag.value = categories[0].tag;
+            }
+        }
+
+        function renderCategoryManagerList() {
+            const container = document.getElementById('category-list-container');
+            const categories = getStoredHymnCategories();
+            
+            if (categories.length === 0) {
+                container.innerHTML = `<div style="font-size:0.8rem; color:var(--text-sub); padding:0.5rem 0;">目前無任何類別，可點擊「恢復預設類別」。</div>`;
+                return;
+            }
+            
+            let html = '';
+            categories.forEach(cat => {
+                html += `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:var(--panel-bg); border:1px solid var(--panel-border); padding:0.4rem 0.7rem; border-radius:8px; font-size:0.85rem;">
+                    <span>🏷️ <strong>${cleanHtml(cat.name || cat.tag)}</strong> <span style="font-size:0.75rem; color:var(--text-sub);">(${cleanHtml(cat.tag)})</span></span>
+                    <button onclick="removeCategoryTag('${cleanHtml(cat.tag)}')" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:0.8rem; font-weight:600; padding:0.2rem 0.4rem;">🗑️ 移除</button>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        async function verifyAndAddCategory() {
+            const tagInput = document.getElementById('input-new-category-tag');
+            const tag = tagInput.value.trim();
+            const statusDiv = document.getElementById('msg-category-status');
+            
+            if (!tag) {
+                statusDiv.innerHTML = `<span style="color:#ef4444;">請輸入工作表名稱！</span>`;
+                return;
+            }
+            
+            const categories = getStoredHymnCategories();
+            if (categories.some(c => c.tag === tag)) {
+                statusDiv.innerHTML = `<span style="color:#f59e0b;">類別「${tag}」已在列表中！</span>`;
+                return;
+            }
+            
+            statusDiv.innerHTML = `<span style="color:var(--accent);">🔍 正在連線驗證工作表 Header 是否含有 "YT"...</span>`;
+            
+            try {
+                const queryParams = { sheetUrl: shURL, sheetTag: tag, key: 0 };
+                const data = await getJsonApi(RSheet2Json_APIV6, queryParams);
+                
+                if (!data || !Array.isArray(data) || data.length === 0) {
+                    statusDiv.innerHTML = `<span style="color:#ef4444;">❌ 驗證失敗：找不到名為「${tag}」的工作表或讀取失敗！</span>`;
+                    return;
+                }
+                
+                const headers = data[0];
+                const hasYT = Array.isArray(headers) && headers.some(h => String(h).trim().toUpperCase() === 'YT');
+                
+                if (!hasYT) {
+                    statusDiv.innerHTML = `<span style="color:#ef4444;">⚠️ 驗證失敗：工作表「${tag}」的 Header 不包含 "YT" 影音欄位！</span>`;
+                    return;
+                }
+                
+                categories.push({ tag: tag, name: tag });
+                localStorage.setItem('hymns-custom-categories', JSON.stringify(categories));
+                statusDiv.innerHTML = `<span style="color:#10b981;">✅ 驗證成功！工作表 Header 包含 "YT"，已成功新增！</span>`;
+                
+                tagInput.value = '';
+                renderCategoryManagerList();
+                populateHymnCategorySelect();
+                loadHymnSublist();
+            } catch (err) {
+                console.error(err);
+                statusDiv.innerHTML = `<span style="color:#ef4444;">❌ 驗證錯誤：${err.message}</span>`;
+            }
+        }
+
+        window.removeCategoryTag = function(tag) {
+            let categories = getStoredHymnCategories();
+            categories = categories.filter(c => c.tag !== tag);
+            localStorage.setItem('hymns-custom-categories', JSON.stringify(categories));
+            renderCategoryManagerList();
+            populateHymnCategorySelect();
+            loadHymnSublist();
+        };
+
+        function resetCategoryTags() {
+            localStorage.removeItem('hymns-custom-categories');
+            renderCategoryManagerList();
+            populateHymnCategorySelect();
+            loadHymnSublist();
+            document.getElementById('msg-category-status').innerHTML = `<span style="color:#10b981;">已恢復預設類別選單！</span>`;
+        }
+
         async function initHymnsTab() {
             if (hymnsInitialized) return;
             hymnsInitialized = true;
             
+            populateHymnCategorySelect();
+
             const selectTag = document.getElementById('hymns-select-tag');
             const selectSub = document.getElementById('hymns-select-sub');
             const btnSearch = document.getElementById('hymns-btn-search');
             const btnPrev = document.getElementById('hymns-btn-prev');
             const btnNext = document.getElementById('hymns-btn-next');
+
+            const btnManage = document.getElementById('hymns-btn-manage-categories');
+            const modal = document.getElementById('modal-category-manager');
+            const btnCloseModal = document.getElementById('btn-close-cat-modal');
+            const btnSaveModal = document.getElementById('btn-save-cat-modal');
+            const btnAddTag = document.getElementById('btn-add-category-tag');
+            const btnResetTag = document.getElementById('btn-reset-categories');
+
+            btnManage.addEventListener('click', () => {
+                document.getElementById('msg-category-status').innerHTML = '';
+                renderCategoryManagerList();
+                modal.style.display = 'flex';
+            });
+
+            btnCloseModal.addEventListener('click', () => modal.style.display = 'none');
+            btnSaveModal.addEventListener('click', () => modal.style.display = 'none');
+            btnAddTag.addEventListener('click', verifyAndAddCategory);
+            btnResetTag.addEventListener('click', resetCategoryTags);
             
             selectTag.addEventListener('change', loadHymnSublist);
             selectSub.addEventListener('change', onSublistSelectChange);
@@ -3130,5 +3280,43 @@
             return response.text();
         }
     </script>
+
+    <!-- 詩歌類別增刪管理彈窗 -->
+    <div id="modal-category-manager" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:var(--bg-end); border:1px solid var(--panel-border); border-radius:16px; width:92%; max-width:480px; padding:1.5rem; color:var(--text-main); box-shadow:0 20px 50px rgba(0,0,0,0.6);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid var(--panel-border); padding-bottom:0.8rem;">
+                <h3 style="font-size:1.05rem; font-weight:700; display:flex; align-items:center; gap:0.4rem;">⚙️ 詩歌類別選單增刪管理</h3>
+                <button id="btn-close-cat-modal" style="background:none; border:none; color:var(--text-sub); font-size:1.2rem; cursor:pointer;">✕</button>
+            </div>
+            
+            <p style="font-size:0.82rem; color:var(--text-sub); margin-bottom:1rem; line-height:1.5;">
+                你可以自行新增或移除類別。新增時系統會發送連線驗證，確認該工作表 Header 是否包含 <strong style="color:var(--accent);">"YT"</strong> 影音欄位。
+            </p>
+
+            <!-- 新增工作表輸入框 -->
+            <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
+                <input type="text" id="input-new-category-tag" class="text-input" placeholder="輸入 Google Sheet 工作表名稱..." style="flex:1;">
+                <button class="btn-action" id="btn-add-category-tag" style="width:auto; padding:0.6rem 1rem; margin:0; font-size:0.85rem; white-space:nowrap;">
+                    ➕ 驗證並新增
+                </button>
+            </div>
+            <div id="msg-category-status" style="font-size:0.8rem; margin-bottom:1rem; min-height:1.2rem;"></div>
+
+            <!-- 現有類別清單 -->
+            <div style="font-size:0.85rem; font-weight:600; color:var(--text-sub); margin-bottom:0.5rem;">當前選單列表 (可隨時點擊移除)：</div>
+            <div id="category-list-container" style="max-height:200px; overflow-y:auto; display:flex; flex-direction:column; gap:0.4rem; padding-right:0.3rem;">
+                <!-- 動態渲染類別標籤與刪除按鈕 -->
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.2rem; border-top:1px solid var(--panel-border); padding-top:0.8rem;">
+                <button class="btn-action" id="btn-reset-categories" style="width:auto; padding:0.45rem 0.8rem; margin:0; font-size:0.8rem; background:rgba(255,255,255,0.08); border:1px solid var(--panel-border);">
+                    🔄 恢復預設類別
+                </button>
+                <button class="btn-action" id="btn-save-cat-modal" style="width:auto; padding:0.45rem 1.2rem; margin:0; font-size:0.85rem;">
+                    關閉
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
