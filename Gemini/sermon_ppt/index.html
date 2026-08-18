@@ -1826,9 +1826,14 @@
         // ==========================================
         let hymnsInitialized = false;
 
+        const REQUIRED_HYMN_CATEGORIES = [
+            { tag: "新聖詩", name: "新聖詩 (001-650)", required: true },
+            { tag: "啟應文", name: "啟應文 (01-66)", required: true }
+        ];
+
         const DEFAULT_HYMN_CATEGORIES = [
-            { tag: "新聖詩", name: "新聖詩 (001-650)" },
-            { tag: "啟應文", name: "啟應文 (01-66)" },
+            { tag: "新聖詩", name: "新聖詩 (001-650)", required: true },
+            { tag: "啟應文", name: "啟應文 (01-66)", required: true },
             { tag: "聖詩", name: "舊聖詩" },
             { tag: "List", name: "聖歌隊雅音" },
             { tag: "聖歌隊2", name: "聖歌隊自動" },
@@ -1839,10 +1844,17 @@
 
         function getStoredHymnCategories() {
             const saved = localStorage.getItem('hymns-custom-categories');
+            let list = DEFAULT_HYMN_CATEGORIES;
             if (saved) {
-                try { return JSON.parse(saved); } catch(e) {}
+                try { list = JSON.parse(saved); } catch(e) {}
             }
-            return DEFAULT_HYMN_CATEGORIES;
+            // 確保「新聖詩」與「啟應文」始終固定位於最頂端
+            REQUIRED_HYMN_CATEGORIES.forEach(req => {
+                if (!list.some(c => c.tag === req.tag)) {
+                    list.unshift(req);
+                }
+            });
+            return list;
         }
 
         function populateHymnCategorySelect() {
@@ -1876,10 +1888,14 @@
             
             let html = '';
             categories.forEach(cat => {
+                const isRequired = cat.tag === "新聖詩" || cat.tag === "啟應文" || cat.required;
                 html += `
                 <div style="display:flex; justify-content:space-between; align-items:center; background:var(--panel-bg); border:1px solid var(--panel-border); padding:0.4rem 0.7rem; border-radius:8px; font-size:0.85rem;">
                     <span>🏷️ <strong>${cleanHtml(cat.name || cat.tag)}</strong> <span style="font-size:0.75rem; color:var(--text-sub);">(${cleanHtml(cat.tag)})</span></span>
-                    <button onclick="removeCategoryTag('${cleanHtml(cat.tag)}')" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:0.8rem; font-weight:600; padding:0.2rem 0.4rem;">🗑️ 移除</button>
+                    ${isRequired 
+                        ? `<span style="font-size:0.75rem; color:var(--accent); font-weight:600; padding:0.2rem 0.4rem;">🔒 必選預設 (固定)</span>` 
+                        : `<button onclick="removeCategoryTag('${cleanHtml(cat.tag)}')" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:0.8rem; font-weight:600; padding:0.2rem 0.4rem;">🗑️ 移除</button>`
+                    }
                 </div>`;
             });
             container.innerHTML = html;
@@ -1935,6 +1951,10 @@
         }
 
         window.removeCategoryTag = function(tag) {
+            if (tag === "新聖詩" || tag === "啟應文") {
+                alert("「新聖詩」與「啟應文」為禮拜必選項，不可移除！");
+                return;
+            }
             let categories = getStoredHymnCategories();
             categories = categories.filter(c => c.tag !== tag);
             localStorage.setItem('hymns-custom-categories', JSON.stringify(categories));
