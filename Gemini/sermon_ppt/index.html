@@ -878,7 +878,6 @@
                                         <option value="ttvcl2021">現代台語2021全羅</option>
                                         <option value="sgebklhl">全民台語聖經漢羅</option>
                                         <option value="sgebklcl">全民台語聖經全羅</option>
-                                        <option value="thvh">現代客語2013漢字</option>
                                         <option value="thv2e">現代客語全羅</option>
                                         <option value="hakka">汕頭客語聖經</option>
                                     </optgroup>
@@ -1194,6 +1193,7 @@
         let startDragHandX = 0;
         let startDragHandY = 0;
         let handDragMode = false;
+        let redirectCount = 0;
 
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -2648,9 +2648,16 @@
                 selectTitle.appendChild(opt);
             }
 
-            selectTitle.addEventListener('change', populateAudioChapters);
-            selectChap.addEventListener('change', onAudioSettingChange);
+            selectTitle.addEventListener('change', () => {
+                redirectCount = 0;
+                populateAudioChapters();
+            });
+            selectChap.addEventListener('change', () => {
+                redirectCount = 0;
+                onAudioSettingChange();
+            });
             selectVer.addEventListener('change', () => {
+                redirectCount = 0;
                 const ver = selectVer.value;
                 if (ver === "Taiwanese") {
                     selectText.value = "bklcl";
@@ -2663,8 +2670,14 @@
                 }
                 onAudioSettingChange();
             });
-            selectText.addEventListener('change', onAudioSettingChange);
-            checkboxDetail.addEventListener('change', onAudioSettingChange);
+            selectText.addEventListener('change', () => {
+                redirectCount = 0;
+                onAudioSettingChange();
+            });
+            checkboxDetail.addEventListener('change', () => {
+                redirectCount = 0;
+                onAudioSettingChange();
+            });
 
             btnPlay.addEventListener('click', () => {
                 if (selectVer.value === "rcuv") {
@@ -2792,6 +2805,13 @@
 
                 // 若該譯本在當前書卷完全查無經文（例如僅收錄新/舊約的特別版本）
                 if (recordsMain.length === 0) {
+                    redirectCount++;
+                    if (redirectCount >= 2) {
+                        textBox.innerHTML = `<div style="padding:1rem; color:var(--text-sub);">⚠️ 該譯本加載失敗：此譯本目前無此書卷經文。</div>`;
+                        redirectCount = 0;
+                        return;
+                    }
+
                     if (selectTitle.selectedIndex < 39) {
                         // 舊約查無內容，自動跳轉至新約馬太福音第一章
                         selectTitle.selectedIndex = 39;
