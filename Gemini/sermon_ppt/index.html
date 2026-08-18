@@ -2964,7 +2964,16 @@
             for (let k in para) {
                 url.searchParams.append(k, para[k]);
             }
-            const response = await fetch(url);
+            
+            const versionParam = (url.searchParams.get("version") || url.searchParams.get("VERSION") || "").toLowerCase();
+            const bypassList = ["unv", "bklcl", "bklhl", "sgebklhl", "sgebklcl", "kjv", "esv", "asv", "bbe", "web", "darby", "erv", "tghg"];
+            
+            let fetchUrl = url.toString();
+            if (versionParam && !bypassList.includes(versionParam)) {
+                fetchUrl = "https://corsproxy.io/?" + encodeURIComponent(fetchUrl);
+            }
+            
+            const response = await fetch(fetchUrl);
             return response.json();
         }
 
@@ -2973,7 +2982,16 @@
             for (let k in para) {
                 url.searchParams.append(k, para[k]);
             }
-            const response = await fetch(url);
+            
+            const versionParam = (url.searchParams.get("version") || url.searchParams.get("VERSION") || "").toLowerCase();
+            const bypassList = ["unv", "bklcl", "bklhl", "sgebklhl", "sgebklcl", "kjv", "esv", "asv", "bbe", "web", "darby", "erv", "tghg"];
+            
+            let fetchUrl = url.toString();
+            if (versionParam && !bypassList.includes(versionParam)) {
+                fetchUrl = "https://corsproxy.io/?" + encodeURIComponent(fetchUrl);
+            }
+            
+            const response = await fetch(fetchUrl);
             return response.text();
         }
     </script>
