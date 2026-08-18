@@ -3017,11 +3017,21 @@
             
             let fetchUrl = url.toString();
             if (versionParam && !bypassList.includes(versionParam)) {
-                fetchUrl = "https://corsproxy.io/?" + encodeURIComponent(fetchUrl);
+                let primaryUrl = "https://corsproxy.io/?" + fetchUrl;
+                try {
+                    const response = await fetch(primaryUrl);
+                    if (!response.ok) throw new Error("Primary CORS Proxy failed");
+                    return await response.json();
+                } catch (e) {
+                    console.warn("Primary CORS proxy failed, trying fallback...", e);
+                    let fallbackUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(fetchUrl);
+                    const response = await fetch(fallbackUrl);
+                    return await response.json();
+                }
+            } else {
+                const response = await fetch(fetchUrl);
+                return response.json();
             }
-            
-            const response = await fetch(fetchUrl);
-            return response.json();
         }
 
         async function getRawApi(urlptr, para) {
@@ -3035,11 +3045,21 @@
             
             let fetchUrl = url.toString();
             if (versionParam && !bypassList.includes(versionParam)) {
-                fetchUrl = "https://corsproxy.io/?" + encodeURIComponent(fetchUrl);
+                let primaryUrl = "https://corsproxy.io/?" + fetchUrl;
+                try {
+                    const response = await fetch(primaryUrl);
+                    if (!response.ok) throw new Error("Primary CORS Proxy failed");
+                    return await response.text();
+                } catch (e) {
+                    console.warn("Primary CORS proxy failed, trying fallback...", e);
+                    let fallbackUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(fetchUrl);
+                    const response = await fetch(fallbackUrl);
+                    return await response.text();
+                }
+            } else {
+                const response = await fetch(fetchUrl);
+                return response.text();
             }
-            
-            const response = await fetch(fetchUrl);
-            return response.text();
         }
     </script>
 </body>
