@@ -871,15 +871,13 @@
                             <div class="input-item">
                                 <label for="audio-select-text-ver" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">對照文字譯本</label>
                                 <select id="audio-select-text-ver" class="select-input">
-                                    <optgroup label="台語 / 客語" style="background:#1e1b4b; color:var(--text-main);">
+                                    <optgroup label="台語 / 閩南語" style="background:#1e1b4b; color:var(--text-main);">
                                         <option value="bklcl" selected>巴克禮全羅 (台語)</option>
                                         <option value="bklhl">巴克禮漢羅 (台語)</option>
                                         <option value="ttvhl2021">現代台語2021漢字</option>
                                         <option value="ttvcl2021">現代台語2021全羅</option>
                                         <option value="sgebklhl">全民台語聖經漢羅</option>
                                         <option value="sgebklcl">全民台語聖經全羅</option>
-                                        <option value="thv2e">現代客語全羅</option>
-                                        <option value="hakka">汕頭客語聖經</option>
                                     </optgroup>
                                     <optgroup label="中文譯本" style="background:#1e1b4b; color:var(--text-main);">
                                         <option value="unv">和合本</option>
@@ -887,21 +885,15 @@
                                         <option value="tcv2019">現代中文譯本2019</option>
                                         <option value="tcv95">現代中文譯本1995</option>
                                         <option value="lcc">呂振中譯本</option>
-                                        <option value="csb">中文標準譯本</option>
-                                        <option value="cnet">NET聖經中譯本</option>
-                                        <option value="recover">恢復本</option>
-                                        <option value="ofm">思高譯本</option>
                                         <option value="wlunv">深文理和合本</option>
-                                        <option value="cuwv">文理和合本</option>
-                                        <option value="ncv">新譯本</option>
                                     </optgroup>
                                     <optgroup label="英文譯本 (English)" style="background:#1e1b4b; color:var(--text-main);">
                                         <option value="kjv">KJV (King James Version)</option>
-                                        <option value="esv">ESV (English Standard Version)</option>
                                         <option value="asv">ASV (American Standard Version)</option>
                                         <option value="bbe">BBE (Bible in Basic English)</option>
                                         <option value="web">WEB (World English Bible)</option>
                                         <option value="darby">Darby Translation</option>
+                                        <option value="erv">ERV (English Revised Version)</option>
                                     </optgroup>
                                 </select>
                             </div>
@@ -1193,7 +1185,6 @@
         let startDragHandX = 0;
         let startDragHandY = 0;
         let handDragMode = false;
-        let redirectCount = 0;
 
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -2648,16 +2639,9 @@
                 selectTitle.appendChild(opt);
             }
 
-            selectTitle.addEventListener('change', () => {
-                redirectCount = 0;
-                populateAudioChapters();
-            });
-            selectChap.addEventListener('change', () => {
-                redirectCount = 0;
-                onAudioSettingChange();
-            });
+            selectTitle.addEventListener('change', populateAudioChapters);
+            selectChap.addEventListener('change', onAudioSettingChange);
             selectVer.addEventListener('change', () => {
-                redirectCount = 0;
                 const ver = selectVer.value;
                 if (ver === "Taiwanese") {
                     selectText.value = "bklcl";
@@ -2670,14 +2654,8 @@
                 }
                 onAudioSettingChange();
             });
-            selectText.addEventListener('change', () => {
-                redirectCount = 0;
-                onAudioSettingChange();
-            });
-            checkboxDetail.addEventListener('change', () => {
-                redirectCount = 0;
-                onAudioSettingChange();
-            });
+            selectText.addEventListener('change', onAudioSettingChange);
+            checkboxDetail.addEventListener('change', onAudioSettingChange);
 
             btnPlay.addEventListener('click', () => {
                 if (selectVer.value === "rcuv") {
@@ -2802,40 +2780,6 @@
                 let html = `<table><tbody>`;
                 const recordsMain = mainData.record || [];
                 const recordsTghg = tghgData.record || [];
-
-                // 若該譯本在當前書卷完全查無經文（例如僅收錄新/舊約的特別版本）
-                if (recordsMain.length === 0) {
-                    redirectCount++;
-                    if (redirectCount >= 2) {
-                        textBox.innerHTML = `<div style="padding:1rem; color:var(--text-sub);">⚠️ 該譯本加載失敗：此譯本目前無此書卷經文。</div>`;
-                        redirectCount = 0;
-                        return;
-                    }
-
-                    if (selectTitle.selectedIndex < 39) {
-                        // 舊約查無內容，自動跳轉至新約馬太福音第一章
-                        selectTitle.selectedIndex = 39;
-                        populateAudioChapters();
-                        const selectChap = document.getElementById('audio-select-chap');
-                        selectChap.value = "1";
-                        textBox.innerHTML = `<div style="padding:1rem; color:var(--accent);">⚠️ 該譯本未收錄舊約，已自動為您跳轉至新約馬太福音...</div>`;
-                        setTimeout(() => {
-                            onAudioSettingChange();
-                        }, 1200);
-                        return;
-                    } else {
-                        // 新約查無內容，自動跳轉至舊約創世記第一章
-                        selectTitle.selectedIndex = 0;
-                        populateAudioChapters();
-                        const selectChap = document.getElementById('audio-select-chap');
-                        selectChap.value = "1";
-                        textBox.innerHTML = `<div style="padding:1rem; color:var(--accent);">⚠️ 該譯本未收錄新約，已自動為您跳轉至舊約創世記...</div>`;
-                        setTimeout(() => {
-                            onAudioSettingChange();
-                        }, 1200);
-                        return;
-                    }
-                }
 
                 for (let i = 0; i < recordsMain.length; i++) {
                     const rMain = recordsMain[i];
@@ -3011,27 +2955,8 @@
             for (let k in para) {
                 url.searchParams.append(k, para[k]);
             }
-            
-            const versionParam = (url.searchParams.get("version") || url.searchParams.get("VERSION") || "").toLowerCase();
-            const bypassList = ["unv", "bklcl", "bklhl", "sgebklhl", "sgebklcl", "kjv", "esv", "asv", "bbe", "web", "darby", "erv", "tghg"];
-            
-            let fetchUrl = url.toString();
-            if (versionParam && !bypassList.includes(versionParam)) {
-                let primaryUrl = "https://corsproxy.io/?" + fetchUrl;
-                try {
-                    const response = await fetch(primaryUrl);
-                    if (!response.ok) throw new Error("Primary CORS Proxy failed");
-                    return await response.json();
-                } catch (e) {
-                    console.warn("Primary CORS proxy failed, trying fallback...", e);
-                    let fallbackUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(fetchUrl);
-                    const response = await fetch(fallbackUrl);
-                    return await response.json();
-                }
-            } else {
-                const response = await fetch(fetchUrl);
-                return response.json();
-            }
+            const response = await fetch(url);
+            return response.json();
         }
 
         async function getRawApi(urlptr, para) {
@@ -3039,27 +2964,8 @@
             for (let k in para) {
                 url.searchParams.append(k, para[k]);
             }
-            
-            const versionParam = (url.searchParams.get("version") || url.searchParams.get("VERSION") || "").toLowerCase();
-            const bypassList = ["unv", "bklcl", "bklhl", "sgebklhl", "sgebklcl", "kjv", "esv", "asv", "bbe", "web", "darby", "erv", "tghg"];
-            
-            let fetchUrl = url.toString();
-            if (versionParam && !bypassList.includes(versionParam)) {
-                let primaryUrl = "https://corsproxy.io/?" + fetchUrl;
-                try {
-                    const response = await fetch(primaryUrl);
-                    if (!response.ok) throw new Error("Primary CORS Proxy failed");
-                    return await response.text();
-                } catch (e) {
-                    console.warn("Primary CORS proxy failed, trying fallback...", e);
-                    let fallbackUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(fetchUrl);
-                    const response = await fetch(fallbackUrl);
-                    return await response.text();
-                }
-            } else {
-                const response = await fetch(fetchUrl);
-                return response.text();
-            }
+            const response = await fetch(url);
+            return response.text();
         }
     </script>
 </body>
