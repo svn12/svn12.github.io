@@ -259,7 +259,7 @@
             margin-top: 8px;
             font-weight: bold;
             letter-spacing: 2px;
-            display: none; /* 答題時預設隱藏口訣，避免洩漏答案 */
+            display: none;
         }
 
         .progress-bar-wrap {
@@ -329,7 +329,7 @@
             40%, 80% { transform: translateX(8px); }
         }
 
-        /* 背誦總覽頁籤與卡片 */
+        /* 背誦頁面控制列 */
         .table-selector {
             display: flex;
             gap: 8px;
@@ -358,15 +358,54 @@
             box-shadow: 0 4px 10px rgba(255,107,107,0.3);
         }
 
-        .study-tools {
+        .study-tools-panel {
+            background: #FFF;
+            padding: 12px 16px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            background: #FFF;
-            padding: 10px 15px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+            gap: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .control-select {
+            padding: 6px 12px;
+            border: 2px solid #4ECDC4;
+            border-radius: 12px;
+            background: white;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .ctrl-btn {
+            padding: 6px 12px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            background: #F8F9FA;
+            color: #555;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ctrl-btn.active {
+            background: #A06CD5;
+            color: white;
+            border-color: #A06CD5;
         }
 
         .table-grid {
@@ -414,12 +453,12 @@
             background: linear-gradient(135deg, #4ECDC4, #2AB7CA);
             color: white;
             border: none;
-            padding: 8px 18px;
+            padding: 10px 20px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 1rem;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(78,205,196,0.3);
+            box-shadow: 0 4px 10px rgba(78,205,196,0.3);
             transition: all 0.2s;
             display: flex;
             align-items: center;
@@ -428,6 +467,11 @@
 
         .auto-play-btn:hover {
             transform: scale(1.05);
+        }
+
+        .stop-play-btn {
+            background: linear-gradient(135deg, #FF6B6B, #EE5253) !important;
+            box-shadow: 0 4px 10px rgba(255,107,107,0.3) !important;
         }
 
         /* 結算彈窗 */
@@ -544,7 +588,7 @@
             </div>
         </div>
 
-        <!-- 闖關數字選擇區 (預設隱藏) -->
+        <!-- 闖關數字選擇區 -->
         <div id="levelSelectArea" style="display:none; margin-top: 20px; text-align: left;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h4 style="color:#555;"><i class="fa-solid fa-list-check"></i> 請選擇要練習的乘數：</h4>
@@ -595,13 +639,29 @@
             <!-- 2~9 切換頁籤 -->
         </div>
 
-        <div class="study-tools">
-            <div style="color:#555; font-weight:bold; font-size:0.95rem;">
-                <i class="fa-solid fa-volume-low" style="color:#4ECDC4"></i> 點擊卡片聽口訣朗讀！
+        <!-- 播放控制工具面板 -->
+        <div class="study-tools-panel">
+            <div class="control-group">
+                <span>⚡ 語速：</span>
+                <select class="control-select" id="speedSelect" onchange="updateSpeechRate()">
+                    <option value="0.75">0.75x 慢速</option>
+                    <option value="0.9" selected>1.0x 標準</option>
+                    <option value="1.15">1.25x 快速</option>
+                    <option value="1.4">1.5x 極快</option>
+                </select>
             </div>
-            <button class="auto-play-btn" id="autoPlayBtn" onclick="toggleAutoPlayCurrentTable()">
-                <i class="fa-solid fa-circle-play"></i> 自動全套朗讀
-            </button>
+
+            <div class="control-group">
+                <span>🔁 模式：</span>
+                <button class="ctrl-btn active" id="modeOnceBtn" onclick="setLoopMode(false)">🔂 播一次</button>
+                <button class="ctrl-btn" id="modeLoopBtn" onclick="setLoopMode(true)">🔁 循環播</button>
+            </div>
+
+            <div>
+                <button class="auto-play-btn" id="autoPlayBtn" onclick="toggleAutoPlayCurrentTable()">
+                    <i class="fa-solid fa-play"></i> 開始全套朗讀
+                </button>
+            </div>
         </div>
 
         <div class="table-grid" id="tableGrid">
@@ -610,7 +670,7 @@
 
         <div style="margin-top: 20px;">
             <button class="action-btn" id="startStudyLevelBtn" onclick="startCurrentLevelGame()" style="padding:10px 25px; font-size:1rem;">
-                <i class="fa-solid fa-gamepad"></i> 畫面太棒了！開始挑戰！
+                <i class="fa-solid fa-gamepad"></i> 開始挑戰！
             </button>
         </div>
     </div>
@@ -666,13 +726,16 @@
     }
 
     /* ==========================================================================
-       Sound System (Web Audio API & Speech Synthesis)
+       Sound & Speech Control System
        ========================================================================== */
     let soundEnabled = true;
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
+
     let autoPlayTimer = null;
     let isAutoPlaying = false;
+    let isLoopMode = false;
+    let speechRate = 0.9;
 
     function initAudio() {
         if (!audioCtx) audioCtx = new AudioCtx();
@@ -685,6 +748,16 @@
         btn.style.borderColor = soundEnabled ? '#4ECDC4' : '#FF6B6B';
         btn.style.color = soundEnabled ? '#4ECDC4' : '#FF6B6B';
         if (!soundEnabled) stopAutoPlay();
+    }
+
+    function updateSpeechRate() {
+        speechRate = parseFloat(document.getElementById('speedSelect').value);
+    }
+
+    function setLoopMode(loop) {
+        isLoopMode = loop;
+        document.getElementById('modeOnceBtn').classList.toggle('active', !loop);
+        document.getElementById('modeLoopBtn').classList.toggle('active', loop);
     }
 
     function playTone(freq, type, duration, delay = 0) {
@@ -729,7 +802,7 @@
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'zh-TW';
-        utterance.rate = 0.9;
+        utterance.rate = speechRate;
         if (onEndCallback) {
             utterance.onend = onEndCallback;
             utterance.onerror = onEndCallback;
@@ -751,7 +824,6 @@
     let timeLeft = 0;
     let totalQuestionsCount = 10;
 
-    // 儲存答錯統計到 localStorage
     let wrongStats = JSON.parse(localStorage.getItem('99_wrong_stats') || '{}');
 
     function recordWrongAnswer(num1, num2) {
@@ -779,7 +851,6 @@
         }
     }
 
-    // 點擊關卡按鈕：自動開啟對應數字背誦表
     function openNumberStudy(num) {
         currentStudyNum = num;
         switchTab('study', num);
@@ -796,7 +867,6 @@
         startGame('level', currentStudyNum);
     }
 
-    // 啟動遊戲
     function startGame(mode, param = null) {
         stopAutoPlay();
         initAudio();
@@ -844,11 +914,9 @@
             }
         }
 
-        // 切換視圖
         document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
         document.getElementById('gameView').classList.add('active');
 
-        // 計時器設置
         if (mode === 'time') {
             document.getElementById('progressWrap').style.display = 'none';
             startTimer();
@@ -891,18 +959,15 @@
         const q = questions[currentQIndex];
         document.getElementById('questionText').innerText = `${q.a} × ${q.b} = ?`;
         
-        // 闖關答題時完全隱藏口訣提示，避免洩漏答案
         const formulaHint = document.getElementById('formulaHint');
         formulaHint.style.display = 'none';
         formulaHint.innerText = '';
 
-        // 進度條
         if (currentMode !== 'time') {
             const pct = ((currentQIndex) / totalQuestionsCount) * 100;
             document.getElementById('progressBar').style.width = `${pct}%`;
         }
 
-        // 產生 4 個選項
         const answers = new Set([q.ans]);
         while (answers.size < 4) {
             let offset = (Math.floor(Math.random() * 5) - 2) * (Math.random() > 0.5 ? 1 : 2);
@@ -938,7 +1003,6 @@
             btnElement.classList.add('correct');
             playCorrectSound();
             
-            // 答對後才短暫展示與發音口訣
             formulaHint.innerText = `口訣：${formulaStr}`;
             formulaHint.style.display = 'block';
             speakFormula(formulaStr);
@@ -959,7 +1023,6 @@
             combo = 0;
             recordWrongAnswer(q.a, q.b);
 
-            // 答錯顯示正解口訣
             formulaHint.innerText = `正確口訣：${formulaStr}`;
             formulaHint.style.display = 'block';
 
@@ -1041,7 +1104,6 @@
         stopAutoPlay();
         currentStudyNum = num;
 
-        // 頁籤
         const selector = document.getElementById('tableSelector');
         selector.innerHTML = '';
         for (let i = 2; i <= 9; i++) {
@@ -1052,13 +1114,11 @@
             selector.appendChild(tab);
         }
 
-        // 自動捲動頁籤
         setTimeout(() => {
             const activeTab = selector.querySelector('.table-tab.active');
             if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }, 50);
 
-        // 九宮格卡片
         const grid = document.getElementById('tableGrid');
         grid.innerHTML = '';
         for (let i = 1; i <= 9; i++) {
@@ -1081,7 +1141,7 @@
         document.getElementById('startStudyLevelBtn').innerText = `🚀 開始挑戰 ${num} 的乘法！`;
     }
 
-    /* 自動順序朗讀全套口訣 */
+    /* 自動朗讀控制邏輯 */
     function toggleAutoPlayCurrentTable() {
         if (isAutoPlaying) {
             stopAutoPlay();
@@ -1093,14 +1153,20 @@
     function startAutoPlayCurrentTable() {
         isAutoPlaying = true;
         const btn = document.getElementById('autoPlayBtn');
-        btn.innerHTML = '<i class="fa-solid fa-circle-stop"></i> 停止朗讀';
-        btn.style.background = '#FF6B6B';
+        btn.innerHTML = '<i class="fa-solid fa-stop"></i> 停止朗讀';
+        btn.classList.add('stop-play-btn');
 
         let step = 1;
         function readStep() {
-            if (!isAutoPlaying || step > 9) {
-                stopAutoPlay();
-                return;
+            if (!isAutoPlaying) return;
+
+            if (step > 9) {
+                if (isLoopMode) {
+                    step = 1; // 循環播放，自動重新第一項
+                } else {
+                    stopAutoPlay();
+                    return;
+                }
             }
 
             document.querySelectorAll('.table-card').forEach(c => c.style.background = 'white');
@@ -1111,7 +1177,7 @@
             speakFormula(formula, () => {
                 step++;
                 if (isAutoPlaying) {
-                    autoPlayTimer = setTimeout(readStep, 300);
+                    autoPlayTimer = setTimeout(readStep, 250);
                 }
             });
         }
@@ -1125,8 +1191,8 @@
 
         const btn = document.getElementById('autoPlayBtn');
         if (btn) {
-            btn.innerHTML = '<i class="fa-solid fa-circle-play"></i> 自動全套朗讀';
-            btn.style.background = 'linear-gradient(135deg, #4ECDC4, #2AB7CA)';
+            btn.innerHTML = '<i class="fa-solid fa-play"></i> 開始全套朗讀';
+            btn.classList.remove('stop-play-btn');
         }
         document.querySelectorAll('.table-card').forEach(c => c.style.background = 'white');
     }
