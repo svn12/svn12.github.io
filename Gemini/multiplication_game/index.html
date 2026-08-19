@@ -812,10 +812,18 @@
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'zh-TW';
         utterance.rate = speechRate;
-        if (onEndCallback) {
-            utterance.onend = onEndCallback;
-            utterance.onerror = onEndCallback;
-        }
+
+        let hasCalled = false;
+        const safeCallback = () => {
+            if (!hasCalled) {
+                hasCalled = true;
+                if (onEndCallback) onEndCallback();
+            }
+        };
+
+        utterance.onend = safeCallback;
+        utterance.onerror = safeCallback;
+
         window.speechSynthesis.speak(utterance);
     }
 
@@ -832,6 +840,7 @@
     let timer = null;
     let timeLeft = 0;
     let totalQuestionsCount = 10;
+    let isTransitioning = false;
 
     let wrongStats = JSON.parse(localStorage.getItem('99_wrong_stats') || '{}');
 
@@ -916,6 +925,7 @@
         combo = 0;
         maxCombo = 0;
         currentQIndex = 0;
+        isTransitioning = false;
         questions = [];
 
         if (mode === 'level') {
@@ -999,6 +1009,7 @@
             return;
         }
 
+        isTransitioning = false;
         const q = questions[currentQIndex];
         if (q.type === 'addsub') {
             document.getElementById('questionText').innerText = `${q.a} ${q.op} ${q.b} = ?`;
@@ -1040,11 +1051,21 @@
     }
 
     function checkAnswer(selected, correct, btnElement, q) {
+        if (isTransitioning) return;
+        isTransitioning = true;
+
         const allBtns = document.querySelectorAll('.option-btn');
         allBtns.forEach(b => b.onclick = null);
 
         const formulaStr = getChineseFormula(q);
         const formulaHint = document.getElementById('formulaHint');
+
+        const goToNext = () => {
+            setTimeout(() => {
+                currentQIndex++;
+                showQuestion();
+            }, 300);
+        };
 
         if (selected === correct) {
             btnElement.classList.add('correct');
@@ -1052,7 +1073,6 @@
             
             formulaHint.innerText = `解答：${formulaStr}`;
             formulaHint.style.display = 'block';
-            speakFormula(formulaStr);
 
             combo++;
             if (combo > maxCombo) maxCombo = combo;
@@ -1063,6 +1083,13 @@
                 wrongStats[key] = Math.max(0, wrongStats[key] - 1);
                 if (wrongStats[key] === 0) delete wrongStats[key];
                 localStorage.setItem('99_wrong_stats', JSON.stringify(wrongStats));
+            }
+
+            // 必須待語音發音完整播完才跳下一題
+            if (soundEnabled && ('speechSynthesis' in window)) {
+                speakFormula(formulaStr, goToNext);
+            } else {
+                setTimeout(goToNext, 900);
             }
         } else {
             btnElement.classList.add('wrong');
@@ -1078,14 +1105,16 @@
                     b.classList.add('correct');
                 }
             });
+
+            // 答錯朗讀正確口訣/答案完畢後跳下一題
+            if (soundEnabled && ('speechSynthesis' in window)) {
+                speakFormula(`答錯囉！${formulaStr}`, goToNext);
+            } else {
+                setTimeout(goToNext, 1200);
+            }
         }
 
         updateUI();
-
-        setTimeout(() => {
-            currentQIndex++;
-            showQuestion();
-        }, 1100);
     }
 
     function updateUI() {
