@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九九乘法大冒險 🚀 - 小學生最佳乘法表學習小遊戲</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --yellow: #FFE66D;
+            --purple: #A06CD5;
+            --dark: #2F2D2E;
+            --light: #F7FFF7;
+            --card-bg: #FFFFFF;
+            --radius: 20px;
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #a8edd9 0%, #fed6e3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 620px;
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border: 4px solid #FFF;
+            text-align: center;
+            position: relative;
+        }
+
+        /* 標題與音效按鈕 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            color: #FF5964;
+            text-shadow: 2px 2px 0px #FFE66D;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: #FFF;
+            border: 3px solid #4ECDC4;
+            color: #4ECDC4;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+            background: #4ECDC4;
+            color: white;
+        }
+
+        /* 選單分頁切換 */
+        .tab-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #EAEAEA;
+            padding: 6px;
+            border-radius: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 15px;
+            background: transparent;
+            color: #666;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #FF6B6B;
+            color: white;
+            box-shadow: 0 4px 10px rgba(255, 107, 107, 0.4);
+        }
+
+        /* 視圖區域 */
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 模式選擇 */
+        .mode-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .mode-card {
+            background: white;
+            border: 3px solid #F0F0F0;
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        }
+
+        .mode-card:hover {
+            transform: translateY(-5px);
+            border-color: #FF6B6B;
+            box-shadow: 0 12px 20px rgba(255, 107, 107, 0.2);
+        }
+
+        .mode-card i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .mode-card.m1 i { color: #FF6B6B; }
+        .mode-card.m2 i { color: #4ECDC4; }
+        .mode-card.m3 i { color: #FFE66D; }
+        .mode-card.m4 i { color: #A06CD5; }
+
+        .mode-card h3 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .mode-card p {
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        /* 關卡選擇列表 (1~9段) */
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .level-btn {
+            background: white;
+            border: 3px solid #4ECDC4;
+            color: #4ECDC4;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 12px 0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .level-btn:hover {
+            background: #4ECDC4;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .level-btn-sub {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            font-weight: normal;
+        }
+
+        /* 遊戲介面 */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #FFF;
+            padding: 12px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .combo-badge {
+            background: #FFE66D;
+            color: #D4A017;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #6C5CE7, #a29bfe);
+            color: white;
+            border-radius: 25px;
+            padding: 25px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+            position: relative;
+        }
+
+        .question-text {
+            font-size: 3.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+        }
+
+        .formula-hint {
+            font-size: 1.2rem;
+            color: #FFE66D;
+            margin-top: 5px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .progress-bar-wrap {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 5px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 100%;
+            background: #FFE66D;
+            transition: width 0.3s linear;
+        }
+
+        /* 選項按鈕 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 3px solid #EAEAEA;
+            border-radius: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            padding: 18px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        }
+
+        .option-btn:hover {
+            border-color: #A06CD5;
+            background: #F8F4FF;
+            transform: translateY(-3px);
+        }
+
+        .option-btn.correct {
+            background: #2ECC71 !important;
+            border-color: #27AE60 !important;
+            color: white !important;
+            animation: bounce 0.4s;
+        }
+
+        .option-btn.wrong {
+            background: #E74C3C !important;
+            border-color: #C0392B !important;
+            color: white !important;
+            animation: shake 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* 背誦總覽頁籤與卡片 */
+        .table-selector {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            scrollbar-width: thin;
+        }
+
+        .table-tab {
+            padding: 10px 18px;
+            background: #FFF;
+            border: 2px solid #DDD;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .table-tab.active {
+            background: #FF6B6B;
+            color: white;
+            border-color: #FF6B6B;
+            box-shadow: 0 4px 10px rgba(255,107,107,0.3);
+        }
+
+        .study-tools {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #FFF;
+            padding: 10px 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+        }
+
+        .table-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 18px;
+            padding: 14px 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid #F0F0F0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .table-card:hover {
+            background: #FFE66D;
+            transform: scale(1.05);
+            border-color: #FFA500;
+        }
+
+        .table-card-math {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .table-card-formula {
+            font-size: 0.95rem;
+            color: #FF5964;
+            font-weight: bold;
+            background: #FFF5F5;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .auto-play-btn {
+            background: linear-gradient(135deg, #4ECDC4, #2AB7CA);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(78,205,196,0.3);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .auto-play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* 結算彈窗 */
+        .modal {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 30px;
+            padding: 30px 20px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in-out;
+            z-index: 10;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-title {
+            font-size: 2.2rem;
+            color: #FF6B6B;
+            margin-bottom: 15px;
+        }
+
+        .stars {
+            font-size: 3rem;
+            color: #FFE66D;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .modal-stats {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        canvas#confetti {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <canvas id="confetti"></canvas>
+    
+    <header>
+        <div class="title">
+            <i class="fa-solid fa-graduation-cap"></i>
+            九九乘法大冒險
+        </div>
+        <div>
+            <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="切換音效">
+                <i class="fa-solid fa-volume-high"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 分頁按鈕 -->
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="switchTab('home')"><i class="fa-solid fa-gamepad"></i> 遊戲模式</button>
+        <button class="tab-btn" onclick="switchTab('study')"><i class="fa-solid fa-book-open"></i> 乘法表背誦</button>
+        <button class="tab-btn" onclick="switchTab('weakness')"><i class="fa-solid fa-bullseye"></i> 錯題特訓</button>
+    </div>
+
+    <!-- 1. 主選單 (遊戲模式) -->
+    <div id="homeView" class="view-section active">
+        <div class="mode-cards">
+            <div class="mode-card m1" onclick="showLevelSelect()">
+                <i class="fa-solid fa-stairs"></i>
+                <h3>闖關練習</h3>
+                <p>點選數字 (2~9) 專題挑戰</p>
+            </div>
+            <div class="mode-card m2" onclick="startGame('time')">
+                <i class="fa-solid fa-stopwatch"></i>
+                <h3>60秒極速賽</h3>
+                <p>爭分奪秒！看你能答對幾題</p>
+            </div>
+            <div class="mode-card m3" onclick="startGame('mixed')">
+                <i class="fa-solid fa-shuffle"></i>
+                <h3>綜合大挑戰</h3>
+                <p>全範圍九九乘法隨機出題</p>
+            </div>
+            <div class="mode-card m4" onclick="switchTab('weakness')">
+                <i class="fa-solid fa-heart-pulse"></i>
+                <h3>錯題本加強</h3>
+                <p>專門複習常答錯的弱點題目</p>
+            </div>
+        </div>
+
+        <!-- 闖關數字選擇區 (預設隱藏) -->
+        <div id="levelSelectArea" style="display:none; margin-top: 20px; text-align: left;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h4 style="color:#555;"><i class="fa-solid fa-list-check"></i> 請選擇要練習的乘數：</h4>
+                <button onclick="hideLevelSelect()" style="background:none; border:none; color:#FF6B6B; cursor:pointer; font-weight:bold;">返回</button>
+            </div>
+            <div class="level-grid">
+                <button class="level-btn" onclick="openNumberStudy(2)">2 的乘法 <span class="level-btn-sub">背誦與挑戰</span></button>
+                <button class="level-btn" onclick="openNumberStudy(3)">3 的乘法 <span class="level-btn-sub">背誦與挑戰</span></button>
+                <button class="level-btn" onclick="openNumberStudy(4)">4 的乘法 <span class="level-btn-sub">背誦與挑戰</span></button>
+                <button class="level-btn" onclick="openNumberStudy(5)">5 的乘法 <span class="level-btn-sub">背誦與挑戰</span></button>
+                <button class="level-btn" onclick="openNumberStudy(6)">6 的乘法 <span class="level-btn-sub">背誦與挑戰</span></button>
+                <button class="level-btn" onclick="openNumberStudy(7)">7 的乘法 <span class="level-btn-sub">背誦與挑戰</span></button>
+                <button class="level-btn" onclick="openNumberStudy(8)">8 的乘法 <span class="level-btn-sub">背誦與挑戰</span></button>
+                <button class="level-btn" onclick="openNumberStudy(9)">9 的乘法 <span class="level-btn-sub">背誦與挑戰</span></button>
+                <button class="level-btn" style="background:#A06CD5; color:white; border-color:#A06CD5" onclick="startGame('level', 'all')">2~9 全套隨機</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 遊戲進行頁面 -->
+    <div id="gameView" class="view-section">
+        <div class="status-bar">
+            <div><i class="fa-solid fa-star" style="color:#FFE66D;"></i> 得分: <span id="scoreText">0</span></div>
+            <div class="combo-badge" id="comboBadge" style="display:none;">🔥 連擊 x<span id="comboText">0</span></div>
+            <div><i class="fa-solid fa-clock" style="color:#FF6B6B;"></i> <span id="timerText">--</span></div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-text" id="questionText">2 × 3 = ?</div>
+            <div class="formula-hint" id="formulaHint">口訣提示：二三得六</div>
+            <div class="progress-bar-wrap" id="progressWrap">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="options-grid" id="optionsContainer">
+            <!-- 動態生成 4 個選擇按鈕 -->
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="quitGame()" style="background:none; border:none; color:#888; cursor:pointer;"><i class="fa-solid fa-arrow-left"></i> 放棄返回主頁</button>
+        </div>
+    </div>
+
+    <!-- 3. 乘法表背誦溫習頁面 -->
+    <div id="studyView" class="view-section">
+        <div class="table-selector" id="tableSelector">
+            <!-- 2~9 切換頁籤 -->
+        </div>
+
+        <div class="study-tools">
+            <div style="color:#555; font-weight:bold; font-size:0.95rem;">
+                <i class="fa-solid fa-volume-low" style="color:#4ECDC4"></i> 點擊卡片聽口訣朗讀！
+            </div>
+            <button class="auto-play-btn" id="autoPlayBtn" onclick="toggleAutoPlayCurrentTable()">
+                <i class="fa-solid fa-circle-play"></i> 自動全套朗讀
+            </button>
+        </div>
+
+        <div class="table-grid" id="tableGrid">
+            <!-- 動態生成 9 個卡片 -->
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button class="action-btn" id="startStudyLevelBtn" onclick="startCurrentLevelGame()" style="padding:10px 25px; font-size:1rem;">
+                <i class="fa-solid fa-gamepad"></i> 立即開始這個數字的挑戰！
+            </button>
+        </div>
+    </div>
+
+    <!-- 4. 錯題特訓頁面 -->
+    <div id="weaknessView" class="view-section">
+        <div style="background:white; border-radius:20px; padding:20px; box-shadow:0 4px 10px rgba(0,0,0,0.05)">
+            <h3 style="color:#FF6B6B; margin-bottom:10px;"><i class="fa-solid fa-circle-exclamation"></i> 常錯弱點分析</h3>
+            <p style="color:#666; font-size:0.95rem; margin-bottom:15px;" id="weaknessDesc">系統會自動記錄答錯的題目，方便重點強化背誦！</p>
+            <div id="weaknessList" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:20px;">
+                <!-- 動態呈現弱點題庫卡片 -->
+            </div>
+            <button class="action-btn" id="startWeaknessBtn" onclick="startGame('weakness')">開始錯題特訓</button>
+        </div>
+    </div>
+
+    <!-- 結算彈窗 -->
+    <div class="modal" id="resultModal">
+        <div class="modal-title" id="modalTitle">關卡完成！🎉</div>
+        <div class="stars" id="starRating">⭐⭐⭐</div>
+        <div class="modal-stats" id="modalStats">
+            答對題數：10 / 10<br>
+            最高連擊：5 次<br>
+            總得分：1500 分
+        </div>
+        <button class="action-btn" onclick="closeModal()"><i class="fa-solid fa-rotate-right"></i> 再玩一次</button>
+    </div>
+</div>
+
+<script>
+    /* ==========================================================================
+       傳統中文九九乘法口訣產生器
+       ========================================================================== */
+    const numZh = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+
+    function getChineseFormula(a, b) {
+        const ans = a * b;
+        const aZh = numZh[a];
+        const bZh = numZh[b];
+
+        if (ans < 10) {
+            return `${aZh}${bZh}得${numZh[ans]}`;
+        }
+
+        const tens = Math.floor(ans / 10);
+        const units = ans % 10;
+
+        if (tens === 1) {
+            return `${aZh}${bZh}十${units > 0 ? numZh[units] : ''}`;
+        } else {
+            return `${aZh}${bZh}${numZh[tens]}十${units > 0 ? numZh[units] : ''}`;
+        }
+    }
+
+    /* ==========================================================================
+       Sound System (Web Audio API & Speech Synthesis)
+       ========================================================================== */
+    let soundEnabled = true;
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    let autoPlayTimer = null;
+    let isAutoPlaying = false;
+
+    function initAudio() {
+        if (!audioCtx) audioCtx = new AudioCtx();
+    }
+
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        const btn = document.getElementById('soundBtn');
+        btn.innerHTML = soundEnabled ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
+        btn.style.borderColor = soundEnabled ? '#4ECDC4' : '#FF6B6B';
+        btn.style.color = soundEnabled ? '#4ECDC4' : '#FF6B6B';
+        if (!soundEnabled) stopAutoPlay();
+    }
+
+    function playTone(freq, type, duration, delay = 0) {
+        if (!soundEnabled) return;
+        try {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime + delay);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(audioCtx.currentTime + delay);
+            osc.stop(audioCtx.currentTime + delay + duration);
+        } catch(e){}
+    }
+
+    function playCorrectSound() {
+        playTone(523.25, 'sine', 0.1, 0);    // C5
+        playTone(659.25, 'sine', 0.1, 0.08); // E5
+        playTone(783.99, 'sine', 0.2, 0.16); // G5
+    }
+
+    function playWrongSound() {
+        playTone(220, 'sawtooth', 0.15, 0);  // A3
+        playTone(196, 'sawtooth', 0.25, 0.1); // G3
+    }
+
+    function playWinSound() {
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((n, i) => playTone(n, 'triangle', 0.25, i * 0.1));
+    }
+
+    // 語音朗讀口訣 (TTS)
+    function speakFormula(text, onEndCallback = null) {
+        if (!soundEnabled || !('speechSynthesis' in window)) {
+            if (onEndCallback) onEndCallback();
+            return;
+        }
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-TW';
+        utterance.rate = 0.9;
+        if (onEndCallback) {
+            utterance.onend = onEndCallback;
+            utterance.onerror = onEndCallback;
+        }
+        window.speechSynthesis.speak(utterance);
+    }
+
+    /* ==========================================================================
+       Game Core Logic
+       ========================================================================== */
+    let currentMode = '';
+    let currentStudyNum = 2;
+    let questions = [];
+    let currentQIndex = 0;
+    let score = 0;
+    let combo = 0;
+    let maxCombo = 0;
+    let timer = null;
+    let timeLeft = 0;
+    let totalQuestionsCount = 10;
+
+    // 儲存答錯統計到 localStorage
+    let wrongStats = JSON.parse(localStorage.getItem('99_wrong_stats') || '{}');
+
+    function recordWrongAnswer(num1, num2) {
+        const key = `${num1}x${num2}`;
+        wrongStats[key] = (wrongStats[key] || 0) + 1;
+        localStorage.setItem('99_wrong_stats', JSON.stringify(wrongStats));
+    }
+
+    function switchTab(tabName, targetNum = null) {
+        stopAutoPlay();
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+
+        if (tabName === 'home') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('homeView').classList.add('active');
+        } else if (tabName === 'study') {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('studyView').classList.add('active');
+            renderStudyTable(targetNum || currentStudyNum);
+        } else if (tabName === 'weakness') {
+            document.querySelectorAll('.tab-btn')[2].classList.add('active');
+            document.getElementById('weaknessView').classList.add('active');
+            renderWeaknessView();
+        }
+    }
+
+    // 點擊關卡按鈕：自動開啟對應數字背誦表
+    function openNumberStudy(num) {
+        currentStudyNum = num;
+        switchTab('study', num);
+    }
+
+    function showLevelSelect() {
+        document.getElementById('levelSelectArea').style.display = 'block';
+    }
+    function hideLevelSelect() {
+        document.getElementById('levelSelectArea').style.display = 'none';
+    }
+
+    function startCurrentLevelGame() {
+        startGame('level', currentStudyNum);
+    }
+
+    // 啟動遊戲
+    function startGame(mode, param = null) {
+        stopAutoPlay();
+        initAudio();
+        currentMode = mode;
+        score = 0;
+        combo = 0;
+        maxCombo = 0;
+        currentQIndex = 0;
+        questions = [];
+
+        if (mode === 'level') {
+            currentStudyNum = param === 'all' ? 2 : param;
+            if (param === 'all') {
+                totalQuestionsCount = 15;
+                for (let i = 0; i < totalQuestionsCount; i++) {
+                    let a = Math.floor(Math.random() * 8) + 2;
+                    let b = Math.floor(Math.random() * 9) + 1;
+                    questions.push({ a, b, ans: a * b });
+                }
+            } else {
+                totalQuestionsCount = 9;
+                for (let b = 1; b <= 9; b++) {
+                    questions.push({ a: param, b: b, ans: param * b });
+                }
+                questions.sort(() => Math.random() - 0.5);
+            }
+        } else if (mode === 'time') {
+            totalQuestionsCount = 999;
+            timeLeft = 60;
+            generateRandomQuestions(50);
+        } else if (mode === 'mixed') {
+            totalQuestionsCount = 10;
+            generateRandomQuestions(10);
+        } else if (mode === 'weakness') {
+            const keys = Object.keys(wrongStats);
+            if (keys.length === 0) {
+                alert('太棒了！目前沒有錯題紀錄喔！');
+                return;
+            }
+            totalQuestionsCount = Math.min(keys.length * 2, 10);
+            for (let i = 0; i < totalQuestionsCount; i++) {
+                const randomKey = keys[Math.floor(Math.random() * keys.length)];
+                const [a, b] = randomKey.split('x').map(Number);
+                questions.push({ a, b, ans: a * b });
+            }
+        }
+
+        // 切換視圖
+        document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById('gameView').classList.add('active');
+
+        // 計時器設置
+        if (mode === 'time') {
+            document.getElementById('progressWrap').style.display = 'none';
+            startTimer();
+        } else {
+            document.getElementById('progressWrap').style.display = 'block';
+            document.getElementById('timerText').innerText = '闖關中';
+        }
+
+        updateUI();
+        showQuestion();
+    }
+
+    function generateRandomQuestions(count) {
+        for (let i = 0; i < count; i++) {
+            let a = Math.floor(Math.random() * 8) + 2;
+            let b = Math.floor(Math.random() * 9) + 1;
+            questions.push({ a, b, ans: a * b });
+        }
+    }
+
+    function startTimer() {
+        clearInterval(timer);
+        document.getElementById('timerText').innerText = `${timeLeft}s`;
+        timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timerText').innerText = `${timeLeft}s`;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                endGame();
+            }
+        }, 1000);
+    }
+
+    function showQuestion() {
+        if (currentQIndex >= questions.length && currentMode !== 'time') {
+            endGame();
+            return;
+        }
+
+        const q = questions[currentQIndex];
+        const formulaStr = getChineseFormula(q.a, q.b);
+        document.getElementById('questionText').innerText = `${q.a} × ${q.b} = ?`;
+        document.getElementById('formulaHint').innerText = `口訣：${formulaStr}`;
+
+        // 進度條
+        if (currentMode !== 'time') {
+            const pct = ((currentQIndex) / totalQuestionsCount) * 100;
+            document.getElementById('progressBar').style.width = `${pct}%`;
+        }
+
+        // 產生 4 個選項
+        const answers = new Set([q.ans]);
+        while (answers.size < 4) {
+            let offset = (Math.floor(Math.random() * 5) - 2) * (Math.random() > 0.5 ? 1 : 2);
+            let wrongAns = q.ans + offset;
+            if (wrongAns > 0 && wrongAns <= 81 && wrongAns !== q.ans) {
+                answers.add(wrongAns);
+            } else {
+                answers.add(q.ans + Math.floor(Math.random() * 10) + 1);
+            }
+        }
+
+        const options = Array.from(answers).sort(() => Math.random() - 0.5);
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(opt, q.ans, btn, q);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected, correct, btnElement, q) {
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(b => b.onclick = null);
+
+        const formulaStr = getChineseFormula(q.a, q.b);
+
+        if (selected === correct) {
+            btnElement.classList.add('correct');
+            playCorrectSound();
+            speakFormula(formulaStr);
+            combo++;
+            if (combo > maxCombo) maxCombo = combo;
+            score += 100 + (combo * 10);
+            
+            const key = `${q.a}x${q.b}`;
+            if (wrongStats[key]) {
+                wrongStats[key] = Math.max(0, wrongStats[key] - 1);
+                if (wrongStats[key] === 0) delete wrongStats[key];
+                localStorage.setItem('99_wrong_stats', JSON.stringify(wrongStats));
+            }
+        } else {
+            btnElement.classList.add('wrong');
+            playWrongSound();
+            combo = 0;
+            recordWrongAnswer(q.a, q.b);
+
+            allBtns.forEach(b => {
+                if (parseInt(b.innerText) === correct) {
+                    b.classList.add('correct');
+                }
+            });
+        }
+
+        updateUI();
+
+        setTimeout(() => {
+            currentQIndex++;
+            showQuestion();
+        }, 900);
+    }
+
+    function updateUI() {
+        document.getElementById('scoreText').innerText = score;
+        document.getElementById('comboText').innerText = combo;
+        const comboBadge = document.getElementById('comboBadge');
+        if (combo >= 2) {
+            comboBadge.style.display = 'inline-block';
+            comboBadge.style.transform = 'scale(1.1)';
+            setTimeout(() => comboBadge.style.transform = 'scale(1)', 150);
+        } else {
+            comboBadge.style.display = 'none';
+        }
+    }
+
+    function quitGame() {
+        clearInterval(timer);
+        switchTab('home');
+    }
+
+    function endGame() {
+        clearInterval(timer);
+        playWinSound();
+
+        const modal = document.getElementById('resultModal');
+        const title = document.getElementById('modalTitle');
+        const stars = document.getElementById('starRating');
+        const stats = document.getElementById('modalStats');
+
+        let starStr = '⭐⭐⭐';
+        if (score < 500) starStr = '⭐';
+        else if (score < 900) starStr = '⭐⭐';
+
+        title.innerText = currentMode === 'time' ? '時間到！' : '太棒了！完成關卡！';
+        stars.innerText = starStr;
+        stats.innerHTML = `
+            得 分：<strong>${score}</strong> 分<br>
+            最高連擊：<strong>${maxCombo}</strong> 次<br>
+            挑戰模式：${getModeName(currentMode)}
+        `;
+
+        modal.classList.add('active');
+        triggerConfetti();
+    }
+
+    function getModeName(mode) {
+        if (mode === 'level') return `${currentStudyNum} 的乘法闖關`;
+        if (mode === 'time') return '60秒極速賽';
+        if (mode === 'mixed') return '綜合大挑戰';
+        if (mode === 'weakness') return '錯題特訓';
+        return '';
+    }
+
+    function closeModal() {
+        document.getElementById('resultModal').classList.remove('active');
+        switchTab('home');
+    }
+
+    /* ==========================================================================
+       乘法表背誦卡 (Study View)
+       ========================================================================== */
+    function renderStudyTable(num) {
+        stopAutoPlay();
+        currentStudyNum = num;
+
+        // 頁籤
+        const selector = document.getElementById('tableSelector');
+        selector.innerHTML = '';
+        for (let i = 2; i <= 9; i++) {
+            const tab = document.createElement('div');
+            tab.className = `table-tab ${i === num ? 'active' : ''}`;
+            tab.innerText = `${i} 的乘法`;
+            tab.onclick = () => renderStudyTable(i);
+            selector.appendChild(tab);
+        }
+
+        // 自動捲動目前被選取的頁籤到視覺中心
+        setTimeout(() => {
+            const activeTab = selector.querySelector('.table-tab.active');
+            if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }, 50);
+
+        // 九宮格卡片
+        const grid = document.getElementById('tableGrid');
+        grid.innerHTML = '';
+        for (let i = 1; i <= 9; i++) {
+            const formula = getChineseFormula(num, i);
+            const card = document.createElement('div');
+            card.className = 'table-card';
+            card.id = `studyCard_${i}`;
+            card.innerHTML = `
+                <div class="table-card-math">${num} × ${i} = <span style="color:#FF6B6B">${num * i}</span></div>
+                <div class="table-card-formula">${formula}</div>
+            `;
+            card.onclick = () => {
+                stopAutoPlay();
+                playTone(400 + i * 40, 'sine', 0.15);
+                speakFormula(formula);
+            };
+            grid.appendChild(card);
+        }
+
+        document.getElementById('startStudyLevelBtn').innerText = `🚀 挑戰 ${num} 的乘法！`;
+    }
+
+    /* 自動順序朗讀全套口訣 */
+    function toggleAutoPlayCurrentTable() {
+        if (isAutoPlaying) {
+            stopAutoPlay();
+        } else {
+            startAutoPlayCurrentTable();
+        }
+    }
+
+    function startAutoPlayCurrentTable() {
+        isAutoPlaying = true;
+        const btn = document.getElementById('autoPlayBtn');
+        btn.innerHTML = '<i class="fa-solid fa-circle-stop"></i> 停止朗讀';
+        btn.style.background = '#FF6B6B';
+
+        let step = 1;
+        function readStep() {
+            if (!isAutoPlaying || step > 9) {
+                stopAutoPlay();
+                return;
+            }
+
+            // 高亮目前卡片
+            document.querySelectorAll('.table-card').forEach(c => c.style.background = 'white');
+            const currentCard = document.getElementById(`studyCard_${step}`);
+            if (currentCard) currentCard.style.background = '#FFE66D';
+
+            const formula = getChineseFormula(currentStudyNum, step);
+            speakFormula(formula, () => {
+                step++;
+                if (isAutoPlaying) {
+                    autoPlayTimer = setTimeout(readStep, 300);
+                }
+            });
+        }
+        readStep();
+    }
+
+    function stopAutoPlay() {
+        isAutoPlaying = false;
+        if (autoPlayTimer) clearTimeout(autoPlayTimer);
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+        const btn = document.getElementById('autoPlayBtn');
+        if (btn) {
+            btn.innerHTML = '<i class="fa-solid fa-circle-play"></i> 自動全套朗讀';
+            btn.style.background = 'linear-gradient(135deg, #4ECDC4, #2AB7CA)';
+        }
+        document.querySelectorAll('.table-card').forEach(c => c.style.background = 'white');
+    }
+
+    /* ==========================================================================
+       錯題特訓分析頁
+       ========================================================================== */
+    function renderWeaknessView() {
+        stopAutoPlay();
+        const list = document.getElementById('weaknessList');
+        const desc = document.getElementById('weaknessDesc');
+        const startBtn = document.getElementById('startWeaknessBtn');
+        list.innerHTML = '';
+
+        const keys = Object.keys(wrongStats);
+        if (keys.length === 0) {
+            desc.innerText = '目前還沒有錯題紀錄喔！答錯的題目會顯示在這裡幫助加強。';
+            startBtn.style.display = 'none';
+            return;
+        }
+
+        desc.innerText = `發現你共有 ${keys.length} 個乘法弱點，點擊以下題卡聽傳統口訣溫習：`;
+        startBtn.style.display = 'inline-block';
+
+        keys.forEach(key => {
+            const [a, b] = key.split('x').map(Number);
+            const count = wrongStats[key];
+            const formula = getChineseFormula(a, b);
+            const badge = document.createElement('div');
+            badge.className = 'table-card';
+            badge.style.borderColor = '#FF6B6B';
+            badge.innerHTML = `
+                <div class="table-card-math">${a} × ${b} = ${a*b}</div>
+                <div class="table-card-formula">${formula}</div>
+                <div style="font-size:0.75rem; color:#888;">(錯 ${count} 次)</div>
+            `;
+            badge.onclick = () => speakFormula(formula);
+            list.appendChild(badge);
+        });
+    }
+
+    /* ==========================================================================
+       Canvas 彩帶效果 (Confetti)
+       ========================================================================== */
+    function triggerConfetti() {
+        const canvas = document.getElementById('confetti');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+
+        const pieces = [];
+        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#A06CD5', '#2ECC71'];
+
+        for (let i = 0; i < 60; i++) {
+            pieces.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 8 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speed: Math.random() * 3 + 2,
+                angle: Math.random() * 360
+            });
+        }
+
+        let frame = 0;
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pieces.forEach(p => {
+                p.y += p.speed;
+                p.angle += 3;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate((p.angle * Math.PI) / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+            });
+
+            frame++;
+            if (frame < 120) {
+                requestAnimationFrame(animate);
+            } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+        animate();
+    }
+
+    // 初始載入背誦表
+    renderStudyTable(2);
+</script>
+
+</body>
+</html>
