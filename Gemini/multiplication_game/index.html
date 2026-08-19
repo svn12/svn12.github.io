@@ -240,14 +240,14 @@
             background: linear-gradient(135deg, #6C5CE7, #a29bfe);
             color: white;
             border-radius: 25px;
-            padding: 25px 20px;
+            padding: 30px 20px;
             margin-bottom: 20px;
             box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
             position: relative;
         }
 
         .question-text {
-            font-size: 3.2rem;
+            font-size: 3.5rem;
             font-weight: bold;
             letter-spacing: 2px;
             text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
@@ -256,9 +256,10 @@
         .formula-hint {
             font-size: 1.2rem;
             color: #FFE66D;
-            margin-top: 5px;
+            margin-top: 8px;
             font-weight: bold;
             letter-spacing: 2px;
+            display: none; /* 答題時預設隱藏口訣，避免洩漏答案 */
         }
 
         .progress-bar-wrap {
@@ -609,7 +610,7 @@
 
         <div style="margin-top: 20px;">
             <button class="action-btn" id="startStudyLevelBtn" onclick="startCurrentLevelGame()" style="padding:10px 25px; font-size:1rem;">
-                <i class="fa-solid fa-gamepad"></i> 立即開始這個數字的挑戰！
+                <i class="fa-solid fa-gamepad"></i> 畫面太棒了！開始挑戰！
             </button>
         </div>
     </div>
@@ -888,9 +889,12 @@
         }
 
         const q = questions[currentQIndex];
-        const formulaStr = getChineseFormula(q.a, q.b);
         document.getElementById('questionText').innerText = `${q.a} × ${q.b} = ?`;
-        document.getElementById('formulaHint').innerText = `口訣：${formulaStr}`;
+        
+        // 闖關答題時完全隱藏口訣提示，避免洩漏答案
+        const formulaHint = document.getElementById('formulaHint');
+        formulaHint.style.display = 'none';
+        formulaHint.innerText = '';
 
         // 進度條
         if (currentMode !== 'time') {
@@ -928,11 +932,17 @@
         allBtns.forEach(b => b.onclick = null);
 
         const formulaStr = getChineseFormula(q.a, q.b);
+        const formulaHint = document.getElementById('formulaHint');
 
         if (selected === correct) {
             btnElement.classList.add('correct');
             playCorrectSound();
+            
+            // 答對後才短暫展示與發音口訣
+            formulaHint.innerText = `口訣：${formulaStr}`;
+            formulaHint.style.display = 'block';
             speakFormula(formulaStr);
+
             combo++;
             if (combo > maxCombo) maxCombo = combo;
             score += 100 + (combo * 10);
@@ -949,6 +959,10 @@
             combo = 0;
             recordWrongAnswer(q.a, q.b);
 
+            // 答錯顯示正解口訣
+            formulaHint.innerText = `正確口訣：${formulaStr}`;
+            formulaHint.style.display = 'block';
+
             allBtns.forEach(b => {
                 if (parseInt(b.innerText) === correct) {
                     b.classList.add('correct');
@@ -961,7 +975,7 @@
         setTimeout(() => {
             currentQIndex++;
             showQuestion();
-        }, 900);
+        }, 1000);
     }
 
     function updateUI() {
@@ -1038,7 +1052,7 @@
             selector.appendChild(tab);
         }
 
-        // 自動捲動目前被選取的頁籤到視覺中心
+        // 自動捲動頁籤
         setTimeout(() => {
             const activeTab = selector.querySelector('.table-tab.active');
             if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
@@ -1064,7 +1078,7 @@
             grid.appendChild(card);
         }
 
-        document.getElementById('startStudyLevelBtn').innerText = `🚀 挑戰 ${num} 的乘法！`;
+        document.getElementById('startStudyLevelBtn').innerText = `🚀 開始挑戰 ${num} 的乘法！`;
     }
 
     /* 自動順序朗讀全套口訣 */
@@ -1089,7 +1103,6 @@
                 return;
             }
 
-            // 高亮目前卡片
             document.querySelectorAll('.table-card').forEach(c => c.style.background = 'white');
             const currentCard = document.getElementById(`studyCard_${step}`);
             if (currentCard) currentCard.style.background = '#FFE66D';
