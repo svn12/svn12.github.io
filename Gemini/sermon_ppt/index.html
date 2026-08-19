@@ -905,12 +905,8 @@
                                 <select id="hymns-select-tag" class="select-input">
                                     <option value="新聖詩" selected>新聖詩 (001-650)</option>
                                     <option value="啟應文">啟應文 (01-66)</option>
-                                    <option value="聖詩">舊聖詩</option>
                                     <option value="List">聖歌隊雅音</option>
                                     <option value="聖歌隊2">聖歌隊自動</option>
-                                    <option value="讚美之泉">讚美之泉</option>
-                                    <option value="讚美詩網">讚美之泉約書亞</option>
-                                    <option value="吉他AI">吉他AI</option>
                                 </select>
                             </div>
 
@@ -1834,16 +1830,12 @@
         const DEFAULT_HYMN_CATEGORIES = [
             { tag: "新聖詩", name: "新聖詩 (001-650)", required: true },
             { tag: "啟應文", name: "啟應文 (01-66)", required: true },
-            { tag: "聖詩", name: "舊聖詩" },
             { tag: "List", name: "聖歌隊雅音" },
-            { tag: "聖歌隊2", name: "聖歌隊自動" },
-            { tag: "讚美之泉", name: "讚美之泉" },
-            { tag: "讚美詩網", name: "讚美之泉約書亞" },
-            { tag: "吉他AI", name: "吉他AI" }
+            { tag: "聖歌隊2", name: "聖歌隊自動" }
         ];
 
         function getStoredHymnCategories() {
-            const saved = localStorage.getItem('hymns-custom-categories');
+            const saved = localStorage.getItem('hymns-custom-categories-v2');
             let list = DEFAULT_HYMN_CATEGORIES;
             if (saved) {
                 try { list = JSON.parse(saved); } catch(e) {}
@@ -1937,7 +1929,7 @@
                 }
                 
                 categories.push({ tag: tag, name: tag });
-                localStorage.setItem('hymns-custom-categories', JSON.stringify(categories));
+                localStorage.setItem('hymns-custom-categories-v2', JSON.stringify(categories));
                 statusDiv.innerHTML = `<span style="color:#10b981;">✅ 驗證成功！工作表 Header 包含 "YT"，已成功新增！</span>`;
                 
                 tagInput.value = '';
@@ -1957,14 +1949,14 @@
             }
             let categories = getStoredHymnCategories();
             categories = categories.filter(c => c.tag !== tag);
-            localStorage.setItem('hymns-custom-categories', JSON.stringify(categories));
+            localStorage.setItem('hymns-custom-categories-v2', JSON.stringify(categories));
             renderCategoryManagerList();
             populateHymnCategorySelect();
             loadHymnSublist();
         };
 
         function resetCategoryTags() {
-            localStorage.removeItem('hymns-custom-categories');
+            localStorage.removeItem('hymns-custom-categories-v2');
             renderCategoryManagerList();
             populateHymnCategorySelect();
             loadHymnSublist();
