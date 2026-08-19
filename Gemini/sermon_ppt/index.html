@@ -1821,6 +1821,64 @@
         // 🎵 聖詩與啟應文功能區
         // ==========================================
         let hymnsInitialized = false;
+        let hymnPlayHistory = [];
+
+        function playHymnNext(autoPlayAfter = false) {
+            const selectSub = document.getElementById('hymns-select-sub');
+            const playModeSelect = document.getElementById('hymns-play-mode');
+            const playMode = playModeSelect ? playModeSelect.value : 'sequential';
+            const total = selectSub.options.length;
+            if (total === 0) return;
+
+            const currentIndex = selectSub.selectedIndex;
+            if (currentIndex >= 0) {
+                hymnPlayHistory.push(currentIndex);
+            }
+
+            let nextIndex = 0;
+            if (playMode === 'random' && total > 1) {
+                do {
+                    nextIndex = Math.floor(Math.random() * total);
+                } while (nextIndex === currentIndex && total > 1);
+            } else {
+                nextIndex = (currentIndex + 1) % total;
+            }
+
+            selectSub.selectedIndex = nextIndex;
+            document.getElementById('hymns-input-query').value = selectSub.value;
+            executeHymnSearch().then(() => {
+                if (autoPlayAfter && ytPlayer) {
+                    setTimeout(() => {
+                        try { ytPlayer.playVideo(); } catch(e){}
+                    }, 500);
+                }
+            });
+        }
+
+        function playHymnPrev() {
+            const selectSub = document.getElementById('hymns-select-sub');
+            const playModeSelect = document.getElementById('hymns-play-mode');
+            const playMode = playModeSelect ? playModeSelect.value : 'sequential';
+            const total = selectSub.options.length;
+            if (total === 0) return;
+
+            let prevIndex = 0;
+            if (hymnPlayHistory.length > 0) {
+                prevIndex = hymnPlayHistory.pop();
+            } else if (playMode === 'random' && total > 1) {
+                const currentIndex = selectSub.selectedIndex;
+                do {
+                    prevIndex = Math.floor(Math.random() * total);
+                } while (prevIndex === currentIndex && total > 1);
+            } else {
+                const currentIndex = selectSub.selectedIndex;
+                prevIndex = (currentIndex - 1 + total) % total;
+            }
+
+            selectSub.selectedIndex = prevIndex;
+            document.getElementById('hymns-input-query').value = selectSub.value;
+            executeHymnSearch();
+        }
 
         const REQUIRED_HYMN_CATEGORIES = [
             { tag: "新聖詩", name: "新聖詩 (001-650)", required: true },
@@ -1997,21 +2055,8 @@
             selectSub.addEventListener('change', onSublistSelectChange);
             btnSearch.addEventListener('click', onHymnSearchClick);
 
-            btnPrev.addEventListener('click', () => {
-                if (selectSub.selectedIndex > 0) {
-                    selectSub.selectedIndex--;
-                    document.getElementById('hymns-input-query').value = selectSub.value;
-                    executeHymnSearch();
-                }
-            });
-
-            btnNext.addEventListener('click', () => {
-                if (selectSub.selectedIndex < selectSub.options.length - 1) {
-                    selectSub.selectedIndex++;
-                    document.getElementById('hymns-input-query').value = selectSub.value;
-                    executeHymnSearch();
-                }
-            });
+            btnPrev.addEventListener('click', () => playHymnPrev());
+            btnNext.addEventListener('click', () => playHymnNext(false));
             
             await loadHymnSublist();
         }
@@ -2023,6 +2068,7 @@
             
             container.innerHTML = `<div style="padding:1rem; color:var(--accent);">載入目錄清單中...</div>`;
             selectSub.innerHTML = '';
+            hymnPlayHistory = [];
             
             const tag = selectTag.value;
             const queryParams = {
@@ -2275,30 +2321,7 @@
 
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.ENDED) {
-                const selectSub = document.getElementById('hymns-select-sub');
-                const playMode = document.getElementById('hymns-play-mode').value;
-                
-                if (selectSub.options.length === 0) return;
-                
-                if (playMode === 'random') {
-                    const randomIndex = Math.floor(Math.random() * selectSub.options.length);
-                    selectSub.selectedIndex = randomIndex;
-                } else {
-                    if (selectSub.selectedIndex < selectSub.options.length - 1) {
-                        selectSub.selectedIndex++;
-                    } else {
-                        selectSub.selectedIndex = 0;
-                    }
-                }
-                
-                document.getElementById('hymns-input-query').value = selectSub.value;
-                executeHymnSearch().then(() => {
-                    if (ytPlayer) {
-                        setTimeout(() => {
-                            try { ytPlayer.playVideo(); } catch(e){}
-                        }, 500);
-                    }
-                });
+                playHymnNext(true);
             }
         }
 
