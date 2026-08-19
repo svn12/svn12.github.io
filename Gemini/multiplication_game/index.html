@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>九九乘法大冒險 🚀 - 小學生最佳乘法表學習小遊戲</title>
+    <title>小學數學大冒險 🚀 - 乘法表與加減法遊戲</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -11,6 +11,7 @@
             --secondary: #4ECDC4;
             --yellow: #FFE66D;
             --purple: #A06CD5;
+            --blue: #45B7D1;
             --dark: #2F2D2E;
             --light: #F7FFF7;
             --card-bg: #FFFFFF;
@@ -40,7 +41,7 @@
             background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(10px);
             width: 100%;
-            max-width: 620px;
+            max-width: 650px;
             border-radius: 30px;
             padding: 25px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
@@ -88,7 +89,7 @@
         /* 選單分頁切換 */
         .tab-menu {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 20px;
             background: #EAEAEA;
             padding: 6px;
@@ -97,13 +98,13 @@
 
         .tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 10px 6px;
             border: none;
             border-radius: 15px;
             background: transparent;
             color: #666;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -129,7 +130,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 模式選擇 */
+        /* 模式選擇卡片 */
         .mode-cards {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -141,7 +142,7 @@
             background: white;
             border: 3px solid #F0F0F0;
             border-radius: 20px;
-            padding: 20px;
+            padding: 18px 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 6px 12px rgba(0,0,0,0.05);
@@ -154,24 +155,25 @@
         }
 
         .mode-card i {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2.3rem;
+            margin-bottom: 8px;
             display: block;
         }
 
         .mode-card.m1 i { color: #FF6B6B; }
         .mode-card.m2 i { color: #4ECDC4; }
-        .mode-card.m3 i { color: #FFE66D; }
-        .mode-card.m4 i { color: #A06CD5; }
+        .mode-card.m3 i { color: #45B7D1; }
+        .mode-card.m4 i { color: #FFE66D; }
+        .mode-card.m5 i { color: #A06CD5; }
 
         .mode-card h3 {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: #333;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .mode-card p {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: #777;
         }
 
@@ -547,7 +549,7 @@
     <header>
         <div class="title">
             <i class="fa-solid fa-graduation-cap"></i>
-            九九乘法大冒險
+            小學數學大冒險
         </div>
         <div>
             <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="切換音效">
@@ -568,23 +570,23 @@
         <div class="mode-cards">
             <div class="mode-card m1" onclick="showLevelSelect()">
                 <i class="fa-solid fa-stairs"></i>
-                <h3>闖關練習</h3>
-                <p>點選數字 (2~9) 專題挑戰</p>
+                <h3>乘法闖關</h3>
+                <p>點選數字 (2~9) 專題背誦與挑戰</p>
+            </div>
+            <div class="mode-card m3" onclick="startGame('addsub')">
+                <i class="fa-solid fa-calculator"></i>
+                <h3>加減大挑戰</h3>
+                <p>2位數與1位數混合加減法</p>
             </div>
             <div class="mode-card m2" onclick="startGame('time')">
                 <i class="fa-solid fa-stopwatch"></i>
                 <h3>60秒極速賽</h3>
                 <p>爭分奪秒！看你能答對幾題</p>
             </div>
-            <div class="mode-card m3" onclick="startGame('mixed')">
+            <div class="mode-card m4" onclick="startGame('mixed')">
                 <i class="fa-solid fa-shuffle"></i>
                 <h3>綜合大挑戰</h3>
-                <p>全範圍九九乘法隨機出題</p>
-            </div>
-            <div class="mode-card m4" onclick="switchTab('weakness')">
-                <i class="fa-solid fa-heart-pulse"></i>
-                <h3>錯題本加強</h3>
-                <p>專門複習常答錯的弱點題目</p>
+                <p>乘法與加減法全範圍隨機出題</p>
             </div>
         </div>
 
@@ -679,7 +681,7 @@
     <div id="weaknessView" class="view-section">
         <div style="background:white; border-radius:20px; padding:20px; box-shadow:0 4px 10px rgba(0,0,0,0.05)">
             <h3 style="color:#FF6B6B; margin-bottom:10px;"><i class="fa-solid fa-circle-exclamation"></i> 常錯弱點分析</h3>
-            <p style="color:#666; font-size:0.95rem; margin-bottom:15px;" id="weaknessDesc">系統會自動記錄答錯的題目，方便重點強化背誦！</p>
+            <p style="color:#666; font-size:0.95rem; margin-bottom:15px;" id="weaknessDesc">系統會自動記錄答錯的題目，方便重點強化！</p>
             <div id="weaknessList" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:20px;">
                 <!-- 動態呈現弱點題庫卡片 -->
             </div>
@@ -702,11 +704,18 @@
 
 <script>
     /* ==========================================================================
-       傳統中文九九乘法口訣產生器
+       中文口訣與加減法語音文字產生器
        ========================================================================== */
     const numZh = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
 
-    function getChineseFormula(a, b) {
+    function getChineseFormula(q) {
+        if (q.type === 'addsub') {
+            const opStr = q.op === '+' ? '加' : '減';
+            return `${q.a} ${opStr} ${q.b} 等於 ${q.ans}`;
+        }
+
+        // 九九乘法口訣
+        const a = q.a, b = q.b;
         const ans = a * b;
         const aZh = numZh[a];
         const bZh = numZh[b];
@@ -793,7 +802,7 @@
         notes.forEach((n, i) => playTone(n, 'triangle', 0.25, i * 0.1));
     }
 
-    // 語音朗讀口訣 (TTS)
+    // 語音朗讀 (TTS)
     function speakFormula(text, onEndCallback = null) {
         if (!soundEnabled || !('speechSynthesis' in window)) {
             if (onEndCallback) onEndCallback();
@@ -826,8 +835,8 @@
 
     let wrongStats = JSON.parse(localStorage.getItem('99_wrong_stats') || '{}');
 
-    function recordWrongAnswer(num1, num2) {
-        const key = `${num1}x${num2}`;
+    function recordWrongAnswer(q) {
+        const key = q.type === 'addsub' ? `${q.a}${q.op}${q.b}` : `${q.a}x${q.b}`;
         wrongStats[key] = (wrongStats[key] || 0) + 1;
         localStorage.setItem('99_wrong_stats', JSON.stringify(wrongStats));
     }
@@ -867,6 +876,38 @@
         startGame('level', currentStudyNum);
     }
 
+    function generateAddSubQuestions(count) {
+        for (let i = 0; i < count; i++) {
+            const isAdd = Math.random() > 0.5;
+            let a, b, ans, op;
+            if (isAdd) {
+                op = '+';
+                a = Math.floor(Math.random() * 80) + 10; // 10~89
+                b = Math.floor(Math.random() * 9) + 1;   // 1~9
+                ans = a + b;
+            } else {
+                op = '-';
+                a = Math.floor(Math.random() * 88) + 11; // 11~98
+                b = Math.floor(Math.random() * 9) + 1;   // 1~9
+                if (a - b < 1) a += b;
+                ans = a - b;
+            }
+            questions.push({ type: 'addsub', a, b, op, ans });
+        }
+    }
+
+    function generateRandomQuestions(count) {
+        for (let i = 0; i < count; i++) {
+            if (Math.random() > 0.3) {
+                let a = Math.floor(Math.random() * 8) + 2;
+                let b = Math.floor(Math.random() * 9) + 1;
+                questions.push({ type: 'mult', a, b, ans: a * b });
+            } else {
+                generateAddSubQuestions(1);
+            }
+        }
+    }
+
     function startGame(mode, param = null) {
         stopAutoPlay();
         initAudio();
@@ -884,15 +925,18 @@
                 for (let i = 0; i < totalQuestionsCount; i++) {
                     let a = Math.floor(Math.random() * 8) + 2;
                     let b = Math.floor(Math.random() * 9) + 1;
-                    questions.push({ a, b, ans: a * b });
+                    questions.push({ type: 'mult', a, b, ans: a * b });
                 }
             } else {
                 totalQuestionsCount = 9;
                 for (let b = 1; b <= 9; b++) {
-                    questions.push({ a: param, b: b, ans: param * b });
+                    questions.push({ type: 'mult', a: param, b: b, ans: param * b });
                 }
                 questions.sort(() => Math.random() - 0.5);
             }
+        } else if (mode === 'addsub') {
+            totalQuestionsCount = 10;
+            generateAddSubQuestions(10);
         } else if (mode === 'time') {
             totalQuestionsCount = 999;
             timeLeft = 60;
@@ -909,8 +953,15 @@
             totalQuestionsCount = Math.min(keys.length * 2, 10);
             for (let i = 0; i < totalQuestionsCount; i++) {
                 const randomKey = keys[Math.floor(Math.random() * keys.length)];
-                const [a, b] = randomKey.split('x').map(Number);
-                questions.push({ a, b, ans: a * b });
+                if (randomKey.includes('+') || randomKey.includes('-')) {
+                    const op = randomKey.includes('+') ? '+' : '-';
+                    const [a, b] = randomKey.split(op).map(Number);
+                    const ans = op === '+' ? a + b : a - b;
+                    questions.push({ type: 'addsub', a, b, op, ans });
+                } else {
+                    const [a, b] = randomKey.split('x').map(Number);
+                    questions.push({ type: 'mult', a, b, ans: a * b });
+                }
             }
         }
 
@@ -927,14 +978,6 @@
 
         updateUI();
         showQuestion();
-    }
-
-    function generateRandomQuestions(count) {
-        for (let i = 0; i < count; i++) {
-            let a = Math.floor(Math.random() * 8) + 2;
-            let b = Math.floor(Math.random() * 9) + 1;
-            questions.push({ a, b, ans: a * b });
-        }
     }
 
     function startTimer() {
@@ -957,7 +1000,11 @@
         }
 
         const q = questions[currentQIndex];
-        document.getElementById('questionText').innerText = `${q.a} × ${q.b} = ?`;
+        if (q.type === 'addsub') {
+            document.getElementById('questionText').innerText = `${q.a} ${q.op} ${q.b} = ?`;
+        } else {
+            document.getElementById('questionText').innerText = `${q.a} × ${q.b} = ?`;
+        }
         
         const formulaHint = document.getElementById('formulaHint');
         formulaHint.style.display = 'none';
@@ -970,9 +1017,9 @@
 
         const answers = new Set([q.ans]);
         while (answers.size < 4) {
-            let offset = (Math.floor(Math.random() * 5) - 2) * (Math.random() > 0.5 ? 1 : 2);
+            let offset = (Math.floor(Math.random() * 7) - 3);
             let wrongAns = q.ans + offset;
-            if (wrongAns > 0 && wrongAns <= 81 && wrongAns !== q.ans) {
+            if (wrongAns >= 0 && wrongAns <= 110 && wrongAns !== q.ans) {
                 answers.add(wrongAns);
             } else {
                 answers.add(q.ans + Math.floor(Math.random() * 10) + 1);
@@ -996,14 +1043,14 @@
         const allBtns = document.querySelectorAll('.option-btn');
         allBtns.forEach(b => b.onclick = null);
 
-        const formulaStr = getChineseFormula(q.a, q.b);
+        const formulaStr = getChineseFormula(q);
         const formulaHint = document.getElementById('formulaHint');
 
         if (selected === correct) {
             btnElement.classList.add('correct');
             playCorrectSound();
             
-            formulaHint.innerText = `口訣：${formulaStr}`;
+            formulaHint.innerText = `解答：${formulaStr}`;
             formulaHint.style.display = 'block';
             speakFormula(formulaStr);
 
@@ -1011,7 +1058,7 @@
             if (combo > maxCombo) maxCombo = combo;
             score += 100 + (combo * 10);
             
-            const key = `${q.a}x${q.b}`;
+            const key = q.type === 'addsub' ? `${q.a}${q.op}${q.b}` : `${q.a}x${q.b}`;
             if (wrongStats[key]) {
                 wrongStats[key] = Math.max(0, wrongStats[key] - 1);
                 if (wrongStats[key] === 0) delete wrongStats[key];
@@ -1021,9 +1068,9 @@
             btnElement.classList.add('wrong');
             playWrongSound();
             combo = 0;
-            recordWrongAnswer(q.a, q.b);
+            recordWrongAnswer(q);
 
-            formulaHint.innerText = `正確口訣：${formulaStr}`;
+            formulaHint.innerText = `正確解答：${formulaStr}`;
             formulaHint.style.display = 'block';
 
             allBtns.forEach(b => {
@@ -1038,7 +1085,7 @@
         setTimeout(() => {
             currentQIndex++;
             showQuestion();
-        }, 1000);
+        }, 1100);
     }
 
     function updateUI() {
@@ -1086,6 +1133,7 @@
 
     function getModeName(mode) {
         if (mode === 'level') return `${currentStudyNum} 的乘法闖關`;
+        if (mode === 'addsub') return '2位數與1位數加減大挑戰';
         if (mode === 'time') return '60秒極速賽';
         if (mode === 'mixed') return '綜合大挑戰';
         if (mode === 'weakness') return '錯題特訓';
@@ -1122,7 +1170,8 @@
         const grid = document.getElementById('tableGrid');
         grid.innerHTML = '';
         for (let i = 1; i <= 9; i++) {
-            const formula = getChineseFormula(num, i);
+            const q = { type: 'mult', a: num, b: i, ans: num * i };
+            const formula = getChineseFormula(q);
             const card = document.createElement('div');
             card.className = 'table-card';
             card.id = `studyCard_${i}`;
@@ -1162,7 +1211,7 @@
 
             if (step > 9) {
                 if (isLoopMode) {
-                    step = 1; // 循環播放，自動重新第一項
+                    step = 1;
                 } else {
                     stopAutoPlay();
                     return;
@@ -1173,7 +1222,8 @@
             const currentCard = document.getElementById(`studyCard_${step}`);
             if (currentCard) currentCard.style.background = '#FFE66D';
 
-            const formula = getChineseFormula(currentStudyNum, step);
+            const q = { type: 'mult', a: currentStudyNum, b: step, ans: currentStudyNum * step };
+            const formula = getChineseFormula(q);
             speakFormula(formula, () => {
                 step++;
                 if (isAutoPlaying) {
@@ -1214,18 +1264,32 @@
             return;
         }
 
-        desc.innerText = `發現你共有 ${keys.length} 個乘法弱點，點擊以下題卡聽傳統口訣溫習：`;
+        desc.innerText = `發現你共有 ${keys.length} 個弱點題目，點擊卡片聽語音溫習：`;
         startBtn.style.display = 'inline-block';
 
         keys.forEach(key => {
-            const [a, b] = key.split('x').map(Number);
+            let formula = '';
+            let label = '';
+            if (key.includes('+') || key.includes('-')) {
+                const op = key.includes('+') ? '+' : '-';
+                const [a, b] = key.split(op).map(Number);
+                const ans = op === '+' ? a + b : a - b;
+                const q = { type: 'addsub', a, b, op, ans };
+                formula = getChineseFormula(q);
+                label = `${a} ${op} ${b} = ${ans}`;
+            } else {
+                const [a, b] = key.split('x').map(Number);
+                const q = { type: 'mult', a, b, ans: a * b };
+                formula = getChineseFormula(q);
+                label = `${a} × ${b} = ${a*b}`;
+            }
+
             const count = wrongStats[key];
-            const formula = getChineseFormula(a, b);
             const badge = document.createElement('div');
             badge.className = 'table-card';
             badge.style.borderColor = '#FF6B6B';
             badge.innerHTML = `
-                <div class="table-card-math">${a} × ${b} = ${a*b}</div>
+                <div class="table-card-math">${label}</div>
                 <div class="table-card-formula">${formula}</div>
                 <div style="font-size:0.75rem; color:#888;">(錯 ${count} 次)</div>
             `;
