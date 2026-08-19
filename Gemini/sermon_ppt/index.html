@@ -2103,7 +2103,11 @@
                 }
             } catch (err) {
                 console.error(err);
-                container.innerHTML = `<div style="padding:1rem; color:#ef4444;">目錄載入失敗：${err.message}</div>`;
+                container.innerHTML = `
+                <div style="padding:1.2rem; background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); border-radius:12px; color:#ef4444; font-size:0.9rem; line-height:1.6;">
+                    <strong>⚠️ 類別「${cleanHtml(tag)}」目錄載入失敗</strong><br>
+                    <span style="font-size:0.82rem; color:var(--text-sub);">${cleanHtml(err.message)}（請確認 Google 試算表中是否存在名為「${cleanHtml(tag)}」的工作表）。</span>
+                </div>`;
             }
         }
 
@@ -3303,7 +3307,16 @@
                 url.searchParams.append(k, para[k]);
             }
             const response = await fetch(url);
-            return response.json();
+            const text = await response.text();
+            
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                if (text.trim().startsWith('<')) {
+                    throw new Error("工作表不存在或 Google Sheet API 連線異常");
+                }
+                throw new Error("API 資料格式解析失敗：" + e.message);
+            }
         }
 
         async function getRawApi(urlptr, para) {
