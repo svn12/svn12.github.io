@@ -648,8 +648,10 @@
               開啟網頁 ↗
             </span>
           </div>
-          <div class="web-container-box">
+          <div class="web-container-box" style="position: relative;">
             <iframe id="preview-iframe" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            <!-- 透明全覆蓋點擊層：攔截 iframe 畫面內部的按左鍵點擊，直接新分頁跳轉開啟網頁 -->
+            <div id="iframe-click-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer;" title="按左鍵直接開啟新分頁網頁 / 右鍵複製連結"></div>
           </div>
         </div>
       </div>
@@ -1284,28 +1286,54 @@
       showToast('已由地圖右鍵填入座標！');
     });
 
+    const iframeClickOverlay = document.getElementById('iframe-click-overlay');
+
+    // Click Overlay Handler: Left click to open in new tab, Right click to copy link
+    if (iframeClickOverlay) {
+      iframeClickOverlay.addEventListener('click', () => {
+        const url = resultLink.textContent;
+        if (url && url.startsWith('http')) {
+          window.open(url, '_blank');
+          saveHistory(currentLat, currentLon, url);
+          showToast('已為您開啟對應網頁！');
+        } else {
+          showToast('無有效連結可開啟！');
+        }
+      });
+
+      iframeClickOverlay.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        const url = resultLink.textContent;
+        if (url && url.startsWith('http')) {
+          navigator.clipboard.writeText(url).then(() => {
+            showToast('已複製網頁連結！');
+          });
+        }
+      });
+    }
+
     // Preview Left-click to open webpage directly in new tab
     webPreviewSection.addEventListener('click', (e) => {
-      if (e.button === 0) {
+      if (e.button === 0 && e.target !== iframeClickOverlay) {
         const url = resultLink.textContent;
         if (url && url.startsWith('http')) {
           window.open(url, '_blank');
           saveHistory(currentLat, currentLon, url);
           showToast('已開啟 Twipcam 對應網頁！');
-        } else {
-          showToast('無有效連結可開啟！');
         }
       }
     });
 
     // Preview Right-click to copy webpage link
     webPreviewSection.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      const url = resultLink.textContent;
-      if (url && url.startsWith('http')) {
-        navigator.clipboard.writeText(url).then(() => {
-          showToast('已複製網頁連結！');
-        });
+      if (e.target !== iframeClickOverlay) {
+        e.preventDefault();
+        const url = resultLink.textContent;
+        if (url && url.startsWith('http')) {
+          navigator.clipboard.writeText(url).then(() => {
+            showToast('已複製網頁連結！');
+          });
+        }
       }
     });
 
