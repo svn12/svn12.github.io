@@ -464,10 +464,24 @@
 
     @media (max-width: 1024px) {
       .dashboard-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
       }
-      .dashboard-grid.hide-preview {
-        max-width: 100%;
+      .left-panel {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+      .left-panel .card {
+        order: 1;
+      }
+      .right-panel {
+        order: 2;
+        width: 100%;
+        margin-bottom: 1.5rem;
+      }
+      .left-panel .history-card {
+        order: 3;
       }
     }
 
@@ -1065,13 +1079,19 @@
     }
 
     // Toggle Preview Panel visibility
-    function setPreviewVisibility(visible) {
+    function setPreviewVisibility(visible, userInitiated = false) {
       if (visible) {
         dashboardGrid.classList.remove('hide-preview');
         toggleText.textContent = '隱藏預覽';
         toggleIcon.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
         if (map) {
           setTimeout(() => { map.invalidateSize(); }, 300);
+        }
+        if (userInitiated && window.innerWidth <= 1024) {
+          setTimeout(() => {
+            const webSec = document.getElementById('web-preview-section');
+            if (webSec) webSec.scrollIntoView({ behavior: 'smooth' });
+          }, 150);
         }
       } else {
         dashboardGrid.classList.add('hide-preview');
@@ -1083,7 +1103,7 @@
     }
 
     togglePreviewBtn.addEventListener('click', () => {
-      setPreviewVisibility(!previewVisible);
+      setPreviewVisibility(!previewVisible, true);
     });
 
     // Nominatim Location Search Logic
