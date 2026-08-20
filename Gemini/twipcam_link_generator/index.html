@@ -776,67 +776,85 @@
       showToast(`已新增常用地點：${name}`);
     });
 
-    // Share Favorites
+    // Extract Favorites JSON Array from text with headers or mixed strings
+    function parseFavoritesFromText(text) {
+      if (!text) return null;
+      const trimmed = text.trim();
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+
+      // Match JSON Array Regex [...] even if leading with "Twipcam 常用地點列表"
+      const match = trimmed.match(/\[\s*\{[\s\S]*\}\s*\]/);
+      if (match) {
+        try {
+          const parsed = JSON.parse(match[0]);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch (e) {}
+      }
+      return null;
+    }
+
+    // Share Favorites (Includes header)
     shareFavoriteBtn.addEventListener('click', () => {
       if (favorites.length === 0) {
         showToast('目前尚無常用地點可分享！');
         return;
       }
-      const jsonStr = JSON.stringify(favorites, null, 2);
+      const exportContent = `Twipcam 常用地點列表\n${JSON.stringify(favorites, null, 2)}`;
       if (navigator.share) {
         navigator.share({
           title: 'Twipcam 常用地點列表',
-          text: jsonStr
+          text: exportContent
         }).catch(() => {
-          navigator.clipboard.writeText(jsonStr).then(() => showToast('已複製常用地點 JSON 至剪貼簿！'));
+          navigator.clipboard.writeText(exportContent).then(() => showToast('已複製常用地點列表至剪貼簿！'));
         });
       } else {
-        navigator.clipboard.writeText(jsonStr).then(() => showToast('已複製常用地點 JSON 至剪貼簿！'));
+        navigator.clipboard.writeText(exportContent).then(() => showToast('已複製常用地點列表至剪貼簿！'));
       }
     });
 
-    // Download Favorites (.json)
+    // Download Favorites (.json / includes header comment if needed)
     downloadFavoriteBtn.addEventListener('click', () => {
       if (favorites.length === 0) {
         showToast('目前尚無常用地點可下載！');
         return;
       }
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(favorites, null, 2));
+      const exportContent = `Twipcam 常用地點列表\n${JSON.stringify(favorites, null, 2)}`;
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(exportContent);
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
       downloadAnchor.setAttribute("download", `twipcam_favorites_${new Date().toISOString().slice(0, 10)}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-      showToast('已下載常用地點 JSON 檔案！');
+      showToast('已下載常用地點列表檔案！');
     });
 
-    // Import Favorites (.json)
+    // Import Favorites (.json or txt with header)
     importFavInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
       reader.onload = (event) => {
-        try {
-          const imported = JSON.parse(event.target.result);
-          if (Array.isArray(imported) && imported.length > 0) {
-            const map = new Map();
-            [...imported, ...favorites].forEach(item => {
-              if (item.name && item.lat && item.lon) {
-                const key = `${item.lat}_${item.lon}`;
-                if (!map.has(key)) map.set(key, item);
-              }
-            });
-            favorites = Array.from(map.values());
-            localStorage.setItem('twipcam_favorites', JSON.stringify(favorites));
-            renderFavorites();
-            showToast('已成功匯入常用地點！');
-          } else {
-            showToast('匯入檔案格式不正確！');
-          }
-        } catch (err) {
-          showToast('JSON 格式解析失敗！');
+        const fileContent = event.target.result;
+        const parsedArray = parseFavoritesFromText(fileContent);
+        if (parsedArray && parsedArray.length > 0) {
+          const map = new Map();
+          [...parsedArray, ...favorites].forEach(item => {
+            if (item.name && item.lat && item.lon) {
+              const key = `${item.lat}_${item.lon}`;
+              if (!map.has(key)) map.set(key, item);
+            }
+          });
+          favorites = Array.from(map.values());
+          localStorage.setItem('twipcam_favorites', JSON.stringify(favorites));
+          renderFavorites();
+          showToast(`已成功匯入 ${parsedArray.length} 個常用地點！`);
+        } else {
+          showToast('無法匹配檔案中的常用地點 JSON 內容！');
         }
         importFavInput.value = '';
       };
@@ -852,38 +870,31 @@
           return;
         }
 
-        const trimmed = clipboardText.trim();
-
-        // 1. Try parsing as JSON Array (Bulk import)
-        try {
-          const parsedJson = JSON.parse(trimmed);
-          if (Array.isArray(parsedJson) && parsedJson.length > 0) {
-            const map = new Map();
-            [...parsedJson, ...favorites].forEach(item => {
-              if (item.name && item.lat && item.lon) {
-                const key = `${item.lat}_${item.lon}`;
-                if (!map.has(key)) map.set(key, item);
-              }
-            });
-            favorites = Array.from(map.values());
-            localStorage.setItem('twipcam_favorites', JSON.stringify(favorites));
-            renderFavorites();
-            showToast(`已從剪貼簿匯入 ${parsedJson.length} 個常用地點！`);
-            return;
-          }
-        } catch (e) {
-          // Not a JSON Array, continue to coordinate parsing
+        // 1. Try matching JSON Array from clipboard (Auto matches even with header "Twipcam 常用地點列表")
+        const parsedArray = parseFavoritesFromText(clipboardText);
+        if (parsedArray && parsedArray.length > 0) {
+          const map = new Map();
+          [...parsedArray, ...favorites].forEach(item => {
+            if (item.name && item.lat && item.lon) {
+              const key = `${item.lat}_${item.lon}`;
+              if (!map.has(key)) map.set(key, item);
+            }
+          });
+          favorites = Array.from(map.values());
+          localStorage.setItem('twipcam_favorites', JSON.stringify(favorites));
+          renderFavorites();
+          showToast(`已自動匹配並從剪貼簿匯入 ${parsedArray.length} 個常用地點！`);
+          return;
         }
 
         // 2. Try parsing single coordinate from text/URL
-        const parsedCoords = parseCoordinates(trimmed);
+        const parsedCoords = parseCoordinates(clipboardText.trim());
         if (parsedCoords) {
           latInput.value = parsedCoords.lat;
           lonInput.value = parsedCoords.lon;
           pasteInput.value = `${parsedCoords.lat}, ${parsedCoords.lon}`;
           updateLink();
 
-          // Auto open add favorite form box
           favAddBox.style.display = 'block';
           favNameInput.value = searchInput.value.trim() || '剪貼簿地標';
           favNameInput.focus();
