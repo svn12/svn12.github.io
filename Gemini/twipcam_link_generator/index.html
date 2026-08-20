@@ -640,9 +640,13 @@
         </div>
 
         <!-- Web Preview Card -->
-        <div class="web-preview-card" id="web-preview-section">
-          <div class="result-label">
-            <span>對應網頁預覽 (於此區按右鍵可複製網頁連結)</span>
+        <div class="web-preview-card" id="web-preview-section" style="cursor: pointer;" title="點擊直接開啟網頁">
+          <div class="result-label" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <span>對應網頁預覽 (按左鍵直接開啟網頁 / 右鍵複製連結)</span>
+            <span style="font-size: 0.78rem; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 0.25rem;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              開啟網頁 ↗
+            </span>
           </div>
           <div class="web-container-box">
             <iframe id="preview-iframe" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
@@ -1278,6 +1282,20 @@
       
       updateLink();
       showToast('已由地圖右鍵填入座標！');
+    });
+
+    // Preview Left-click to open webpage directly in new tab
+    webPreviewSection.addEventListener('click', (e) => {
+      if (e.button === 0) {
+        const url = resultLink.textContent;
+        if (url && url.startsWith('http')) {
+          window.open(url, '_blank');
+          saveHistory(currentLat, currentLon, url);
+          showToast('已開啟 Twipcam 對應網頁！');
+        } else {
+          showToast('無有效連結可開啟！');
+        }
+      }
     });
 
     // Preview Right-click to copy webpage link
