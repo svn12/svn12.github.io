@@ -238,8 +238,8 @@
 
     .actions-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
     }
 
     /* Interactive Components */
@@ -550,6 +550,10 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                 開啟網頁
               </button>
+              <button class="btn btn-secondary" id="gmap-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Google 地圖
+              </button>
             </div>
           </div>
         </div>
@@ -603,6 +607,7 @@
     const resultLink = document.getElementById('result-link');
     const copyBtn = document.getElementById('copy-btn');
     const openBtn = document.getElementById('open-btn');
+    const gmapBtn = document.getElementById('gmap-btn');
     const historyList = document.getElementById('history-list');
     const clearHistoryBtn = document.getElementById('clear-history');
     const toast = document.getElementById('toast');
@@ -917,6 +922,17 @@
         saveHistory(currentLat, currentLon, url);
       } else {
         showToast('無有效連結可開啟！');
+      }
+    });
+
+    gmapBtn.addEventListener('click', () => {
+      const latVal = latInput.value.trim();
+      const lonVal = lonInput.value.trim();
+      if (latVal && lonVal) {
+        const gmapUrl = `https://www.google.com/maps?q=${latVal},${lonVal}`;
+        window.open(gmapUrl, '_blank');
+      } else {
+        showToast('無有效座標可開啟 Google 地圖！');
       }
     });
 
