@@ -558,6 +558,30 @@
           </div>
         </div>
 
+        <!-- Favorites Card -->
+        <div class="history-card" style="margin-bottom: 1.5rem;">
+          <div class="history-title">
+            <span>常用地點</span>
+            <button class="btn-clear-all" id="add-favorite-btn" style="color: var(--primary); font-size: 0.8rem; display: flex; align-items: center; gap: 0.25rem;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              新增常用
+            </button>
+          </div>
+
+          <!-- Add Favorite Form Box -->
+          <div id="fav-add-box" style="display: none; margin-bottom: 0.85rem; background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" id="fav-name-input" placeholder="地標名稱 (例: 建國中學, 台北101...)" style="padding: 0.5rem 0.75rem; font-size: 0.875rem;" autocomplete="off">
+              <button class="btn btn-primary" id="save-fav-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; white-space: nowrap;">儲存</button>
+              <button class="btn btn-secondary" id="cancel-fav-btn" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">取消</button>
+            </div>
+          </div>
+
+          <ul class="history-list" id="favorites-list">
+            <!-- Dynamically populated -->
+          </ul>
+        </div>
+
         <!-- History Card -->
         <div class="history-card">
           <div class="history-title">
@@ -608,6 +632,12 @@
     const copyBtn = document.getElementById('copy-btn');
     const openBtn = document.getElementById('open-btn');
     const gmapBtn = document.getElementById('gmap-btn');
+    const favoritesList = document.getElementById('favorites-list');
+    const addFavoriteBtn = document.getElementById('add-favorite-btn');
+    const favAddBox = document.getElementById('fav-add-box');
+    const favNameInput = document.getElementById('fav-name-input');
+    const saveFavBtn = document.getElementById('save-fav-btn');
+    const cancelFavBtn = document.getElementById('cancel-fav-btn');
     const historyList = document.getElementById('history-list');
     const clearHistoryBtn = document.getElementById('clear-history');
     const toast = document.getElementById('toast');
@@ -622,6 +652,106 @@
     let currentLon = '';
     let map, marker;
     let previewVisible = localStorage.getItem('preview_visible') !== 'false';
+
+    // Favorites Management
+    const defaultFavorites = [
+      { name: '建國中學', lat: '25.032608', lon: '121.512245' },
+      { name: '台北101', lat: '25.033964', lon: '121.564468' },
+      { name: '花蓮車站', lat: '23.993427', lon: '121.601283' }
+    ];
+
+    let favorites = JSON.parse(localStorage.getItem('twipcam_favorites')) || defaultFavorites;
+
+    function renderFavorites() {
+      favoritesList.innerHTML = '';
+      if (favorites.length === 0) {
+        favoritesList.innerHTML = '<li style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem 0;">尚無常用地點</li>';
+        return;
+      }
+      favorites.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        const cleanLat = truncateFloat(item.lat, 8);
+        const cleanLon = truncateFloat(item.lon, 7);
+        const url = `https://www.twipcam.com/widget/v1/query-cam-list-by-coordinate?lat=${cleanLat}&lon=${cleanLon}`;
+
+        li.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 0.1rem; cursor: pointer;" class="fav-apply" data-lat="${cleanLat}" data-lon="${cleanLon}">
+            <span style="font-weight: 600; color: #fff; font-size: 0.88rem;">${item.name}</span>
+            <span class="history-coords" style="font-size: 0.78rem;">${cleanLat}, ${cleanLon}</span>
+          </div>
+          <div class="history-actions">
+            <button class="btn-mini copy-item" data-url="${url}" title="複製連結">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="btn-mini delete-fav" data-index="${index}" title="刪除常用地點">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+        `;
+        favoritesList.appendChild(li);
+      });
+
+      document.querySelectorAll('.fav-apply').forEach(el => {
+        el.addEventListener('click', () => {
+          const latVal = el.getAttribute('data-lat');
+          const lonVal = el.getAttribute('data-lon');
+          latInput.value = latVal;
+          lonInput.value = lonVal;
+          pasteInput.value = `${latVal}, ${lonVal}`;
+          updateLink();
+          showToast('已載入常用地點座標！');
+        });
+      });
+
+      document.querySelectorAll('.delete-fav').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(el.getAttribute('data-index'));
+          const deletedName = favorites[idx].name;
+          favorites.splice(idx, 1);
+          localStorage.setItem('twipcam_favorites', JSON.stringify(favorites));
+          renderFavorites();
+          showToast(`已移除常用地點：${deletedName}`);
+        });
+      });
+    }
+
+    addFavoriteBtn.addEventListener('click', () => {
+      if (favAddBox.style.display === 'none') {
+        favAddBox.style.display = 'block';
+        favNameInput.value = searchInput.value.trim() || '';
+        favNameInput.focus();
+      } else {
+        favAddBox.style.display = 'none';
+      }
+    });
+
+    cancelFavBtn.addEventListener('click', () => {
+      favAddBox.style.display = 'none';
+    });
+
+    saveFavBtn.addEventListener('click', () => {
+      const name = favNameInput.value.trim();
+      const latVal = latInput.value.trim();
+      const lonVal = lonInput.value.trim();
+
+      if (!name) {
+        showToast('請輸入地標名稱！');
+        return;
+      }
+      if (!latVal || !lonVal) {
+        showToast('目前尚無有效經緯度！');
+        return;
+      }
+
+      favorites.unshift({ name, lat: latVal, lon: lonVal });
+      localStorage.setItem('twipcam_favorites', JSON.stringify(favorites));
+      renderFavorites();
+      favAddBox.style.display = 'none';
+      favNameInput.value = '';
+      showToast(`已新增常用地點：${name}`);
+    });
 
     // Load History
     let history = JSON.parse(localStorage.getItem('twipcam_history') || '[]');
@@ -993,8 +1123,9 @@
     // Initialize link computation
     updateLink();
 
-    // Initialize History list
+    // Initialize History & Favorites list
     renderHistory();
+    renderFavorites();
   </script>
 </body>
 </html>
