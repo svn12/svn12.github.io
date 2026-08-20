@@ -562,10 +562,25 @@
         <div class="history-card" style="margin-bottom: 1.5rem;">
           <div class="history-title">
             <span>常用地點</span>
-            <button class="btn-clear-all" id="add-favorite-btn" style="color: var(--primary); font-size: 0.8rem; display: flex; align-items: center; gap: 0.25rem;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              新增常用
-            </button>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <button class="btn-clear-all" id="add-favorite-btn" style="color: var(--primary); font-size: 0.78rem; display: flex; align-items: center; gap: 0.2rem;" title="新增當前座標">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                新增
+              </button>
+              <button class="btn-clear-all" id="share-favorite-btn" style="color: #cbd5e1; font-size: 0.78rem; display: flex; align-items: center; gap: 0.2rem;" title="分享常用地點 (複製 JSON)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                分享
+              </button>
+              <button class="btn-clear-all" id="download-favorite-btn" style="color: #cbd5e1; font-size: 0.78rem; display: flex; align-items: center; gap: 0.2rem;" title="下載常用地點檔 (.json)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                下載
+              </button>
+              <label for="import-fav-input" class="btn-clear-all" style="color: #cbd5e1; font-size: 0.78rem; display: flex; align-items: center; gap: 0.2rem; cursor: pointer;" title="匯入常用地點 (.json)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                匯入
+              </label>
+              <input type="file" id="import-fav-input" accept=".json" style="display: none;">
+            </div>
           </div>
 
           <!-- Add Favorite Form Box -->
@@ -634,6 +649,9 @@
     const gmapBtn = document.getElementById('gmap-btn');
     const favoritesList = document.getElementById('favorites-list');
     const addFavoriteBtn = document.getElementById('add-favorite-btn');
+    const shareFavoriteBtn = document.getElementById('share-favorite-btn');
+    const downloadFavoriteBtn = document.getElementById('download-favorite-btn');
+    const importFavInput = document.getElementById('import-fav-input');
     const favAddBox = document.getElementById('fav-add-box');
     const favNameInput = document.getElementById('fav-name-input');
     const saveFavBtn = document.getElementById('save-fav-btn');
@@ -751,6 +769,73 @@
       favAddBox.style.display = 'none';
       favNameInput.value = '';
       showToast(`已新增常用地點：${name}`);
+    });
+
+    // Share Favorites
+    shareFavoriteBtn.addEventListener('click', () => {
+      if (favorites.length === 0) {
+        showToast('目前尚無常用地點可分享！');
+        return;
+      }
+      const jsonStr = JSON.stringify(favorites, null, 2);
+      if (navigator.share) {
+        navigator.share({
+          title: 'Twipcam 常用地點列表',
+          text: jsonStr
+        }).catch(() => {
+          navigator.clipboard.writeText(jsonStr).then(() => showToast('已複製常用地點 JSON 至剪貼簿！'));
+        });
+      } else {
+        navigator.clipboard.writeText(jsonStr).then(() => showToast('已複製常用地點 JSON 至剪貼簿！'));
+      }
+    });
+
+    // Download Favorites (.json)
+    downloadFavoriteBtn.addEventListener('click', () => {
+      if (favorites.length === 0) {
+        showToast('目前尚無常用地點可下載！');
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(favorites, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `twipcam_favorites_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('已下載常用地點 JSON 檔案！');
+    });
+
+    // Import Favorites (.json)
+    importFavInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const imported = JSON.parse(event.target.result);
+          if (Array.isArray(imported) && imported.length > 0) {
+            const map = new Map();
+            [...imported, ...favorites].forEach(item => {
+              if (item.name && item.lat && item.lon) {
+                const key = `${item.lat}_${item.lon}`;
+                if (!map.has(key)) map.set(key, item);
+              }
+            });
+            favorites = Array.from(map.values());
+            localStorage.setItem('twipcam_favorites', JSON.stringify(favorites));
+            renderFavorites();
+            showToast('已成功匯入常用地點！');
+          } else {
+            showToast('匯入檔案格式不正確！');
+          }
+        } catch (err) {
+          showToast('JSON 格式解析失敗！');
+        }
+        importFavInput.value = '';
+      };
+      reader.readAsText(file);
     });
 
     // Load History
