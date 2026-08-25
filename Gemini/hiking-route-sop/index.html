@@ -589,7 +589,7 @@
               <li>點擊 <strong>「Export Route」</strong> 或 <strong>「Save」</strong> 按鈕</li>
               <li>選擇檔案格式 <strong>GPX</strong>（或 KML），點擊下載</li>
               <li>確認下載完成：<code>onthegomap-6.3-km-route.gpx</code></li>
-              <li>使用 <strong><a href="https://www.gpxsee.org/" target="_blank" rel="noopener" style="color:var(--clr-accent)">GPXSee</a></strong> 開啟下載的 GPX 檔案，<strong>驗證路線是否正確</strong></li>
+              <li>使用 <strong><a href="https://www.gpxsee.org/" id="gpxsee-link" style="color:var(--clr-accent)">GPXSee</a></strong> 開啟下載的 GPX 檔案，<strong>驗證路線是否正確</strong></li>
             </ol>
 
             <div class="step-image">
@@ -609,11 +609,31 @@
 
             <ol class="substeps" style="counter-reset:substep 0;">
               <li>安裝 <strong><a href="https://www.gpxsee.org/" target="_blank" rel="noopener" style="color:var(--clr-accent)">GPXSee</a></strong>（macOS / Windows / Linux 皆支援，免費開源）</li>
-              <li>對 <code>.gpx</code> 檔案 <strong>右鍵 → 打開方式 → GPXSee</strong>，或直接拖曳檔案至 GPXSee 視窗</li>
+              <li><strong>設為 .gpx 預設開啟方式：</strong>對任一 <code>.gpx</code> 檔案 <strong>右鍵 → 取得資訊 → 打開檔案的應用程式 → 選 GPXSee → 「全部更改」</strong>，之後雙擊 .gpx 即自動開啟</li>
+              <li>或對 <code>.gpx</code> 檔案 <strong>右鍵 → 打開方式 → GPXSee</strong>，也可直接拖曳檔案至 GPXSee 視窗</li>
               <li>確認地圖上的 <strong>路線軌跡</strong> 是否與預期一致（路線會以彩色線條顯示）</li>
               <li>可切換工具列的 <strong>「Show map」/「Show graph」</strong> 查看地圖與海拔剖面圖</li>
               <li>若路線有誤，回到 OnTheGoMap 修正後重新下載</li>
             </ol>
+
+            <div style="margin:16px 0; text-align:center;">
+              <a href="#" id="btn-open-gpxsee" onclick="return false;" style="
+                display:inline-flex; align-items:center; gap:8px;
+                padding:12px 28px; border-radius:12px;
+                background:linear-gradient(135deg,#059669,#34d399);
+                color:#fff; font-weight:600; font-size:0.95rem;
+                text-decoration:none; border:none; cursor:pointer;
+                box-shadow:0 4px 16px rgba(52,211,153,0.3);
+                transition:all 0.3s ease;
+              " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 24px rgba(52,211,153,0.4)'"
+                 onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(52,211,153,0.3)'">
+                📐 開啟 GPXSee App
+              </a>
+              <p style="margin-top:8px; font-size:0.78rem; color:var(--clr-text-dim);">
+                需已安裝 GPXSee.app · macOS 限定 · 
+                <a href="https://www.gpxsee.org/" target="_blank" rel="noopener" style="color:var(--clr-accent);">未安裝？點此下載</a>
+              </p>
+            </div>
 
             <div class="step-image">
               <img src="images/step1b_gpxsee.png" alt="GPXSee 開啟 GPX 路線檔" loading="lazy">
@@ -773,6 +793,22 @@
     <p>健行路徑建立 SOP v1.1 &nbsp;·&nbsp; 最後更新：2026/08/25</p>
     <p style="margin-top:6px">Made with 🥾 for hiking lovers</p>
   </footer>
+
+  <!-- ═══ GPXSee App Launcher ═══ -->
+  <script>
+    document.getElementById('btn-open-gpxsee').addEventListener('click', function(e) {
+      e.preventDefault();
+      // 嘗試透過 file:// 協定開啟本機 GPXSee.app (僅本機瀏覽有效)
+      const appPath = 'file:///Applications/GPXSee.app';
+      const w = window.open(appPath, '_blank');
+      // 如果無法開啟（線上環境），fallback 到官網
+      setTimeout(function() {
+        if (!w || w.closed) {
+          window.open('https://www.gpxsee.org/', '_blank');
+        }
+      }, 500);
+    });
+  </script>
 
 </body>
 </html>
