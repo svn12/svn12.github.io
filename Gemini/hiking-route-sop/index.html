@@ -602,22 +602,8 @@
               <div class="img-caption">▲ 匯出路線檔案，選擇 GPX 格式下載</div>
             </div>
 
-            <h3 style="margin:24px 0 12px; font-size:1.05rem; color:var(--clr-text-bright); display:flex; align-items:center; gap:8px;">
-              <span style="background:linear-gradient(135deg,#f59e0b,#f97316); padding:4px 10px; border-radius:8px; font-size:0.85rem; color:#fff;">1b</span>
-              用 GPXSee 驗證路線檔
-            </h3>
-
-            <ol class="substeps" style="counter-reset:substep 0;">
-              <li>安裝 <strong><a href="https://www.gpxsee.org/" target="_blank" rel="noopener" style="color:var(--clr-accent)">GPXSee</a></strong>（macOS / Windows / Linux 皆支援，免費開源）</li>
-              <li><strong>設為 .gpx 預設開啟方式：</strong>對任一 <code>.gpx</code> 檔案 <strong>右鍵 → 取得資訊 → 打開檔案的應用程式 → 選 GPXSee → 「全部更改」</strong>，之後雙擊 .gpx 即自動開啟</li>
-              <li>或對 <code>.gpx</code> 檔案 <strong>右鍵 → 打開方式 → GPXSee</strong>，也可直接拖曳檔案至 GPXSee 視窗</li>
-              <li>確認地圖上的 <strong>路線軌跡</strong> 是否與預期一致（路線會以彩色線條顯示）</li>
-              <li>可切換工具列的 <strong>「Show map」/「Show graph」</strong> 查看地圖與海拔剖面圖</li>
-              <li>若路線有誤，回到 OnTheGoMap 修正後重新下載</li>
-            </ol>
-
-            <div style="margin:16px 0; text-align:center;">
-              <a href="#" id="btn-open-gpxsee" onclick="return false;" style="
+            <div style="margin:20px 0; text-align:center;">
+              <a href="#" id="btn-open-downloads" onclick="return false;" style="
                 display:inline-flex; align-items:center; gap:8px;
                 padding:12px 28px; border-radius:12px;
                 background:linear-gradient(135deg,#059669,#34d399);
@@ -627,11 +613,10 @@
                 transition:all 0.3s ease;
               " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 24px rgba(52,211,153,0.4)'"
                  onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(52,211,153,0.3)'">
-                📐 開啟 GPXSee App
+                📂 開啟下載資料夾，找到 GPX 檔案雙擊開啟
               </a>
               <p style="margin-top:8px; font-size:0.78rem; color:var(--clr-text-dim);">
-                需已安裝 GPXSee.app · macOS 限定 · 
-                <a href="https://www.gpxsee.org/" target="_blank" rel="noopener" style="color:var(--clr-accent);">未安裝？點此下載</a>
+                若已設定 GPXSee 為預設程式，雙擊 .gpx 即自動開啟
               </p>
             </div>
 
@@ -640,9 +625,17 @@
               <div class="img-caption">▲ 使用 GPXSee 開啟 GPX 檔案，確認路線軌跡正確無誤</div>
             </div>
 
-            <div class="tip-box tip-box--success">
-              <span class="tip-icon">✅</span>
-              <span><strong>GPXSee 優勢：</strong>支援 GPX / KML / FIT / TCX 等多種格式，可同時載入多條路線比較，還能查看速度、海拔、距離等統計圖表。</span>
+            <div class="tip-box tip-box--success" style="flex-direction:column; gap:6px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="tip-icon">📐</span>
+                <strong style="font-size:0.95rem;">GPXSee 設定提示（首次使用）</strong>
+              </div>
+              <ul style="margin:4px 0 0 20px; font-size:0.88rem; line-height:1.8; list-style:disc;">
+                <li>下載安裝 <a href="https://www.gpxsee.org/" target="_blank" rel="noopener" style="color:var(--clr-accent)">GPXSee</a>（macOS / Windows / Linux，免費開源）</li>
+                <li><strong>設為預設：</strong>對任一 <code>.gpx</code> 右鍵 → <strong>取得資訊 → 打開檔案的應用程式 → GPXSee → 「全部更改」</strong></li>
+                <li>之後雙擊任何 <code>.gpx</code> 檔案即自動開啟 GPXSee 顯示路線</li>
+                <li>支援 GPX / KML / FIT / TCX 等多種格式，可查看海拔、距離統計圖表</li>
+              </ul>
             </div>
 
             <div class="tip-box tip-box--info">
@@ -794,19 +787,18 @@
     <p style="margin-top:6px">Made with 🥾 for hiking lovers</p>
   </footer>
 
-  <!-- ═══ GPXSee App Launcher ═══ -->
+  <!-- ═══ Open Downloads Folder ═══ -->
   <script>
-    document.getElementById('btn-open-gpxsee').addEventListener('click', function(e) {
+    document.getElementById('btn-open-downloads').addEventListener('click', function(e) {
       e.preventDefault();
-      // 嘗試透過 file:// 協定開啟本機 GPXSee.app (僅本機瀏覽有效)
-      const appPath = 'file:///Applications/GPXSee.app';
-      const w = window.open(appPath, '_blank');
-      // 如果無法開啟（線上環境），fallback 到官網
-      setTimeout(function() {
-        if (!w || w.closed) {
-          window.open('https://www.gpxsee.org/', '_blank');
-        }
-      }, 500);
+      // 嘗試開啟 macOS 下載資料夾 (僅本機 file:// 瀏覽有效)
+      const downloadsPath = 'file:///Users/' + (location.pathname.split('/Users/')[1] || '').split('/')[0] + '/Downloads/';
+      const fallbackPath = 'file:///tmp/';
+      const w = window.open(downloadsPath, '_blank');
+      // 線上環境無法開啟 file://，提示使用者手動開啟
+      if (!w || w.closed) {
+        alert('請手動開啟 Finder → 下載項目，找到 .gpx 檔案雙擊開啟');
+      }
     });
   </script>
 
