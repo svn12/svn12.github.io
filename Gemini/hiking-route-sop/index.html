@@ -589,6 +589,7 @@
               <li>點擊 <strong>「Export Route」</strong> 或 <strong>「Save」</strong> 按鈕</li>
               <li>選擇檔案格式 <strong>GPX</strong>（或 KML），點擊下載</li>
               <li>確認下載完成：<code>onthegomap-6.3-km-route.gpx</code></li>
+              <li>使用 <strong><a href="https://www.gpxsee.org/" target="_blank" rel="noopener" style="color:var(--clr-accent)">GPXSee</a></strong> 開啟下載的 GPX 檔案，<strong>驗證路線是否正確</strong></li>
             </ol>
 
             <div class="step-image">
@@ -599,6 +600,29 @@
             <div class="step-image">
               <img src="images/step1_download_gpx.jpg" alt="下載 GPX 路線檔" loading="lazy">
               <div class="img-caption">▲ 匯出路線檔案，選擇 GPX 格式下載</div>
+            </div>
+
+            <h3 style="margin:24px 0 12px; font-size:1.05rem; color:var(--clr-text-bright); display:flex; align-items:center; gap:8px;">
+              <span style="background:linear-gradient(135deg,#f59e0b,#f97316); padding:4px 10px; border-radius:8px; font-size:0.85rem; color:#fff;">1b</span>
+              用 GPXSee 驗證路線檔
+            </h3>
+
+            <ol class="substeps" style="counter-reset:substep 0;">
+              <li>安裝 <strong><a href="https://www.gpxsee.org/" target="_blank" rel="noopener" style="color:var(--clr-accent)">GPXSee</a></strong>（macOS / Windows / Linux 皆支援，免費開源）</li>
+              <li>對 <code>.gpx</code> 檔案 <strong>右鍵 → 打開方式 → GPXSee</strong>，或直接拖曳檔案至 GPXSee 視窗</li>
+              <li>確認地圖上的 <strong>路線軌跡</strong> 是否與預期一致（路線會以彩色線條顯示）</li>
+              <li>可切換工具列的 <strong>「Show map」/「Show graph」</strong> 查看地圖與海拔剖面圖</li>
+              <li>若路線有誤，回到 OnTheGoMap 修正後重新下載</li>
+            </ol>
+
+            <div class="step-image">
+              <img src="images/step1b_gpxsee.png" alt="GPXSee 開啟 GPX 路線檔" loading="lazy">
+              <div class="img-caption">▲ 使用 GPXSee 開啟 GPX 檔案，確認路線軌跡正確無誤</div>
+            </div>
+
+            <div class="tip-box tip-box--success">
+              <span class="tip-icon">✅</span>
+              <span><strong>GPXSee 優勢：</strong>支援 GPX / KML / FIT / TCX 等多種格式，可同時載入多條路線比較，還能查看速度、海拔、距離等統計圖表。</span>
             </div>
 
             <div class="tip-box tip-box--info">
@@ -732,6 +756,13 @@
             <div class="link-desc">台灣健行路線資料庫</div>
           </div>
         </a>
+        <a href="https://www.gpxsee.org/" target="_blank" rel="noopener" class="link-card">
+          <span class="link-icon">📐</span>
+          <div class="link-info">
+            <div class="link-name">GPXSee</div>
+            <div class="link-desc">開源 GPX/KML 路線檢視器（macOS/Win/Linux）</div>
+          </div>
+        </a>
       </div>
     </section>
 
@@ -739,7 +770,7 @@
 
   <!-- ═══ Footer ═══ -->
   <footer class="footer">
-    <p>健行路徑建立 SOP v1.0 &nbsp;·&nbsp; 最後更新：2026/07/22</p>
+    <p>健行路徑建立 SOP v1.1 &nbsp;·&nbsp; 最後更新：2026/08/25</p>
     <p style="margin-top:6px">Made with 🥾 for hiking lovers</p>
   </footer>
 
