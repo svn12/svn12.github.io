@@ -966,7 +966,7 @@
                                 <label for="audio-select-version" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">有聲播放譯本</label>
                                 <select id="audio-select-version" class="select-input">
                                     <option value="Taiwanese" selected>🎤 台語有聲聖經</option>
-                                    <option value="unv1">🎤 和合本有聲聖經</option>
+                                    <option value="unvdavid">🎤 和合本（閻大衛）有聲聖經</option>
                                     <option value="tcv">🎤 現代中文有聲聖經</option>
                                     <option value="rcuv">🎤 和合本2010 (YouTube 播放)</option>
                                 </select>
@@ -2567,7 +2567,8 @@
                     leadNum = (chapNum < 10) ? "00" : "0";
                 }
                 const suffix = (verPath === "tcv") ? "C" : "";
-                const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx1}${suffix}/${bookIdx1}_${leadNum}${chapNum}.mp3`;
+                const baseUrl = (verPath === "unvdavid") ? "https://cb.fhl.net/stream" : "https://media.fhl.net";
+                const audioUrl = `${baseUrl}/${verPath}/${bookIdx1}${suffix}/${bookIdx1}_${leadNum}${chapNum}.mp3`;
                 
                 audioHtmlPlayer.src = audioUrl;
                 audioHtmlPlayer.load();
@@ -2767,7 +2768,8 @@
                     leadNum = (chapNum < 10) ? "00" : "0";
                 }
                 const suffix = (verPath === "tcv") ? "C" : "";
-                const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx1}${suffix}/${bookIdx1}_${leadNum}${chapNum}.mp3`;
+                const baseUrl = (verPath === "unvdavid") ? "https://cb.fhl.net/stream" : "https://media.fhl.net";
+                const audioUrl = `${baseUrl}/${verPath}/${bookIdx1}${suffix}/${bookIdx1}_${leadNum}${chapNum}.mp3`;
                 
                 audioHtmlPlayer.src = audioUrl;
                 audioHtmlPlayer.load();
@@ -2996,7 +2998,7 @@
                 const ver = selectVer.value;
                 if (ver === "Taiwanese") {
                     selectText.value = "bklcl";
-                } else if (ver === "unv1") {
+                } else if (ver === "unvdavid" || ver === "unv1") {
                     selectText.value = "unv";
                 } else if (ver === "tcv") {
                     selectText.value = "tcv2019";
@@ -3085,7 +3087,8 @@
                     leadNum = (chapNum < 10) ? "00" : "0";
                 }
                 const suffix = (verPath === "tcv") ? "C" : "";
-                const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx}${suffix}/${bookIdx}_${leadNum}${chapNum}.mp3`;
+                const baseUrl = (verPath === "unvdavid") ? "https://cb.fhl.net/stream" : "https://media.fhl.net";
+                const audioUrl = `${baseUrl}/${verPath}/${bookIdx}${suffix}/${bookIdx}_${leadNum}${chapNum}.mp3`;
 
                 const isPlaying = !audioHtmlPlayer.paused;
                 audioHtmlPlayer.src = audioUrl;

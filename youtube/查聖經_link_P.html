@@ -1,4 +1,4 @@
-﻿ <!DOCTYPE html><html lang="zh"">
+ <!DOCTYPE html><html lang="zh"">
 <!-- Remark: 入口引導導覽頁（Portal Page），彙整各類專案的連結 | 關聯: reset.css, link_P.css -->
  <head>
     <meta charset="UTF-8">
@@ -157,7 +157,7 @@
         <input type="radio" name="optradio" checked>台語有聲聖經
     </label>
     <label class="radio-inline">
-        <input type="radio" name="optradio">和合本有聲聖經
+        <input type="radio" name="optradio">和合本（閻大衛）有聲聖經
     </label>
     <label class="radio-inline">
         <input type="radio" name="optradio">現代中文有聲聖經
@@ -904,7 +904,7 @@ function  Read_Bible(){
         
     }  
   function fselChap() {
-        var audio_type=["Taiwanese","unv1","tcv"]
+        var audio_type=["Taiwanese","unvdavid","tcv"]
         var lead_num = "";
         var num= document.getElementById("SelChap").value ;
         if (num < 100) {
@@ -919,7 +919,7 @@ function  Read_Bible(){
 					&&document.getElementById('audio1').paused 
         var audio_ptr= document.getElementById("SelTitle").selectedIndex+1;
         
-        var audio_src_h = "https://media.fhl.net/" + audio_type[1] + "/" + audio_ptr + "/" + audio_ptr + "_"; //"41/41_";
+        var audio_src_h = "https://cb.fhl.net/stream/" + audio_type[1] + "/" + audio_ptr + "/" + audio_ptr + "_"; //"41/41_";
        
     //    document.getElementById("test1").innerHTML = audio_src_h + lead_num + num + ".mp3";
        
