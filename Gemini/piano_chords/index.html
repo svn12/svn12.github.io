@@ -540,6 +540,12 @@
         </div>
       </div>
 
+      <!-- 和弦特色與概念卡片 (紅框位置) -->
+      <div id="chord-concept-box" style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; padding: 12px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-main);">
+        <span style="background: var(--primary); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; white-space: nowrap;">樂理概念</span>
+        <span id="concept-text-content">💡 懸空感強、期待解決：用「純四度音 (4)」取代原本的三度音 (1-4-5)，常在接回大三和弦前做美麗裝飾。</span>
+      </div>
+
       <!-- Info Box -->
       <div class="chord-display">
         <div class="chord-title-box">
@@ -693,15 +699,15 @@
     const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
     const CHORD_TYPES = {
-      'maj': { name: '大三和弦 (Major)', intervals: [0, 4, 7], roles: ['根音', '大3音', '純5音'], formula: '1 - 3 - 5', desc: '色彩明亮、歡樂、堅定，流行樂最基本核心' },
-      'm': { name: '小三和弦 (Minor)', intervals: [0, 3, 7], roles: ['根音', '小3音', '純5音'], formula: '1 - ♭3 - 5', desc: '色彩憂傷、柔和、深沉，常用於抒情樂曲' },
-      '7': { name: '屬七和弦 (Dominant 7th)', intervals: [0, 4, 7, 10], roles: ['根音', '大3音', '純5音', '小7音'], formula: '1 - 3 - 5 - ♭7', desc: '帶有強烈傾向解決感與藍調味的七和弦' },
-      'maj7': { name: '大七和弦 (Major 7th)', intervals: [0, 4, 7, 11], roles: ['根音', '大3音', '純5音', '大7音'], formula: '1 - 3 - 5 - 7', desc: '典雅、浪漫、爵士與都市流行感十足' },
-      'm7': { name: '小七和弦 (Minor 7th)', intervals: [0, 3, 7, 10], roles: ['根音', '小3音', '純5音', '小7音'], formula: '1 - ♭3 - 5 - ♭7', desc: '柔和舒適、質感豐富，R&B與爵士常用' },
-      'sus4': { name: '掛留四和弦 (Sus4)', intervals: [0, 5, 7], roles: ['根音', '純4音', '純5音'], formula: '1 - 4 - 5', desc: '懸空感強，常在接回大三和弦前作裝飾' },
-      'sus2': { name: '掛留二和弦 (Sus2)', intervals: [0, 2, 7], roles: ['根音', '大2音', '純5音'], formula: '1 - 2 - 5', desc: '通透空靈感，吉他與鋼琴極常見裝飾和弦' },
-      'dim': { name: '減三和弦 (Diminished)', intervals: [0, 3, 6], roles: ['根音', '小3音', '減5音'], formula: '1 - ♭3 - ♭5', desc: '緊張、不穩定、帶有懸疑與過渡氣氛' },
-      'aug': { name: '增三和弦 (Augmented)', intervals: [0, 4, 8], roles: ['根音', '大3音', '增5音'], formula: '1 - 3 - ♯5', desc: '科幻擴張感，常做為和弦轉接過渡音' }
+      'maj': { name: '大三和弦 (Major)', intervals: [0, 4, 7], roles: ['根音', '大3音', '純5音'], formula: '1 - 3 - 5', desc: '色彩明亮、歡樂、堅定，流行樂最基本核心', concept: '💡 【明亮、堅定、歡樂】由「根音 + 大三度 + 純五度」組成 (1-3-5)，是流行樂與經典和諧聲音的最核心基礎。' },
+      'm': { name: '小三和弦 (Minor)', intervals: [0, 3, 7], roles: ['根音', '小3音', '純5音'], formula: '1 - ♭3 - 5', desc: '色彩憂傷、柔和、深沉，常用於抒情樂曲', concept: '💡 【憂傷、柔和、抒情】由「根音 + 小三度 + 純五度」組成 (1-♭3-5)，三音調降半音，充滿抒情感染力。' },
+      '7': { name: '屬七和弦 (Dominant 7th)', intervals: [0, 4, 7, 10], roles: ['根音', '大3音', '純5音', '小7音'], formula: '1 - 3 - 5 - ♭7', desc: '帶有強烈傾向解決感與藍調味的七和弦', concept: '💡 【藍調味、強烈傾向解決感】由「根音 + 大三度 + 純五度 + 小七度」組成 (1-3-5-♭7)，帶有張力與轉接傾向。' },
+      'maj7': { name: '大七和弦 (Major 7th)', intervals: [0, 4, 7, 11], roles: ['根音', '大3音', '純5音', '大7音'], formula: '1 - 3 - 5 - 7', desc: '典雅、浪漫、爵士與都市流行感十足', concept: '💡 【典雅、浪漫、都會感】由「根音 + 大三度 + 純五度 + 大七度」組成 (1-3-5-7)，爵士與 City Pop 高級感調味音。' },
+      'm7': { name: '小七和弦 (Minor 7th)', intervals: [0, 3, 7, 10], roles: ['根音', '小3音', '純5音', '小7音'], formula: '1 - ♭3 - 5 - ♭7', desc: '柔和舒適、質感豐富，R&B與爵士常用', concept: '💡 【蓬鬆、舒適、鬆弛】由「根音 + 小三度 + 純五度 + 小七度」組成 (1-♭3-5-♭7)，R&B 與 Chill 樂曲最常用的配角。' },
+      'sus4': { name: '掛留四和弦 (Sus4)', intervals: [0, 5, 7], roles: ['根音', '純4音', '純5音'], formula: '1 - 4 - 5', desc: '懸空感強，常在接回大三和弦前作裝飾', concept: '💡 【懸空感強、期待解決】用「純四度音 (4)」取代原本的三度音 (1-4-5)，常在接回大三和弦前做美麗裝飾。' },
+      'sus2': { name: '掛留二和弦 (Sus2)', intervals: [0, 2, 7], roles: ['根音', '大2音', '純5音'], formula: '1 - 2 - 5', desc: '通透空靈感，吉他與鋼琴極常見裝飾和弦', concept: '💡 【通透、空靈、現代敬拜感】用「大二度音 (2)」取代原本的三度音 (1-2-5)，詩歌與吉他鋼琴演奏極常用。' },
+      'dim': { name: '減三和弦 (Diminished)', intervals: [0, 3, 6], roles: ['根音', '小3音', '減5音'], formula: '1 - ♭3 - ♭5', desc: '緊張、不穩定、帶有懸疑與過渡氣氛', concept: '💡 【緊張、壓迫、懸疑】由「根音 + 小三度 + 減五度」組成 (1-♭3-♭5)，雙三度降半音，常用於電影配樂與緊張銜接。' },
+      'aug': { name: '增三和弦 (Augmented)', intervals: [0, 4, 8], roles: ['根音', '大3音', '增5音'], formula: '1 - 3 - ♯5', desc: '科幻擴張感，常做為和弦轉接過渡音', concept: '💡 【科幻、擴張、失重】由「根音 + 大三度 + 增五度」組成 (1-3-♯5)，五度音升高半音，聲音帶有奇幻膨脹感。' }
     };
 
     // State Variables
@@ -799,9 +805,11 @@
       const info = CHORD_TYPES[currentQuality];
       const { rootMidi, midiNotes, roles } = getChordMidiNotes(currentRoot, currentQuality, currentInversion);
 
-      // Update UI Text
+      // Update UI Text & Concept Banner
       document.getElementById('chord-name-text').innerText = `${currentRoot} ${info.name.split(' ')[0]}`;
       document.getElementById('chord-formula-text').innerText = `${info.formula}｜${info.desc}`;
+      const conceptElem = document.getElementById('concept-text-content');
+      if (conceptElem) conceptElem.innerText = info.concept;
 
       // Update Note Badges
       const badgesContainer = document.getElementById('notes-badges');
