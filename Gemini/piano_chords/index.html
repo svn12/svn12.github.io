@@ -1308,45 +1308,33 @@
         title: '🐝 《小蜜蜂》 (Lightly Row)',
         key: 'C 大調',
         tempo: 450,
-        desc: '經典初學者入門名曲：左手柱狀和弦與右手單音旋律練習。',
+        desc: '經典初學者入門名曲：全曲 8 小節，右手五指旋律與左手 C - G7 和弦練習。',
         measures: [
-          {
-            lyric: '小蜜蜂 嗡嗡嗡',
-            lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦 (C3-E3-G3)' },
-            rh: [
-              { midi: 67, name: 'G4 (5)', dur: 1 },
-              { midi: 64, name: 'E4 (3)', dur: 1 },
-              { midi: 64, name: 'E4 (3)', dur: 2 }
-            ]
-          },
-          {
-            lyric: '飛到東 飛到西',
-            lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦 (B2-D3-F3-G3)' },
-            rh: [
-              { midi: 65, name: 'F4 (4)', dur: 1 },
-              { midi: 62, name: 'D4 (2)', dur: 1 },
-              { midi: 62, name: 'D4 (2)', dur: 2 }
-            ]
-          },
-          {
-            lyric: '來跳舞 來唱歌',
-            lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦 (C3-E3-G3)' },
-            rh: [
-              { midi: 60, name: 'C4 (1)', dur: 1 },
-              { midi: 62, name: 'D4 (2)', dur: 1 },
-              { midi: 64, name: 'E4 (3)', dur: 1 },
-              { midi: 65, name: 'F4 (4)', dur: 1 }
-            ]
-          },
-          {
-            lyric: '嗡嗡嗡 嗡嗡嗡',
-            lh: { chord: 'G', midis: [47, 50, 55], name: 'G 和弦 (B2-D3-G3)' },
-            rh: [
-              { midi: 67, name: 'G4 (5)', dur: 1 },
-              { midi: 67, name: 'G4 (5)', dur: 1 },
-              { midi: 67, name: 'G4 (5)', dur: 2 }
-            ]
-          }
+          { lyric: '小蜜蜂 嗡嗡嗡 (1/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦 (C3-E3-G3)' }, rh: [{ midi: 67, name: 'G4 (5)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 2 }] },
+          { lyric: '飛到東 飛到西 (2/8)', lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦 (B2-D3-F3-G3)' }, rh: [{ midi: 65, name: 'F4 (4)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 2 }] },
+          { lyric: '來跳舞 來唱歌 (3/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 60, name: 'C4 (1)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 65, name: 'F4 (4)', dur: 1 }] },
+          { lyric: '嗡嗡嗡 嗡嗡嗡 (4/8)', lh: { chord: 'G', midis: [47, 50, 55], name: 'G 和弦' }, rh: [{ midi: 67, name: 'G4 (5)', dur: 1 }, { midi: 67, name: 'G4 (5)', dur: 1 }, { midi: 67, name: 'G4 (5)', dur: 2 }] },
+          { lyric: '花朵開 得美麗 (5/8)', lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦' }, rh: [{ midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }] },
+          { lyric: '草地綠 真芬芳 (6/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 65, name: 'F4 (4)', dur: 1 }, { midi: 65, name: 'F4 (4)', dur: 1 }] },
+          { lyric: '小蜜蜂 嗡嗡嗡 (7/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 67, name: 'G4 (5)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 2 }] },
+          { lyric: '飛到東 飛到西 (8/8)', lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦' }, rh: [{ midi: 65, name: 'F4 (4)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 60, name: 'C4 (1)', dur: 2 }] }
+        ]
+      },
+      {
+        id: 'silent_night',
+        title: '🎄 《平安夜》 (Silent Night)',
+        key: 'C 大調 (3/4 拍)',
+        tempo: 580,
+        desc: '全曲 8 小節聖誕經典讚美詩歌：左手 C - G7 - F 伴奏與右手優美主旋律。',
+        measures: [
+          { lyric: '平～安～夜～ (1/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦 (C3-E3-G3)' }, rh: [{ midi: 67, name: 'G4', dur: 1.5 }, { midi: 69, name: 'A4', dur: 0.5 }, { midi: 67, name: 'G4', dur: 1 }] },
+          { lyric: '聖～善～夜～ (2/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 64, name: 'E4', dur: 3 }] },
+          { lyric: '萬～暗～中～ (3/8)', lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦 (B2-D3-F3-G3)' }, rh: [{ midi: 67, name: 'G4', dur: 1.5 }, { midi: 69, name: 'A4', dur: 0.5 }, { midi: 67, name: 'G4', dur: 1 }] },
+          { lyric: '光～華～射～ (4/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 64, name: 'E4', dur: 3 }] },
+          { lyric: '照～著～聖～母～ (5/8)', lh: { chord: 'F', midis: [41, 45, 48], name: 'F 和弦 (F2-A2-C3)' }, rh: [{ midi: 74, name: 'D5', dur: 2 }, { midi: 74, name: 'D5', dur: 1 }] },
+          { lyric: '照～著～聖～嬰～ (6/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 72, name: 'C5', dur: 2 }, { midi: 67, name: 'G4', dur: 1 }] },
+          { lyric: '多～麼～慈～祥～ (7/8)', lh: { chord: 'F', midis: [41, 45, 48], name: 'F 和弦' }, rh: [{ midi: 69, name: 'A4', dur: 1 }, { midi: 69, name: 'A4', dur: 1 }, { midi: 72, name: 'C5', dur: 1 }] },
+          { lyric: '平～安～夜～ (8/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 67, name: 'G4', dur: 1.5 }, { midi: 64, name: 'E4', dur: 1.5 }] }
         ]
       },
       {
@@ -1354,87 +1342,14 @@
         title: '🌌 《小星星》 (Twinkle, Twinkle, Little Star)',
         key: 'C 大調',
         tempo: 500,
-        desc: '一小節一和弦，訓練右手跳度旋律與左手 C - F - G7 和弦轉接。',
+        desc: '全曲 6 小節完整樂段：訓練右手跳度旋律與左手 C - F - G7 和弦轉換。',
         measures: [
-          {
-            lyric: '一閃一閃 亮晶晶',
-            lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' },
-            rh: [
-              { midi: 60, name: 'C4 (1)', dur: 1 },
-              { midi: 60, name: 'C4 (1)', dur: 1 },
-              { midi: 67, name: 'G4 (5)', dur: 1 },
-              { midi: 67, name: 'G4 (5)', dur: 1 }
-            ]
-          },
-          {
-            lyric: '滿天都是 小星星',
-            lh: { chord: 'F', midis: [41, 45, 48], name: 'F 和弦' },
-            rh: [
-              { midi: 69, name: 'A4 (6)', dur: 1 },
-              { midi: 69, name: 'A4 (6)', dur: 1 },
-              { midi: 67, name: 'G4 (5)', dur: 2 }
-            ]
-          },
-          {
-            lyric: '掛在天空 放光明',
-            lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' },
-            rh: [
-              { midi: 65, name: 'F4 (4)', dur: 1 },
-              { midi: 65, name: 'F4 (4)', dur: 1 },
-              { midi: 64, name: 'E4 (3)', dur: 1 },
-              { midi: 64, name: 'E4 (3)', dur: 1 }
-            ]
-          },
-          {
-            lyric: '好像許多 小眼睛',
-            lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦' },
-            rh: [
-              { midi: 62, name: 'D4 (2)', dur: 1 },
-              { midi: 62, name: 'D4 (2)', dur: 1 },
-              { midi: 60, name: 'C4 (1)', dur: 2 }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'silent_night',
-        title: '🎄 《平安夜》 (Silent Night)',
-        key: 'C 大調 (3/4 拍)',
-        tempo: 600,
-        desc: '3/4 拍聖誕經典讚美詩歌，溫暖和諧的雙手伴奏。',
-        measures: [
-          {
-            lyric: '平～安～夜～',
-            lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' },
-            rh: [
-              { midi: 67, name: 'G4', dur: 1.5 },
-              { midi: 69, name: 'A4', dur: 0.5 },
-              { midi: 67, name: 'G4', dur: 1 }
-            ]
-          },
-          {
-            lyric: '聖～善～夜～',
-            lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' },
-            rh: [
-              { midi: 64, name: 'E4', dur: 3 }
-            ]
-          },
-          {
-            lyric: '萬～暗～中～',
-            lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦' },
-            rh: [
-              { midi: 67, name: 'G4', dur: 1.5 },
-              { midi: 69, name: 'A4', dur: 0.5 },
-              { midi: 67, name: 'G4', dur: 1 }
-            ]
-          },
-          {
-            lyric: '光～華～射～',
-            lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' },
-            rh: [
-              { midi: 64, name: 'E4', dur: 3 }
-            ]
-          }
+          { lyric: '一閃一閃 亮晶晶 (1/6)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 60, name: 'C4 (1)', dur: 1 }, { midi: 60, name: 'C4 (1)', dur: 1 }, { midi: 67, name: 'G4 (5)', dur: 1 }, { midi: 67, name: 'G4 (5)', dur: 1 }] },
+          { lyric: '滿天都是 小星星 (2/6)', lh: { chord: 'F', midis: [41, 45, 48], name: 'F 和弦' }, rh: [{ midi: 69, name: 'A4 (6)', dur: 1 }, { midi: 69, name: 'A4 (6)', dur: 1 }, { midi: 67, name: 'G4 (5)', dur: 2 }] },
+          { lyric: '掛在天空 放光明 (3/6)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 65, name: 'F4 (4)', dur: 1 }, { midi: 65, name: 'F4 (4)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }] },
+          { lyric: '好像許多 小眼睛 (4/6)', lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦' }, rh: [{ midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 60, name: 'C4 (1)', dur: 2 }] },
+          { lyric: '一閃一閃 亮晶晶 (5/6)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 60, name: 'C4 (1)', dur: 1 }, { midi: 60, name: 'C4 (1)', dur: 1 }, { midi: 67, name: 'G4 (5)', dur: 1 }, { midi: 67, name: 'G4 (5)', dur: 1 }] },
+          { lyric: '滿天都是 小星星 (6/6)', lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦' }, rh: [{ midi: 65, name: 'F4 (4)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 60, name: 'C4 (1)', dur: 1 }] }
         ]
       },
       {
@@ -1442,89 +1357,31 @@
         title: '🎼 《歡樂頌》 (Ode to Joy)',
         key: 'C 大調',
         tempo: 480,
-        desc: '貝多芬第九交響曲經典樂段，右手進行音階躍動與左手柱狀和弦。',
+        desc: '全曲 8 小節經典名段：右手進行音階躍動與左手柱狀和弦。',
         measures: [
-          {
-            lyric: '歡樂女神 聖潔美麗',
-            lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' },
-            rh: [
-              { midi: 64, name: 'E4 (3)', dur: 1 },
-              { midi: 64, name: 'E4 (3)', dur: 1 },
-              { midi: 65, name: 'F4 (4)', dur: 1 },
-              { midi: 67, name: 'G4 (5)', dur: 1 }
-            ]
-          },
-          {
-            lyric: '燦爛光芒 照大地',
-            lh: { chord: 'G', midis: [47, 50, 55], name: 'G 和弦' },
-            rh: [
-              { midi: 67, name: 'G4 (5)', dur: 1 },
-              { midi: 65, name: 'F4 (4)', dur: 1 },
-              { midi: 64, name: 'E4 (3)', dur: 1 },
-              { midi: 62, name: 'D4 (2)', dur: 1 }
-            ]
-          },
-          {
-            lyric: '我們心中 充滿熱情',
-            lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' },
-            rh: [
-              { midi: 60, name: 'C4 (1)', dur: 1 },
-              { midi: 60, name: 'C4 (1)', dur: 1 },
-              { midi: 62, name: 'D4 (2)', dur: 1 },
-              { midi: 64, name: 'E4 (3)', dur: 1 }
-            ]
-          },
-          {
-            lyric: '來到你的 聖殿前',
-            lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦' },
-            rh: [
-              { midi: 64, name: 'E4 (3)', dur: 1.5 },
-              { midi: 62, name: 'D4 (2)', dur: 0.5 },
-              { midi: 62, name: 'D4 (2)', dur: 2 }
-            ]
-          }
+          { lyric: '歡樂女神 聖潔美麗 (1/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 65, name: 'F4 (4)', dur: 1 }, { midi: 67, name: 'G4 (5)', dur: 1 }] },
+          { lyric: '燦爛光芒 照大地 (2/8)', lh: { chord: 'G', midis: [47, 50, 55], name: 'G 和弦' }, rh: [{ midi: 67, name: 'G4 (5)', dur: 1 }, { midi: 65, name: 'F4 (4)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }] },
+          { lyric: '我們心中 充滿熱情 (3/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 60, name: 'C4 (1)', dur: 1 }, { midi: 60, name: 'C4 (1)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }] },
+          { lyric: '來到你的 聖殿前 (4/8)', lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦' }, rh: [{ midi: 64, name: 'E4 (3)', dur: 1.5 }, { midi: 62, name: 'D4 (2)', dur: 0.5 }, { midi: 62, name: 'D4 (2)', dur: 2 }] },
+          { lyric: '你的力量 能使人們 (5/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 65, name: 'F4 (4)', dur: 1 }, { midi: 67, name: 'G4 (5)', dur: 1 }] },
+          { lyric: '消除一切 歧見分歧 (6/8)', lh: { chord: 'G', midis: [47, 50, 55], name: 'G 和弦' }, rh: [{ midi: 67, name: 'G4 (5)', dur: 1 }, { midi: 65, name: 'F4 (4)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }] },
+          { lyric: '在你光輝 照耀之下 (7/8)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 60, name: 'C4 (1)', dur: 1 }, { midi: 60, name: 'C4 (1)', dur: 1 }, { midi: 62, name: 'D4 (2)', dur: 1 }, { midi: 64, name: 'E4 (3)', dur: 1 }] },
+          { lyric: '四海之內 皆兄弟 (8/8)', lh: { chord: 'G7', midis: [47, 50, 53, 55], name: 'G7 和弦' }, rh: [{ midi: 62, name: 'D4 (2)', dur: 1.5 }, { midi: 60, name: 'C4 (1)', dur: 0.5 }, { midi: 60, name: 'C4 (1)', dur: 2 }] }
         ]
       },
       {
         id: 'grace',
         title: '🎵 《奇妙恩典》 (Amazing Grace)',
         key: 'G 大調 (3/4 拍)',
-        tempo: 600,
-        desc: '著名經典讚美詩，左手 G - C - D7 和弦三拍流暢伴奏。',
+        tempo: 580,
+        desc: '全曲 6 小節著名讚美詩：左手 G - C - D7 和弦三拍伴奏。',
         measures: [
-          {
-            lyric: '奇妙恩典 何等甘甜',
-            lh: { chord: 'G', midis: [43, 47, 50], name: 'G 和弦 (G2-B2-D3)' },
-            rh: [
-              { midi: 62, name: 'D4', dur: 1 },
-              { midi: 67, name: 'G4', dur: 2 }
-            ]
-          },
-          {
-            lyric: '我罪已得 赦免',
-            lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' },
-            rh: [
-              { midi: 71, name: 'B4', dur: 0.5 },
-              { midi: 67, name: 'G4', dur: 0.5 },
-              { midi: 71, name: 'B4', dur: 2 }
-            ]
-          },
-          {
-            lyric: '前我失喪 今被尋回',
-            lh: { chord: 'G', midis: [43, 47, 50], name: 'G 和弦' },
-            rh: [
-              { midi: 69, name: 'A4', dur: 1 },
-              { midi: 67, name: 'G4', dur: 2 }
-            ]
-          },
-          {
-            lyric: '瞎眼今得 看見',
-            lh: { chord: 'D7', midis: [45, 48, 50, 54], name: 'D7 和弦' },
-            rh: [
-              { midi: 64, name: 'E4', dur: 1 },
-              { midi: 62, name: 'D4', dur: 2 }
-            ]
-          }
+          { lyric: '奇妙恩典 何等甘甜 (1/6)', lh: { chord: 'G', midis: [43, 47, 50], name: 'G 和弦 (G2-B2-D3)' }, rh: [{ midi: 62, name: 'D4', dur: 1 }, { midi: 67, name: 'G4', dur: 2 }] },
+          { lyric: '我罪已得 赦免 (2/6)', lh: { chord: 'C', midis: [48, 52, 55], name: 'C 和弦' }, rh: [{ midi: 71, name: 'B4', dur: 0.5 }, { midi: 67, name: 'G4', dur: 0.5 }, { midi: 71, name: 'B4', dur: 2 }] },
+          { lyric: '前我失喪 今被尋回 (3/6)', lh: { chord: 'G', midis: [43, 47, 50], name: 'G 和弦' }, rh: [{ midi: 69, name: 'A4', dur: 1 }, { midi: 67, name: 'G4', dur: 2 }] },
+          { lyric: '瞎眼今得 看見 (4/6)', lh: { chord: 'D7', midis: [45, 48, 50, 54], name: 'D7 和弦' }, rh: [{ midi: 64, name: 'E4', dur: 1 }, { midi: 62, name: 'D4', dur: 2 }] },
+          { lyric: '如此恩典 催我敬畏 (5/6)', lh: { chord: 'G', midis: [43, 47, 50], name: 'G 和弦' }, rh: [{ midi: 62, name: 'D4', dur: 1 }, { midi: 67, name: 'G4', dur: 2 }] },
+          { lyric: '使我心得 安慰 (6/6)', lh: { chord: 'D7', midis: [45, 48, 50, 54], name: 'D7 和弦' }, rh: [{ midi: 64, name: 'E4', dur: 1 }, { midi: 67, name: 'G4', dur: 2 }] }
         ]
       },
       {
@@ -1532,44 +1389,14 @@
         title: '🌸 《四季紅 / 台灣民謠流行曲》',
         key: 'F 大調 (2/4 拍)',
         tempo: 450,
-        desc: '經典台灣鄉土流行民謠，輕快活潑的五音旋律與和弦伴奏。',
+        desc: '全曲 6 小節經典台灣流行民謠：輕快活潑的五音旋律與和弦伴奏。',
         measures: [
-          {
-            lyric: '桃花鄉 桃花鄉',
-            lh: { chord: 'F', midis: [41, 45, 48], name: 'F 和弦 (F2-A2-C3)' },
-            rh: [
-              { midi: 65, name: 'F4', dur: 1 },
-              { midi: 67, name: 'G4', dur: 1 },
-              { midi: 69, name: 'A4', dur: 2 }
-            ]
-          },
-          {
-            lyric: '紅花紅 綠葉香',
-            lh: { chord: 'C7', midis: [43, 46, 48, 52], name: 'C7 和弦' },
-            rh: [
-              { midi: 69, name: 'A4', dur: 1 },
-              { midi: 67, name: 'G4', dur: 1 },
-              { midi: 65, name: 'F4', dur: 2 }
-            ]
-          },
-          {
-            lyric: '春風吹 滿面香',
-            lh: { chord: 'F', midis: [41, 45, 48], name: 'F 和弦' },
-            rh: [
-              { midi: 65, name: 'F4', dur: 1 },
-              { midi: 69, name: 'A4', dur: 1 },
-              { midi: 72, name: 'C5', dur: 2 }
-            ]
-          },
-          {
-            lyric: '雙雙對對 來作伴',
-            lh: { chord: 'C7', midis: [43, 46, 48, 52], name: 'C7 和弦' },
-            rh: [
-              { midi: 70, name: 'Bb4', dur: 1 },
-              { midi: 67, name: 'G4', dur: 1 },
-              { midi: 65, name: 'F4', dur: 2 }
-            ]
-          }
+          { lyric: '桃花鄉 桃花鄉 (1/6)', lh: { chord: 'F', midis: [41, 45, 48], name: 'F 和弦' }, rh: [{ midi: 65, name: 'F4', dur: 1 }, { midi: 67, name: 'G4', dur: 1 }, { midi: 69, name: 'A4', dur: 2 }] },
+          { lyric: '紅花紅 綠葉香 (2/6)', lh: { chord: 'C7', midis: [43, 46, 48, 52], name: 'C7 和弦' }, rh: [{ midi: 69, name: 'A4', dur: 1 }, { midi: 67, name: 'G4', dur: 1 }, { midi: 65, name: 'F4', dur: 2 }] },
+          { lyric: '春風吹 滿面香 (3/6)', lh: { chord: 'F', midis: [41, 45, 48], name: 'F 和弦' }, rh: [{ midi: 65, name: 'F4', dur: 1 }, { midi: 69, name: 'A4', dur: 1 }, { midi: 72, name: 'C5', dur: 2 }] },
+          { lyric: '雙雙對對 來作伴 (4/6)', lh: { chord: 'C7', midis: [43, 46, 48, 52], name: 'C7 和弦' }, rh: [{ midi: 70, name: 'Bb4', dur: 1 }, { midi: 67, name: 'G4', dur: 1 }, { midi: 65, name: 'F4', dur: 2 }] },
+          { lyric: '歡歡喜喜 過新年 (5/6)', lh: { chord: 'F', midis: [41, 45, 48], name: 'F 和弦' }, rh: [{ midi: 65, name: 'F4', dur: 1 }, { midi: 69, name: 'A4', dur: 1 }, { midi: 67, name: 'G4', dur: 2 }] },
+          { lyric: '永遠四季 紅～ (6/6)', lh: { chord: 'C7', midis: [43, 46, 48, 52], name: 'C7 和弦' }, rh: [{ midi: 67, name: 'G4', dur: 1 }, { midi: 65, name: 'F4', dur: 3 }] }
         ]
       }
     ];
@@ -1679,9 +1506,12 @@
       let currentTimeMs = 0;
 
       song.measures.forEach((m, mIdx) => {
+        // 計算該小節右手旋律音符的總拍數
+        const measureDuration = m.rh.reduce((sum, n) => sum + n.dur, 0) * song.tempo;
+
         // 播放左手和弦
         const tLh = setTimeout(() => {
-          document.getElementById('song-current-lyric').innerText = `歌詞：${m.lyric} （小節 ${mIdx + 1}/${song.measures.length}）`;
+          document.getElementById('song-current-lyric').innerText = `歌詞：${m.lyric}`;
           document.getElementById('song-current-lh').innerText = m.lh.name;
           document.getElementById('song-current-rh').innerText = m.rh.map(r => r.name).join(' - ');
 
@@ -1694,7 +1524,7 @@
 
         songTimeouts.push(tLh);
 
-        // 播放右手主旋律
+        // 播放右手主旋律音符
         let rhTimeMs = currentTimeMs;
         m.rh.forEach(note => {
           const tRh = setTimeout(() => {
@@ -1708,14 +1538,15 @@
           rhTimeMs += note.dur * song.tempo;
         });
 
-        currentTimeMs = rhTimeMs;
+        // 下一個小節的時間累加
+        currentTimeMs += measureDuration;
       });
 
-      // 循環播放控制
+      // 全曲播放完畢後，若啟用循環則重新播放
       if (isSongLoop) {
         const tLoop = setTimeout(() => {
           playCurrentSong();
-        }, currentTimeMs + 800);
+        }, currentTimeMs + 1000);
         songTimeouts.push(tLoop);
       }
     }
