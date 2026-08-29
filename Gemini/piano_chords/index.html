@@ -800,16 +800,45 @@
       return { rootMidi, midiNotes, roles: CHORD_TYPES[qualityKey].roles };
     }
 
+    function getDynamicConcept(root, qualityKey) {
+      const rawInfo = getChordMidiNotes(root, qualityKey, 0);
+      const p = rawInfo.midiNotes.map(m => NOTE_NAMES[m % 12]);
+      const pitchStr = p.join(' - ');
+
+      switch (qualityKey) {
+        case 'maj':
+          return `💡 【明亮、堅定、歡樂】由「根音 ${root} ＋ 大3音 ${p[1]} ＋ 純5音 ${p[2]}」組成 (${pitchStr} / 1-3-5)，是流行樂與經典和諧音色的最核心基礎。`;
+        case 'm':
+          return `💡 【憂傷、柔和、抒情】由「根音 ${root} ＋ 小3音 ${p[1]} ＋ 純5音 ${p[2]}」組成 (${pitchStr} / 1-♭3-5)，3度音降半音至 ${p[1]}，充滿抒情感染力。`;
+        case '7':
+          return `💡 【藍調味、強烈傾向解決感】由「根音 ${root} ＋ 大3音 ${p[1]} ＋ 純5音 ${p[2]} ＋ 小7音 ${p[3]}」組成 (${pitchStr} / 1-3-5-♭7)，帶有張力與轉接導向。`;
+        case 'maj7':
+          return `💡 【典雅、浪漫、都會感】由「根音 ${root} ＋ 大3音 ${p[1]} ＋ 純5音 ${p[2]} ＋ 大7音 ${p[3]}」組成 (${pitchStr} / 1-3-5-7)，爵士與 City Pop 高級感調味音。`;
+        case 'm7':
+          return `💡 【蓬鬆、舒適、鬆弛】由「根音 ${root} ＋ 小3音 ${p[1]} ＋ 純5音 ${p[2]} ＋ 小7音 ${p[3]}」組成 (${pitchStr} / 1-♭3-5-♭7)，R&B 與 Chill 樂曲經典色調。`;
+        case 'sus4':
+          return `💡 【懸空感強、期待解決】用「純4音 ${p[1]}」取代原本的三度音組成 (${pitchStr} / 1-4-5)，常在接回大三和弦前做美麗裝飾。`;
+        case 'sus2':
+          return `💡 【通透、空靈、現代敬拜感】用「大2音 ${p[1]}」取代原本的三度音組成 (${pitchStr} / 1-2-5)，詩歌與吉他鋼琴演奏極常用。`;
+        case 'dim':
+          return `💡 【緊張、壓迫、懸疑】由「根音 ${root} ＋ 小3音 ${p[1]} ＋ 減5音 ${p[2]}」組成 (${pitchStr} / 1-♭3-♭5)，雙3度降半音，緊張過渡感。`;
+        case 'aug':
+          return `💡 【科幻、擴張、失重】由「根音 ${root} ＋ 大3音 ${p[1]} ＋ 增5音 ${p[2]}」組成 (${pitchStr} / 1-3-♯5)，5度音升高半音至 ${p[2]}，帶有奇幻失重感。`;
+        default:
+          return `💡 由「根音 ${root}」開頭組合而成 (${pitchStr})。`;
+      }
+    }
+
     function updateChord(shouldPlay = false) {
       currentQuality = document.getElementById('chord-type-select').value;
       const info = CHORD_TYPES[currentQuality];
       const { rootMidi, midiNotes, roles } = getChordMidiNotes(currentRoot, currentQuality, currentInversion);
 
-      // Update UI Text & Concept Banner
+      // Update UI Text & Dynamic Concept Banner (Follows Root)
       document.getElementById('chord-name-text').innerText = `${currentRoot} ${info.name.split(' ')[0]}`;
       document.getElementById('chord-formula-text').innerText = `${info.formula}｜${info.desc}`;
       const conceptElem = document.getElementById('concept-text-content');
-      if (conceptElem) conceptElem.innerText = info.concept;
+      if (conceptElem) conceptElem.innerText = getDynamicConcept(currentRoot, currentQuality);
 
       // Update Note Badges
       const badgesContainer = document.getElementById('notes-badges');
