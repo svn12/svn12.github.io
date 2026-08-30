@@ -563,8 +563,11 @@
       <!-- Info Box -->
       <div class="chord-display">
         <div class="chord-title-box">
-          <h2 id="chord-name-text">C Major</h2>
-          <p id="chord-formula-text">大三和弦 (1 - 3 - 5)｜聲響明亮清亮</p>
+          <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+            <h2 id="chord-name-text">G 屬七和弦</h2>
+            <span id="chord-symbol-badge" style="background: linear-gradient(135deg, #ef4444, #ec4899); color: #ffffff; font-size: 1.6rem; font-weight: 800; padding: 4px 16px; border-radius: 10px; border: 2px solid #f43f5e; box-shadow: 0 0 12px rgba(244, 63, 94, 0.4); text-shadow: 0 2px 4px rgba(0,0,0,0.3); font-family: monospace; letter-spacing: 1px;">G7</span>
+          </div>
+          <p id="chord-formula-text">1 - 3 - 5 - ♭7｜帶有強烈傾向解決感與藍調味的七和弦</p>
         </div>
 
         <div class="chord-notes-badges" id="notes-badges"></div>
@@ -995,6 +998,18 @@
       const info = CHORD_TYPES[currentQuality];
       const { rootMidi, midiNotes, roles } = getChordMidiNotes(currentRoot, currentQuality, currentInversion);
       const spelledNotes = getSpelledChordNotes(currentRoot, currentQuality);
+
+      // 計算精確簡短和弦代號符號 (Chord Symbol Badge: G7, Cm, Cmaj7, G7/B)
+      const CHORD_SYMBOLS = { 'maj': '', 'm': 'm', '7': '7', 'maj7': 'maj7', 'm7': 'm7', 'sus4': 'sus4', 'sus2': 'sus2', 'dim': 'dim', 'aug': 'aug' };
+      const symbolSuffix = CHORD_SYMBOLS[currentQuality] || '';
+      let chordSymbol = `${currentRoot}${symbolSuffix}`;
+      if (currentInversion > 0 && spelledNotes.length > 0) {
+        // 第一轉位/第二轉位加入斜線低音 (Slash Chord Notation)
+        const bassNote = (currentInversion === 1) ? spelledNotes[1] : (spelledNotes[2] || spelledNotes[0]);
+        if (bassNote) chordSymbol += `/${bassNote}`;
+      }
+      const symbolElem = document.getElementById('chord-symbol-badge');
+      if (symbolElem) symbolElem.innerText = chordSymbol;
 
       // Update UI Text & Dynamic Concept Banner (Follows Root)
       document.getElementById('chord-name-text').innerText = `${currentRoot} ${info.name.split(' ')[0]}`;
