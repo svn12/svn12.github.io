@@ -883,9 +883,33 @@
       return { rootMidi, midiNotes, roles: CHORD_TYPES[qualityKey].roles };
     }
 
+    // 樂理同音異名推導引擎 (Enharmonic Chord Spelling Engine)
+    function getSpelledChordNotes(root, qualityKey) {
+      const SPELLINGS = {
+        'C': { 'maj': ['C', 'E', 'G'], 'm': ['C', 'E♭', 'G'], '7': ['C', 'E', 'G', 'B♭'], 'maj7': ['C', 'E', 'G', 'B'], 'm7': ['C', 'E♭', 'G', 'B♭'], 'sus4': ['C', 'F', 'G'], 'sus2': ['C', 'D', 'G'], 'dim': ['C', 'E♭', 'G♭'], 'aug': ['C', 'E', 'G♯'] },
+        'C#': { 'maj': ['C♯', 'E♯', 'G♯'], 'm': ['C♯', 'E', 'G♯'], '7': ['C♯', 'E♯', 'G♯', 'B'], 'maj7': ['C♯', 'E♯', 'G♯', 'B♯'], 'm7': ['C♯', 'E', 'G♯', 'B'], 'sus4': ['C♯', 'F♯', 'G♯'], 'sus2': ['C♯', 'D♯', 'G♯'], 'dim': ['C♯', 'E', 'G'], 'aug': ['C♯', 'E♯', 'A'] },
+        'D': { 'maj': ['D', 'F♯', 'A'], 'm': ['D', 'F', 'A'], '7': ['D', 'F♯', 'A', 'C'], 'maj7': ['D', 'F♯', 'A', 'C♯'], 'm7': ['D', 'F', 'A', 'C'], 'sus4': ['D', 'G', 'A'], 'sus2': ['D', 'E', 'A'], 'dim': ['D', 'F', 'A♭'], 'aug': ['D', 'F♯', 'A♯'] },
+        'D#': { 'maj': ['E♭', 'G', 'B♭'], 'm': ['E♭', 'G♭', 'B♭'], '7': ['E♭', 'G', 'B♭', 'D♭'], 'maj7': ['E♭', 'G', 'B♭', 'D'], 'm7': ['E♭', 'G♭', 'B♭', 'D♭'], 'sus4': ['E♭', 'A♭', 'B♭'], 'sus2': ['E♭', 'F', 'B♭'], 'dim': ['E♭', 'G♭', 'B♭♭'], 'aug': ['E♭', 'G', 'B'] },
+        'E': { 'maj': ['E', 'G♯', 'B'], 'm': ['E', 'G', 'B'], '7': ['E', 'G♯', 'B', 'D'], 'maj7': ['E', 'G♯', 'B', 'D♯'], 'm7': ['E', 'G', 'B', 'D'], 'sus4': ['E', 'A', 'B'], 'sus2': ['E', 'F♯', 'B'], 'dim': ['E', 'G', 'B♭'], 'aug': ['E', 'G♯', 'B♯'] },
+        'F': { 'maj': ['F', 'A', 'C'], 'm': ['F', 'A♭', 'C'], '7': ['F', 'A', 'C', 'E♭'], 'maj7': ['F', 'A', 'C', 'E'], 'm7': ['F', 'A♭', 'C', 'E♭'], 'sus4': ['F', 'B♭', 'C'], 'sus2': ['F', 'G', 'C'], 'dim': ['F', 'A♭', 'C♭'], 'aug': ['F', 'A', 'C♯'] },
+        'F#': { 'maj': ['F♯', 'A♯', 'C♯'], 'm': ['F♯', 'A', 'C♯'], '7': ['F♯', 'A♯', 'C♯', 'E'], 'maj7': ['F♯', 'A♯', 'C♯', 'E♯'], 'm7': ['F♯', 'A', 'C♯', 'E'], 'sus4': ['F♯', 'B', 'C♯'], 'sus2': ['F♯', 'G♯', 'C♯'], 'dim': ['F♯', 'A', 'C'], 'aug': ['F♯', 'A♯', 'D'] },
+        'G': { 'maj': ['G', 'B', 'D'], 'm': ['G', 'B♭', 'D'], '7': ['G', 'B', 'D', 'F'], 'maj7': ['G', 'B', 'D', 'F♯'], 'm7': ['G', 'B♭', 'D', 'F'], 'sus4': ['G', 'C', 'D'], 'sus2': ['G', 'A', 'D'], 'dim': ['G', 'B♭', 'D♭'], 'aug': ['G', 'B', 'D♯'] },
+        'G#': { 'maj': ['A♭', 'C', 'E♭'], 'm': ['A♭', 'C♭', 'E♭'], '7': ['A♭', 'C', 'E♭', 'G♭'], 'maj7': ['A♭', 'C', 'E♭', 'G'], 'm7': ['A♭', 'C♭', 'E♭', 'G♭'], 'sus4': ['A♭', 'D♭', 'E♭'], 'sus2': ['A♭', 'B♭', 'E♭'], 'dim': ['A♭', 'C♭', 'E♭♭'], 'aug': ['A♭', 'C', 'E'] },
+        'A': { 'maj': ['A', 'C♯', 'E'], 'm': ['A', 'C', 'E'], '7': ['A', 'C♯', 'E', 'G'], 'maj7': ['A', 'C♯', 'E', 'G♯'], 'm7': ['A', 'C', 'E', 'G'], 'sus4': ['A', 'D', 'E'], 'sus2': ['A', 'B', 'E'], 'dim': ['A', 'C', 'E♭'], 'aug': ['A', 'C♯', 'E♯'] },
+        'A#': { 'maj': ['B♭', 'D', 'F'], 'm': ['B♭', 'D♭', 'F'], '7': ['B♭', 'D', 'F', 'A♭'], 'maj7': ['B♭', 'D', 'F', 'A'], 'm7': ['B♭', 'D♭', 'F', 'A♭'], 'sus4': ['B♭', 'E♭', 'F'], 'sus2': ['B♭', 'C', 'F'], 'dim': ['B♭', 'D♭', 'F♭'], 'aug': ['B♭', 'D', 'F♯'] },
+        'B': { 'maj': ['B', 'D♯', 'F♯'], 'm': ['B', 'D', 'F♯'], '7': ['B', 'D♯', 'F♯', 'A'], 'maj7': ['B', 'D♯', 'F♯', 'A♯'], 'm7': ['B', 'D', 'F♯', 'A'], 'sus4': ['B', 'E', 'F♯'], 'sus2': ['B', 'C♯', 'F♯'], 'dim': ['B', 'D', 'F'], 'aug': ['B', 'D♯', 'G'] }
+      };
+
+      if (SPELLINGS[root] && SPELLINGS[root][qualityKey]) {
+        return SPELLINGS[root][qualityKey];
+      }
+      const info = CHORD_TYPES[qualityKey];
+      const rootIdx = NOTE_NAMES.indexOf(root);
+      return info.intervals.map(semi => NOTE_NAMES[(rootIdx + semi) % 12]);
+    }
+
     function getDynamicConcept(root, qualityKey) {
-      const rawInfo = getChordMidiNotes(root, qualityKey, 0);
-      const p = rawInfo.midiNotes.map(m => NOTE_NAMES[m % 12]);
+      const p = getSpelledChordNotes(root, qualityKey);
       const pitchStr = p.join(' - ');
 
       switch (qualityKey) {
@@ -916,6 +940,7 @@
       currentQuality = document.getElementById('chord-type-select').value;
       const info = CHORD_TYPES[currentQuality];
       const { rootMidi, midiNotes, roles } = getChordMidiNotes(currentRoot, currentQuality, currentInversion);
+      const spelledNotes = getSpelledChordNotes(currentRoot, currentQuality);
 
       // Update UI Text & Dynamic Concept Banner (Follows Root)
       document.getElementById('chord-name-text').innerText = `${currentRoot} ${info.name.split(' ')[0]}`;
@@ -927,10 +952,10 @@
       const badgesContainer = document.getElementById('notes-badges');
       badgesContainer.innerHTML = '';
       midiNotes.forEach((midi, idx) => {
-        const noteName = NOTE_NAMES[midi % 12];
+        const spelledName = spelledNotes[idx] || NOTE_NAMES[midi % 12];
         const badge = document.createElement('div');
-        badge.className = `note-badge ${noteName === currentRoot ? 'is-root' : ''}`;
-        badge.innerHTML = `<span class="n-name">${noteName}</span><span class="n-role">${roles[idx] || ''}</span>`;
+        badge.className = `note-badge ${spelledName === currentRoot || (idx === 0 && currentInversion === 0) ? 'is-root' : ''}`;
+        badge.innerHTML = `<span class="n-name">${spelledName}</span><span class="n-role">${roles[idx] || ''}</span>`;
         badgesContainer.appendChild(badge);
       });
 
