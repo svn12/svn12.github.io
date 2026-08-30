@@ -1189,11 +1189,11 @@
       document.getElementById('quiz-streak').innerText = quizStreak;
     }
 
-    // --- Progression Practice ---
+    // --- Progression Practice (10 大熱門經典和弦進行) ---
     const PROGRESSIONS = [
       {
-        title: 'Pop 流行萬用進行 (1 - 5 - 6 - 4)',
-        desc: '無數熱門華語流行歌與西洋單曲的核心和弦骨架 (C - G - Am - F)',
+        title: 'Pop 流行萬用王道進行 (1 - 5 - 6 - 4)',
+        desc: '無數熱門華語流行歌與西洋單曲的核心骨架 (周杰倫/告五人熱門同款)',
         chords: [
           { root: 'C', quality: 'maj' },
           { root: 'G', quality: 'maj' },
@@ -1202,17 +1202,28 @@
         ]
       },
       {
-        title: 'Jazz 經典 2-5-1 進行 (Dm7 - G7 - Cmaj7)',
-        desc: '爵士與流行樂最極致優美的解決導進音形',
+        title: '抒情傷感下行進行 (6 - 4 - 1 - 5)',
+        desc: '情緒深沉感傷，無數動人流行抒情大歌指定和弦進行',
         chords: [
-          { root: 'D', quality: 'm7' },
-          { root: 'G', quality: '7' },
-          { root: 'C', quality: 'maj7' }
+          { root: 'A', quality: 'm' },
+          { root: 'F', quality: 'maj' },
+          { root: 'C', quality: 'maj' },
+          { root: 'G', quality: 'maj' }
         ]
       },
       {
-        title: 'Canon 卡農經典進行 (1-5-6-3-4-1-4-5)',
-        desc: '雋永和諧的經典和弦進行，教會詩歌與 weddings 最愛',
+        title: 'Jazz / R&B 經典 2-5-1-6 進行 (Dm7 - G7 - Cmaj7 - Am7)',
+        desc: '爵士與流行樂最極致優美的解決導進與迴圈轉接音形',
+        chords: [
+          { root: 'D', quality: 'm7' },
+          { root: 'G', quality: '7' },
+          { root: 'C', quality: 'maj7' },
+          { root: 'A', quality: 'm7' }
+        ]
+      },
+      {
+        title: 'Canon 卡農黃金進行 (1-5-6-3-4-1-4-5)',
+        desc: '雋永和諧的古典經典和弦進行，婚禮與教會詩歌熱門最愛',
         chords: [
           { root: 'C', quality: 'maj' },
           { root: 'G', quality: 'maj' },
@@ -1225,13 +1236,63 @@
         ]
       },
       {
-        title: 'Sus2 溫柔懸空裝飾進行 (C - Csus2 - C - Fsus2)',
-        desc: '充滿現代敬拜與溫暖安撫感的情感音色',
+        title: '日系 City Pop 王道進行 (4 - 5 - 3 - 6)',
+        desc: '強烈推進感與情緒張力升華，動漫主題曲與 J-Pop 必學進行',
+        chords: [
+          { root: 'F', quality: 'maj' },
+          { root: 'G', quality: 'maj' },
+          { root: 'E', quality: 'm' },
+          { root: 'A', quality: 'm' }
+        ]
+      },
+      {
+        title: 'Sus2 溫柔懸空裝飾進行 (C - Csus2 - F - Fsus2)',
+        desc: '充滿現代敬拜與溫暖安撫感的情感音色，詩歌彈奏極常用',
         chords: [
           { root: 'C', quality: 'maj' },
           { root: 'C', quality: 'sus2' },
-          { root: 'C', quality: 'maj' },
+          { root: 'F', quality: 'maj' },
           { root: 'F', quality: 'sus2' }
+        ]
+      },
+      {
+        title: 'Blues 12 小節藍調進行 (C7 - F7 - C7 - G7)',
+        desc: '藍調、搖滾與爵士即興演奏的最核心搖擺骨架',
+        chords: [
+          { root: 'C', quality: '7' },
+          { root: 'F', quality: '7' },
+          { root: 'C', quality: '7' },
+          { root: 'G', quality: '7' }
+        ]
+      },
+      {
+        title: 'Andalucian 佛朗明哥下行進行 (Am - G - F - E)',
+        desc: '充滿西班牙吉他風情、異國感與戲劇張力的下行和弦',
+        chords: [
+          { root: 'A', quality: 'm' },
+          { root: 'G', quality: 'maj' },
+          { root: 'F', quality: 'maj' },
+          { root: 'E', quality: 'maj' }
+        ]
+      },
+      {
+        title: 'Pop Minor 潮流暗黑進行 (6 - 4 - 1 - 3m)',
+        desc: '現代電音與流行潮流樂曲最愛用的酷帥氛圍音色',
+        chords: [
+          { root: 'A', quality: 'm' },
+          { root: 'F', quality: 'maj' },
+          { root: 'C', quality: 'maj' },
+          { root: 'E', quality: 'm' }
+        ]
+      },
+      {
+        title: '50s 復古搖擺經典進行 (1 - 6 - 4 - 5)',
+        desc: '50 年代復古搖滾與《Stand By Me》經典流行抒情進行',
+        chords: [
+          { root: 'C', quality: 'maj' },
+          { root: 'A', quality: 'm' },
+          { root: 'F', quality: 'maj' },
+          { root: 'G', quality: 'maj' }
         ]
       }
     ];
