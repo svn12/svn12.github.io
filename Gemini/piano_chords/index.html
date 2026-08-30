@@ -865,7 +865,7 @@
       updateChord(true); // 點擊直接播放彈奏
     }
 
-    // Calculate MIDI notes for given root, chord quality and inversion
+    // Calculate MIDI notes for given root, chord quality and inversion (Central C Focused)
     function getChordMidiNotes(rootName, qualityKey, inversion = 0, baseOctave = 4) {
       const rootIndex = NOTE_NAMES.indexOf(rootName);
       const rootMidi = 12 * (baseOctave + 1) + rootIndex;
@@ -880,7 +880,20 @@
         }
       }
       midiNotes.sort((a, b) => a - b);
-      return { rootMidi, midiNotes, roles: CHORD_TYPES[qualityKey].roles };
+
+      // Central C (C4 = 60) Alignment Engine: 確保音高與鍵盤視覺靠近中央 C 區
+      let avgPitch = midiNotes.reduce((a, b) => a + b, 0) / midiNotes.length;
+      while (avgPitch > 68 || Math.max(...midiNotes) > 75) {
+        midiNotes = midiNotes.map(m => m - 12);
+        avgPitch -= 12;
+      }
+      while (avgPitch < 52 || Math.min(...midiNotes) < 48) {
+        midiNotes = midiNotes.map(m => m + 12);
+        avgPitch += 12;
+      }
+
+      const effectiveRootMidi = midiNotes[0]; // 最低音做為基準
+      return { rootMidi: effectiveRootMidi, midiNotes, roles: CHORD_TYPES[qualityKey].roles };
     }
 
     // 樂理同音異名推導引擎 (Enharmonic Chord Spelling Engine)
