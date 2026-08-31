@@ -3281,7 +3281,8 @@
                     leadNum = (chapNum < 10) ? "00" : "0";
                 }
                 const suffix = (verPath === "tcv") ? "C" : "";
-                const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx}${suffix}/${bookIdx}_${leadNum}${chapNum}.mp3`;
+                const realVerFolder = (verPath === "unv1") ? "unvdavid" : verPath;
+                const audioUrl = `https://media.fhl.net/${realVerFolder}/${bookIdx}${suffix}/${bookIdx}_${leadNum}${chapNum}.mp3`;
 
                 const isPlaying = !audioHtmlPlayer.paused;
                 audioHtmlPlayer.src = audioUrl;
