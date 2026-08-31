@@ -1475,48 +1475,54 @@
         const btnCopy = document.getElementById('btn-copy');
         const btnDownload = document.getElementById('btn-download');
 
-        document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
-        document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
-        document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
-        document.getElementById('tab-audio').addEventListener('click', () => switchTab('audio'));
+        const btnTabLyrics = document.getElementById('tab-lyrics');
+        if (btnTabLyrics) btnTabLyrics.addEventListener('click', () => switchTab('lyrics'));
+
+        const btnTabScripture = document.getElementById('tab-scripture');
+        if (btnTabScripture) btnTabScripture.addEventListener('click', () => switchTab('scripture'));
+
+        const btnTabHymns = document.getElementById('tab-hymns');
+        if (btnTabHymns) btnTabHymns.addEventListener('click', () => switchTab('hymns'));
+
+        const btnTabAudio = document.getElementById('tab-audio');
+        if (btnTabAudio) btnTabAudio.addEventListener('click', () => switchTab('audio'));
 
         function switchTab(tab) {
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
-            // 重置預覽視窗
-            document.getElementById('wrapper-text-preview').style.display = 'block';
-            document.getElementById('wrapper-hymns-preview').style.display = 'none';
-            document.getElementById('wrapper-audio-preview').style.display = 'none';
-            document.getElementById('btn-group-shared').style.display = 'grid';
+            const wText = document.getElementById('wrapper-text-preview');
+            const wHymns = document.getElementById('wrapper-hymns-preview');
+            const wAudio = document.getElementById('wrapper-audio-preview');
+            const btnShared = document.getElementById('btn-group-shared');
 
-            if (tab === 'lyrics') {
-                document.getElementById('tab-lyrics').classList.add('active');
-                document.getElementById('content-lyrics').classList.add('active');
-                document.getElementById('input-lyrics').classList.add('active');
-                document.getElementById('controls-row-lyrics').style.display = 'flex';
-                updateLyricsLayout();
-            } else if (tab === 'scripture') {
-                document.getElementById('tab-scripture').classList.add('active');
-                document.getElementById('input-scripture').classList.add('active');
-                document.getElementById('controls-row-lyrics').style.display = 'none';
-                previewArea.textContent = currentFormattedResult;
-            } else if (tab === 'hymns') {
-                document.getElementById('tab-hymns').classList.add('active');
-                document.getElementById('input-hymns').classList.add('active');
-                document.getElementById('controls-row-lyrics').style.display = 'none';
-                document.getElementById('btn-group-shared').style.display = 'none';
-                document.getElementById('wrapper-text-preview').style.display = 'none';
-                document.getElementById('wrapper-hymns-preview').style.display = 'block';
+            if (wText) wText.style.display = 'block';
+            if (wHymns) wHymns.style.display = 'none';
+            if (wAudio) wAudio.style.display = 'none';
+            if (btnShared) btnShared.style.display = 'grid';
+
+            if (tab === 'hymns') {
+                const tHymns = document.getElementById('tab-hymns');
+                const iHymns = document.getElementById('input-hymns');
+                const ctrlLyrics = document.getElementById('controls-row-lyrics');
+                if (tHymns) tHymns.classList.add('active');
+                if (iHymns) iHymns.classList.add('active');
+                if (ctrlLyrics) ctrlLyrics.style.display = 'none';
+                if (btnShared) btnShared.style.display = 'none';
+                if (wText) wText.style.display = 'none';
+                if (wHymns) wHymns.style.display = 'block';
                 initHymnsTab();
             } else if (tab === 'audio') {
-                document.getElementById('tab-audio').classList.add('active');
-                document.getElementById('input-audio').classList.add('active');
-                document.getElementById('controls-row-lyrics').style.display = 'none';
-                document.getElementById('btn-group-shared').style.display = 'none';
-                document.getElementById('wrapper-text-preview').style.display = 'none';
-                document.getElementById('wrapper-audio-preview').style.display = 'block';
+                const tAudio = document.getElementById('tab-audio');
+                const iAudio = document.getElementById('input-audio');
+                const ctrlLyrics = document.getElementById('controls-row-lyrics');
+                if (tAudio) tAudio.classList.add('active');
+                if (iAudio) iAudio.classList.add('active');
+                if (ctrlLyrics) ctrlLyrics.style.display = 'none';
+                if (btnShared) btnShared.style.display = 'none';
+                if (wText) wText.style.display = 'none';
+                if (wAudio) wAudio.style.display = 'block';
                 initAudioBibleTab();
             }
         }
@@ -1524,16 +1530,16 @@
         window.initAppTheme();
         setTimeout(() => { switchTab("hymns"); }, 100);
 
-        textarea.addEventListener('input', updateLyricsLayout);
-        document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
-        document.getElementById('max-len').addEventListener('input', () => {
+        if (textarea) textarea.addEventListener('input', updateLyricsLayout);
+        if (document.getElementById('auto-header')) document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
+        if (document.getElementById('max-len')) document.getElementById('max-len').addEventListener('input', () => {
             if (currentTab === 'lyrics') updateLyricsLayout();
         });
 
         // Drag & Drop
-        dropZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
-        dropZone.addEventListener('dragover', (e) => {
+        if (dropZone && fileInput) dropZone.addEventListener('click', () => fileInput.click());
+        if (fileInput) fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        if (dropZone) dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropZone.classList.add('dragover');
         });
@@ -1858,7 +1864,7 @@
         const fetchSpinner = document.getElementById('fetch-spinner');
         const fetchBtnText = document.getElementById('fetch-btn-text');
 
-        btnFetch.addEventListener('click', async () => {
+        if (btnFetch) btnFetch.addEventListener('click', async () => {
             const qstr = document.getElementById('bible-qstr').value.trim();
             if (!qstr) {
                 alert("請輸入要查詢的經文！");
@@ -1913,7 +1919,7 @@
         });
 
         // 下載 UTF-16LE 帶 BOM 的 TXT 檔案 (共用)
-        btnDownload.addEventListener('click', () => {
+        if (btnDownload) btnDownload.addEventListener('click', () => {
             const text = currentFormattedResult;
             if (!text) {
                 alert('無排版文字可供下載！');
