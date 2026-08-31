@@ -960,6 +960,7 @@
         <!-- 主題外觀切換器 -->
         <div class="theme-switcher">
         <a href="./index.html" class="theme-btn" style="text-decoration:none; border-right:1px solid var(--panel-border); padding-right:0.6rem; color:var(--text-main); font-weight:600;">🛠️ 主日排版助手 ➔</a>
+        <a href="./bible_hymns.html" class="theme-btn" style="text-decoration:none; border-right:1px solid var(--panel-border); padding-right:0.6rem; color:var(--text-main); font-weight:600;">📖 聖經與聖詩專用頁 ➔</a>
             <button class="theme-btn" data-theme-val="auto" onclick="setAppTheme('auto')">🌓 自動</button>
             <button class="theme-btn" data-theme-val="light" onclick="setAppTheme('light')">☀️ 淺色</button>
             <button class="theme-btn" data-theme-val="dark" onclick="setAppTheme('dark')">🌙 深色</button>
@@ -1173,14 +1174,9 @@
 
                 <!-- 右側輸出預覽區 -->
                 <div>
-                    <div class="panel-title">✨ 排版預覽與播放結果</div>
-                    <!-- 歌詞與經文預覽 -->
-                    <div id="wrapper-text-preview" style="display: none;">
-                        <div class="preview-area" id="preview-area"></div>
-                    </div>
-                    
                     <!-- 聖詩啟應文預覽 & 播放區 -->
                     <div id="wrapper-hymns-preview" style="display: block;">
+                        <div class="panel-title">✨ 排版預覽與播放結果</div>
                         <div class="hymns-table-wrapper">
                             <div id="hymns-table-container"></div>
                         </div>
@@ -1275,32 +1271,10 @@
             </div>
 
             <!-- 控制列 (歌詞模式專屬) -->
-            <div class="controls-row" id="controls-row-lyrics">
-                <div class="control-item" id="ctrl-auto-header">
-                    <div class="control-label">
-                        <span class="control-title">自動解析介紹</span>
-                        <span class="control-desc">自動分析前5行基本資訊與詞曲作者</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="auto-header" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-
-                <div class="control-item" id="ctrl-max-len">
-                    <div class="control-label">
-                        <span class="control-title">單行字數限制</span>
-                        <span class="control-desc">歌詞超過將自動於語意標點換行</span>
-                    </div>
-                    <input type="number" id="max-len" class="number-input" value="15" min="5" max="35">
-                </div>
-            </div>
+            
 
             <!-- 共用操作按鈕 (歌詞與經文模式) -->
-            <div class="button-group" id="btn-group-shared">
-                <button class="btn btn-copy" id="btn-copy">📋 複製排版文字</button>
-                <button class="btn btn-download" id="btn-download">💾 下載排版檔案 (.txt)</button>
-            </div>
+            
         </main>
     </div>
 
@@ -1436,44 +1410,8 @@
         const RSheet2Json_APIV6 = "https://script.google.com/macros/s/AKfycbz-Q9lP3QXasQwyCT6pegSR7eu23AQUKTkd3iv5WcZLvoxIaH0m41_W0av5Ncc3LTwoQw/exec";
         const Search_API = "https://script.google.com/macros/s/AKfycbzPRmF3iiIIuPR0PwoTA87Dgs9CvLLJRvFKJJKk5U5Qqn9ZzA57XWOxXIoZ1ad8wxf_CQ/exec";
 
-        let currentTab = 'hymns'; 
-        let currentFormattedResult = '';
-        let ytPlayer = null;
-        let audioYtPlayer = null;
-        let rcuvYoutubeIds = [];
-        let scanBibleInfo = []; 
-        let scanBibleDetail = [];
-        let currentScanPage = 1;
-        let scanMode = 'text'; // 'text', 'scan', 或 'hand'
-        let handBibleInfo = [];
-        let handBibleDetail = [];
-        let currentHandPage = 1;
-        let handWriters = [];
-        let currentSearchQuery = "";
-        let currentSearchOffset = 0;
-        let currentSearchResults = [];
-        let currentSearchVer = "";
-        let zoomScale = 1.0;
-        let panX = 0;
-        let panY = 0;
-        let isDraggingScanImg = false;
-        let startDragX = 0;
-        let startDragY = 0;
-        let handZoomScale = 1.0;
-        let handPanX = 0;
-        let handPanY = 0;
-        let isDraggingHandPdf = false;
-        let startDragHandX = 0;
-        let startDragHandY = 0;
-        let handDragMode = false;
-
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('file-input');
-        const textarea = document.getElementById('lyrics-textarea');
-        const previewArea = document.getElementById('preview-area');
-        const btnCopy = document.getElementById('btn-copy');
-        const btnDownload = document.getElementById('btn-download');
-
+        
+        let currentTab = 'hymns';
         const tabHymnsBtn = document.getElementById('tab-hymns');
         const tabAudioBtn = document.getElementById('tab-audio');
 
@@ -1484,9 +1422,6 @@
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
-            document.getElementById('wrapper-text-preview').style.display = 'none';
-            document.getElementById('btn-group-shared').style.display = 'none';
 
             if (tab === 'hymns') {
                 if (document.getElementById('tab-hymns')) document.getElementById('tab-hymns').classList.add('active');
@@ -1506,10 +1441,11 @@
         window.initAppTheme();
         setTimeout(initHymnsTab, 100);
 
-        textarea.addEventListener('input', updateLyricsLayout);
-        document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
-        document.getElementById('max-len').addEventListener('input', () => {
-            if (currentTab === 'lyrics') initHymnsTab();
+
+        if (textarea) textarea.addEventListener('input', updateLyricsLayout);
+        if (document.getElementById('auto-header')) document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
+        if (document.getElementById('max-len')) document.getElementById('max-len').addEventListener('input', () => {
+            if (currentTab === 'lyrics') updateLyricsLayout();
         });
 
         // Drag & Drop
@@ -1535,7 +1471,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 textarea.value = e.target.result;
-                initHymnsTab();
+                updateLyricsLayout();
             };
             reader.readAsText(file);
         }
