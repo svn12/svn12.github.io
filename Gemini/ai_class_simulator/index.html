@@ -170,6 +170,53 @@
 
     <!-- Tab 2: 指令填空器 -->
     <section id="tab-prompt" class="tab-content">
+      <!-- ✨ 熱門【建立可完成】經典課堂作品專區 -->
+      <div class="card card-fullwidth completed-hero-card" style="margin-bottom: 24px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.85)); border: 1px solid rgba(52, 211, 153, 0.4); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15); border-radius: 18px; padding: 20px 24px;">
+        <div class="card-header" style="margin-bottom: 16px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 12px;">
+          <i data-lucide="sparkles" class="card-icon" style="color: #34d399; font-size: 24px;"></i>
+          <div>
+            <h2 style="color: #34d399; font-size: 1.3rem; margin: 0;">✨ 建立可完成 - 熱門實作成品一鍵生成專區</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">重現學員經典成果！點擊即可載入高級 Prompt 或使用 AI 風格相機【一鍵建立可完成作品】。</p>
+          </div>
+        </div>
+
+        <div class="completed-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+          <!-- Card 1: 208徐玉蘭 LINE 16宮格貼圖 -->
+          <div class="completed-card-item" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <span class="completed-badge" style="display: inline-block; background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 50px; font-size: 0.75rem; font-weight: 700; padding: 2px 10px; margin-bottom: 8px;">📱 208徐玉蘭熱門作品</span>
+              <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; color: #fff;">LINE 問候貼圖 16 宮格 / Q版表情包</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">手繪 Q 版家族（阿嬤、媳婦與孫女）LINE 16宮格請安貼圖，包含「早安！」、「什麼啦啊？」、「蛤？」、「好想睡」、「哇！通過啦！」、「讚啦！」、「生氣氣！」、「晚安:3」等問候標語。</p>
+            </div>
+            <div class="completed-btn-group" style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm btn-load-completed-prompt" data-type="sticker">
+                <i data-lucide="file-text"></i> 載入指令
+              </button>
+              <button class="btn btn-accent btn-sm btn-quick-build-completed" data-type="sticker">
+                <i data-lucide="wand-2"></i> 一鍵建立可完成作品
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: 暑假 AI 伴我遊相片拼貼海報 -->
+          <div class="completed-card-item" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <span class="completed-badge" style="display: inline-block; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 50px; font-size: 0.75rem; font-weight: 700; padding: 2px 10px; margin-bottom: 8px;">✈️ 旅遊紀錄熱門作品</span>
+              <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; color: #fff;">暑假 AI 伴我遊相片拼貼海報</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">歐洲義大利旅行拼貼（威尼斯 Gondola、羅馬競技場 Colosseum、比薩斜塔 Pisa Tower、佛羅倫斯 Florence、品酒時光 Cheers!）相片拍立得質感組合。</p>
+            </div>
+            <div class="completed-btn-group" style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm btn-load-completed-prompt" data-type="travel">
+                <i data-lucide="file-text"></i> 載入指令
+              </button>
+              <button class="btn btn-accent btn-sm btn-quick-build-completed" data-type="travel">
+                <i data-lucide="wand-2"></i> 一鍵建立可完成作品
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="grid-2col">
         <!-- Form 1: AI變身公式 -->
         <div class="card">
@@ -585,12 +632,22 @@
                 <span class="style-badge style-vin">復古</span>
                 <strong>懷舊老照片</strong>
               </button>
+              <button class="style-select-btn" data-style="line_sticker_16" style="border: 1px solid rgba(52, 211, 153, 0.4); background: rgba(16, 185, 129, 0.1);">
+                <span class="style-badge" style="background: #10b981; color: #fff;">建立可完成</span>
+                <strong>LINE貼圖16宮格</strong>
+              </button>
+              <button class="style-select-btn" data-style="travel_poster_collage" style="border: 1px solid rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.1);">
+                <span class="style-badge" style="background: #38bdf8; color: #0f172a;">建立可完成</span>
+                <strong>暑假AI伴我遊拼貼</strong>
+              </button>
             </div>
             
             <div class="style-select-more">
-              <label for="camera-style-select">或選擇其他 40 種 AI 畫風模擬：</label>
+              <label for="camera-style-select">或選擇其他 42 種 AI 畫風模擬：</label>
               <select id="camera-style-select" class="form-select">
                 <option value="" disabled selected>--- 選擇其他畫風 ---</option>
+                <option value="line_sticker_16">✨【建立可完成】LINE 問候貼圖 16 宮格 (表情包組)</option>
+                <option value="travel_poster_collage">✨【建立可完成】暑假 AI 伴我遊相片拼貼海報</option>
                 <option value="chibi">1: 可愛 Q 版卡通人物插畫 / 貼紙風 (Chibi/Sticker style)</option>
                 <option value="line">2: 可愛Q版LINE貼圖風格 (Line sticker style)</option>
                 <option value="clay">3: 3D 黏土/皮克斯風 (3D Clay/Pixar Style)</option>

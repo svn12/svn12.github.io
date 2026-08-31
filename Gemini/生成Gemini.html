@@ -129,6 +129,13 @@
             margin-bottom: 0.5rem;
         }
 
+        .project-tag.tag-completed {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border-color: rgba(52, 211, 153, 0.4);
+            box-shadow: 0 0 10px rgba(52, 211, 153, 0.2);
+        }
+
         .arrow {
             font-size: 1.5rem;
             color: var(--text-muted);
@@ -345,9 +352,12 @@
             </a>
             <a href="./ai_class_simulator/index.html" class="project-card" id="link-ai_class_simulator">
                 <div class="project-info">
-                    <span class="project-tag">AI應用</span>
-                    <div class="project-title">AI 課堂實作與班級互動照片牆</div>
-                    <div class="project-desc">重現中華民國AI教育協會課程操作，包含AI描述公式、藝術風格畫風指令產生器、Canvas即時風格化濾鏡（波普、新藝術風格等）以及班級互動照片牆。</div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <span class="project-tag tag-completed">✨ 建立可完成</span>
+                        <span class="project-tag">AI應用</span>
+                    </div>
+                    <div class="project-title">AI 課堂實作與班級互動照片牆 (含建立可完成功能)</div>
+                    <div class="project-desc">重現中華民國AI教育協會課程操作，全新支援【建立可完成】經典作品功能（含 LINE 16宮格問候貼圖組、暑假AI伴我遊相片拼貼海報），包含AI描述公式、風格相機模擬器與照片牆互動。</div>
                 </div>
                 <div class="arrow">→</div>
             </a>
@@ -601,10 +611,8 @@
             // 收集所有標籤，並取得不重複的標籤列表
             const tags = new Set();
             cards.forEach(card => {
-                const tagSpan = card.querySelector('.project-tag');
-                if (tagSpan) {
-                    tags.add(tagSpan.textContent.trim());
-                }
+                const tagSpans = card.querySelectorAll('.project-tag');
+                tagSpans.forEach(t => tags.add(t.textContent.trim().replace(/^✨\s*/, '')));
             });
 
             // 依序建立各種類別 option
@@ -626,8 +634,8 @@
                     if (selectedCategory === '全部') {
                         isCategoryMatch = true;
                     } else {
-                        const tagSpan = card.querySelector('.project-tag');
-                        if (tagSpan && tagSpan.textContent.trim() === selectedCategory) {
+                        const tagSpans = Array.from(card.querySelectorAll('.project-tag'));
+                        if (tagSpans.some(t => t.textContent.trim().replace(/^✨\s*/, '') === selectedCategory)) {
                             isCategoryMatch = true;
                         }
                     }

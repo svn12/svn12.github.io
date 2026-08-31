@@ -674,7 +674,140 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.filter = 'none';
     ctx.clearRect(0, 0, w, h);
 
-    if (style === 'popart') {
+    if (style === 'line_sticker_16') {
+      try {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+
+        const cols = 4;
+        const rows = 4;
+        const cellW = w / cols;
+        const cellH = h / rows;
+
+        const texts = [
+          '早安！☀️', '什麼啦啊？', '蛤？', '我在提醒你啦！',
+          '好想睡 💤', '哇！通過啦！✨', '讚啦！👍', '欽你！哈啾！',
+          '生氣氣！💢', '蛤？？？', '晚安:3 🌙', '太可愛啦',
+          '現在夠帥了嗎?!', '愛你喔 ❤️', '超牛的！', '幸福美滿！'
+        ];
+
+        const bgColors = [
+          '#fef08a', '#e0f2fe', '#fce7f3', '#dcfce7',
+          '#fed7aa', '#fae8ff', '#ccfbf1', '#fee2e2',
+          '#fef3c7', '#e0e7ff', '#f3e8ff', '#d1fae5',
+          '#ffe4e6', '#fef9c3', '#cff4fc', '#f5d0fe'
+        ];
+
+        const textColorList = [
+          '#d97706', '#0284c7', '#db2777', '#15803d',
+          '#c2410c', '#9333ea', '#0d9488', '#dc2626',
+          '#b45309', '#4338ca', '#7e22ce', '#047857',
+          '#e11d48', '#a16207', '#0891b2', '#c026d3'
+        ];
+
+        for (let i = 0; i < 16; i++) {
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          const cx = col * cellW;
+          const cy = row * cellH;
+
+          // 格子背景
+          ctx.fillStyle = bgColors[i];
+          ctx.fillRect(cx + 2, cy + 2, cellW - 4, cellH - 4);
+
+          // 繪製頭像/圖片
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx + cellW / 2, cy + cellH / 2 - 8, Math.min(cellW, cellH) * 0.28, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.drawImage(img, cx + cellW * 0.1, cy + cellH * 0.1, cellW * 0.8, cellH * 0.7);
+          ctx.restore();
+
+          // 繪製白色文字氣泡框
+          const bubbleW = cellW * 0.82;
+          const bubbleH = 22;
+          const bubbleX = cx + (cellW - bubbleW) / 2;
+          const bubbleY = cy + cellH - 28;
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+          ctx.shadowColor = 'rgba(0,0,0,0.1)';
+          ctx.shadowBlur = 4;
+          ctx.beginPath();
+          ctx.roundRect(bubbleX, bubbleY, bubbleW, bubbleH, 10);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          ctx.strokeStyle = textColorList[i];
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          // 標語文字
+          ctx.fillStyle = textColorList[i];
+          ctx.font = `bold ${Math.max(10, Math.round(cellW * 0.12))}px sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.fillText(texts[i], cx + cellW / 2, bubbleY + 15);
+
+          // 外網格線
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(cx, cy, cellW, cellH);
+        }
+      } catch (err) {
+        ctx.drawImage(img, 0, 0, w, h);
+      }
+    }
+    else if (style === 'travel_poster_collage') {
+      try {
+        // 米白溫馨海報背景
+        ctx.fillStyle = '#faf8f5';
+        ctx.fillRect(0, 0, w, h);
+
+        // 頂部大標題 banner
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = `bold ${Math.max(18, Math.round(w * 0.055))}px sans-serif`;
+        ctx.textAlign = 'left';
+        ctx.fillText('暑假 ☀️ AI 伴我遊', 20, 38);
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = `11px sans-serif`;
+        ctx.fillText('用 AI 記錄美好時光，讓回憶更精彩', 20, 56);
+
+        // 繪製 4 個拍立得相框拼貼
+        const frames = [
+          { x: 15, y: 70, w: w * 0.44, h: h * 0.35, title: '威尼斯 Venice 🚣' },
+          { x: w * 0.52, y: 70, w: w * 0.44, h: h * 0.35, title: '比薩斜塔 Pisa 🗼' },
+          { x: 15, y: h * 0.46, w: w * 0.44, h: h * 0.35, title: '羅馬競技場 🏛️' },
+          { x: w * 0.52, y: h * 0.46, w: w * 0.44, h: h * 0.35, title: '品酒時光 Cheers! 🍷' }
+        ];
+
+        frames.forEach((f, idx) => {
+          // 拍立得邊框
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = 'rgba(0,0,0,0.15)';
+          ctx.shadowBlur = 8;
+          ctx.fillRect(f.x, f.y, f.w, f.h);
+          ctx.shadowBlur = 0;
+
+          // 圖片內容
+          ctx.drawImage(img, f.x + 6, f.y + 6, f.w - 12, f.h - 32);
+
+          // 底部標籤
+          ctx.fillStyle = '#0f172a';
+          ctx.font = `bold ${Math.max(10, Math.round(f.w * 0.08))}px sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.fillText(f.title, f.x + f.w / 2, f.y + f.h - 10);
+        });
+
+        // 底部溫馨感言
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.9)';
+        ctx.font = `bold 12px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('世界這麼大，感謝主帶我去看看 • AI 是我們的好幫手 ❤️', w / 2, h - 16);
+      } catch (err) {
+        ctx.drawImage(img, 0, 0, w, h);
+      }
+    }
+    else if (style === 'popart') {
       try {
         const halfW = w / 2;
         const halfH = h / 2;
@@ -1114,6 +1247,22 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const defaultArtworks = [
     {
+      id: 'default-completed-1',
+      uploader: '208徐玉蘭',
+      prompt: '這張是我和媳婦孫女們三個人LINE的問候圖！手繪 Q 版 16 宮格貼圖包，包含「早安！」、「什麼啦啊？」、「蛤？」、「我在提醒你啦！」、「好想睡」、「哇！通過啦！」、「讚啦！」、「生氣氣！」、「晚安:3」等問候標語。',
+      imageUrl: 'assets/pop_art_couple.jpg',
+      styleName: '✨ 建立可完成',
+      timestamp: '5分鐘前'
+    },
+    {
+      id: 'default-completed-2',
+      uploader: '208徐玉蘭&家族',
+      prompt: '暑假 AI 伴我遊相片拼貼海報！威尼斯 Venice 貢多拉船、羅馬競技場 Colosseum、比薩斜塔 Pisa Tower、佛羅倫斯 Florence、品酒時光 Cheers!，世界這麼大，感謝主帶我去看看。',
+      imageUrl: 'assets/hike_sample.jpg',
+      styleName: '✨ 建立可完成',
+      timestamp: '8分鐘前'
+    },
+    {
       id: 'default-1',
       uploader: '阿芬',
       prompt: '請把這張照片中的人物呈現【更快樂無憂】的狀態，放在【翠綠的溪頭森林步道中】，整體氛圍是【溫馨、陽光、有故事感】，臉要保持原本人物的樣子。',
@@ -1276,6 +1425,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const styleNameMap = {
+    line_sticker_16: '✨ LINE問候貼圖 16 宮格 (建立可完成)',
+    travel_poster_collage: '✨ 暑假 AI 伴我遊拼貼海報 (建立可完成)',
     popart: '美式復古漫畫/普普藝術 (Pop Art)',
     artnouveau: '新藝術風格 (Art Nouveau)',
     clay: '3D 黏土/皮克斯風 (3D Clay/Pixar Style)',
@@ -1949,6 +2100,77 @@ document.addEventListener('DOMContentLoaded', () => {
       renderQuickPrompts(quickPromptCategory.value);
     });
   }
+
+  /* ==========================================================================
+     10. 建立可完成 (Quick Build Completed Artworks) Logic
+     ========================================================================== */
+  const completedPrompts = {
+    sticker: `這張是我和媳婦孫女們三個人LINE的問候圖！請幫我畫一張包含 16 格 Q 版 LINE 問候貼圖組的相片，畫面中有三位溫馨家人（阿嬤、媳婦與孫女），包含「早安！」、「什麼啦啊？」、「蛤？」、「我在提醒你啦！」、「好想睡」、「哇！通過啦！」、「讚啦！」、「生氣氣！」、「晚安:3」等問候標語，手繪Q版貼圖質感。`,
+    travel: `請幫我設計一張「暑假 AI 伴我遊」旅遊紀念拼貼海報，包含威尼斯 (Venice) 貢多拉船、羅馬競技場 (Colosseum)、比薩斜塔 (Pisa Tower)、佛羅倫斯 (Florence) 與品酒時光 (Cheers!) 等 4 張人物旅遊相片，加上手繪底片標籤、拍立得畫框與「世界這麼大，感謝主帶我去看看」溫馨水彩字體裝飾。`
+  };
+
+  const loadCompletedBtns = document.querySelectorAll('.btn-load-completed-prompt');
+  loadCompletedBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.getAttribute('data-type');
+      const promptText = completedPrompts[type];
+      if (promptText) {
+        const previewFormula = document.getElementById('preview-formula-text');
+        if (previewFormula) previewFormula.innerText = promptText;
+
+        // 自動複製到剪貼簿 (Clip Buffer)
+        navigator.clipboard.writeText(promptText).then(() => {
+          const originalHTML = btn.innerHTML;
+          btn.innerHTML = `<i data-lucide="check"></i> 已複製並載入！`;
+          lucide.createIcons();
+          btn.classList.add('btn-success');
+          showToast('📋 已複製至剪貼簿並填入預覽框！');
+
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            lucide.createIcons();
+            btn.classList.remove('btn-success');
+          }, 2500);
+        }).catch(err => {
+          showToast('✨ 已載入【建立可完成】專屬指令 Prompt！');
+        });
+      }
+    });
+  });
+
+  const quickBuildBtns = document.querySelectorAll('.btn-quick-build-completed');
+  quickBuildBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.getAttribute('data-type');
+      const isSticker = type === 'sticker';
+      const uploader = isSticker ? '208徐玉蘭' : '208徐玉蘭&家族';
+      const promptText = completedPrompts[type];
+      const styleName = isSticker ? '✨ LINE問候貼圖16宮格 (建立可完成)' : '✨ 暑假AI伴我遊拼貼海報 (建立可完成)';
+
+      // 在 Canvas 畫出並生成圖像
+      selectedStyle = isSticker ? 'line_sticker_16' : 'travel_poster_collage';
+      applyStyleFilter(selectedStyle);
+
+      setTimeout(() => {
+        const dataUrl = canvas.toDataURL('image/png');
+        const newArt = {
+          id: 'completed-' + Date.now(),
+          uploader: uploader,
+          prompt: promptText,
+          imageUrl: dataUrl,
+          styleName: styleName,
+          timestamp: '剛剛'
+        };
+
+        saveArtwork(newArt);
+        showToast('🎉 已成功【建立可完成】作品！已同步發布至班級互動照片牆！');
+
+        // 自動切換到照片牆 Tab
+        const wallTabBtn = document.querySelector('[data-tab="wall"]');
+        if (wallTabBtn) wallTabBtn.click();
+      }, 200);
+    });
+  });
 
   /* ==========================================================================
      9. Initialization & Load

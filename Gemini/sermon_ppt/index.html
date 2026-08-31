@@ -646,6 +646,145 @@
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
         }
 
+        /* ☀️ 淺色模式高對比與視覺清晰度專屬優化 */
+        [data-theme="light"] h1 {
+            background: linear-gradient(135deg, #0f172a 30%, #334155 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        [data-theme="light"] .subtitle {
+            color: #475569;
+            font-weight: 500;
+        }
+
+        [data-theme="light"] .tabs-header {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        [data-theme="light"] .tab-btn {
+            color: #475569;
+        }
+
+        [data-theme="light"] .tab-btn.active {
+            background: var(--primary-glow);
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+        }
+
+        [data-theme="light"] .hymns-table-wrapper {
+            background: #ffffff;
+            border-color: #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="light"] .hymns-table th {
+            background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+            color: #1e1b4b;
+            border-bottom: 1px solid #c7d2fe;
+            font-weight: 700;
+        }
+
+        [data-theme="light"] .hymns-table td {
+            color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        [data-theme="light"] .hymns-table tr:hover td {
+            color: #0f172a;
+            background: #f8fafc;
+        }
+
+        /* 淺色模式表格連結按鈕高對比配色 */
+        [data-theme="light"] .btn-link-db {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            font-weight: 700;
+        }
+
+        [data-theme="light"] .btn-link-db:hover {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+
+        [data-theme="light"] .btn-link-gd {
+            background: #fffbeb;
+            color: #b45309;
+            border: 1px solid #fde68a;
+            font-weight: 700;
+        }
+
+        [data-theme="light"] .btn-link-gd:hover {
+            background: #d97706;
+            color: #ffffff;
+            border-color: #d97706;
+        }
+
+        [data-theme="light"] .btn-link-yt {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            font-weight: 700;
+        }
+
+        [data-theme="light"] .btn-link-yt:hover {
+            background: #dc2626;
+            color: #ffffff;
+            border-color: #dc2626;
+        }
+
+        /* 淺色模式類別管理按鈕 */
+        [data-theme="light"] #hymns-btn-manage-categories {
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="light"] #hymns-btn-manage-categories:hover {
+            background: #f1f5f9 !important;
+            border-color: #94a3b8 !important;
+        }
+
+        /* 次要控制按鈕 (上一首/下一首) */
+        .btn-sub-action {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 10px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .btn-sub-action:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+
+        [data-theme="light"] .btn-sub-action {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="light"] .btn-sub-action:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #020617;
+        }
+
         .yt-player-box {
             width: 100%;
             border-radius: 16px;
@@ -934,10 +1073,10 @@
                                 <span id="hymns-search-text">🔍 查詢詩歌連結</span>
                             </button>
                             <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-                                <button class="btn-action" id="hymns-btn-prev" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--panel-border);">
+                                <button class="btn-sub-action" id="hymns-btn-prev">
                                     ⬆ 上一首
                                 </button>
-                                <button class="btn-action" id="hymns-btn-next" style="flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--panel-border);">
+                                <button class="btn-sub-action" id="hymns-btn-next">
                                     ⬇ 下一首
                                 </button>
                             </div>
@@ -966,7 +1105,7 @@
                                 <label for="audio-select-version" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">有聲播放譯本</label>
                                 <select id="audio-select-version" class="select-input">
                                     <option value="Taiwanese" selected>🎤 台語有聲聖經</option>
-                                    <option value="unvdavid">🎤 和合本（閻大衛）有聲聖經</option>
+                                    <option value="unv1">🎤 和合本有聲聖經</option>
                                     <option value="tcv">🎤 現代中文有聲聖經</option>
                                     <option value="rcuv">🎤 和合本2010 (YouTube 播放)</option>
                                 </select>
@@ -2567,8 +2706,7 @@
                     leadNum = (chapNum < 10) ? "00" : "0";
                 }
                 const suffix = (verPath === "tcv") ? "C" : "";
-                const baseUrl = (verPath === "unvdavid") ? "https://cb.fhl.net/stream" : "https://media.fhl.net";
-                const audioUrl = `${baseUrl}/${verPath}/${bookIdx1}${suffix}/${bookIdx1}_${leadNum}${chapNum}.mp3`;
+                const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx1}${suffix}/${bookIdx1}_${leadNum}${chapNum}.mp3`;
                 
                 audioHtmlPlayer.src = audioUrl;
                 audioHtmlPlayer.load();
@@ -2768,8 +2906,7 @@
                     leadNum = (chapNum < 10) ? "00" : "0";
                 }
                 const suffix = (verPath === "tcv") ? "C" : "";
-                const baseUrl = (verPath === "unvdavid") ? "https://cb.fhl.net/stream" : "https://media.fhl.net";
-                const audioUrl = `${baseUrl}/${verPath}/${bookIdx1}${suffix}/${bookIdx1}_${leadNum}${chapNum}.mp3`;
+                const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx1}${suffix}/${bookIdx1}_${leadNum}${chapNum}.mp3`;
                 
                 audioHtmlPlayer.src = audioUrl;
                 audioHtmlPlayer.load();
@@ -2998,7 +3135,7 @@
                 const ver = selectVer.value;
                 if (ver === "Taiwanese") {
                     selectText.value = "bklcl";
-                } else if (ver === "unvdavid" || ver === "unv1") {
+                } else if (ver === "unv1") {
                     selectText.value = "unv";
                 } else if (ver === "tcv") {
                     selectText.value = "tcv2019";
@@ -3087,8 +3224,7 @@
                     leadNum = (chapNum < 10) ? "00" : "0";
                 }
                 const suffix = (verPath === "tcv") ? "C" : "";
-                const baseUrl = (verPath === "unvdavid") ? "https://cb.fhl.net/stream" : "https://media.fhl.net";
-                const audioUrl = `${baseUrl}/${verPath}/${bookIdx}${suffix}/${bookIdx}_${leadNum}${chapNum}.mp3`;
+                const audioUrl = `https://media.fhl.net/${verPath}/${bookIdx}${suffix}/${bookIdx}_${leadNum}${chapNum}.mp3`;
 
                 const isPlaying = !audioHtmlPlayer.paused;
                 audioHtmlPlayer.src = audioUrl;
