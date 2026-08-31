@@ -2037,12 +2037,17 @@
             if (saved) {
                 try { list = JSON.parse(saved); } catch(e) {}
             }
+            // 剔除任何不應出現的測試項目（如「輕柔的音樂」）
+            list = list.filter(c => c && c.tag !== "輕柔的音樂" && c.name !== "輕柔的音樂");
+
             // 確保「新聖詩」與「啟應文」始終固定位於最頂端
             REQUIRED_HYMN_CATEGORIES.forEach(req => {
                 if (!list.some(c => c.tag === req.tag)) {
                     list.unshift(req);
                 }
             });
+            // 即時同步乾淨的 list 回 localStorage，徹底淨化舊紀錄
+            localStorage.setItem('hymns-custom-categories-v2', JSON.stringify(list));
             return list;
         }
 
