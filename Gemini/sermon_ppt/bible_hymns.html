@@ -959,12 +959,10 @@
     <div class="container">
         <!-- 主題外觀切換器 -->
         <div class="theme-switcher">
-        <a href="./index.html" class="theme-btn" style="text-decoration:none; border-right:1px solid var(--panel-border); padding-right:0.6rem; color:var(--text-main); font-weight:600;">🛠️ 主日排版助手 ➔</a>
-        <a href="./bible_hymns.html" class="theme-btn" style="text-decoration:none; border-right:1px solid var(--panel-border); padding-right:0.6rem; color:var(--text-main); font-weight:600;">📖 聖經與聖詩專用頁 ➔</a>
-            <button class="theme-btn" data-theme-val="auto" onclick="setAppTheme('auto')">🌓 自動</button>
-            <button class="theme-btn" data-theme-val="light" onclick="setAppTheme('light')">☀️ 淺色</button>
-            <button class="theme-btn" data-theme-val="dark" onclick="setAppTheme('dark')">🌙 深色</button>
-        </div>
+        <button class="theme-btn" id="theme-auto">🌓 自動</button>
+        <button class="theme-btn" id="theme-light">☀️ 淺色</button>
+        <button class="theme-btn" id="theme-dark">🌙 深色</button>
+    </div>
 
         <header>
             <h1>南門教會 聖經與聖詩啟應文</h1>
@@ -1034,9 +1032,7 @@
                     <div class="tab-content active" id="input-hymns">
                         <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center;">
                             <span>🔍 聖詩與啟應文查詢</span>
-                            <button id="hymns-btn-manage-categories" style="background:rgba(255,255,255,0.08); border:1px solid var(--panel-border); color:var(--text-main); padding:0.25rem 0.6rem; border-radius:8px; font-size:0.78rem; cursor:pointer; font-weight:600; transition:all 0.2s ease;">
-                                ⚙️ 增刪類別
-                            </button>
+                            
                         </div>
                         <div class="bible-input-group" style="height: auto;">
                             <div class="input-item">
