@@ -2187,16 +2187,18 @@
             const btnAddTag = document.getElementById('btn-add-category-tag');
             const btnResetTag = document.getElementById('btn-reset-categories');
 
-            btnManage.addEventListener('click', () => {
-                document.getElementById('msg-category-status').innerHTML = '';
-                renderCategoryManagerList();
-                modal.style.display = 'flex';
-            });
+            if (btnManage) {
+                btnManage.addEventListener('click', () => {
+                    if (document.getElementById('msg-category-status')) document.getElementById('msg-category-status').innerHTML = '';
+                    renderCategoryManagerList();
+                    if (modal) modal.style.display = 'flex';
+                });
+            }
 
-            btnCloseModal.addEventListener('click', () => modal.style.display = 'none');
-            btnSaveModal.addEventListener('click', () => modal.style.display = 'none');
-            btnAddTag.addEventListener('click', verifyAndAddCategory);
-            btnResetTag.addEventListener('click', resetCategoryTags);
+            if (btnCloseModal && modal) btnCloseModal.addEventListener('click', () => modal.style.display = 'none');
+            if (btnSaveModal && modal) btnSaveModal.addEventListener('click', () => modal.style.display = 'none');
+            if (btnAddTag) btnAddTag.addEventListener('click', verifyAndAddCategory);
+            if (btnResetTag) btnResetTag.addEventListener('click', resetCategoryTags);
             
             selectTag.addEventListener('change', loadHymnSublist);
             selectSub.addEventListener('change', onSublistSelectChange);
