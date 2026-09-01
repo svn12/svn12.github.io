@@ -2298,7 +2298,8 @@
                     list.push(data[k][0]);
                 }
                 list.shift(); // 移除首列標頭
-                list.sort();
+                // 保留 Google 試算表原始順序，不進行字母重排
+                // list.sort();
                 
                 list.forEach(rawItem => {
                     if (rawItem !== null && rawItem !== undefined) {
