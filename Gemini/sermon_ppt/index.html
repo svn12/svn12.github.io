@@ -1501,6 +1501,23 @@
                     target.isContentEditable
                 );
                 if (!isInputElement) {
+                    if (e.key === "ArrowUp" || e.key === "Up") {
+                        const hymnsTab = document.getElementById('tab-hymns');
+                        if (hymnsTab && hymnsTab.style.display !== 'none') {
+                            e.preventDefault();
+                            onPrevHymnClick();
+                            return;
+                        }
+                    }
+                    if (e.key === "ArrowDown" || e.key === "Down") {
+                        const hymnsTab = document.getElementById('tab-hymns');
+                        if (hymnsTab && hymnsTab.style.display !== 'none') {
+                            e.preventDefault();
+                            onNextHymnClick();
+                            return;
+                        }
+                    }
+
                     e.preventDefault();
                     let handled = false;
                     if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
@@ -2361,41 +2378,64 @@
                     loadYouTubeVideo(ytField);
                 }
                 
-                let html = `<table class="hymns-table"><thead><tr>`;
-                headers.forEach(h => {
-                    html += `<th>${h}</th>`;
-                });
-                html += `</tr></thead><tbody>`;
-                
+                let targetRow = null;
                 for (let row of data) {
-                    if (String(row[headers[0]] || '').indexOf(findString) >= 0) {
-                        html += `<tr>`;
-                        headers.forEach(h => {
-                            const val = row[h] || '';
-                            if (h === headers[0]) {
-                                html += `<td><strong>${val}</strong></td>`;
-                            } else if (/you|http/gi.test(val)) {
-                                let btnClass = 'btn-link-db';
-                                let btnText = '投影片';
-                                if (h.includes('Drive') || h.includes('雲端')) {
-                                    btnClass = 'btn-link-gd';
-                                    btnText = '雲端簡報';
-                                } else if (h === 'YT' || h === '歌曲伴奏影音') {
-                                    btnClass = 'btn-link-yt';
-                                    btnText = '伴奏影片';
-                                } else if (h === '精簡') {
-                                    btnText = '精簡 PDF';
-                                }
-                                html += `<td><a class="hymns-link-btn ${btnClass}" href="${val}" target="_blank">🔗 ${btnText}</a></td>`;
-                            } else {
-                                html += `<td>${val}</td>`;
-                            }
-                        });
-                        html += `</tr>`;
+                    const firstVal = String(row[headers[0]] || '').trim();
+                    if (firstVal === findString) {
+                        targetRow = row;
+                        break;
                     }
                 }
-                html += `</tbody></table>`;
-                tableContainer.innerHTML = html;
+                if (!targetRow) {
+                    for (let row of data) {
+                        const firstVal = String(row[headers[0]] || '').trim();
+                        if (firstVal.indexOf(findString) >= 0) {
+                            targetRow = row;
+                            break;
+                        }
+                    }
+                }
+                if (!targetRow && data.length > 0) {
+                    targetRow = data[0];
+                }
+
+                if (targetRow) {
+                    const ytField = targetRow.YT || targetRow.歌曲伴奏影音 || targetRow[headers[2]] || '';
+                    if (ytField) {
+                        loadYouTubeVideo(ytField);
+                    }
+                    
+                    let html = `<table class="hymns-table"><thead><tr>`;
+                    headers.forEach(h => { html += `<th>${cleanHtml(h)}</th>`; });
+                    html += `</tr></thead><tbody><tr>`;
+                    headers.forEach(h => {
+                        const val = targetRow[h] || '';
+                        const strVal = String(val);
+                        if (h === headers[0]) {
+                            html += `<td><strong>${cleanHtml(strVal)}</strong></td>`;
+                        } else if (/you|http/gi.test(strVal)) {
+                            let btnClass = 'btn-link-db';
+                            let btnText = '投影片';
+                            if (h.includes('Drive') || h.includes('雲端')) {
+                                btnClass = 'btn-link-gd';
+                                btnText = '雲端簡報';
+                            } else if (h === 'YT' || h === '歌曲伴奏影音') {
+                                btnClass = 'btn-link-yt';
+                                btnText = '伴奏影片';
+                            } else if (h === '精簡') {
+                                btnClass = 'btn-link-pdf';
+                                btnText = '精簡 PDF';
+                            }
+                            html += `<td><a class="hymns-link-btn ${btnClass}" href="${cleanHtml(strVal)}" target="_blank">🔗 ${btnText}</a></td>`;
+                        } else {
+                            html += `<td>${cleanHtml(strVal)}</td>`;
+                        }
+                    });
+                    html += `</tr></tbody></table>`;
+                    tableContainer.innerHTML = html;
+                } else {
+                    tableContainer.innerHTML = `<div style="padding:1rem; color:var(--text-sub);">無可呈現的單筆資料</div>`;
+                }
             } catch (err) {
                 console.error(err);
                 tableContainer.innerHTML = `<div style="padding:1rem; color:#ef4444;">查詢失敗：${err.message}</div>`;
