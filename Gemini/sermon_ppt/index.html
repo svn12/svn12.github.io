@@ -3560,13 +3560,13 @@
         function onAudioChapterEnded() {
             const selectTitle = document.getElementById('audio-select-title');
             const selectChap = document.getElementById('audio-select-chap');
+            const selectVer = document.getElementById('audio-select-version');
+            
             if (selectTitle && selectChap) {
                 const bookName = BIBLE_66_BOOKS[selectTitle.selectedIndex];
                 const chapNum = parseInt(selectChap.value, 10);
                 markChapterAsRead(bookName, chapNum);
             }
-            const selectChap = document.getElementById('audio-select-chap');
-            const selectVer = document.getElementById('audio-select-version');
             
             if (selectChap.selectedIndex < selectChap.options.length - 1) {
                 // 跳到下一章
