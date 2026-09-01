@@ -3240,7 +3240,7 @@
             }
 
             selectTitle.addEventListener('change', populateAudioChapters);
-            selectChap.addEventListener('change', onAudioSettingChange);
+            selectChap.addEventListener('change', () => { onAudioSettingChange(); updateChapterSelectStyles(); });
             selectVer.addEventListener('change', () => {
                 const ver = selectVer.value;
                 if (ver === "Taiwanese") {
@@ -3342,7 +3342,8 @@
                 }
             });
 
-            const currentChap = selectChap.value;
+            const selectedOpt = selectChap.options[selectChap.selectedIndex];
+            const currentChap = selectedOpt ? selectedOpt.value : selectChap.value;
             const currentKey = bookName + '_' + currentChap;
             const btnUnread = document.getElementById('btn-mark-unread');
             if (btnUnread) {
@@ -3395,6 +3396,7 @@
 
             // 更新播放標題
             document.getElementById('audio-playing-title').textContent = `${BIBLE_66_BOOKS[selectTitle.selectedIndex]} 第 ${chapNum} 章`;
+            updateChapterSelectStyles();
 
             if (verPath === "rcuv") {
                 // 顯示 YouTube 播放器，隱藏 HTML5 播放器
