@@ -1091,7 +1091,17 @@
                             </div>
 
                             <div class="input-item">
-                                <label for="audio-select-chap" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">章節選擇</label>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+                                    <label for="audio-select-chap" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">章節選擇</label>
+                                    <div style="display:flex; gap:0.4rem;">
+                                        <button type="button" onclick="markCurrentChapterAsUnread()" style="background:rgba(239, 68, 68, 0.12); border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; font-size:0.75rem; padding:0.15rem 0.45rem; border-radius:6px; cursor:pointer; font-weight:600;">
+                                            ↺ 標記此章未讀
+                                        </button>
+                                        <button type="button" onclick="clearAllReadChaptersHistory()" style="background:none; border:none; color:var(--text-sub); font-size:0.72rem; cursor:pointer; text-decoration:underline;">
+                                            🗑️ 清除全部已讀
+                                        </button>
+                                    </div>
+                                </div>
                                 <select id="audio-select-chap" class="select-input">
                                     <!-- 動態填充 -->
                                 </select>
