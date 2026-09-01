@@ -3272,6 +3272,23 @@
             }
         }
 
+        function markCurrentChapterAsUnread() {
+            const selectTitle = document.getElementById('audio-select-title');
+            const selectChap = document.getElementById('audio-select-chap');
+            if (!selectTitle || !selectChap) return;
+            
+            const bookName = BIBLE_66_BOOKS[selectTitle.selectedIndex];
+            const chapNum = selectChap.value;
+            const key = bookName + '_' + chapNum;
+            
+            let list = getReadChapters();
+            if (list.includes(key)) {
+                list = list.filter(k => k !== key);
+                localStorage.setItem('bible-read-chapters-v1', JSON.stringify(list));
+                updateChapterSelectStyles();
+            }
+        }
+
         function clearAllReadChaptersHistory() {
             if (confirm("確定要清除所有有聲聖經的已讀紀錄，將全部章節改為未讀嗎？")) {
                 localStorage.removeItem('bible-read-chapters-v1');
