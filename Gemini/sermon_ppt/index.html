@@ -3298,7 +3298,7 @@
                     opt.style.backgroundColor = '#fef08a';
                     opt.style.color = '#854d0e';
                     opt.style.fontWeight = 'bold';
-                    opt.textContent = '黃色 | 第 ' + i + ' 章 (已讀)';
+                    opt.textContent = '第 ' + i + ' 章 (已讀)';
                 } else {
                     opt.style.backgroundColor = '';
                     opt.style.color = '';
@@ -3326,7 +3326,7 @@
                     opt.style.backgroundColor = '#fef08a';
                     opt.style.color = '#854d0e';
                     opt.style.fontWeight = 'bold';
-                    opt.textContent = '黃色 | 第 ' + i + ' 章 (已讀)';
+                    opt.textContent = '第 ' + i + ' 章 (已讀)';
                 } else {
                     opt.textContent = '第 ' + i + ' 章';
                 }
@@ -3349,7 +3349,6 @@
 
             // 更新播放標題
             document.getElementById('audio-playing-title').textContent = `${BIBLE_66_BOOKS[selectTitle.selectedIndex]} 第 ${chapNum} 章`;
-            markChapterAsRead(BIBLE_66_BOOKS[selectTitle.selectedIndex], chapNum);
 
             if (verPath === "rcuv") {
                 // 顯示 YouTube 播放器，隱藏 HTML5 播放器
@@ -3560,6 +3559,12 @@
 
         function onAudioChapterEnded() {
             const selectTitle = document.getElementById('audio-select-title');
+            const selectChap = document.getElementById('audio-select-chap');
+            if (selectTitle && selectChap) {
+                const bookName = BIBLE_66_BOOKS[selectTitle.selectedIndex];
+                const chapNum = parseInt(selectChap.value, 10);
+                markChapterAsRead(bookName, chapNum);
+            }
             const selectChap = document.getElementById('audio-select-chap');
             const selectVer = document.getElementById('audio-select-version');
             
