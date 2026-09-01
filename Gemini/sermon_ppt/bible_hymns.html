@@ -3268,6 +3268,50 @@
             populateAudioChapters();
         }
 
+        function getReadChapters() {
+            try {
+                return JSON.parse(localStorage.getItem('bible-read-chapters-v1') || '[]');
+            } catch(e) {
+                return [];
+            }
+        }
+
+        function markChapterAsRead(bookName, chapNum) {
+            if (!bookName || !chapNum) return;
+            const key = bookName + '_' + chapNum;
+            const list = getReadChapters();
+            if (!list.includes(key)) {
+                list.push(key);
+                localStorage.setItem('bible-read-chapters-v1', JSON.stringify(list));
+            }
+            updateChapterSelectStyles();
+        }
+
+        function updateChapterSelectStyles() {
+            const selectTitle = document.getElementById('audio-select-title');
+            const selectChap = document.getElementById('audio-select-chap');
+            if (!selectTitle || !selectChap) return;
+            
+            const bookName = BIBLE_66_BOOKS[selectTitle.selectedIndex];
+            const readList = getReadChapters();
+            
+            Array.from(selectChap.options).forEach(opt => {
+                const i = opt.value;
+                const key = bookName + '_' + i;
+                if (readList.includes(key)) {
+                    opt.style.backgroundColor = '#fef08a';
+                    opt.style.color = '#854d0e';
+                    opt.style.fontWeight = 'bold';
+                    opt.textContent = '黃色 | 第 ' + i + ' 章 (已讀)';
+                } else {
+                    opt.style.backgroundColor = '';
+                    opt.style.color = '';
+                    opt.style.fontWeight = '';
+                    opt.textContent = '第 ' + i + ' 章';
+                }
+            });
+        }
+
         function populateAudioChapters() {
             const selectTitle = document.getElementById('audio-select-title');
             const selectChap = document.getElementById('audio-select-chap');
@@ -3275,11 +3319,21 @@
             
             selectChap.innerHTML = '';
             const chapCount = BIBLE_66_CHAPS[idx];
+            const bookName = BIBLE_66_BOOKS[idx];
+            const readList = getReadChapters();
             
             for (let i = 1; i <= chapCount; i++) {
                 const opt = document.createElement('option');
                 opt.value = i;
-                opt.textContent = `第 ${i} 章`;
+                const key = bookName + '_' + i;
+                if (readList.includes(key)) {
+                    opt.style.backgroundColor = '#fef08a';
+                    opt.style.color = '#854d0e';
+                    opt.style.fontWeight = 'bold';
+                    opt.textContent = '黃色 | 第 ' + i + ' 章 (已讀)';
+                } else {
+                    opt.textContent = '第 ' + i + ' 章';
+                }
                 selectChap.appendChild(opt);
             }
 
@@ -3299,6 +3353,7 @@
 
             // 更新播放標題
             document.getElementById('audio-playing-title').textContent = `${BIBLE_66_BOOKS[selectTitle.selectedIndex]} 第 ${chapNum} 章`;
+            markChapterAsRead(BIBLE_66_BOOKS[selectTitle.selectedIndex], chapNum);
 
             if (verPath === "rcuv") {
                 // 顯示 YouTube 播放器，隱藏 HTML5 播放器
