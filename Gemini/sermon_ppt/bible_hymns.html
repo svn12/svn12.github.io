@@ -3276,6 +3276,14 @@
             }
         }
 
+        function clearAllReadChaptersHistory() {
+            if (confirm("確定要清除所有有聲聖經的已讀紀錄，將全部章節改為未讀嗎？")) {
+                localStorage.removeItem('bible-read-chapters-v1');
+                updateChapterSelectStyles();
+                alert("已成功重置所有已讀紀錄！");
+            }
+        }
+
         function markChapterAsRead(bookName, chapNum) {
             if (!bookName || !chapNum) return;
             const key = bookName + '_' + chapNum;
