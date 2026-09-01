@@ -2185,6 +2185,7 @@
                 tagInput.value = '';
                 renderCategoryManagerList();
                 populateHymnCategorySelect();
+                document.getElementById('hymns-select-tag').value = tag;
                 loadHymnSublist();
             } catch (err) {
                 console.error(err);
@@ -2278,11 +2279,16 @@
                 list.shift(); // 移除首列標頭
                 list.sort();
                 
-                list.forEach(item => {
-                    const opt = document.createElement('option');
-                    opt.value = item;
-                    opt.textContent = item.substring(0, 32);
-                    selectSub.appendChild(opt);
+                list.forEach(rawItem => {
+                    if (rawItem !== null && rawItem !== undefined) {
+                        const item = String(rawItem).trim();
+                        if (item.length > 0) {
+                            const opt = document.createElement('option');
+                            opt.value = item;
+                            opt.textContent = item.length > 32 ? item.substring(0, 32) + '...' : item;
+                            selectSub.appendChild(opt);
+                        }
+                    }
                 });
                 
                 setupHymnsAutocomplete(document.getElementById('hymns-input-query'), list);
@@ -2362,7 +2368,7 @@
                 html += `</tr></thead><tbody>`;
                 
                 for (let row of data) {
-                    if (row[headers[0]].indexOf(findString) >= 0) {
+                    if (String(row[headers[0]] || '').indexOf(findString) >= 0) {
                         html += `<tr>`;
                         headers.forEach(h => {
                             const val = row[h] || '';
