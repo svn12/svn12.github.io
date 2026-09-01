@@ -3485,9 +3485,20 @@
                 const mainData = await getJsonApi(urlMain, {});
                 const tghgData = await getJsonApi(urlTghg, {});
 
-                let html = `<table><tbody>`;
                 const recordsMain = mainData.record || [];
                 const recordsTghg = tghgData.record || [];
+
+                if (recordsMain.length === 0) {
+                    textBox.innerHTML = `
+                        <div style="text-align:center; padding:3rem 1.5rem; color:var(--text-sub); background:rgba(30, 41, 59, 0.4); border-radius:12px; border:1px dashed var(--card-border); margin:1rem 0;">
+                            <div style="font-size:1.6rem; margin-bottom:0.5rem;">⚠️</div>
+                            <div style="font-weight:600; font-size:1rem; color:var(--text-main); margin-bottom:0.3rem;">此譯本目前未包含此章經文</div>
+                            <div style="font-size:0.85rem;">請切換至其它對照譯本（例如：和合本、巴克禮全羅/台漢本、ESV 等）</div>
+                        </div>`;
+                    return;
+                }
+
+                let html = `<table><tbody>`;
 
                 for (let i = 0; i < recordsMain.length; i++) {
                     const rMain = recordsMain[i];
