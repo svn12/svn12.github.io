@@ -1241,7 +1241,7 @@
                             <div id="hymns-table-container"></div>
                         </div>
                         <div class="yt-player-box" id="hymns-player-box">
-                            <div id="youtube-player"></div>
+                            <iframe id="youtube-player-iframe" src="https://www.youtube.com/embed/y990k6j4ErE?enablejsapi=1&autoplay=0" style="width:100%; height:100%; border:none; border-radius:12px;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                         </div>
                     </div>
 
@@ -2676,28 +2676,32 @@
         }
 
         function loadYouTubeVideo(url) {
-            const videoId = extractYoutubeId(url);
+            const videoId = extractYoutubeId(url) || 'y990k6j4ErE';
+            const playerBox = document.getElementById('hymns-player-box');
             
-            if (ytPlayer) {
-                try {
-                    ytPlayer.loadVideoById({ videoId: videoId });
-                } catch (e) {
-                    console.error(e);
+            if (window.YT && window.YT.Player) {
+                if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+                    try {
+                        ytPlayer.loadVideoById({ videoId: videoId });
+                        return;
+                    } catch (e) { console.error(e); }
+                } else {
+                    try {
+                        ytPlayer = new YT.Player("youtube-player", {
+                            height: "100%",
+                            width: "100%",
+                            videoId: videoId,
+                            playerVars: { autoplay: 0, loop: 1, playlist: videoId },
+                            events: { onStateChange: onPlayerStateChange }
+                        });
+                        return;
+                    } catch(e) { console.error(e); }
                 }
-            } else {
-                ytPlayer = new YT.Player("youtube-player", {
-                    height: "100%",
-                    width: "100%",
-                    videoId: videoId,
-                    playerVars: {
-                        autoplay: 0,
-                        loop: 1,
-                        playlist: videoId
-                    },
-                    events: {
-                        onStateChange: onPlayerStateChange
-                    }
-                });
+            }
+            
+            // 備援：若 YT API 未加載，直接插入全能無障礙 iframe，絕對不上黑屏
+            if (playerBox) {
+                playerBox.innerHTML = `<iframe id="youtube-player-iframe" src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=0" style="width:100%; height:100%; border:none; border-radius:12px;" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
             }
         }
 
