@@ -2427,24 +2427,32 @@
             try {
                 const data = await getJsonApi(RSheet2Json_APIV6, queryParams);
                 let list = [];
-                for (let k in data) {
-                    list.push(data[k][0]);
-                }
-                list.shift(); // 移除首列標頭
-                // 保留 Google 試算表原始順序，不進行字母重排
-                // list.sort();
+                let isFirstRow = true;
                 
-                list.forEach(rawItem => {
-                    if (rawItem !== null && rawItem !== undefined) {
-                        const item = String(rawItem).trim();
-                        if (item.length > 0) {
-                            const opt = document.createElement('option');
-                            opt.value = item;
-                            opt.textContent = item.length > 32 ? item.substring(0, 32) + '...' : item;
-                            selectSub.appendChild(opt);
+                for (let k in data) {
+                    if (isFirstRow) { isFirstRow = false; continue; } // 跳過標頭列
+                    const row = data[k];
+                    if (!row || row.length === 0) continue;
+                    
+                    const titleVal = String(row[0] || '').trim();
+                    let ytVal = '';
+                    for (let cell of row) {
+                        const cellStr = String(cell || '').trim();
+                        if (/youtu|http/gi.test(cellStr)) {
+                            ytVal = cellStr;
+                            break;
                         }
                     }
-                });
+                    
+                    if (titleVal.length > 0) {
+                        const opt = document.createElement('option');
+                        opt.value = titleVal;
+                        opt.textContent = titleVal.length > 32 ? titleVal.substring(0, 32) + '...' : titleVal;
+                        if (ytVal) opt.setAttribute('data-yt', ytVal);
+                        selectSub.appendChild(opt);
+                        list.push(titleVal);
+                    }
+                }
                 
                 setupHymnsAutocomplete(document.getElementById('hymns-input-query'), list);
                 
