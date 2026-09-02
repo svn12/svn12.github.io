@@ -2170,7 +2170,7 @@
             
             let html = '';
             categories.forEach(cat => {
-                const isRequired = cat.tag === "新聖詩" || cat.tag === "啟應文" || cat.tag === "南門靈修默想" || cat.tag === "南門靈修分享" || cat.required;
+                const isRequired = cat.tag === "新聖詩" || cat.tag === "啟應文" || cat.tag === "南門靈修分享" || cat.required;
                 html += `
                 <div style="display:flex; justify-content:space-between; align-items:center; background:var(--panel-bg); border:1px solid var(--panel-border); padding:0.4rem 0.7rem; border-radius:8px; font-size:0.85rem;">
                     <span>🏷️ <strong>${cleanHtml(cat.name || cat.tag)}</strong> <span style="font-size:0.75rem; color:var(--text-sub);">(${cleanHtml(cat.tag)})</span></span>
