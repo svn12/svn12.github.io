@@ -1530,10 +1530,19 @@
         const btnCopy = document.getElementById('btn-copy');
         const btnDownload = document.getElementById('btn-download');
 
-        document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
-        document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
-        document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
-        document.getElementById('tab-audio').addEventListener('click', () => switchTab('audio'));
+        if (document.getElementById('tab-lyrics')) document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
+        if (document.getElementById('tab-scripture')) document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
+        if (document.getElementById('tab-hymns')) document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
+        if (document.getElementById('tab-audio')) document.getElementById('tab-audio').addEventListener('click', () => switchTab('audio'));
+        if (document.getElementById('tab-devotion')) document.getElementById('tab-devotion').addEventListener('click', () => switchTab('devotion'));
+
+        // 通用 event delegation 雙重保障
+        document.querySelectorAll('.tabs-header .tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabTarget = this.getAttribute('data-tab') || this.id.replace('tab-', '');
+                if (tabTarget) switchTab(tabTarget);
+            });
+        });
 
                 function stopAllPlayback() {
             if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {

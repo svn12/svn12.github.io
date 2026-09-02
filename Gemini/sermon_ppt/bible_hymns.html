@@ -1614,6 +1614,17 @@
         const btnTabAudio = document.getElementById('tab-audio');
         if (btnTabAudio) btnTabAudio.addEventListener('click', () => switchTab('audio'));
 
+        const btnTabDevotion = document.getElementById('tab-devotion');
+        if (btnTabDevotion) btnTabDevotion.addEventListener('click', () => switchTab('devotion'));
+
+        // 通用 event delegation 雙重保障
+        document.querySelectorAll('.tabs-header .tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabTarget = this.getAttribute('data-tab') || this.id.replace('tab-', '');
+                if (tabTarget) switchTab(tabTarget);
+            });
+        });
+
                 function stopAllPlayback() {
             if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
                 try { ytPlayer.pauseVideo(); } catch(e) {}
