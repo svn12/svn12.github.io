@@ -939,6 +939,58 @@
             color: var(--text-sub);
             text-align: center;
         }
+    
+        /* 每日靈修卡片高對比主題樣式 */
+        .devotion-card {
+            background: rgba(30, 41, 59, 0.75) !important;
+            border: 1px solid var(--panel-border) !important;
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            text-decoration: none !important;
+        }
+        .devotion-card-title {
+            color: #f8fafc !important;
+            font-weight: 700 !important;
+            font-size: 1.05rem !important;
+        }
+        .devotion-card-desc {
+            color: #94a3b8 !important;
+            font-size: 0.83rem !important;
+            line-height: 1.4 !important;
+        }
+        .devotion-card-link {
+            color: #818cf8 !important;
+            font-weight: 600 !important;
+            font-size: 0.83rem !important;
+        }
+        .devotion-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent) !important;
+        }
+
+        /* 淺色模式 (Light Mode) 絕佳高對比調色 */
+        [data-theme="light"] .devotion-card {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+        }
+        [data-theme="light"] .devotion-card-title {
+            color: #0f172a !important;
+            font-weight: 800 !important;
+        }
+        [data-theme="light"] .devotion-card-desc {
+            color: #334155 !important;
+            font-weight: 500 !important;
+        }
+        [data-theme="light"] .devotion-card-link {
+            color: #1d4ed8 !important;
+            font-weight: 700 !important;
+        }
+    
     </style>
     <script>
         (function() {
@@ -1293,9 +1345,9 @@
                                 <!-- 翻頁控制 -->
                                 <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.03); padding:0.4rem 0.8rem; border-radius:8px; border:1px solid var(--panel-border); margin-bottom:0.5rem; flex-wrap:wrap; justify-content:center; z-index:5;">
                                     <button class="hymns-link-btn btn-link-db" id="scan-prev-page" style="padding:0.35rem 0.6rem;">◀ 上一頁</button>
-                                    <span style="font-size:0.8rem; color:var(--text-sub);">第</span>
+                                    <span class="devotion-card-desc">第</span>
                                     <input type="number" id="scan-page-input" class="number-input" style="width:60px;" value="1" min="1" max="1361">
-                                    <span style="font-size:0.8rem; color:var(--text-sub);">/ 1361 頁</span>
+                                    <span class="devotion-card-desc">/ 1361 頁</span>
                                     <button class="hymns-link-btn btn-link-db" id="scan-goto-page" style="padding:0.35rem 0.6rem;">前往</button>
                                     <button class="hymns-link-btn btn-link-db" id="scan-next-page" style="padding:0.35rem 0.6rem;">下一頁 ▶</button>
                                     
@@ -1316,9 +1368,9 @@
                                 <!-- 翻頁與手抄者控制 -->
                                 <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.03); padding:0.4rem 0.8rem; border-radius:8px; border:1px solid var(--panel-border); margin-bottom:0.5rem; flex-wrap:wrap; justify-content:center; z-index:5;">
                                     <button class="hymns-link-btn btn-link-db" id="hand-prev-page" style="padding:0.35rem 0.6rem;">◀ 上一頁</button>
-                                    <span style="font-size:0.8rem; color:var(--text-sub);">第</span>
+                                    <span class="devotion-card-desc">第</span>
                                     <input type="number" id="hand-page-input" class="number-input" style="width:60px;" value="1" min="1" max="1873">
-                                    <span style="font-size:0.8rem; color:var(--text-sub);">/ 1873 頁</span>
+                                    <span class="devotion-card-desc">/ 1873 頁</span>
                                     <button class="hymns-link-btn btn-link-db" id="hand-goto-page" style="padding:0.35rem 0.6rem;">前往</button>
                                     <button class="hymns-link-btn btn-link-db" id="hand-next-page" style="padding:0.35rem 0.6rem;">下一頁 ▶</button>
                                     
@@ -1648,13 +1700,13 @@
                     container.innerHTML = `
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-top:0.4rem;">
                             <div style="background:rgba(56, 189, 248, 0.08); border:1px solid rgba(56, 189, 248, 0.25); border-radius:12px; padding:0.7rem; text-align:center;">
-                                <div style="font-size:0.78rem; color:var(--text-sub);">今日天氣 (${todayTime})</div>
+                                <div class="devotion-card-desc">今日天氣 (${todayTime})</div>
                                 <div style="font-size:1rem; font-weight:700; color:var(--text-main); margin:0.25rem 0;">${getWeatherDesc(todayCode)}</div>
                                 <div style="font-size:0.82rem; color:var(--primary-color);">🌡️ ${todayMin}°C ~ ${todayMax}°C</div>
                                 <div style="font-size:0.75rem; color:var(--text-sub); margin-top:0.15rem;">💧 降雨率 ${todayPop}%</div>
                             </div>
                             <div style="background:rgba(129, 140, 248, 0.08); border:1px solid rgba(129, 140, 248, 0.25); border-radius:12px; padding:0.7rem; text-align:center;">
-                                <div style="font-size:0.78rem; color:var(--text-sub);">明日預報 (${tomorrowTime})</div>
+                                <div class="devotion-card-desc">明日預報 (${tomorrowTime})</div>
                                 <div style="font-size:1rem; font-weight:700; color:var(--text-main); margin:0.25rem 0;">${getWeatherDesc(tomorrowCode)}</div>
                                 <div style="font-size:0.82rem; color:#818cf8;">🌡️ ${tomorrowMin}°C ~ ${tomorrowMax}°C</div>
                                 <div style="font-size:0.75rem; color:var(--text-sub); margin-top:0.15rem;">💧 降雨率 ${tomorrowPop}%</div>
