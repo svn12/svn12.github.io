@@ -2525,11 +2525,15 @@
                 for (let k in data) {
                     if (isFirstRow) { isFirstRow = false; continue; } // 跳過標頭列
                     const row = data[k];
-                    if (!row || row.length === 0) continue;
+                    if (!row) continue;
                     
-                    const titleVal = String(row[0] || '').trim();
+                    // 雙重保險：相容 Array 與 Object 結構，使用 Object.values 拿取欄位內容
+                    const rowVals = Array.isArray(row) ? row : Object.values(row);
+                    if (rowVals.length === 0) continue;
+
+                    const titleVal = String(rowVals[0] || '').trim();
                     let ytVal = '';
-                    for (let cell of row) {
+                    for (let cell of rowVals) {
                         const cellStr = String(cell || '').trim();
                         if (/youtu|http/gi.test(cellStr)) {
                             ytVal = cellStr;
