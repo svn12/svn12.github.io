@@ -2408,7 +2408,46 @@
             await loadHymnSublist();
         }
 
-        async function loadHymnSublist() {
+        function getYtUrlFromRow(row, headers) {
+            if (!row) return '';
+            
+            // 1. 優先比對 Key 屬性名為 "YT" (忽略大小寫)
+            if (typeof row === 'object' && !Array.isArray(row)) {
+                for (let key in row) {
+                    if (key.trim().toUpperCase() === 'YT' && row[key]) {
+                        const val = String(row[key]).trim();
+                        if (val) return val;
+                    }
+                }
+                for (let key in row) {
+                    if ((key.toUpperCase().includes('YT') || key.includes('歌曲伴奏影音')) && row[key]) {
+                        const val = String(row[key]).trim();
+                        if (val) return val;
+                    }
+                }
+            }
+            
+            // 2. 若為 Array 結構，依據 headers 尋找標頭為 "YT" 的 Column Index
+            if (headers && Array.isArray(headers)) {
+                let ytIdx = headers.findIndex(h => String(h).trim().toUpperCase() === 'YT');
+                if (ytIdx !== -1 && row[ytIdx]) {
+                    const val = String(row[ytIdx]).trim();
+                    if (val) return val;
+                }
+            }
+            
+            // 3. 備援：搜尋專屬 youtube.com / youtu.be 連結
+            const rowVals = Array.isArray(row) ? row : Object.values(row);
+            for (let cell of rowVals) {
+                const str = String(cell || '').trim();
+                if (/youtu\.?be/gi.test(str)) {
+                    return str;
+                }
+            }
+            return '';
+        }
+
+        function loadHymnSublist() {
             const selectTag = document.getElementById('hymns-select-tag');
             const selectSub = document.getElementById('hymns-select-sub');
             const container = document.getElementById('hymns-table-container');
@@ -2429,24 +2468,21 @@
                 let list = [];
                 let isFirstRow = true;
                 
+                // 提取首列 Header 標頭
+                const headers = data['0'] || data[0] || [];
+                const headerList = Array.isArray(headers) ? headers : Object.values(headers);
+
                 for (let k in data) {
                     if (isFirstRow) { isFirstRow = false; continue; } // 跳過標頭列
                     const row = data[k];
                     if (!row) continue;
                     
-                    // 雙重保險：相容 Array 與 Object 結構，使用 Object.values 拿取欄位內容
                     const rowVals = Array.isArray(row) ? row : Object.values(row);
                     if (rowVals.length === 0) continue;
 
                     const titleVal = String(rowVals[0] || '').trim();
-                    let ytVal = '';
-                    for (let cell of rowVals) {
-                        const cellStr = String(cell || '').trim();
-                        if (/youtu|http/gi.test(cellStr)) {
-                            ytVal = cellStr;
-                            break;
-                        }
-                    }
+                    // 精確「認YT」標頭與 YT 欄位值
+                    const ytVal = getYtUrlFromRow(row, headerList);
                     
                     if (titleVal.length > 0) {
                         const opt = document.createElement('option');
@@ -2554,8 +2590,8 @@
                     }
                 }
 
-                // 自動播放 YouTube
-                const ytField = targetRow.YT || targetRow.歌曲伴奏影音 || targetRow[headers[2]] || '';
+                // 精確「認YT」標頭欄位播放 YouTube
+                const ytField = getYtUrlFromRow(targetRow, headers);
                 if (ytField) {
                     loadYouTubeVideo(ytField);
                 }
