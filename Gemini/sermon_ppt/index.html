@@ -2010,12 +2010,11 @@
             if (currentTab === 'lyrics') {
                 const rawText = textarea.value.trim();
                 const firstLine = rawText.split('\n')[0].trim();
-                if (firstLine && firstLine.length < 30) {
-                    title = `${firstLine}_排版後`;
-                } else {
-                    title = '聖歌隊歌詞_排版後';
-                }
-            } else {
+                // 確保【新聖詩】、【啟應文】、【南門靈修分享】100% 依序固定位於最頂端 Top 3
+                list = list.filter(c => c && !REQUIRED_HYMN_CATEGORIES.some(r => r.tag === c.tag));
+                list = [...REQUIRED_HYMN_CATEGORIES, ...list];
+                localStorage.setItem('hymns-custom-categories-v2', JSON.stringify(list));
+                return list; } else {
                 const qstr = document.getElementById('bible-qstr').value.trim();
                 if (qstr) {
                     title = `經文_${qstr}_排版後`;
@@ -2108,12 +2107,14 @@
 
         const REQUIRED_HYMN_CATEGORIES = [
             { tag: "新聖詩", name: "新聖詩 (001-650)", required: true },
-            { tag: "啟應文", name: "啟應文 (01-66)", required: true }
+            { tag: "啟應文", name: "啟應文 (01-66)", required: true },
+            { tag: "南門靈修分享", name: "南門靈修分享", required: true }
         ];
 
         const DEFAULT_HYMN_CATEGORIES = [
             { tag: "新聖詩", name: "新聖詩 (001-650)", required: true },
             { tag: "啟應文", name: "啟應文 (01-66)", required: true },
+            { tag: "南門靈修分享", name: "南門靈修分享", required: true },
             { tag: "List", name: "聖歌隊雅音" },
             { tag: "聖歌隊2", name: "聖歌隊自動" }
         ];
