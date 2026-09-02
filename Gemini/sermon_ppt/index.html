@@ -1241,7 +1241,23 @@
                             <div id="hymns-table-container"></div>
                         </div>
                         <div class="yt-player-box" id="hymns-player-box">
-                            <iframe id="youtube-player-iframe" src="https://www.youtube.com/embed/y990k6j4ErE?enablejsapi=1&autoplay=0" style="width:100%; height:100%; border:none; border-radius:12px;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                            <div id="youtube-player"></div>
+                        </div>
+                    </div>
+
+                    
+                    <!-- 每日靈修預覽與播放區 -->
+                    <div id="wrapper-devotion-preview" style="display: none;">
+                        <div class="audio-player-box" style="margin-bottom:0.8rem;">
+                            <div class="audio-player-header" style="display:flex; justify-content:space-between; align-items:center;">
+                                <span id="devotion-preview-title" style="font-weight:700; color:var(--text-main);">🌱 每日新眼光 靈修分享</span>
+                                <a id="devotion-external-link" href="https://ppt.cc/fMLfGx" target="_blank" style="font-size:0.78rem; color:var(--accent); text-decoration:underline;">開啟原本網站 ↗</a>
+                            </div>
+                        </div>
+
+                        <!-- 靈修內容 內嵌檢視器 -->
+                        <div id="devotion-viewer-container" style="width:100%; height:520px; border-radius:12px; overflow:hidden; border:1px solid var(--panel-border); background:rgba(0,0,0,0.3); position:relative;">
+                            <iframe id="devotion-iframe" src="https://www.pct.org.tw/dailyneweyes.aspx" style="width:100%; height:100%; border:none; background:white;" allow="autoplay; encrypted-media"></iframe>
                         </div>
                     </div>
 
@@ -1530,19 +1546,10 @@
         const btnCopy = document.getElementById('btn-copy');
         const btnDownload = document.getElementById('btn-download');
 
-        if (document.getElementById('tab-lyrics')) document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
-        if (document.getElementById('tab-scripture')) document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
-        if (document.getElementById('tab-hymns')) document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
-        if (document.getElementById('tab-audio')) document.getElementById('tab-audio').addEventListener('click', () => switchTab('audio'));
-        if (document.getElementById('tab-devotion')) document.getElementById('tab-devotion').addEventListener('click', () => switchTab('devotion'));
-
-        // 通用 event delegation 雙重保障
-        document.querySelectorAll('.tabs-header .tab-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const tabTarget = this.getAttribute('data-tab') || this.id.replace('tab-', '');
-                if (tabTarget) switchTab(tabTarget);
-            });
-        });
+        document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
+        document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
+        document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
+        document.getElementById('tab-audio').addEventListener('click', () => switchTab('audio'));
 
                 function stopAllPlayback() {
             if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
@@ -1720,6 +1727,57 @@
             toggleInfoBlock.addEventListener('change', () => {
                 infoBlockContainer.style.display = toggleInfoBlock.checked ? 'block' : 'none';
             });
+        }
+    
+        
+        let devotionInitialized = false;
+        function initDevotionTab() {
+            if (devotionInitialized) return;
+            devotionInitialized = true;
+
+            const btnNeweyes = document.getElementById('btn-devotion-neweyes');
+            const btnStreams = document.getElementById('btn-devotion-streams');
+            const btnLoad = document.getElementById('btn-devotion-load');
+            const btnOpenExt = document.getElementById('btn-devotion-open-external');
+            const urlInput = document.getElementById('devotion-url-input');
+            const previewTitle = document.getElementById('devotion-preview-title');
+            const externalLink = document.getElementById('devotion-external-link');
+            const iframe = document.getElementById('devotion-iframe');
+
+            function loadDevotionUrl(url, title, extUrl) {
+                if (urlInput) urlInput.value = url;
+                if (previewTitle) previewTitle.textContent = title || '每日靈修';
+                if (externalLink) externalLink.href = extUrl || url;
+                if (iframe) iframe.src = url;
+            }
+
+            if (btnNeweyes) {
+                btnNeweyes.addEventListener('click', () => {
+                    loadDevotionUrl('https://www.pct.org.tw/dailyneweyes.aspx', '🌱 每日新眼光 靈修分享', 'https://ppt.cc/fMLfGx');
+                });
+            }
+
+            if (btnStreams) {
+                btnStreams.addEventListener('click', () => {
+                    loadDevotionUrl('https://www.glorypress.com/devotional/FaithAndLifeOneYearBook.asp?bid=1', '💧 荒漠甘泉 每日靈修', 'https://ppt.cc/fjZFux');
+                });
+            }
+
+            if (btnLoad) {
+                btnLoad.addEventListener('click', () => {
+                    const val = urlInput ? urlInput.value.trim() : '';
+                    if (val) {
+                        loadDevotionUrl(val, '📖 每日靈修分享', val);
+                    }
+                });
+            }
+
+            if (btnOpenExt) {
+                btnOpenExt.addEventListener('click', () => {
+                    const val = urlInput ? urlInput.value.trim() : '';
+                    if (val) window.open(val, '_blank');
+                });
+            }
         }
     
         window.initAppTheme();
@@ -2408,45 +2466,6 @@
             await loadHymnSublist();
         }
 
-        function getYtUrlFromRow(row, headers) {
-            if (!row) return '';
-            
-            // 1. 優先比對 Key 屬性名為 "YT" (忽略大小寫)
-            if (typeof row === 'object' && !Array.isArray(row)) {
-                for (let key in row) {
-                    if (key.trim().toUpperCase() === 'YT' && row[key]) {
-                        const val = String(row[key]).trim();
-                        if (val) return val;
-                    }
-                }
-                for (let key in row) {
-                    if ((key.toUpperCase().includes('YT') || key.includes('歌曲伴奏影音')) && row[key]) {
-                        const val = String(row[key]).trim();
-                        if (val) return val;
-                    }
-                }
-            }
-            
-            // 2. 若為 Array 結構，依據 headers 尋找標頭為 "YT" 的 Column Index
-            if (headers && Array.isArray(headers)) {
-                let ytIdx = headers.findIndex(h => String(h).trim().toUpperCase() === 'YT');
-                if (ytIdx !== -1 && row[ytIdx]) {
-                    const val = String(row[ytIdx]).trim();
-                    if (val) return val;
-                }
-            }
-            
-            // 3. 備援：搜尋專屬 youtube.com / youtu.be 連結
-            const rowVals = Array.isArray(row) ? row : Object.values(row);
-            for (let cell of rowVals) {
-                const str = String(cell || '').trim();
-                if (/youtu\.?be/gi.test(str)) {
-                    return str;
-                }
-            }
-            return '';
-        }
-
         async function loadHymnSublist() {
             const selectTag = document.getElementById('hymns-select-tag');
             const selectSub = document.getElementById('hymns-select-sub');
@@ -2466,33 +2485,24 @@
             try {
                 const data = await getJsonApi(RSheet2Json_APIV6, queryParams);
                 let list = [];
-                let isFirstRow = true;
-                
-                // 提取首列 Header 標頭
-                const headers = data['0'] || data[0] || [];
-                const headerList = Array.isArray(headers) ? headers : Object.values(headers);
-
                 for (let k in data) {
-                    if (isFirstRow) { isFirstRow = false; continue; } // 跳過標頭列
-                    const row = data[k];
-                    if (!row) continue;
-                    
-                    const rowVals = Array.isArray(row) ? row : Object.values(row);
-                    if (rowVals.length === 0) continue;
-
-                    const titleVal = String(rowVals[0] || '').trim();
-                    // 精確「認YT」標頭與 YT 欄位值
-                    const ytVal = getYtUrlFromRow(row, headerList);
-                    
-                    if (titleVal.length > 0) {
-                        const opt = document.createElement('option');
-                        opt.value = titleVal;
-                        opt.textContent = titleVal.length > 32 ? titleVal.substring(0, 32) + '...' : titleVal;
-                        if (ytVal) opt.setAttribute('data-yt', ytVal);
-                        selectSub.appendChild(opt);
-                        list.push(titleVal);
-                    }
+                    list.push(data[k][0]);
                 }
+                list.shift(); // 移除首列標頭
+                // 保留 Google 試算表原始順序，不進行字母重排
+                // list.sort();
+                
+                list.forEach(rawItem => {
+                    if (rawItem !== null && rawItem !== undefined) {
+                        const item = String(rawItem).trim();
+                        if (item.length > 0) {
+                            const opt = document.createElement('option');
+                            opt.value = item;
+                            opt.textContent = item.length > 32 ? item.substring(0, 32) + '...' : item;
+                            selectSub.appendChild(opt);
+                        }
+                    }
+                });
                 
                 setupHymnsAutocomplete(document.getElementById('hymns-input-query'), list);
                 
@@ -2590,8 +2600,8 @@
                     }
                 }
 
-                // 精確「認YT」標頭欄位播放 YouTube
-                const ytField = getYtUrlFromRow(targetRow, headers);
+                // 自動播放 YouTube
+                const ytField = targetRow.YT || targetRow.歌曲伴奏影音 || targetRow[headers[2]] || '';
                 if (ytField) {
                     loadYouTubeVideo(ytField);
                 }
@@ -2724,32 +2734,28 @@
         }
 
         function loadYouTubeVideo(url) {
-            const videoId = extractYoutubeId(url) || 'y990k6j4ErE';
-            const playerBox = document.getElementById('hymns-player-box');
+            const videoId = extractYoutubeId(url);
             
-            if (window.YT && window.YT.Player) {
-                if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-                    try {
-                        ytPlayer.loadVideoById({ videoId: videoId });
-                        return;
-                    } catch (e) { console.error(e); }
-                } else {
-                    try {
-                        ytPlayer = new YT.Player("youtube-player", {
-                            height: "100%",
-                            width: "100%",
-                            videoId: videoId,
-                            playerVars: { autoplay: 0, loop: 1, playlist: videoId },
-                            events: { onStateChange: onPlayerStateChange }
-                        });
-                        return;
-                    } catch(e) { console.error(e); }
+            if (ytPlayer) {
+                try {
+                    ytPlayer.loadVideoById({ videoId: videoId });
+                } catch (e) {
+                    console.error(e);
                 }
-            }
-            
-            // 備援：若 YT API 未加載，直接插入全能無障礙 iframe，絕對不上黑屏
-            if (playerBox) {
-                playerBox.innerHTML = `<iframe id="youtube-player-iframe" src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=0" style="width:100%; height:100%; border:none; border-radius:12px;" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            } else {
+                ytPlayer = new YT.Player("youtube-player", {
+                    height: "100%",
+                    width: "100%",
+                    videoId: videoId,
+                    playerVars: {
+                        autoplay: 0,
+                        loop: 1,
+                        playlist: videoId
+                    },
+                    events: {
+                        onStateChange: onPlayerStateChange
+                    }
+                });
             }
         }
 
