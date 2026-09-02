@@ -2111,13 +2111,13 @@
         const REQUIRED_HYMN_CATEGORIES = [
             { tag: "新聖詩", name: "新聖詩 (001-650)", required: true },
             { tag: "啟應文", name: "啟應文 (01-66)", required: true },
-            { tag: "南門靈修分享", name: "南門靈修分享", required: true }
+            { tag: "南門靈修默想", name: "南門靈修默想", required: true }
         ];
 
         const DEFAULT_HYMN_CATEGORIES = [
             { tag: "新聖詩", name: "新聖詩 (001-650)", required: true },
             { tag: "啟應文", name: "啟應文 (01-66)", required: true },
-            { tag: "南門靈修分享", name: "南門靈修分享", required: true },
+            { tag: "南門靈修默想", name: "南門靈修默想", required: true },
             { tag: "List", name: "聖歌隊雅音" },
             { tag: "聖歌隊2", name: "聖歌隊自動" }
         ];
@@ -2128,8 +2128,8 @@
             if (saved) {
                 try { list = JSON.parse(saved); } catch(e) {}
             }
-            // 1. 剔除舊無效項目「南門靈修默想」與「輕柔的音樂」
-            list = list.filter(c => c && c.tag !== "輕柔的音樂" && c.name !== "輕柔的音樂" && c.tag !== "南門靈修默想" && c.name !== "南門靈修默想");
+            // 1. 剔除無效舊項目「南門靈修分享」與「輕柔的音樂」
+            list = list.filter(c => c && c.tag !== "輕柔的音樂" && c.name !== "輕柔的音樂" && c.tag !== "南門靈修分享" && c.name !== "南門靈修分享");
 
             // 2. 移除已有 required 項目
             list = list.filter(c => c && !REQUIRED_HYMN_CATEGORIES.some(r => r.tag === c.tag));
