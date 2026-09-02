@@ -1197,7 +1197,12 @@
 
                 <!-- 右側輸出預覽區 -->
                 <div>
-                    <div class="panel-title">✨ 排版預覽與播放結果</div>
+                    <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <span>✨ 排版預覽與播放結果</span>
+                        <label style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; color:var(--text-sub); cursor:pointer; font-weight:normal;">
+                            <input type="checkbox" id="hymns-toggle-infoblock"> 顯示詳細資料欄 (Information Block)
+                        </label>
+                    </div>
                     <!-- 歌詞與經文預覽 -->
                     <div id="wrapper-text-preview">
                         <div class="preview-area" id="preview-area"></div>
@@ -1608,6 +1613,15 @@
             }
         }
 
+        
+        const toggleInfoBlock = document.getElementById('hymns-toggle-infoblock');
+        const infoBlockContainer = document.getElementById('hymns-info-block');
+        if (toggleInfoBlock && infoBlockContainer) {
+            toggleInfoBlock.addEventListener('change', () => {
+                infoBlockContainer.style.display = toggleInfoBlock.checked ? 'block' : 'none';
+            });
+        }
+    
         window.initAppTheme();
 
         textarea.addEventListener('input', updateLyricsLayout);
