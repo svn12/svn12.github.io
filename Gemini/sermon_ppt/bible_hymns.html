@@ -971,9 +971,9 @@
 
         <!-- Tabs Header -->
         <div class="tabs-header">
-                <button class="tab-btn active" id="tab-devotion" data-tab="devotion">☀️ 每日靈修</button>
-                <button class="tab-btn" id="tab-audio" data-tab="audio">🎧 聽讀有聲聖經</button>
+                <button class="tab-btn active" id="tab-audio" data-tab="audio">🎧 聽讀有聲聖經</button>
                 <button class="tab-btn" id="tab-hymns" data-tab="hymns">🎵 聖詩與啟應文</button>
+                <button class="tab-btn" id="tab-devotion" data-tab="devotion">☀️ 每日靈修</button>
             </div>
 
         <main>
@@ -1082,7 +1082,7 @@
 
                     <!-- 聽讀有聲聖經面板 -->
                     <!-- 每日靈修面板 -->
-                    <div class="tab-content active" id="input-devotion">
+                    <div class="tab-content" id="input-devotion">
                         <div class="panel-title">☀️ 今日靈修與氣象資訊</div>
                         
                         <!-- 金句卡片 -->
@@ -1108,7 +1108,7 @@
                         </div>
                     </div>
 
-                    <div class="tab-content" id="input-audio">
+                    <div class="tab-content active" id="input-audio">
                         <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                             <span>🔍 有聲聖經播放設定</span>
                             <div style="display:flex; gap:0.4rem; flex-wrap:wrap; font-size:0.75rem; font-weight:normal;">
@@ -1233,7 +1233,7 @@
                     
                     <!-- 聖詩啟應文預覽 & 播放區 -->
                     <!-- 每日靈修預覽 & 資源牆區 -->
-                    <div id="wrapper-devotion-preview" style="display: block;">
+                    <div id="wrapper-devotion-preview" style="display: none;">
                         <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center;">
                             <span>📚 每日靈修經典資源</span>
                             <span style="font-size:0.78rem; color:var(--text-sub);">點擊卡片快速開啟靈修影音與文章</span>
@@ -1318,7 +1318,7 @@
                     </div>
 
                     <!-- 聽讀有聲聖經預覽區 -->
-                    <div id="wrapper-audio-preview" style="display: none;">
+                    <div id="wrapper-audio-preview" style="display: block;">
                         <div class="audio-player-box">
                             <div class="audio-player-header">
                                 <span id="audio-playing-title">創世記 第 1 章</span>
@@ -1794,7 +1794,7 @@
         }
     
         window.initAppTheme();
-        setTimeout(() => { switchTab("devotion"); }, 100);
+        setTimeout(() => { switchTab("audio"); }, 100);
 
         if (textarea) textarea.addEventListener('input', updateLyricsLayout);
         if (document.getElementById('auto-header')) document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
