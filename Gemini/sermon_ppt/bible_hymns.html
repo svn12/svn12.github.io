@@ -3340,8 +3340,46 @@
             updateChapterSelectStyles();
         }
 
+        function updateBookSelectOptionsProgress() {
+            const selectTitle = document.getElementById('audio-select-title');
+            if (!selectTitle) return;
+
+            const readList = getReadChapters();
+
+            Array.from(selectTitle.options).forEach((opt, idx) => {
+                const bookName = BIBLE_66_BOOKS[idx];
+                const totalChaps = BIBLE_66_CHAPTERS_COUNT[idx];
+                if (!bookName || !totalChaps) return;
+
+                let readCount = 0;
+                readList.forEach(key => {
+                    if (key.startsWith(bookName + '_')) {
+                        readCount++;
+                    }
+                });
+
+                if (readCount === totalChaps) {
+                    opt.textContent = `${bookName} (全卷完 ${readCount}/${totalChaps}章)`;
+                    opt.style.backgroundColor = '#fef08a';
+                    opt.style.color = '#854d0e';
+                    opt.style.fontWeight = 'bold';
+                } else if (readCount > 0) {
+                    opt.textContent = `${bookName} (已讀 ${readCount}/${totalChaps}章)`;
+                    opt.style.backgroundColor = '';
+                    opt.style.color = '';
+                    opt.style.fontWeight = '';
+                } else {
+                    opt.textContent = `${bookName} (0/${totalChaps}章)`;
+                    opt.style.backgroundColor = '';
+                    opt.style.color = '';
+                    opt.style.fontWeight = '';
+                }
+            });
+        }
+
         function updateBibleProgressBadges() {
             const selectTitle = document.getElementById('audio-select-title');
+            updateBookSelectOptionsProgress();
             const badgeBook = document.getElementById('badge-book-progress');
             const badgeTotal = document.getElementById('badge-total-progress');
             if (!selectTitle || !badgeBook || !badgeTotal) return;
