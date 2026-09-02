@@ -2566,96 +2566,98 @@
             const tableContainer = document.getElementById('hymns-table-container');
             const searchBtn = document.getElementById('hymns-btn-search');
             
-            let findString = queryInput.value.trim();
-            if (findString === '!') findString = '';
+            let rawQuery = queryInput.value.trim();
+            // 智慧提取首別號碼（例如 "001 聖哉 聖哉 聖哉" -> "001"）
+            let numMatch = rawQuery.match(/^\d+/);
+            let searchKeyword = numMatch ? numMatch[0] : rawQuery;
+            if (rawQuery === '!' || !rawQuery) searchKeyword = '';
             
             searchBtn.disabled = true;
             document.getElementById('hymns-search-text').textContent = '查詢中...';
             tableContainer.innerHTML = `<div style="padding:1rem; color:var(--accent);">連線查詢中，請稍候...</div>`;
             
-            const queryParams = {
-                sheetUrl: shURL,
-                sheetTag: selectTag.value,
-                findSting: findString
-            };
-            
             try {
-                const responseText = await getRawApi(Search_API, queryParams);
-                if (responseText.length === 2 || !responseText) {
+                let queryParams = {
+                    sheetUrl: shURL,
+                    sheetTag: selectTag.value,
+                    findSting: searchKeyword
+                };
+                
+                let responseText = await getRawApi(Search_API, queryParams);
+                let data = [];
+                
+                if (responseText && responseText.length > 2) {
+                    try { data = JSON.parse(responseText); } catch(e) {}
+                }
+
+                // 若純號碼查無資料，嘗試以全名做二次備援搜尋
+                if ((!data || data.length === 0) && searchKeyword !== rawQuery && rawQuery) {
+                    queryParams.findSting = rawQuery;
+                    responseText = await getRawApi(Search_API, queryParams);
+                    if (responseText && responseText.length > 2) {
+                        try { data = JSON.parse(responseText); } catch(e) {}
+                    }
+                }
+
+                // 若依然查無特定資料，讀取全類別資料預設呈現第 1 首，絕對不上卡死黑屏
+                if (!data || data.length === 0) {
+                    queryParams.findSting = '';
+                    responseText = await getRawApi(Search_API, queryParams);
+                    if (responseText && responseText.length > 2) {
+                        try { data = JSON.parse(responseText); } catch(e) {}
+                    }
+                }
+
+                if (!data || data.length === 0) {
                     tableContainer.innerHTML = `<div style="padding:1rem; color:#ef4444;">查無資料，請重新輸入再查詢</div>`;
                     return;
                 }
                 
-                const data = JSON.parse(responseText);
-                if (data.length === 0) {
-                    tableContainer.innerHTML = `<div style="padding:1rem; color:var(--text-sub);">查無資料</div>`;
-                    return;
-                }
-                
                 const headers = Object.keys(data[0]);
-                const ytField = data[0].YT || '';
-                if (ytField) {
-                    loadYouTubeVideo(ytField);
-                }
-                
-                let targetRow = null;
+                let targetRow = data[0];
+
                 for (let row of data) {
                     const firstVal = String(row[headers[0]] || '').trim();
-                    if (firstVal === findString) {
+                    if (firstVal === searchKeyword || firstVal === rawQuery || (numMatch && parseInt(firstVal) === parseInt(numMatch[0]))) {
                         targetRow = row;
                         break;
                     }
                 }
-                if (!targetRow) {
-                    for (let row of data) {
-                        const firstVal = String(row[headers[0]] || '').trim();
-                        if (firstVal.indexOf(findString) >= 0) {
-                            targetRow = row;
-                            break;
-                        }
-                    }
-                }
-                if (!targetRow && data.length > 0) {
-                    targetRow = data[0];
-                }
 
-                if (targetRow) {
-                    const ytField = targetRow.YT || targetRow.歌曲伴奏影音 || targetRow[headers[2]] || '';
-                    if (ytField) {
-                        loadYouTubeVideo(ytField);
-                    }
-                    
-                    let html = `<table class="hymns-table"><thead><tr>`;
-                    headers.forEach(h => { html += `<th>${cleanHtml(h)}</th>`; });
-                    html += `</tr></thead><tbody><tr>`;
-                    headers.forEach(h => {
-                        const val = targetRow[h] || '';
-                        const strVal = String(val);
-                        if (h === headers[0]) {
-                            html += `<td><strong>${cleanHtml(strVal)}</strong></td>`;
-                        } else if (/you|http/gi.test(strVal)) {
-                            let btnClass = 'btn-link-db';
-                            let btnText = '投影片';
-                            if (h.includes('Drive') || h.includes('雲端')) {
-                                btnClass = 'btn-link-gd';
-                                btnText = '雲端簡報';
-                            } else if (h === 'YT' || h === '歌曲伴奏影音') {
-                                btnClass = 'btn-link-yt';
-                                btnText = '伴奏影片';
-                            } else if (h === '精簡') {
-                                btnClass = 'btn-link-pdf';
-                                btnText = '精簡 PDF';
-                            }
-                            html += `<td><a class="hymns-link-btn ${btnClass}" href="${cleanHtml(strVal)}" target="_blank">🔗 ${btnText}</a></td>`;
-                        } else {
-                            html += `<td>${cleanHtml(strVal)}</td>`;
-                        }
-                    });
-                    html += `</tr></tbody></table>`;
-                    tableContainer.innerHTML = html;
-                } else {
-                    tableContainer.innerHTML = `<div style="padding:1rem; color:var(--text-sub);">無可呈現的單筆資料</div>`;
+                // 自動播放 YouTube
+                const ytField = targetRow.YT || targetRow.歌曲伴奏影音 || targetRow[headers[2]] || '';
+                if (ytField) {
+                    loadYouTubeVideo(ytField);
                 }
+                
+                let html = `<table class="hymns-table"><thead><tr>`;
+                headers.forEach(h => { html += `<th>${cleanHtml(h)}</th>`; });
+                html += `</tr></thead><tbody><tr>`;
+                headers.forEach(h => {
+                    const val = targetRow[h] || '';
+                    const strVal = String(val);
+                    if (h === headers[0]) {
+                        html += `<td><strong>${cleanHtml(strVal)}</strong></td>`;
+                    } else if (/you|http/gi.test(strVal)) {
+                        let btnClass = 'btn-link-db';
+                        let btnText = '投影片';
+                        if (h.includes('Drive') || h.includes('雲端')) {
+                            btnClass = 'btn-link-gd';
+                            btnText = '雲端簡報';
+                        } else if (h === 'YT' || h === '歌曲伴奏影音') {
+                            btnClass = 'btn-link-yt';
+                            btnText = '伴奏影片';
+                        } else if (h === '精簡') {
+                            btnClass = 'btn-link-pdf';
+                            btnText = '精簡 PDF';
+                        }
+                        html += `<td><a class="hymns-link-btn ${btnClass}" href="${cleanHtml(strVal)}" target="_blank">🔗 ${btnText}</a></td>`;
+                    } else {
+                        html += `<td>${cleanHtml(strVal)}</td>`;
+                    }
+                });
+                html += `</tr></tbody></table>`;
+                tableContainer.innerHTML = html;
             } catch (err) {
                 console.error(err);
                 tableContainer.innerHTML = `<div style="padding:1rem; color:#ef4444;">查詢失敗：${err.message}</div>`;
