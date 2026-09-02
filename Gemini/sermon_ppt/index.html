@@ -1226,7 +1226,7 @@
                 <div>
                     <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                         <span>✨ 排版預覽與播放結果</span>
-                        <label style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; color:var(--text-sub); cursor:pointer; font-weight:normal;">
+                        <label id="hymns-toggle-infoblock-label" style="display:none; align-items:center; gap:0.35rem; font-size:0.78rem; color:var(--text-sub); cursor:pointer; font-weight:normal;">
                             <input type="checkbox" id="hymns-toggle-infoblock"> 顯示詳細資料欄 (Information Block)
                         </label>
                     </div>
@@ -1668,6 +1668,10 @@
         }
 
         function switchTab(tab) {
+            const toggleLabel = document.getElementById('hymns-toggle-infoblock-label');
+            if (toggleLabel) {
+                toggleLabel.style.display = (tab === 'hymns') ? 'inline-flex' : 'none';
+            }
             stopAllPlayback();
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
