@@ -971,7 +971,8 @@
 
         <!-- Tabs Header -->
         <div class="tabs-header">
-                <button class="tab-btn active" id="tab-audio" data-tab="audio">🎧 聽讀有聲聖經</button>
+                <button class="tab-btn active" id="tab-devotion" data-tab="devotion">☀️ 每日靈修</button>
+                <button class="tab-btn" id="tab-audio" data-tab="audio">🎧 聽讀有聲聖經</button>
                 <button class="tab-btn" id="tab-hymns" data-tab="hymns">🎵 聖詩與啟應文</button>
             </div>
 
@@ -1080,7 +1081,34 @@
                     </div>
 
                     <!-- 聽讀有聲聖經面板 -->
-                    <div class="tab-content active" id="input-audio">
+                    <!-- 每日靈修面板 -->
+                    <div class="tab-content active" id="input-devotion">
+                        <div class="panel-title">☀️ 今日靈修與氣象資訊</div>
+                        
+                        <!-- 金句卡片 -->
+                        <div style="background:linear-gradient(135deg, rgba(234,179,8,0.15) 0%, rgba(245,158,11,0.05) 100%); border:1px solid rgba(234,179,8,0.3); border-radius:14px; padding:1.2rem; margin-bottom:1rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                                <span style="font-size:0.85rem; font-weight:700; color:#f59e0b; background:rgba(245,158,11,0.2); padding:0.15rem 0.5rem; border-radius:8px;">📖 今天金句</span>
+                                <a href="https://ppt.cc/fKV5Mx" target="_blank" style="font-size:0.78rem; color:var(--primary-color); text-decoration:none;">🖼️ 查看金句意象 ↗</a>
+                            </div>
+                            <div style="font-weight:700; font-size:1.05rem; color:var(--text-main); margin-bottom:0.4rem;">羅馬書 8:11</div>
+                            <div style="font-size:0.92rem; line-height:1.6; color:var(--text-sub); font-style:italic;">
+                                「然而，叫耶穌從死裡復活者的靈若住在你們心裡，那叫基督耶穌從死裡復活的，也必藉著住在你們心裡的聖靈，使你們必死的身體又活過來。」
+                            </div>
+                        </div>
+
+                        <!-- 臺北市氣象預報卡片 -->
+                        <div style="background:rgba(30, 41, 59, 0.4); border:1px solid var(--panel-border); border-radius:14px; padding:1.2rem;">
+                            <div style="font-size:0.9rem; font-weight:700; color:var(--text-main); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+                                <span>🌤️ 臺北市今明天氣預報</span>
+                            </div>
+                            <div id="taipei-weather-container">
+                                <div style="padding:1rem; text-align:center; color:var(--text-sub); font-size:0.85rem;">氣象資料載入中...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="input-audio">
                         <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                             <span>🔍 有聲聖經播放設定</span>
                             <div style="display:flex; gap:0.4rem; flex-wrap:wrap; font-size:0.75rem; font-weight:normal;">
@@ -1204,7 +1232,83 @@
                     </div>
                     
                     <!-- 聖詩啟應文預覽 & 播放區 -->
-                    <div id="wrapper-hymns-preview" style="display: block;">
+                    <!-- 每日靈修預覽 & 資源牆區 -->
+                    <div id="wrapper-devotion-preview" style="display: block;">
+                        <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>📚 每日靈修經典資源</span>
+                            <span style="font-size:0.78rem; color:var(--text-sub);">點擊卡片快速開啟靈修影音與文章</span>
+                        </div>
+
+                        <!-- 7大靈修資源卡片牆 -->
+                        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:0.9rem; margin-bottom:1.2rem;">
+                            
+                            <a href="https://ppt.cc/fMLfGx" target="_blank" class="devotion-card" style="text-decoration:none; background:rgba(30,41,59,0.7); border:1px solid var(--panel-border); border-radius:12px; padding:1rem; transition:all 0.2s ease; display:flex; flex-direction:column; gap:0.4rem;">
+                                <div style="display:flex; align-items:center; justify-content:space-between;">
+                                    <span style="font-size:1.3rem;">📖</span>
+                                    <span style="font-size:0.75rem; color:var(--primary-color);">開啟連結 ↗</span>
+                                </div>
+                                <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">每日新眼光</div>
+                                <div style="font-size:0.78rem; color:var(--text-sub);">台灣基督長老教會每日靈修默想</div>
+                            </a>
+
+                            <a href="https://ppt.cc/fjZFux" target="_blank" class="devotion-card" style="text-decoration:none; background:rgba(30,41,59,0.7); border:1px solid var(--panel-border); border-radius:12px; padding:1rem; transition:all 0.2s ease; display:flex; flex-direction:column; gap:0.4rem;">
+                                <div style="display:flex; align-items:center; justify-content:space-between;">
+                                    <span style="font-size:1.3rem;">🌵</span>
+                                    <span style="font-size:0.75rem; color:var(--primary-color);">開啟連結 ↗</span>
+                                </div>
+                                <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">荒漠甘泉</div>
+                                <div style="font-size:0.78rem; color:var(--text-sub);">考門夫人經典靈修默想文</div>
+                            </a>
+
+                            <a href="https://reurl.cc/eM8QEW" target="_blank" class="devotion-card" style="text-decoration:none; background:rgba(30,41,59,0.7); border:1px solid var(--panel-border); border-radius:12px; padding:1rem; transition:all 0.2s ease; display:flex; flex-direction:column; gap:0.4rem;">
+                                <div style="display:flex; align-items:center; justify-content:space-between;">
+                                    <span style="font-size:1.3rem;">📜</span>
+                                    <span style="font-size:0.75rem; color:var(--primary-color);">開啟連結 ↗</span>
+                                </div>
+                                <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">每日箴言</div>
+                                <div style="font-size:0.78rem; color:var(--text-sub);">智慧人聽讀神的話語靈修教導</div>
+                            </a>
+
+                            <a href="https://reurl.cc/8Dne77" target="_blank" class="devotion-card" style="text-decoration:none; background:rgba(30,41,59,0.7); border:1px solid var(--panel-border); border-radius:12px; padding:1rem; transition:all 0.2s ease; display:flex; flex-direction:column; gap:0.4rem;">
+                                <div style="display:flex; align-items:center; justify-content:space-between;">
+                                    <span style="font-size:1.3rem;">🥛</span>
+                                    <span style="font-size:0.75rem; color:var(--primary-color);">開啟連結 ↗</span>
+                                </div>
+                                <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">心靈蜜豆奶 (文章)</div>
+                                <div style="font-size:0.78rem; color:var(--text-sub);">暖心生命分享與每日靈性培育</div>
+                            </a>
+
+                            <a href="https://reurl.cc/3KLk9M" target="_blank" class="devotion-card" style="text-decoration:none; background:rgba(30,41,59,0.7); border:1px solid var(--panel-border); border-radius:12px; padding:1rem; transition:all 0.2s ease; display:flex; flex-direction:column; gap:0.4rem;">
+                                <div style="display:flex; align-items:center; justify-content:space-between;">
+                                    <span style="font-size:1.3rem;">📺</span>
+                                    <span style="font-size:0.75rem; color:var(--primary-color);">開啟連結 ↗</span>
+                                </div>
+                                <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">心靈蜜豆奶 (YT)</div>
+                                <div style="font-size:0.78rem; color:var(--text-sub);">YouTube 靈修影音播報專區</div>
+                            </a>
+
+                            <a href="https://reurl.cc/4LmlKV" target="_blank" class="devotion-card" style="text-decoration:none; background:rgba(30,41,59,0.7); border:1px solid var(--panel-border); border-radius:12px; padding:1rem; transition:all 0.2s ease; display:flex; flex-direction:column; gap:0.4rem;">
+                                <div style="display:flex; align-items:center; justify-content:space-between;">
+                                    <span style="font-size:1.3rem;">🕊️</span>
+                                    <span style="font-size:0.75rem; color:var(--primary-color);">開啟連結 ↗</span>
+                                </div>
+                                <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">恩典365</div>
+                                <div style="font-size:0.78rem; color:var(--text-sub);">寇紹恩牧師 365天恩典亮光資訊</div>
+                            </a>
+
+                            <a href="https://reurl.cc/o8dvll" target="_blank" class="devotion-card" style="text-decoration:none; background:rgba(30,41,59,0.7); border:1px solid var(--panel-border); border-radius:12px; padding:1rem; transition:all 0.2s ease; display:flex; flex-direction:column; gap:0.4rem;">
+                                <div style="display:flex; align-items:center; justify-content:space-between;">
+                                    <span style="font-size:1.3rem;">⏰</span>
+                                    <span style="font-size:0.75rem; color:var(--primary-color);">開啟連結 ↗</span>
+                                </div>
+                                <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">禱告時光</div>
+                                <div style="font-size:0.78rem; color:var(--text-sub);">每日暖心同心禱告與文字領受</div>
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <div id="wrapper-hymns-preview" style="display: none;">
                         <div class="hymns-table-wrapper" id="hymns-info-block" style="display: none;">
                             <div id="hymns-table-container"></div>
                         </div>
@@ -1573,6 +1677,59 @@
             }
         });
 
+        async function fetchTaipeiWeather() {
+            const container = document.getElementById('taipei-weather-container');
+            if (!container) return;
+            try {
+                const url = 'https://api.open-meteo.com/v1/forecast?latitude=25.033&longitude=121.5654&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTaipei';
+                const res = await fetch(url);
+                const data = await res.json();
+                const daily = data.daily;
+                
+                if (daily && daily.time && daily.time.length >= 2) {
+                    const todayTime = daily.time[0];
+                    const todayMin = Math.round(daily.temperature_2m_min[0]);
+                    const todayMax = Math.round(daily.temperature_2m_max[0]);
+                    const todayPop = daily.precipitation_probability_max[0] || 0;
+                    const todayCode = daily.weathercode[0];
+
+                    const tomorrowTime = daily.time[1];
+                    const tomorrowMin = Math.round(daily.temperature_2m_min[1]);
+                    const tomorrowMax = Math.round(daily.temperature_2m_max[1]);
+                    const tomorrowPop = daily.precipitation_probability_max[1] || 0;
+                    const tomorrowCode = daily.weathercode[1];
+
+                    function getWeatherDesc(code) {
+                        if (code === 0) return '晴朗 ☀️';
+                        if (code <= 3) return '多雲時晴 ⛅';
+                        if (code <= 57) return '毛毛雨 🌧️';
+                        if (code <= 67) return '有雨 🌧️';
+                        if (code <= 82) return '短暫陣雨 🌦️';
+                        return '雷陣雨 ⛈️';
+                    }
+
+                    container.innerHTML = `
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-top:0.4rem;">
+                            <div style="background:rgba(56, 189, 248, 0.08); border:1px solid rgba(56, 189, 248, 0.25); border-radius:12px; padding:0.7rem; text-align:center;">
+                                <div style="font-size:0.78rem; color:var(--text-sub);">今日天氣 (${todayTime})</div>
+                                <div style="font-size:1rem; font-weight:700; color:var(--text-main); margin:0.25rem 0;">${getWeatherDesc(todayCode)}</div>
+                                <div style="font-size:0.82rem; color:var(--primary-color);">🌡️ ${todayMin}°C ~ ${todayMax}°C</div>
+                                <div style="font-size:0.75rem; color:var(--text-sub); margin-top:0.15rem;">💧 降雨率 ${todayPop}%</div>
+                            </div>
+                            <div style="background:rgba(129, 140, 248, 0.08); border:1px solid rgba(129, 140, 248, 0.25); border-radius:12px; padding:0.7rem; text-align:center;">
+                                <div style="font-size:0.78rem; color:var(--text-sub);">明日預報 (${tomorrowTime})</div>
+                                <div style="font-size:1rem; font-weight:700; color:var(--text-main); margin:0.25rem 0;">${getWeatherDesc(tomorrowCode)}</div>
+                                <div style="font-size:0.82rem; color:#818cf8;">🌡️ ${tomorrowMin}°C ~ ${tomorrowMax}°C</div>
+                                <div style="font-size:0.75rem; color:var(--text-sub); margin-top:0.15rem;">💧 降雨率 ${tomorrowPop}%</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch(e) {
+                console.log("Weather API error:", e);
+            }
+        }
+
         function switchTab(tab) {
             stopAllPlayback();
             currentTab = tab;
@@ -1584,12 +1741,25 @@
             const wAudio = document.getElementById('wrapper-audio-preview');
             const btnShared = document.getElementById('btn-group-shared');
 
+            const wDevotion = document.getElementById('wrapper-devotion-preview');
             if (wText) wText.style.display = 'block';
             if (wHymns) wHymns.style.display = 'none';
             if (wAudio) wAudio.style.display = 'none';
+            if (wDevotion) wDevotion.style.display = 'none';
             if (btnShared) btnShared.style.display = 'grid';
 
-            if (tab === 'hymns') {
+            if (tab === 'devotion') {
+                const tDev = document.getElementById('tab-devotion');
+                const iDev = document.getElementById('input-devotion');
+                const ctrlLyrics = document.getElementById('controls-row-lyrics');
+                if (tDev) tDev.classList.add('active');
+                if (iDev) iDev.classList.add('active');
+                if (ctrlLyrics) ctrlLyrics.style.display = 'none';
+                if (btnShared) btnShared.style.display = 'none';
+                if (wText) wText.style.display = 'none';
+                if (wDevotion) wDevotion.style.display = 'block';
+                fetchTaipeiWeather();
+            } else if (tab === 'hymns') {
                 const tHymns = document.getElementById('tab-hymns');
                 const iHymns = document.getElementById('input-hymns');
                 const ctrlLyrics = document.getElementById('controls-row-lyrics');
@@ -1624,7 +1794,7 @@
         }
     
         window.initAppTheme();
-        setTimeout(() => { switchTab("audio"); }, 100);
+        setTimeout(() => { switchTab("devotion"); }, 100);
 
         if (textarea) textarea.addEventListener('input', updateLyricsLayout);
         if (document.getElementById('auto-header')) document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
