@@ -1320,7 +1320,7 @@
                                 <span id="audio-playing-title">創世記 第 1 章</span>
                                 <span style="font-size:0.75rem; color:var(--text-sub);">🔊 支援下一章自動播放</span>
                             </div>
-                            <audio id="audio-html-player" class="custom-audio" controls></audio>
+                            <audio id="audio-html-player" class="custom-audio" controls playsinline webkit-playsinline preload="auto"></audio>
                             <div id="audio-yt-player-wrapper" style="display:none; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1px solid var(--panel-border); margin-top:0.8rem; background:black;">
                                 <div id="audio-youtube-player"></div>
                             </div>
@@ -1835,6 +1835,57 @@
                 });
             }
         }
+    
+        
+        // -------------------------------------------------------------
+        // 📱 手機/平板睡眠與鎖屏背景連播防護罩 (Background Playback & WakeLock API)
+        // -------------------------------------------------------------
+        let wakeLockObj = null;
+
+        async function requestScreenWakeLock() {
+            try {
+                if ('wakeLock' in navigator && !wakeLockObj) {
+                    wakeLockObj = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {}
+        }
+
+        function releaseScreenWakeLock() {
+            if (wakeLockObj !== null) {
+                wakeLockObj.release().then(() => { wakeLockObj = null; }).catch(() => { wakeLockObj = null; });
+            }
+        }
+
+        function updateMediaSessionInfo(titleStr, artistStr) {
+            if ('mediaSession' in navigator) {
+                try {
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                        title: titleStr || '聽讀有聲聖經',
+                        artist: artistStr || '南門教會線上聽讀系統',
+                        album: '南門教會聖經與聖詩',
+                        artwork: [
+                            { src: 'https://www.jktai123.com/Gemini/sermon_ppt/cross_icon.png', sizes: '512x512', type: 'image/png' }
+                        ]
+                    });
+
+                    // 綁定耳機與手機鎖屏按鈕
+                    navigator.mediaSession.setActionHandler('play', () => {
+                        const player = document.getElementById('audio-html-player');
+                        if (player) player.play();
+                    });
+                    navigator.mediaSession.setActionHandler('pause', () => {
+                        const player = document.getElementById('audio-html-player');
+                        if (player) player.pause();
+                    });
+                } catch(e) {}
+            }
+        }
+
+        document.addEventListener('visibilitychange', async () => {
+            if (wakeLockObj !== null && document.visibilityState === 'visible') {
+                await requestScreenWakeLock();
+            }
+        });
     
         window.initAppTheme();
 
