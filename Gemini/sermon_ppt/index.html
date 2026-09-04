@@ -2287,14 +2287,16 @@
 
             let title = '排版結果';
             if (currentTab === 'lyrics') {
-                const rawText = textarea.value.trim();
-                const firstLine = rawText.split('\n')[0].trim();
-                // 確保【新聖詩】、【啟應文】、【南門靈修分享】100% 依序固定位於最頂端 Top 3
-                list = list.filter(c => c && !REQUIRED_HYMN_CATEGORIES.some(r => r.tag === c.tag));
-                list = [...REQUIRED_HYMN_CATEGORIES, ...list];
-                localStorage.setItem('hymns-custom-categories-v2', JSON.stringify(list));
-                return list; } else {
-                const qstr = document.getElementById('bible-qstr').value.trim();
+                const rawText = textarea ? textarea.value.trim() : '';
+                const firstLine = rawText ? rawText.split('\n')[0].trim() : '';
+                if (firstLine && firstLine.length < 30) {
+                    title = `${firstLine}_排版後`;
+                } else {
+                    title = '聖歌隊歌詞_排版後';
+                }
+            } else {
+                const qstrElem = document.getElementById('bible-qstr');
+                const qstr = qstrElem ? qstrElem.value.trim() : '';
                 if (qstr) {
                     title = `經文_${qstr}_排版後`;
                 } else {
