@@ -1993,10 +1993,24 @@
             reader.readAsText(file);
         }
 
-        // 歌詞語意分行
+        // 計算視覺等效全形字數 (中文字/全形標點=1, 英文/數字/空格/半形標點=0.5)
+        function getDisplayWidth(str) {
+            let width = 0;
+            for (let i = 0; i < str.length; i++) {
+                const code = str.charCodeAt(i);
+                if (code >= 0 && code <= 127) {
+                    width += 0.5;
+                } else {
+                    width += 1.0;
+                }
+            }
+            return width;
+        }
+
+        // 歌詞語意分行 (支援全形/半形英文等效字寬計算，防止英文行被錯拆)
         function splitLongLine(line, maxLen = 15) {
             line = line.trim();
-            if (line.length <= maxLen) {
+            if (getDisplayWidth(line) <= maxLen) {
                 return [line];
             }
             
