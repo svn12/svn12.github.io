@@ -2048,7 +2048,7 @@
         }
 
         // 歌詞切頁
-        // 歌詞切頁（以空行段落 Paragraph Block 為單位精確對應頁碼 P1, P2...）
+        // 歌詞切頁 (每頁硬性上限 2 行，空行段落獨立分頁，超過 2 行自動加頁)
         function chunkRawLyrics(text, linesPerPage = 2, maxLen = 15) {
             const rawBlocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(b => b);
             const pages = [];
@@ -2058,18 +2058,28 @@
                 const blockLines = block.split('\n').map(l => l.trim()).filter(l => l);
                 let currentChunk = [];
 
-                for (let line of blockLines) {
-                    const subLines = splitLongLine(line, maxLen);
-                    currentChunk.push(...subLines);
+                function flushPage() {
+                    if (currentChunk.length > 0) {
+                        pages.push({
+                            page: `P${pageIdx}`,
+                            lines: [...currentChunk]
+                        });
+                        pageIdx++;
+                        currentChunk = [];
+                    }
                 }
 
-                if (currentChunk.length > 0) {
-                    pages.push({
-                        page: `P${pageIdx}`,
-                        lines: currentChunk
-                    });
-                    pageIdx++;
+                for (let line of blockLines) {
+                    const subLines = splitLongLine(line, maxLen);
+                    for (let subLine of subLines) {
+                        currentChunk.push(subLine);
+                        // 每頁只能有兩行 (linesPerPage)，超過立刻自動增加頁！
+                        if (currentChunk.length >= linesPerPage) {
+                            flushPage();
+                        }
+                    }
                 }
+                flushPage();
             }
 
             return pages;
