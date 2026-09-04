@@ -1964,40 +1964,29 @@
         }
 
         // 歌詞切頁
-        // 歌詞切頁（支援手動空白行強行加頁/分頁）
+        // 歌詞切頁（以空行段落 Paragraph Block 為單位精確對應頁碼 P1, P2...）
         function chunkRawLyrics(text, linesPerPage = 2, maxLen = 15) {
-            const rawLines = text.split('\n').map(l => l.trim());
+            const rawBlocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(b => b);
             const pages = [];
             let pageIdx = 1;
-            let currentChunk = [];
 
-            function flushPage() {
+            for (let block of rawBlocks) {
+                const blockLines = block.split('\n').map(l => l.trim()).filter(l => l);
+                let currentChunk = [];
+
+                for (let line of blockLines) {
+                    const subLines = splitLongLine(line, maxLen);
+                    currentChunk.push(...subLines);
+                }
+
                 if (currentChunk.length > 0) {
                     pages.push({
                         page: `P${pageIdx}`,
-                        lines: [...currentChunk]
+                        lines: currentChunk
                     });
                     pageIdx++;
-                    currentChunk = [];
                 }
             }
-
-            for (let line of rawLines) {
-                if (!line) {
-                    // 遇到空行/手動換行：增加換行，直接加頁！
-                    flushPage();
-                    continue;
-                }
-
-                const subLines = splitLongLine(line, maxLen);
-                for (let subLine of subLines) {
-                    currentChunk.push(subLine);
-                    if (currentChunk.length >= linesPerPage) {
-                        flushPage();
-                    }
-                }
-            }
-            flushPage();
 
             return pages;
         }
