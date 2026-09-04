@@ -2040,11 +2040,10 @@
         }
 
         // 歌詞切頁
-        // 歌詞切頁 (每頁硬性上限 2 行，空行段落獨立分頁，超過 2 行自動加頁)
+        // 歌詞切頁 (每頁硬性上限 2 行，空行段落獨立分頁，超過 2 行自動加頁，顯示 P1/總頁數)
         function chunkRawLyrics(text, linesPerPage = 2, maxLen = 15) {
             const rawBlocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(b => b);
-            const pages = [];
-            let pageIdx = 1;
+            const rawPages = [];
 
             for (let block of rawBlocks) {
                 const blockLines = block.split('\n').map(l => l.trim()).filter(l => l);
@@ -2052,11 +2051,7 @@
 
                 function flushPage() {
                     if (currentChunk.length > 0) {
-                        pages.push({
-                            page: `P${pageIdx}`,
-                            lines: [...currentChunk]
-                        });
-                        pageIdx++;
+                        rawPages.push([...currentChunk]);
                         currentChunk = [];
                     }
                 }
@@ -2074,7 +2069,11 @@
                 flushPage();
             }
 
-            return pages;
+            const totalPages = rawPages.length;
+            return rawPages.map((lines, idx) => ({
+                page: `P${idx + 1}/${totalPages}`,
+                lines: lines
+            }));
         }
 
         // 歌詞解析 Header
