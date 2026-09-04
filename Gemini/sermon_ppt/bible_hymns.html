@@ -1456,15 +1456,7 @@
 
             <!-- 控制列 (歌詞模式專屬) -->
             <div class="controls-row" id="controls-row-lyrics" style="display:none !important;">
-                <div class="control-item" id="ctrl-auto-header">
-                    <div class="control-label">
-                        <span class="control-title">自動解析介紹</span>
-                        <span class="control-desc">自動分析前5行基本資訊與詞曲作者</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="auto-header" checked>
-                        <span class="slider"></span>
-                    </label>
+                
                 </div>
 
                 <div class="control-item" id="ctrl-max-len">
@@ -1960,7 +1952,7 @@
         setTimeout(() => { switchTab(initialTab); }, 50);
 
         if (textarea) textarea.addEventListener('input', updateLyricsLayout);
-        if (document.getElementById('auto-header')) document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
+        if (document.getElementById('auto-header')) 
         if (document.getElementById('max-len')) document.getElementById('max-len').addEventListener('input', () => {
             if (currentTab === 'lyrics') updateLyricsLayout();
         });
@@ -2172,29 +2164,21 @@
         }
 
         function updateLyricsLayout() {
-            const rawText = textarea.value.trim();
+            const rawText = textarea ? textarea.value.trim() : "";
             if (!rawText) {
-                previewArea.textContent = "";
+                if (previewArea) previewArea.textContent = "";
+                currentFormattedResult = "";
                 return;
             }
 
-            const autoHeader = document.getElementById('auto-header').checked;
-            const maxLen = parseInt(document.getElementById('max-len').value, 10) || 15;
+            const maxLenElem = document.getElementById('max-len');
+            const maxLen = maxLenElem ? (parseInt(maxLenElem.value, 10) || 15) : 15;
 
-            let metadata = {};
-            let lyricsPages = [];
+            const metadata = { title: rawText.split('\n')[0].trim() || '歌詞字幕' };
+            const lyricsPages = chunkRawLyrics(rawText, 2, maxLen);
 
-            if (autoHeader) {
-                const parsed = parseAutoHeaderFile(rawText);
-                metadata = parsed.metadata;
-                lyricsPages = chunkRawLyrics(parsed.lyricsText, 2, maxLen);
-            } else {
-                metadata = { title: rawText.split('\n')[0].trim() || '歌詞字幕' };
-                lyricsPages = chunkRawLyrics(rawText, 2, maxLen);
-            }
-
-            const formattedText = formatOutputText(metadata, lyricsPages, autoHeader);
-            previewArea.textContent = formattedText;
+            const formattedText = formatOutputText(metadata, lyricsPages, false);
+            if (previewArea) previewArea.textContent = formattedText;
             currentFormattedResult = formattedText;
         }
 
