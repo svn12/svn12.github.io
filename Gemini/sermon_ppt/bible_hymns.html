@@ -1955,7 +1955,9 @@
         });
     
         window.initAppTheme();
-        setTimeout(() => { switchTab("audio"); }, 100);
+        const initialActiveBtn = document.querySelector('.tabs-header .tab-btn.active');
+        const initialTab = initialActiveBtn ? (initialActiveBtn.dataset.tab || initialActiveBtn.id.replace('tab-', '')) : 'lyrics';
+        setTimeout(() => { switchTab(initialTab); }, 50);
 
         if (textarea) textarea.addEventListener('input', updateLyricsLayout);
         if (document.getElementById('auto-header')) document.getElementById('auto-header').addEventListener('change', updateLyricsLayout);
