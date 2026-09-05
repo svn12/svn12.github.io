@@ -681,6 +681,48 @@ input:checked + .slider:before {
     justify-content: center;
 }
 
+/* 通關成語說明列表 */
+.win-idiom-list {
+    margin: 12px 0 4px;
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 4px;
+}
+.win-idiom-list::-webkit-scrollbar { width: 4px; }
+.win-idiom-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
+
+.win-idiom-item {
+    background: rgba(0,0,0,0.04);
+    border-left: 3px solid var(--correct-color);
+    border-radius: 6px;
+    padding: 7px 10px;
+    text-align: left;
+}
+.win-idiom-word {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 3px;
+}
+.win-idiom-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+.win-idiom-pinyin {
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 1px;
+}
+.win-idiom-exp {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.5;
+}
+
 /* 按鈕系統 */
 .btn {
     border: 2px solid var(--primary-color);

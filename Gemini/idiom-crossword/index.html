@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Remark: 網頁功能：成語十字接龍 - 1000關挑戰 | 關聯: style.css, levels.js, game.js -->
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +6,7 @@
     <title>成語十字接龍 - 1000關挑戰</title>
     <!-- 引入 Google Fonts 中文字型 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
     <!-- 引入 Canvas Confetti 撒花特效 -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
@@ -64,7 +63,7 @@
                     <div class="btn-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                     </div>
-                    <span class="btn-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="gold" style="vertical-align: middle; margin-right: 1px;"><circle cx="12" cy="12" r="10"></circle></svg> 30</span>
+                    <span class="btn-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="gold" style="vertical-align: middle; margin-right: 1px;"><circle cx="12" cy="12" r="10"></circle></svg> <span id="hint-cost-label">30</span></span>
                 </button>
 
                 <!-- 廣告/免費提示按鈕 -->
@@ -141,6 +140,8 @@
                         <span>金幣 +50</span>
                     </div>
                 </div>
+                <!-- 本關成語說明 -->
+                <div class="win-idiom-list" id="win-idiom-list"></div>
                 <div class="win-actions">
                     <button class="btn btn-primary" id="btn-next-level">進入下一關</button>
                 </div>

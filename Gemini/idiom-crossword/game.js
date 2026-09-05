@@ -7,6 +7,8 @@ let currentLevel = 1;
 let coins = 100;
 let unlockedLevel = 1;
 let soundEnabled = true;
+let hintCount = 0;       // 每關已用提示次數（扣點 = 30 * (hintCount+1)）
+let lastDailyDate = '';  // 上次領取每日福袋的日期 (YYYY-MM-DD)
 
 let levelData = null; // 當前關卡資料
 let playerAnswers = {}; // 記錄玩家填寫的字，鍵為 "r,c"，值為候選字 index 或字符
@@ -70,21 +72,38 @@ function loadProgress() {
     const savedCoins = localStorage.getItem('idiom_coins');
     const savedUnlocked = localStorage.getItem('idiom_unlocked_level');
     const savedSound = localStorage.getItem('idiom_sound_enabled');
+    const savedDailyDate = localStorage.getItem('idiom_daily_date');
+    const savedHintDate = localStorage.getItem('idiom_hint_date');
+    const savedHintCount = localStorage.getItem('idiom_hint_count');
 
     if (savedLevel) currentLevel = parseInt(savedLevel);
     if (savedCoins) coins = parseInt(savedCoins);
     if (savedUnlocked) unlockedLevel = parseInt(savedUnlocked);
     if (savedSound) soundEnabled = (savedSound === 'true');
+    if (savedDailyDate) lastDailyDate = savedDailyDate;
+
+    // hintCount 以天為單位：跨天自動歸零
+    const today = new Date().toISOString().slice(0, 10);
+    if (savedHintDate === today && savedHintCount) {
+        hintCount = parseInt(savedHintCount);
+    } else {
+        hintCount = 0;
+    }
 
     document.getElementById('coin-count').innerText = coins;
     document.getElementById('toggle-sound').checked = soundEnabled;
+    updateDailyBtn();
 }
 
 function saveProgress() {
+    const today = new Date().toISOString().slice(0, 10);
     localStorage.setItem('idiom_current_level', currentLevel);
     localStorage.setItem('idiom_coins', coins);
     localStorage.setItem('idiom_unlocked_level', unlockedLevel);
     localStorage.setItem('idiom_sound_enabled', soundEnabled);
+    localStorage.setItem('idiom_daily_date', lastDailyDate);
+    localStorage.setItem('idiom_hint_count', hintCount);
+    localStorage.setItem('idiom_hint_date', today);
     document.getElementById('coin-count').innerText = coins;
 }
 
@@ -119,6 +138,7 @@ function loadLevel(levelNum) {
     // 預設選中第一個空格
     selectFirstEmptyCell();
 
+    updateHintBtn();
     saveProgress();
 }
 
@@ -516,6 +536,18 @@ function handleWinLevel() {
         if (currentLevel === 1000) {
             showModal('modal-complete-all');
         } else {
+            // 填入本關成語說明
+            const list = document.getElementById('win-idiom-list');
+            list.innerHTML = levelData.words.map(w => {
+                const shortExp = (w.explanation || '').split('\n')[0].replace(/＃.*/, '').trim();
+                return `<div class="win-idiom-item">
+                    <div class="win-idiom-word">
+                        <span class="win-idiom-name">${w.word}</span>
+                        <span class="win-idiom-pinyin">${w.zhuyin || w.pinyin || ''}</span>
+                    </div>
+                    <div class="win-idiom-exp">${shortExp}</div>
+                </div>`;
+            }).join('');
             showModal('modal-win');
         }
     }, 500);
@@ -525,15 +557,16 @@ function handleWinLevel() {
 // 提示與廣告系統 (Hints & Ads)
 // ==========================================================================
 
-// 使用金幣獲得提示 (花費 30 金幣)
+// 使用金幣獲得提示 (花費 30 × (hintCount+1) 金幣，等差遞增)
 function triggerHint() {
-    if (coins < 30) {
+    const cost = 30 * (hintCount + 1);
+    if (coins < cost) {
         // 金幣不足動畫
         const coinCountDom = document.getElementById('coin-badge');
         coinCountDom.style.animation = 'shake-error 0.4s ease-in-out';
         setTimeout(() => coinCountDom.style.animation = '', 400);
         SoundEffects.error();
-        alert("金幣不足！你可以點擊金幣旁的「+」或觀看廣告獲取免費金幣。");
+        alert(`金幣不足！本次提示需 ${cost} 金幣。你可以點擊金幣旁的「+」或觀看廣告獲取免費金幣。`);
         return;
     }
 
@@ -541,8 +574,10 @@ function triggerHint() {
     const targetBlank = findHintTarget();
     if (!targetBlank) return;
 
-    coins -= 30;
+    coins -= cost;
+    hintCount++;
     SoundEffects.coin();
+    updateHintBtn();
     saveProgress();
 
     // 填入正確字
@@ -790,6 +825,33 @@ function openLevelsMenu() {
     showModal('modal-levels-menu');
 }
 
+// 更新提示按鈕顯示的金幣數
+function updateHintBtn() {
+    const cost = 30 * (hintCount + 1);
+    const label = document.getElementById('hint-cost-label');
+    if (label) label.textContent = cost;
+    const btn = document.getElementById('btn-hint');
+    if (btn) btn.title = `提示 (消耗 ${cost} 金幣)`;
+}
+
+// 更新每日福袋按鈕狀態（當天已領取時顯示灰色）
+function updateDailyBtn() {
+    const today = new Date().toISOString().slice(0, 10);
+    const btn = document.getElementById('btn-add-coin');
+    if (!btn) return;
+    if (lastDailyDate === today) {
+        btn.disabled = true;
+        btn.title = '今日福袋已領取，明天再來';
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'not-allowed';
+    } else {
+        btn.disabled = false;
+        btn.title = '每日福袋 +100 金幣';
+        btn.style.opacity = '';
+        btn.style.cursor = '';
+    }
+}
+
 // ==========================================================================
 // 綁定事件監聽器
 // ==========================================================================
@@ -803,11 +865,17 @@ function setupEventListeners() {
     
     document.getElementById('btn-add-coin').addEventListener('click', () => {
         initAudio();
+        const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+        if (lastDailyDate === today) {
+            alert('每日福袋已領取！明天再來領 100 金幣 🎁');
+            return;
+        }
+        lastDailyDate = today;
         coins += 100;
         SoundEffects.coin();
         saveProgress();
-        // 飛入動畫提示
-        alert("成功領取每日福袋金幣 +100！");
+        updateDailyBtn();
+        alert('成功領取每日福袋金幣 +100！');
     });
 
     // 底部按鈕
