@@ -30,6 +30,9 @@
         </div>
       </div>
       <div class="flex items-center gap-2">
+        <button onclick="openConfigModal()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg border border-slate-700 transition" title="增刪系統分類與狀態類別">
+          <i class="fa-solid fa-sliders"></i> 類別管理
+        </button>
         <button onclick="openModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm transition">
           <i class="fa-solid fa-plus"></i> 新增缺失項目
         </button>
@@ -44,30 +47,10 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
 
     <!-- KPI Dashboard Cards -->
-    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+    <section id="kpi-dashboard-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
       <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
         <div class="text-xs text-slate-500 font-medium">總提報項目</div>
         <div class="text-2xl font-black text-slate-800 mt-1" id="stat-total">0</div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <div class="text-xs text-red-500 font-medium">待處理 / 緊急</div>
-        <div class="text-2xl font-black text-red-600 mt-1" id="stat-pending">0</div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <div class="text-xs text-amber-500 font-medium">國霖驗收列管</div>
-        <div class="text-2xl font-black text-amber-600 mt-1" id="stat-inspection">0</div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <div class="text-xs text-orange-500 font-medium">建商查勘中</div>
-        <div class="text-2xl font-black text-orange-600 mt-1" id="stat-surveying">0</div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <div class="text-xs text-indigo-500 font-medium">已改善待複驗</div>
-        <div class="text-2xl font-black text-indigo-600 mt-1" id="stat-reverify">0</div>
-      </div>
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <div class="text-xs text-emerald-500 font-medium">已結案</div>
-        <div class="text-2xl font-black text-emerald-600 mt-1" id="stat-closed">0</div>
       </div>
     </section>
 
@@ -394,6 +377,78 @@
           <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow-sm transition">儲存提報</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Category & Status Config Modal (類別管理彈窗) -->
+  <div id="config-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col">
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-indigo-400"></i>
+          <h3 class="font-bold text-base">類別管理（系統分類 & 改善狀態）</h3>
+        </div>
+        <button onclick="closeConfigModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="p-6 space-y-6 overflow-y-auto text-sm">
+        <!-- 系統分類管理 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-layer-group text-indigo-600"></i> 系統分類列表
+            </h4>
+            <span class="text-xs text-slate-400">供全系統提報與篩選分類使用</span>
+          </div>
+
+          <!-- 新增分類輸入區 -->
+          <div class="flex gap-2 mb-3">
+            <input type="text" id="new-category-input" placeholder="輸入新分類名稱 (如：電梯設備、園藝景觀)" 
+                   class="flex-1 py-1.5 px-3 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+            <button type="button" onclick="addCategory()" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1 transition">
+              <i class="fa-solid fa-plus"></i> 新增分類
+            </button>
+          </div>
+
+          <!-- 類別清單 tags -->
+          <div id="category-tags-list" class="flex flex-wrap gap-2">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- 改善狀態管理 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-traffic-light text-amber-600"></i> 改善狀態列表
+            </h4>
+            <span class="text-xs text-slate-400">案件生命週期階段</span>
+          </div>
+
+          <!-- 新增狀態輸入區 -->
+          <div class="flex gap-2 mb-3">
+            <input type="text" id="new-status-input" placeholder="輸入新狀態名稱 (如：管委會審核中、第三方複勘)" 
+                   class="flex-1 py-1.5 px-3 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+            <button type="button" onclick="addStatus()" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1 transition">
+              <i class="fa-solid fa-plus"></i> 新增狀態
+            </button>
+          </div>
+
+          <!-- 狀態清單 tags -->
+          <div id="status-tags-list" class="flex flex-wrap gap-2">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="text-[11px] text-slate-400 leading-relaxed bg-amber-50/60 p-3 rounded-lg border border-amber-200/50">
+          <i class="fa-solid fa-circle-info text-amber-600 mr-1"></i>
+          說明：刪除類別僅會將該項目從未來的選單中移除，已存在之歷史案件資料仍會妥善保留其原本設定的文字，不會受到影響。
+        </div>
+      </div>
+
+      <div class="px-6 py-3 bg-slate-100 border-t border-slate-200 flex justify-end shrink-0">
+        <button type="button" onclick="closeConfigModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold transition">完成關閉</button>
+      </div>
     </div>
   </div>
 
@@ -1334,18 +1389,208 @@
     let currentDetailDefect = null;
     let currentFilteredList = defectList; // 記錄當前過濾篩選出的案件列表
 
+    // 預設系統分類與改善狀態
+    const defaultCategories = ["漏水滲水", "給排水系統", "門禁弱電", "消防安檢", "土建五金", "環境管理"];
+    const defaultStatuses = ["待處理", "國霖驗收列管", "建商查勘中", "已改善待複驗", "已結案"];
+
+    let categoryList = JSON.parse(localStorage.getItem('pinyang_categories_v1')) || defaultCategories;
+    let statusList = JSON.parse(localStorage.getItem('pinyang_statuses_v1')) || defaultStatuses;
+
+    function saveCategoryAndStatus() {
+      localStorage.setItem('pinyang_categories_v1', JSON.stringify(categoryList));
+      localStorage.setItem('pinyang_statuses_v1', JSON.stringify(statusList));
+      populateSelectOptions();
+      renderConfigTags();
+      updateDashboardStats();
+      renderTable();
+    }
+
+    // 狀態色彩對照設定（若為自訂狀態則自動隨機分配優雅色系）
+    const statusColorMap = {
+      "待處理": { bg: "bg-red-50", text: "text-red-700", border: "border-red-200", badgeClass: "status-badge-待處理" },
+      "國霖驗收列管": { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", badgeClass: "status-badge-國霖驗收列管" },
+      "建商查勘中": { bg: "bg-orange-50", text: "text-orange-700", border: "border-orange-200", badgeClass: "status-badge-建商查勘中" },
+      "已改善待複驗": { bg: "bg-indigo-50", text: "text-indigo-700", border: "border-indigo-200", badgeClass: "status-badge-已改善待複驗" },
+      "已結案": { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200", badgeClass: "status-badge-已結案" }
+    };
+
+    function getStatusBadgeStyle(status) {
+      if (statusColorMap[status]) {
+        return {
+          cardBg: statusColorMap[status].bg,
+          cardText: statusColorMap[status].text,
+          border: statusColorMap[status].border,
+          badgeClass: statusColorMap[status].badgeClass
+        };
+      }
+      return {
+        cardBg: "bg-sky-50",
+        cardText: "text-sky-700",
+        border: "border-sky-200",
+        badgeClass: "bg-sky-100 text-sky-800 border-sky-300"
+      };
+    }
+
+    // 動態填入各處下拉選單
+    function populateSelectOptions() {
+      // 1. 頂部過濾器 - 系統分類
+      const filterCat = document.getElementById('filter-category');
+      if (filterCat) {
+        const cur = filterCat.value;
+        filterCat.innerHTML = `<option value="">全部系統分類</option>` + 
+          categoryList.map(c => `<option value="${c}">${c}</option>`).join('');
+        filterCat.value = cur;
+      }
+
+      // 2. 頂部過濾器 - 改善狀態
+      const filterStatus = document.getElementById('filter-status');
+      if (filterStatus) {
+        const cur = filterStatus.value;
+        filterStatus.innerHTML = `<option value="">全部狀態</option>` + 
+          statusList.map(s => `<option value="${s}">${s}</option>`).join('');
+        filterStatus.value = cur;
+      }
+
+      // 3. 新增表單 - 系統分類
+      const newCat = document.getElementById('new-cat');
+      if (newCat) {
+        const cur = newCat.value;
+        newCat.innerHTML = categoryList.map(c => `<option value="${c}">${c}</option>`).join('');
+        if (categoryList.includes(cur)) newCat.value = cur;
+      }
+
+      // 4. 新增表單 - 初始處理狀態
+      const newStatus = document.getElementById('new-status');
+      if (newStatus) {
+        const cur = newStatus.value;
+        newStatus.innerHTML = statusList.map(s => `<option value="${s}">${s}</option>`).join('');
+        if (statusList.includes(cur)) newStatus.value = cur;
+      }
+
+      // 5. 案件編輯表單 - 系統分類
+      const editCat = document.getElementById('edit-cat');
+      if (editCat) {
+        const cur = editCat.value;
+        editCat.innerHTML = categoryList.map(c => `<option value="${c}">${c}</option>`).join('');
+        if (categoryList.includes(cur)) editCat.value = cur;
+      }
+
+      // 6. 案件詳情底部 - 狀態選擇
+      const modalStatusSelect = document.getElementById('modal-status-select');
+      if (modalStatusSelect) {
+        const cur = modalStatusSelect.value;
+        modalStatusSelect.innerHTML = statusList.map(s => `<option value="${s}">${s}</option>`).join('');
+        if (statusList.includes(cur)) modalStatusSelect.value = cur;
+      }
+    }
+
+    // 類別管理彈窗處理
+    function openConfigModal() {
+      renderConfigTags();
+      document.getElementById('config-modal').classList.remove('hidden');
+    }
+
+    function closeConfigModal() {
+      document.getElementById('config-modal').classList.add('hidden');
+    }
+
+    function renderConfigTags() {
+      const catListEl = document.getElementById('category-tags-list');
+      const statusListEl = document.getElementById('status-tags-list');
+
+      if (catListEl) {
+        catListEl.innerHTML = categoryList.map((cat, idx) => `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs font-semibold">
+            ${cat}
+            <button type="button" onclick="deleteCategory(${idx})" class="w-4 h-4 rounded-full hover:bg-indigo-200 text-indigo-600 hover:text-indigo-900 inline-flex items-center justify-center transition" title="刪除此分類">
+              <i class="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+          </span>
+        `).join('');
+      }
+
+      if (statusListEl) {
+        statusListEl.innerHTML = statusList.map((st, idx) => `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
+            ${st}
+            <button type="button" onclick="deleteStatus(${idx})" class="w-4 h-4 rounded-full hover:bg-amber-200 text-amber-600 hover:text-amber-900 inline-flex items-center justify-center transition" title="刪除此狀態">
+              <i class="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+          </span>
+        `).join('');
+      }
+    }
+
+    function addCategory() {
+      const input = document.getElementById('new-category-input');
+      const val = input.value.trim();
+      if (!val) return;
+      if (categoryList.includes(val)) {
+        alert('該系統分類已存在！');
+        return;
+      }
+      categoryList.push(val);
+      input.value = '';
+      saveCategoryAndStatus();
+    }
+
+    function deleteCategory(index) {
+      const target = categoryList[index];
+      if (confirm(`確定刪除分類「${target}」？\n（歷史案件中若有此分類仍會保留文字，僅從未來選單移除）`)) {
+        categoryList.splice(index, 1);
+        saveCategoryAndStatus();
+      }
+    }
+
+    function addStatus() {
+      const input = document.getElementById('new-status-input');
+      const val = input.value.trim();
+      if (!val) return;
+      if (statusList.includes(val)) {
+        alert('該改善狀態已存在！');
+        return;
+      }
+      statusList.push(val);
+      input.value = '';
+      saveCategoryAndStatus();
+    }
+
+    function deleteStatus(index) {
+      const target = statusList[index];
+      if (confirm(`確定刪除狀態「${target}」？\n（歷史案件中若有此狀態仍會保留文字，僅從未來選單移除）`)) {
+        statusList.splice(index, 1);
+        saveCategoryAndStatus();
+      }
+    }
+
     function saveData() {
       localStorage.setItem('pinyang_defects_v5', JSON.stringify(defectList));
       updateDashboardStats();
     }
 
     function updateDashboardStats() {
-      document.getElementById('stat-total').innerText = defectList.length;
-      document.getElementById('stat-pending').innerText = defectList.filter(d => d.status === '待處理').length;
-      document.getElementById('stat-inspection').innerText = defectList.filter(d => d.status === '國霖驗收列管').length;
-      document.getElementById('stat-surveying').innerText = defectList.filter(d => d.status === '建商查勘中').length;
-      document.getElementById('stat-reverify').innerText = defectList.filter(d => d.status === '已改善待複驗').length;
-      document.getElementById('stat-closed').innerText = defectList.filter(d => d.status === '已結案').length;
+      const container = document.getElementById('kpi-dashboard-container');
+      if (!container) return;
+
+      let html = `
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500 font-medium">總提報項目</div>
+          <div class="text-2xl font-black text-slate-800 mt-1" id="stat-total">${defectList.length}</div>
+        </div>
+      `;
+
+      statusList.forEach(st => {
+        const count = defectList.filter(d => d.status === st).length;
+        const style = getStatusBadgeStyle(st);
+        html += `
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-xs ${style.cardText} font-medium">${st}</div>
+            <div class="text-2xl font-black ${style.cardText} mt-1">${count}</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
     }
 
     function renderTable() {
@@ -1399,6 +1644,8 @@
           }
         }
 
+        const style = getStatusBadgeStyle(item.status);
+
         tr.innerHTML = `
           <td class="py-3 px-3 font-mono font-bold text-xs text-indigo-700 whitespace-nowrap">${item.id}</td>
           <td class="py-3 px-3 whitespace-nowrap">${officialBadge}</td>
@@ -1416,7 +1663,7 @@
           </td>
           <td class="py-3 px-3 text-center whitespace-nowrap">${photoBadge}</td>
           <td class="py-3 px-3 whitespace-nowrap">
-            <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-bold border status-badge-${item.status}">${item.status}</span>
+            <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-bold border ${style.badgeClass}">${item.status}</span>
           </td>
           <td class="py-3 px-3 text-right whitespace-nowrap">
             <button onclick="showDetail('${item.id}')" class="p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded transition" title="查看相片與細節">
@@ -1443,7 +1690,19 @@
       document.getElementById('modal-reporter').innerText = item.reporter || '未註記';
       document.getElementById('modal-desc').innerText = item.desc;
       document.getElementById('modal-progress').innerText = item.progress || '尚無建商回覆紀錄';
-      document.getElementById('modal-status-select').value = item.status;
+      
+      const modalStatusSelect = document.getElementById('modal-status-select');
+      if (modalStatusSelect) {
+        // 若該案件狀態不在目前狀態清單中（例如歷史狀態），暫時補進選單避免空白
+        const exists = Array.from(modalStatusSelect.options).some(opt => opt.value === item.status);
+        if (!exists && item.status) {
+          const opt = document.createElement('option');
+          opt.value = item.status;
+          opt.innerText = item.status;
+          modalStatusSelect.appendChild(opt);
+        }
+        modalStatusSelect.value = item.status;
+      }
 
       // 更新彈窗內的案件序號計數器 (例如: 2 / 60)
       const caseCounterEl = document.getElementById('case-counter');
@@ -1501,7 +1760,17 @@
         document.getElementById('edit-date').value = currentDetailDefect.date || '';
         document.getElementById('edit-area').value = currentDetailDefect.area || '';
         document.getElementById('edit-loc').value = currentDetailDefect.loc || '';
-        document.getElementById('edit-cat').value = currentDetailDefect.cat || '土建五金';
+        const editCatEl = document.getElementById('edit-cat');
+        if (editCatEl) {
+          const exists = Array.from(editCatEl.options).some(opt => opt.value === currentDetailDefect.cat);
+          if (!exists && currentDetailDefect.cat) {
+            const opt = document.createElement('option');
+            opt.value = currentDetailDefect.cat;
+            opt.innerText = currentDetailDefect.cat;
+            editCatEl.appendChild(opt);
+          }
+          editCatEl.value = currentDetailDefect.cat || (categoryList[0] || '');
+        }
         document.getElementById('edit-reporter').value = currentDetailDefect.reporter || '';
         document.getElementById('edit-official-id').value = currentDetailDefect.official_id || '';
         document.getElementById('edit-desc').value = currentDetailDefect.desc || '';
@@ -1919,6 +2188,7 @@
     }
 
     // Init
+    populateSelectOptions();
     updateDashboardStats();
     renderTable();
   </script>
