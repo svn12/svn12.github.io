@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>社區公設缺失與修繕追蹤系統</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif; }
+    .status-badge-待處理 { background-color: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+    .status-badge-建商查勘中 { background-color: #ffedd5; color: #c2410c; border-color: #fdba74; }
+    .status-badge-國霖驗收列管 { background-color: #fef3c7; color: #b45309; border-color: #fcd34d; }
+    .status-badge-已改善待複驗 { background-color: #e0e7ff; color: #4338ca; border-color: #a5b4fc; }
+    .status-badge-已結案 { background-color: #dcfce7; color: #15803d; border-color: #86efac; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-16">
+
+  <!-- Header -->
+  <header class="bg-slate-900 text-white sticky top-0 z-30 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-xl font-bold shadow-inner">
+          <i class="fa-solid fa-building-circle-exclamation"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-wide">品陽大苑｜大樓公設缺失追蹤系統</h1>
+          <p class="text-xs text-slate-400">住戶提報・第三方驗收（國霖）列管・修繕比對平台</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm transition">
+          <i class="fa-solid fa-plus"></i> 新增缺失項目
+        </button>
+        <button onclick="exportCSV()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg border border-slate-700 transition">
+          <i class="fa-solid fa-file-export"></i> 匯出 CSV
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+
+    <!-- KPI Dashboard Cards -->
+    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="text-xs text-slate-500 font-medium">總提報項目</div>
+        <div class="text-2xl font-black text-slate-800 mt-1" id="stat-total">0</div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="text-xs text-red-500 font-medium">待處理 / 緊急</div>
+        <div class="text-2xl font-black text-red-600 mt-1" id="stat-pending">0</div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="text-xs text-amber-500 font-medium">國霖驗收列管</div>
+        <div class="text-2xl font-black text-amber-600 mt-1" id="stat-inspection">0</div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="text-xs text-orange-500 font-medium">建商查勘中</div>
+        <div class="text-2xl font-black text-orange-600 mt-1" id="stat-surveying">0</div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="text-xs text-indigo-500 font-medium">已改善待複驗</div>
+        <div class="text-2xl font-black text-indigo-600 mt-1" id="stat-reverify">0</div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="text-xs text-emerald-500 font-medium">已結案</div>
+        <div class="text-2xl font-black text-emerald-600 mt-1" id="stat-closed">0</div>
+      </div>
+    </section>
+
+    <!-- Filters & Search Bar -->
+    <section class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
+        <!-- Keyword Search -->
+        <div class="md:col-span-2 relative">
+          <label class="block text-xs font-semibold text-slate-500 mb-1">關鍵字搜尋 (編號/地點/描述/提報人)</label>
+          <div class="relative">
+            <input type="text" id="filter-keyword" oninput="renderTable()" placeholder="輸入關鍵字，如：漏水、水錘、B4、電梯..." 
+                   class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+          </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">系統分類</label>
+          <select id="filter-category" onchange="renderTable()" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <option value="">全部系統分類</option>
+            <option value="漏水滲水">漏水滲水 (全棟防水)</option>
+            <option value="給排水系統">給排水系統 (水壓/水錘)</option>
+            <option value="門禁弱電">門禁弱電 (車道/感應)</option>
+            <option value="消防安檢">消防安檢 (警報/排煙)</option>
+            <option value="土建五金">土建裝修與五金</option>
+            <option value="環境管理">環境衛生與管理</option>
+          </select>
+        </div>
+
+        <!-- Area Filter -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">空間區域</label>
+          <select id="filter-area" onchange="renderTable()" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <option value="">全部區域</option>
+            <option value="頂樓/RF">頂樓 / RF 露台</option>
+            <option value="地下室">地下停車場 (B1~B4)</option>
+            <option value="梯廳/逃生梯">梯廳 / 逃生樓梯間</option>
+            <option value="大廳/門廳">1F 大廳 / 櫃檯</option>
+            <option value="車道">汽機車道</option>
+            <option value="全棟供水系統">全棟供水幹管</option>
+            <option value="2F公設">2F 健身房 / 媽媽教室</option>
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">改善狀態</label>
+          <select id="filter-status" onchange="renderTable()" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <option value="">全部狀態</option>
+            <option value="待處理">待處理</option>
+            <option value="國霖驗收列管">國霖驗收列管</option>
+            <option value="建商查勘中">建商查勘中</option>
+            <option value="已改善待複驗">已改善待複驗</option>
+            <option value="已結案">已結案</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Table Section -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
+        <h2 class="font-bold text-slate-800 text-sm">缺失項目清單 (<span id="filtered-count">0</span> 項)</h2>
+        <span class="text-xs text-slate-500">點擊任一項目查看現場相片與修繕明細</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-slate-50 text-slate-600 font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
+              <th class="py-3 px-4">編號</th>
+              <th class="py-3 px-3">提報日期</th>
+              <th class="py-3 px-3">區域與位置</th>
+              <th class="py-3 px-3">系統類別</th>
+              <th class="py-3 px-4">缺失詳情摘要</th>
+              <th class="py-3 px-3 text-center">現場相片</th>
+              <th class="py-3 px-3">狀態</th>
+              <th class="py-3 px-3 text-right">操作</th>
+            </tr>
+          </thead>
+          <tbody id="defect-table-body" class="divide-y divide-slate-100 text-slate-700">
+            <!-- Rendered by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Detail / Photo Modal -->
+  <div id="detail-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-100 overflow-hidden my-auto max-h-[90vh] flex flex-col">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-2">
+          <span id="modal-id" class="font-mono px-2 py-0.5 rounded bg-indigo-600 text-xs font-bold">DEF-000</span>
+          <h3 id="modal-title" class="text-base font-bold truncate">缺失詳情</h3>
+        </div>
+        <button onclick="closeDetailModal()" class="text-slate-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-6 space-y-5 overflow-y-auto">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-100">
+          <div><span class="text-slate-400 block mb-1">提報日期</span><strong id="modal-date" class="text-slate-800 text-sm"></strong></div>
+          <div><span class="text-slate-400 block mb-1">區域空間</span><strong id="modal-area" class="text-slate-800 text-sm"></strong></div>
+          <div><span class="text-slate-400 block mb-1">系統分類</span><strong id="modal-cat" class="text-slate-800 text-sm"></strong></div>
+          <div><span class="text-slate-400 block mb-1">提報住戶</span><strong id="modal-reporter" class="text-slate-800 text-sm"></strong></div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">缺失詳情描述</label>
+          <p id="modal-desc" class="text-sm text-slate-800 bg-amber-50/50 p-3 rounded-lg border border-amber-200/50 leading-relaxed"></p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">建商回覆與改善進度</label>
+          <p id="modal-progress" class="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-200"></p>
+        </div>
+
+        <!-- Photo Section -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">現場照片紀錄 (<span id="photo-count">0</span> 張)</label>
+            <div class="flex gap-2">
+              <label class="cursor-pointer inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 font-semibold">
+                <i class="fa-solid fa-camera"></i> 上傳現場相片
+                <input type="file" id="photo-upload-input" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(event)" />
+              </label>
+            </div>
+          </div>
+          
+          <div id="modal-photo-gallery" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <!-- Dynamic Photos -->
+          </div>
+          <p id="no-photo-hint" class="text-xs text-slate-400 italic py-4 text-center bg-slate-50 border border-dashed border-slate-200 rounded-lg">尚無照片，可點擊上方「上傳現場相片」新增</p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-500">更新狀態：</span>
+          <select id="modal-status-select" onchange="updateCurrentStatus(this.value)" class="text-xs py-1.5 px-2.5 border border-slate-300 rounded-md bg-white font-medium focus:outline-none">
+            <option value="待處理">待處理</option>
+            <option value="國霖驗收列管">國霖驗收列管</option>
+            <option value="建商查勘中">建商查勘中</option>
+            <option value="已改善待複驗">已改善待複驗</option>
+            <option value="已結案">已結案</option>
+          </select>
+        </div>
+        <button onclick="closeDetailModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Modal -->
+  <div id="create-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden my-auto">
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <h3 class="font-bold text-base">新增公設缺失提報</h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="create-form" onsubmit="handleCreateSubmit(event)" class="p-6 space-y-4 text-sm">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">提報日期</label>
+            <input type="date" id="new-date" required class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">系統分類</label>
+            <select id="new-cat" required class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm">
+              <option value="漏水滲水">漏水滲水</option>
+              <option value="給排水系統">給排水系統</option>
+              <option value="門禁弱電">門禁弱電</option>
+              <option value="消防安檢">消防安檢</option>
+              <option value="土建五金">土建五金</option>
+              <option value="環境管理">環境管理</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">空間區域</label>
+            <input type="text" id="new-area" placeholder="例如：地下室、頂樓/RF" required class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">具體位置</label>
+            <input type="text" id="new-location" placeholder="例如：B4車位54號上方" required class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">缺失詳情與現況描述</label>
+          <textarea id="new-desc" rows="3" placeholder="詳細描述現況（如滴水、白華、聲響、異味等）" required class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">提報住戶 / 戶別</label>
+            <input type="text" id="new-reporter" placeholder="例如：16-1陳宅" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">初始處理狀態</label>
+            <select id="new-status" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm">
+              <option value="待處理">待處理</option>
+              <option value="國霖驗收列管">國霖驗收列管</option>
+              <option value="建商查勘中">建商查勘中</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">現場相片 (支援多張)</label>
+          <input type="file" id="new-photos" accept="image/*" multiple class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+        </div>
+
+        <div class="pt-3 flex justify-end gap-2 border-t border-slate-100">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-medium transition">取消</button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow-sm transition">儲存提報</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Image Lightbox Modal -->
+  <div id="lightbox-modal" class="fixed inset-0 z-60 bg-black/90 hidden flex items-center justify-center p-4" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl" />
+  </div>
+
+  <script>
+    // Initial Dataset extracted from LINE chat
+    const initialData = [
+      { id: "DEF-001", date: "2026-06-01", area: "2F公設", loc: "2F健身房、媽媽教室", cat: "土建五金", desc: "跑步機螢幕破裂、檯面破碎、2F監視器掉落損壞", reporter: "14F-3廖小姐/21F A1", status: "已改善待複驗", progress: "清潔員碰觸掉落；檯面已拆換訂製品，跑步機協調中", photos: [] },
+      { id: "DEF-002", date: "2026-06-01", area: "車道", loc: "車道入口、B2/B4防火門", cat: "土建五金", desc: "車道入口地面鐵條突出；B2/B4防火門無緩衝關閉發出巨大碰撞聲、關不緊", reporter: "16F高小姐/5F-2 Audi", status: "已改善待複驗", progress: "6/27廠商已調整部分門弓器，仍需持續追蹤五金壽命", photos: [] },
+      { id: "DEF-003", date: "2026-06-01", area: "車道", loc: "機車道入口", cat: "土建五金", desc: "機車道未設防洪擋水板，地勢較低暴雨恐直接灌入大廳與交誼廳", reporter: "TT / 15F-2李先生", status: "國霖驗收列管", progress: "建商稱機車道有向上微斜坡未規劃，住戶要求複驗防洪風險", photos: [] },
+      { id: "DEF-004", date: "2026-06-08", area: "梯廳/逃生梯", loc: "17F梯廳", cat: "土建裝修", desc: "17樓電梯旁消防窗按鍵周邊磁磚施工破損", reporter: "17F陳思維", status: "待處理", progress: "管委會已記下向品陽回報，尚未完成精緻修復", photos: [] },
+      { id: "DEF-005", date: "2026-06-09", area: "戶外公設", loc: "社區外牆、後花園", cat: "環境管理", desc: "外牆與後花園照明時段不佳（天未黑開燈，晚上沿路昏暗無路燈）", reporter: "14F-3廖小姐", status: "已改善待複驗", progress: "控制器已調整為18:00-21:00，里長安排後巷路燈會勘", photos: [] },
+      { id: "DEF-006", date: "2026-06-10", area: "梯廳/逃生梯", loc: "全棟電梯", cat: "門禁弱電", desc: "殘障電梯關門鍵無功能（開門正常）；身障面板未設門禁刷卡感應；15F身障按鈕失效", reporter: "17F吉 / 15F-2黃小姐", status: "待處理", progress: "9/22再次回報15F身障按鈕故障，1F正常", photos: [] },
+      { id: "DEF-007", date: "2026-06-12", area: "梯廳/逃生梯", loc: "B4逃生梯", cat: "土建五金", desc: "B4逃生梯欄杆斷裂脫落，存在嚴重公共安全危險", reporter: "15F-2李先生 / 21F A1", status: "待處理", progress: "6/12即回報總幹事記錄，至今超過3個月未見修復", photos: [] },
+      { id: "DEF-008", date: "2026-06-12", area: "梯廳/逃生梯", loc: "全棟公共走廊與樓梯", cat: "消防安檢", desc: "公共梯間大樓滅火器有效日期疑過期，需全面查核換新", reporter: "8F-1劉先生", status: "待處理", progress: "已通知品陽檢查更新", photos: [] },
+      { id: "DEF-009", date: "2026-06-14", area: "頂樓/RF", loc: "20F、21F(R樓)陽台出口", cat: "土建五金", desc: "出陽台斜坡為亮面石材，雨天極度濕滑致住戶摔倒，強烈要求加裝止滑條", reporter: "Iris Lin", status: "待處理", progress: "防滑未施作，雨天屢次造成危險", photos: [] },
+      { id: "DEF-010", date: "2026-06-18", area: "梯廳/逃生梯", loc: "8F電梯外、中走道", cat: "土建五金", desc: "天花板通道有明顯汙漬、維修板破損，要求全棟梯間批土粉刷維修", reporter: "8F-1翁小姐", status: "已改善待複驗", progress: "品陽9月中旬完成第一批9個樓層梯廳修繕，待管委會複驗", photos: [] },
+      { id: "DEF-011", date: "2026-06-18", area: "頂樓/RF", loc: "20F公設露台門", cat: "漏水滲水", desc: "暴雨時外水倒灌進20F梯廳；門縫過大、門外無止水墩與排水溝（19F/頂樓皆有排水溝）", reporter: "20F陳太太/10F-5陳先生", status: "已改善待複驗", progress: "6/29已補做防水門與止水設施，需大雨複驗", photos: [] },
+      { id: "DEF-012", date: "2026-06-22", area: "地下室", loc: "B1停車場", cat: "環境管理", desc: "B1停車場方向警示牌掉落未固定", reporter: "15A1A2鄭先生", status: "待處理", progress: "已拍照通報總幹事", photos: [] },
+      { id: "DEF-013", date: "2026-06-25", area: "梯廳/逃生梯", loc: "全棟電梯", cat: "土建五金", desc: "電梯車廂內使用許可證已過期，未依法定期換證展延", reporter: "15F-2李先生", status: "已結案", progress: "已通報品陽並更換最新有效許可證", photos: [] },
+      { id: "DEF-014", date: "2026-06-30", area: "大廳/門廳", loc: "1F大廳櫃檯", cat: "消防安檢", desc: "一樓管理櫃檯未設消防副機/複示面板，警報響起警衛需跑至B1確認樓層，延誤救災", reporter: "16F高小姐 / 10F-5", status: "國霖驗收列管", progress: "管委會已正式提請建商全額出資增設，待會勘決議", photos: [] },
+      { id: "DEF-015", date: "2026-06-30", area: "地下室", loc: "B1~B3公共區域", cat: "環境管理", desc: "建商剩餘水泥、砂石及纖維棉餘料長期堆置公共走道，粉塵飛揚污染空氣", reporter: "16F高小姐/16-1陳宅", status: "建商查勘中", progress: "已要求品陽於9月底前全面清運完畢（部分石材移入機房）", photos: [] },
+      { id: "DEF-016", date: "2026-06-30", area: "大廳/門廳", loc: "1F挑高大廳", cat: "土建五金", desc: "挑高大廳未依規定配置專用維修高梯，日後物業無法維護更換挑高燈具", reporter: "16F高小姐", status: "國霖驗收列管", progress: "要求建商於公設點交時無償附隨移交符合勞安規格之專用梯", photos: [] },
+      { id: "DEF-017", date: "2026-07-12", area: "地下室", loc: "B4停車場牆面", cat: "土建五金", desc: "B4停車場牆面批土塗層大片剝落，現場僅貼藍色膠帶標記未實質修復", reporter: "Max", status: "待處理", progress: "7/12反映至今仍有修補剝落現象", photos: [] },
+      { id: "DEF-018", date: "2026-07-19", area: "地下室", loc: "B2地下室 / 3F露台側", cat: "消防安檢", desc: "地下室消防排風系統無故誤啟動，3F露台排氣孔發出震耳欲聾暴風巨響", reporter: "3F-2蕭先生/10F-3劉先生", status: "國霖驗收列管", progress: "排煙閘門疑似故障或誤觸，需查修電路板並加裝防誤觸保護蓋", photos: [] },
+      { id: "DEF-019", date: "2026-07-20", area: "地下室", loc: "機車停車場天花板", cat: "漏水滲水", desc: "暴雨後機車停車區天花板持續滴水、有多處批土補漆痕跡", reporter: "15F-5謝先生/16-1陳宅", status: "國霖驗收列管", progress: "現場有多處重新開孔批土痕跡，證明長期滲漏，需查明水路", photos: [] },
+      { id: "DEF-020", date: "2026-07-20", area: "車道", loc: "機車與汽車車道", cat: "門禁弱電", desc: "eTag感應不良極頻繁（下雨天/特定角度無法感應）；機車捲門關閉後又自動開啟", reporter: "14F-3/5F-2/16-1陳宅", status: "建商查勘中", progress: "已請宗亞到場測試，預計9/29再次現場排查", photos: [] },
+      { id: "DEF-021", date: "2026-07-29", area: "大廳/門廳", loc: "1F管理中心", cat: "門禁弱電", desc: "住戶觸發求救警報時，1F管理主機螢幕僅顯示戶別，完全無警報聲提醒值勤警衛", reporter: "16F高小姐/17F-3主委", status: "建商查勘中", progress: "已請設備廠商改善主機聲光警報設定", photos: [] },
+      { id: "DEF-022", date: "2026-08-06", area: "全棟供水系統", loc: "中高樓層/16~21F", cat: "給排水系統", desc: "高樓層水壓嚴重不足(實測僅1kg/cm²)、水溫忽冷忽熱；建商私自要求住戶出資裝馬達", reporter: "16-1陳宅/20F陳太太", status: "國霖驗收列管", progress: "要求比對原始設計計算書、竣工圖及PRV減壓閥設定，全面動態測試", photos: [] },
+      { id: "DEF-023", date: "2026-08-21", area: "梯廳/逃生梯", loc: "16-1與16-2相連隔間牆", cat: "漏水滲水", desc: "電視牆插座大量漏水、牆體潮濕惡臭，建商僅目視查看推託為住戶冷氣管徑問題", reporter: "16-1陳宅/16-2馮小姐", status: "建商查勘中", progress: "住戶自費委請第三方專業抓漏，要求建商出具管線竣工圖", photos: [] },
+      { id: "DEF-024", date: "2026-08-30", area: "頂樓/RF", loc: "空中花園、水箱外牆", cat: "漏水滲水", desc: "頂樓外牆沿線大面積嚴重白華、晴天持續滴水數小時，女兒牆冷接縫防水失效", reporter: "16-1陳宅/5F-3簡良璘", status: "國霖驗收列管", progress: "建商原稱洗外牆即可，住戶駁斥應從結構與女兒牆冷接縫做實質防水", photos: [] },
+      { id: "DEF-025", date: "2026-08-31", area: "地下室", loc: "B3停車位54號上方", cat: "漏水滲水", desc: "B3車位54號上方天花板滲水滴水，地面長期殘留水痕", reporter: "16-1陳宅", status: "國霖驗收列管", progress: "主委已現場查看並請總幹事納入驗收缺失清冊", photos: [] },
+      { id: "DEF-026", date: "2026-09-02", area: "頂樓/RF", loc: "頂樓機房、21F上R樓梯間", cat: "漏水滲水", desc: "頂樓機房地板有滲水痕跡；21F通往R層樓梯間天花板、牆面持續滲水、塗層剝離", reporter: "16-1陳宅", status: "國霖驗收列管", progress: "9/22晴天現場巡檢仍持續滲水，磁磚縫隙吐白華嚴重", photos: [] },
+      { id: "DEF-027", date: "2026-09-03", area: "梯廳/逃生梯", loc: "15-16F、18-19F公共樓梯", cat: "漏水滲水", desc: "樓梯間牆面大面積受潮、水漬斑駁，18-19F塗裝表層劣化剝落", reporter: "16-1陳宅", status: "國霖驗收列管", progress: "要求查明外牆/結構滲水路徑，禁止建商僅以表面補漆掩蓋", photos: [] },
+      { id: "DEF-028", date: "2026-09-03", area: "梯廳/逃生梯", loc: "5樓電梯門", cat: "土建五金", desc: "5樓電梯每次開關門均發出巨大金屬碰撞聲（叩一聲）", reporter: "5F-2 Audi", status: "已改善待複驗", progress: "總幹事查明為外門鋼索線太鬆，9月中旬已請日立永大調整", photos: [] },
+      { id: "DEF-029", date: "2026-09-03", area: "全棟供水系統", loc: "14F、15F、16F", cat: "給排水系統", desc: "沖馬桶關閉瞬間產生巨大水錘撞擊聲（約60~70dB），水錘吸收器疑似故障或未裝設", reporter: "14F-3廖小姐/15F-5謝", status: "國霖驗收列管", progress: "查W-2竣工圖未見14-15F有水錘吸收器（僅在B4），要求第三方查核", photos: [] },
+      { id: "DEF-030", date: "2026-09-04", area: "地下室", loc: "B4集水區及雨水滯留池", cat: "漏水滲水", desc: "B4集水池牆面開裂破損、貼藍色膠帶未修；雨水滯留池周邊牆縫滲水、修補痕跡嚴重", reporter: "16-1陳宅", status: "國霖驗收列管", progress: "涉及綠建築雨水回收系統之槽體結構防漏，需確認含水率與結構安全", photos: [] },
+      { id: "DEF-031", date: "2026-09-05", area: "全棟供水系統", loc: "全棟公共管道間", cat: "給排水系統", desc: "清晨與晚間整棟大樓管道間出現高頻尖銳異音（10樓與梯廳最明顯）", reporter: "15F-2李先生/16-1陳宅", status: "建商查勘中", progress: "9/5暫關頂樓水表補水閥後平息；研判為減壓閥(PRV)或泵浦震盪引起", photos: [] },
+      { id: "DEF-032", date: "2026-09-14", area: "梯廳/逃生梯", loc: "公共電梯", cat: "消防安檢", desc: "電梯因感應區粉塵卡住導致門半開停滯；物業缺乏電梯異常即時廣播與停用SOP", reporter: "16-1陳宅/16F高小姐", status: "待處理", progress: "要求物業訂定電梯故障停用警示SOP，並將感應器清潔納入例行保養", photos: [] },
+      { id: "DEF-033", date: "2026-09-15", area: "地下室", loc: "B4自來水箱周邊", cat: "環境管理", desc: "B4水箱外牆大面積灰黑斑駁霉斑，疑似長期反覆受潮，上方管線有重新包覆修補痕", reporter: "16-1陳宅", status: "國霖驗收列管", progress: "要求第三方檢測牆體含水率，追查管線滲漏源頭", photos: [] },
+      { id: "DEF-034", date: "2026-09-15", area: "梯廳/逃生梯", loc: "全棟逃生樓梯間", cat: "消防安檢", desc: "10F、11F樓梯間照明損壞只剩單燈；B1/1F/B3/B4樓層標示牌黏著不良大範圍脫落", reporter: "16-1陳宅", status: "待處理", progress: "要求建商重新牢固固定並補齊逃生動線照明", photos: [] },
+      { id: "DEF-035", date: "2026-09-15", area: "地下室", loc: "B2電梯出入口梁面", cat: "漏水滲水", desc: "梁面有明顯水痕、受潮及修補痕跡，現場濕氣重導致安全標語黏不住脫落", reporter: "16-1陳宅/5F-3簡良璘", status: "國霖驗收列管", progress: "列入土建結構滲水查驗項目", photos: [] },
+      { id: "DEF-036", date: "2026-09-17", area: "地下室", loc: "B1電梯廳入口天花板", cat: "土建五金", desc: "B1天花板格柵金屬條歪斜扭曲變形", reporter: "15A1A2鄭先生", status: "待處理", progress: "總幹事已記錄列管", photos: [] },
+      { id: "DEF-037", date: "2026-09-22", area: "大廳/門廳", loc: "1F公共洗手間", cat: "給排水系統", desc: "現場疑似滲水、並伴隨異常嚴重之尿騷味與糞臭味，疑排污管密封不良或存水彎失效", reporter: "16-1陳宅", status: "國霖驗收列管", progress: "需查驗馬達排污管接合、地排水封及透氣管路", photos: [] },
+      { id: "DEF-038", date: "2026-09-22", area: "地下室", loc: "B3停車場門禁刷卡處", cat: "門禁弱電", desc: "刷卡門禁機連日發出尖銳警報無法解除，總幹事只能以關閉總電源消音", reporter: "16-1陳宅", status: "待處理", progress: "需查明感應控制器、弱電訊號迴路是否短路或故障", photos: [] },
+      { id: "DEF-039", date: "2026-09-22", area: "頂樓/RF", loc: "R2水表/機房管制區", cat: "環境管理", desc: "管制機房地表散落煙蒂與垃圾，疑外包施工人員隨意丟棄，涉火警隱憂", reporter: "16-1陳宅", status: "待處理", progress: "要求物業加強門禁管制並向進出施工廠商宣導罰責", photos: [] }
+    ];
+
+    // Local Storage sync
+    let defectList = JSON.parse(localStorage.getItem('pinyang_defects')) || initialData;
+    let currentDetailDefect = null;
+
+    function saveData() {
+      localStorage.setItem('pinyang_defects', JSON.stringify(defectList));
+      updateDashboardStats();
+    }
+
+    function updateDashboardStats() {
+      document.getElementById('stat-total').innerText = defectList.length;
+      document.getElementById('stat-pending').innerText = defectList.filter(d => d.status === '待處理').length;
+      document.getElementById('stat-inspection').innerText = defectList.filter(d => d.status === '國霖驗收列管').length;
+      document.getElementById('stat-surveying').innerText = defectList.filter(d => d.status === '建商查勘中').length;
+      document.getElementById('stat-reverify').innerText = defectList.filter(d => d.status === '已改善待複驗').length;
+      document.getElementById('stat-closed').innerText = defectList.filter(d => d.status === '已結案').length;
+    }
+
+    function renderTable() {
+      const keyword = document.getElementById('filter-keyword').value.trim().toLowerCase();
+      const cat = document.getElementById('filter-category').value;
+      const area = document.getElementById('filter-area').value;
+      const status = document.getElementById('filter-status').value;
+
+      const filtered = defectList.filter(item => {
+        const matchKw = !keyword || 
+          item.id.toLowerCase().includes(keyword) || 
+          item.loc.toLowerCase().includes(keyword) || 
+          item.desc.toLowerCase().includes(keyword) || 
+          (item.reporter && item.reporter.toLowerCase().includes(keyword));
+        const matchCat = !cat || item.cat === cat;
+        const matchArea = !area || item.area.includes(area);
+        const matchStatus = !status || item.status === status;
+        return matchKw && matchCat && matchArea && matchStatus;
+      });
+
+      document.getElementById('filtered-count').innerText = filtered.length;
+      const tbody = document.getElementById('defect-table-body');
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400">沒有符合搜尋條件的缺失項目</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition cursor-pointer border-b border-slate-100";
+        tr.onclick = (e) => {
+          if (e.target.closest('button')) return;
+          showDetail(item.id);
+        };
+
+        const photoCount = item.photos ? item.photos.length : 0;
+        const photoBadge = photoCount > 0 
+          ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200"><i class="fa-solid fa-images"></i> ${photoCount}</span>`
+          : `<span class="text-slate-300 text-xs">-</span>`;
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-bold text-xs text-indigo-700 whitespace-nowrap">${item.id}</td>
+          <td class="py-3 px-3 text-xs text-slate-500 whitespace-nowrap">${item.date}</td>
+          <td class="py-3 px-3 text-xs">
+            <span class="font-semibold text-slate-800">${item.area}</span>
+            <span class="block text-slate-500 truncate max-w-[130px]">${item.loc}</span>
+          </td>
+          <td class="py-3 px-3 text-xs whitespace-nowrap">
+            <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 font-medium">${item.cat}</span>
+          </td>
+          <td class="py-3 px-4 text-xs">
+            <div class="font-medium text-slate-800 line-clamp-1">${item.desc}</div>
+            <div class="text-slate-400 text-[11px] truncate max-w-[320px]">${item.progress || '尚無進度備註'}</div>
+          </td>
+          <td class="py-3 px-3 text-center whitespace-nowrap">${photoBadge}</td>
+          <td class="py-3 px-3 whitespace-nowrap">
+            <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-bold border status-badge-${item.status}">${item.status}</span>
+          </td>
+          <td class="py-3 px-3 text-right whitespace-nowrap">
+            <button onclick="showDetail('${item.id}')" class="p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded transition" title="查看相片與細節">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function showDetail(id) {
+      const item = defectList.find(d => d.id === id);
+      if (!item) return;
+      currentDetailDefect = item;
+
+      document.getElementById('modal-id').innerText = item.id;
+      document.getElementById('modal-title').innerText = item.loc;
+      document.getElementById('modal-date').innerText = item.date;
+      document.getElementById('modal-area').innerText = `${item.area} (${item.loc})`;
+      document.getElementById('modal-cat').innerText = item.cat;
+      document.getElementById('modal-reporter').innerText = item.reporter || '未註記';
+      document.getElementById('modal-desc').innerText = item.desc;
+      document.getElementById('modal-progress').innerText = item.progress || '尚無建商回覆紀錄';
+      document.getElementById('modal-status-select').value = item.status;
+
+      renderModalPhotos();
+      document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+      currentDetailDefect = null;
+      renderTable();
+    }
+
+    function updateCurrentStatus(newStatus) {
+      if (!currentDetailDefect) return;
+      currentDetailDefect.status = newStatus;
+      saveData();
+      renderTable();
+    }
+
+    function renderModalPhotos() {
+      const gallery = document.getElementById('modal-photo-gallery');
+      const noHint = document.getElementById('no-photo-hint');
+      const countEl = document.getElementById('photo-count');
+      gallery.innerHTML = '';
+
+      if (!currentDetailDefect.photos || currentDetailDefect.photos.length === 0) {
+        noHint.classList.remove('hidden');
+        countEl.innerText = '0';
+        return;
+      }
+
+      noHint.classList.add('hidden');
+      countEl.innerText = currentDetailDefect.photos.length;
+
+      currentDetailDefect.photos.forEach((src, idx) => {
+        const div = document.createElement('div');
+        div.className = "relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-100 aspect-video flex items-center justify-center shadow-sm";
+        div.innerHTML = `
+          <img src="${src}" class="w-full h-full object-cover cursor-pointer hover:scale-105 transition duration-300" onclick="openLightbox('${src}')" />
+          <button onclick="removePhoto(${idx})" class="absolute top-1.5 right-1.5 w-6 h-6 bg-red-600/80 hover:bg-red-700 text-white rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        `;
+        gallery.appendChild(div);
+      });
+    }
+
+    function handlePhotoUpload(e) {
+      if (!currentDetailDefect) return;
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
+
+      if (!currentDetailDefect.photos) currentDetailDefect.photos = [];
+
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          currentDetailDefect.photos.push(evt.target.result);
+          saveData();
+          renderModalPhotos();
+          renderTable();
+        };
+        reader.readAsDataURL(file);
+      });
+      e.target.value = '';
+    }
+
+    function removePhoto(index) {
+      if (!currentDetailDefect) return;
+      if (confirm('確定刪除此相片？')) {
+        currentDetailDefect.photos.splice(index, 1);
+        saveData();
+        renderModalPhotos();
+        renderTable();
+      }
+    }
+
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-modal').classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.add('hidden');
+    }
+
+    // Create Modal handlers
+    function openModal() {
+      document.getElementById('new-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('create-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('create-modal').classList.add('hidden');
+      document.getElementById('create-form').reset();
+    }
+
+    function handleCreateSubmit(e) {
+      e.preventDefault();
+      const maxIdNum = defectList.reduce((max, d) => {
+        const num = parseInt(d.id.replace('DEF-', ''), 10) || 0;
+        return num > max ? num : max;
+      }, 0);
+      const nextId = `DEF-${String(maxIdNum + 1).padStart(3, '0')}`;
+
+      const newDefect = {
+        id: nextId,
+        date: document.getElementById('new-date').value,
+        area: document.getElementById('new-area').value,
+        loc: document.getElementById('new-location').value,
+        cat: document.getElementById('new-cat').value,
+        desc: document.getElementById('new-desc').value,
+        reporter: document.getElementById('new-reporter').value || '住戶提報',
+        status: document.getElementById('new-status').value,
+        progress: '尚未排定查驗',
+        photos: []
+      };
+
+      const photoFiles = document.getElementById('new-photos').files;
+      if (photoFiles && photoFiles.length > 0) {
+        let loaded = 0;
+        Array.from(photoFiles).forEach(f => {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            newDefect.photos.push(evt.target.result);
+            loaded++;
+            if (loaded === photoFiles.length) {
+              defectList.unshift(newDefect);
+              saveData();
+              closeModal();
+              renderTable();
+            }
+          };
+          reader.readAsDataURL(f);
+        });
+      } else {
+        defectList.unshift(newDefect);
+        saveData();
+        closeModal();
+        renderTable();
+      }
+    }
+
+    function exportCSV() {
+      let csvContent = "\uFEFF編號,提報日期,區域空間,具體位置,系統分類,缺失描述,提報人,狀態,改善進度\n";
+      defectList.forEach(d => {
+        csvContent += `"${d.id}","${d.date}","${d.area}","${d.loc}","${d.cat}","${d.desc.replace(/"/g, '""')}","${d.reporter}","${d.status}","${(d.progress||'').replace(/"/g, '""')}"\n`;
+      });
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `品陽大苑_公設缺失清單_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // Init
+    updateDashboardStats();
+    renderTable();
+  </script>
+</body>
+</html>
