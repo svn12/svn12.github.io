@@ -180,6 +180,11 @@
             </button>
           </div>
 
+          <!-- 編輯 / 儲存按鈕 -->
+          <button type="button" id="btn-edit-case" onclick="toggleCaseEdit()" class="px-2.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow">
+            <i class="fa-solid fa-pen-to-square"></i> <span id="btn-edit-case-text">編輯內容</span>
+          </button>
+
           <button onclick="closeDetailModal()" class="w-8 h-8 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition ml-1" title="關閉">
             <i class="fa-solid fa-xmark text-sm"></i>
           </button>
@@ -188,21 +193,88 @@
 
       <!-- Modal Body (Scrollable) -->
       <div class="p-6 space-y-5 overflow-y-auto">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-100">
-          <div><span class="text-slate-400 block mb-1">提報日期</span><strong id="modal-date" class="text-slate-800 text-sm"></strong></div>
-          <div><span class="text-slate-400 block mb-1">區域空間</span><strong id="modal-area" class="text-slate-800 text-sm"></strong></div>
-          <div><span class="text-slate-400 block mb-1">系統分類</span><strong id="modal-cat" class="text-slate-800 text-sm"></strong></div>
-          <div><span class="text-slate-400 block mb-1">提報住戶</span><strong id="modal-reporter" class="text-slate-800 text-sm"></strong></div>
+        <!-- 檢視模式 View Mode -->
+        <div id="case-view-mode" class="space-y-5">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <div><span class="text-slate-400 block mb-1">提報日期</span><strong id="modal-date" class="text-slate-800 text-sm"></strong></div>
+            <div><span class="text-slate-400 block mb-1">區域空間</span><strong id="modal-area" class="text-slate-800 text-sm"></strong></div>
+            <div><span class="text-slate-400 block mb-1">系統分類</span><strong id="modal-cat" class="text-slate-800 text-sm"></strong></div>
+            <div><span class="text-slate-400 block mb-1">提報住戶</span><strong id="modal-reporter" class="text-slate-800 text-sm"></strong></div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">缺失詳情描述</label>
+            <p id="modal-desc" class="text-sm text-slate-800 bg-amber-50/50 p-3 rounded-lg border border-amber-200/50 leading-relaxed"></p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">建商回覆與改善進度</label>
+            <p id="modal-progress" class="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-200"></p>
+          </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">缺失詳情描述</label>
-          <p id="modal-desc" class="text-sm text-slate-800 bg-amber-50/50 p-3 rounded-lg border border-amber-200/50 leading-relaxed"></p>
-        </div>
+        <!-- 編輯模式 Edit Mode (預設隱藏) -->
+        <div id="case-edit-mode" class="space-y-4 hidden bg-amber-50/40 p-4 rounded-xl border border-amber-200">
+          <div class="flex items-center justify-between border-b border-amber-200 pb-2">
+            <span class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+              <i class="fa-solid fa-pen-nib"></i> 正在編輯案件內容
+            </span>
+            <span class="text-[11px] text-amber-700 font-medium">編輯完成請點擊「儲存修改」</span>
+          </div>
 
-        <div>
-          <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">建商回覆與改善進度</label>
-          <p id="modal-progress" class="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-200"></p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div>
+              <label class="block text-slate-600 font-semibold mb-1">提報日期</label>
+              <input type="date" id="edit-date" class="w-full py-1.5 px-2.5 bg-white border border-slate-300 rounded-lg text-xs" />
+            </div>
+            <div>
+              <label class="block text-slate-600 font-semibold mb-1">空間區域</label>
+              <input type="text" id="edit-area" placeholder="例如：地下室、頂樓/RF" class="w-full py-1.5 px-2.5 bg-white border border-slate-300 rounded-lg text-xs" />
+            </div>
+            <div>
+              <label class="block text-slate-600 font-semibold mb-1">具體位置</label>
+              <input type="text" id="edit-loc" placeholder="例如：B4車位54號上方" class="w-full py-1.5 px-2.5 bg-white border border-slate-300 rounded-lg text-xs" />
+            </div>
+            <div>
+              <label class="block text-slate-600 font-semibold mb-1">系統分類</label>
+              <select id="edit-cat" class="w-full py-1.5 px-2.5 bg-white border border-slate-300 rounded-lg text-xs">
+                <option value="漏水滲水">漏水滲水</option>
+                <option value="給排水系統">給排水系統</option>
+                <option value="門禁弱電">門禁弱電</option>
+                <option value="消防安檢">消防安檢</option>
+                <option value="土建五金">土建五金</option>
+                <option value="環境管理">環境管理</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block text-slate-600 font-semibold mb-1">提報住戶 / 戶別</label>
+              <input type="text" id="edit-reporter" placeholder="例如：16F高小姐" class="w-full py-1.5 px-2.5 bg-white border border-slate-300 rounded-lg text-xs" />
+            </div>
+            <div>
+              <label class="block text-slate-600 font-semibold mb-1">官方編號 / 備註</label>
+              <input type="text" id="edit-official-id" placeholder="例如：官方 #01 或 6/1提案 #01" class="w-full py-1.5 px-2.5 bg-white border border-slate-300 rounded-lg text-xs" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">缺失詳情與現況描述</label>
+            <textarea id="edit-desc" rows="3" class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-amber-400 focus:outline-none"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">建商回覆與改善進度</label>
+            <textarea id="edit-progress" rows="3" class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-amber-400 focus:outline-none"></textarea>
+          </div>
+
+          <div class="flex justify-end gap-2 pt-2">
+            <button type="button" onclick="cancelCaseEdit()" class="px-3.5 py-1.5 text-xs text-slate-600 hover:bg-slate-200 bg-white border border-slate-300 rounded-lg font-medium transition">取消編輯</button>
+            <button type="button" onclick="saveCaseEdit()" class="px-4 py-1.5 text-xs text-white bg-amber-600 hover:bg-amber-700 rounded-lg font-bold shadow transition flex items-center gap-1.5">
+              <i class="fa-solid fa-check"></i> 儲存修改
+            </button>
+          </div>
         </div>
 
         <!-- Photo Section -->
@@ -1379,8 +1451,10 @@
         caseCounterEl.innerText = `${idx + 1} / ${list.length}`;
       }
 
-      // 每次切換新案件時重設照片管理模式
+      // 每次切換新案件時重設照片管理與案件編輯模式
       isPhotoEditMode = false;
+      isCaseEditMode = false;
+      updateCaseEditUI();
       const btn = document.getElementById('btn-toggle-photo-edit');
       const text = document.getElementById('photo-edit-text');
       if (btn) btn.className = "inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition";
@@ -1388,6 +1462,102 @@
 
       renderModalPhotos();
       document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    let isCaseEditMode = false;
+
+    function updateCaseEditUI() {
+      const viewMode = document.getElementById('case-view-mode');
+      const editMode = document.getElementById('case-edit-mode');
+      const btnEdit = document.getElementById('btn-edit-case');
+      const btnEditText = document.getElementById('btn-edit-case-text');
+
+      if (!viewMode || !editMode) return;
+
+      if (isCaseEditMode) {
+        viewMode.classList.add('hidden');
+        editMode.classList.remove('hidden');
+        if (btnEdit) {
+          btnEdit.className = "px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow";
+          btnEditText.innerText = "儲存修改";
+        }
+      } else {
+        viewMode.classList.remove('hidden');
+        editMode.classList.add('hidden');
+        if (btnEdit) {
+          btnEdit.className = "px-2.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow";
+          btnEditText.innerText = "編輯內容";
+        }
+      }
+    }
+
+    function toggleCaseEdit() {
+      if (!currentDetailDefect) return;
+      if (isCaseEditMode) {
+        saveCaseEdit();
+      } else {
+        // 進入編輯模式，填入當前案件值
+        isCaseEditMode = true;
+        document.getElementById('edit-date').value = currentDetailDefect.date || '';
+        document.getElementById('edit-area').value = currentDetailDefect.area || '';
+        document.getElementById('edit-loc').value = currentDetailDefect.loc || '';
+        document.getElementById('edit-cat').value = currentDetailDefect.cat || '土建五金';
+        document.getElementById('edit-reporter').value = currentDetailDefect.reporter || '';
+        document.getElementById('edit-official-id').value = currentDetailDefect.official_id || '';
+        document.getElementById('edit-desc').value = currentDetailDefect.desc || '';
+        document.getElementById('edit-progress').value = currentDetailDefect.progress || '';
+        updateCaseEditUI();
+      }
+    }
+
+    function cancelCaseEdit() {
+      isCaseEditMode = false;
+      updateCaseEditUI();
+    }
+
+    function saveCaseEdit() {
+      if (!currentDetailDefect) return;
+
+      const dateVal = document.getElementById('edit-date').value.trim();
+      const areaVal = document.getElementById('edit-area').value.trim();
+      const locVal = document.getElementById('edit-loc').value.trim();
+      const catVal = document.getElementById('edit-cat').value;
+      const reporterVal = document.getElementById('edit-reporter').value.trim();
+      const officialIdVal = document.getElementById('edit-official-id').value.trim();
+      const descVal = document.getElementById('edit-desc').value.trim();
+      const progressVal = document.getElementById('edit-progress').value.trim();
+
+      if (!locVal || !descVal) {
+        alert('請填寫具體位置與缺失詳情描述！');
+        return;
+      }
+
+      currentDetailDefect.date = dateVal;
+      currentDetailDefect.area = areaVal;
+      currentDetailDefect.loc = locVal;
+      currentDetailDefect.cat = catVal;
+      currentDetailDefect.reporter = reporterVal;
+      currentDetailDefect.official_id = officialIdVal;
+      currentDetailDefect.desc = descVal;
+      currentDetailDefect.progress = progressVal;
+
+      saveData();
+      isCaseEditMode = false;
+      updateCaseEditUI();
+
+      // 重新整理詳情面板數值
+      document.getElementById('modal-id').innerText = currentDetailDefect.id + (currentDetailDefect.official_id ? ` 【${currentDetailDefect.official_id}】` : '');
+      document.getElementById('modal-title').innerText = currentDetailDefect.loc;
+      document.getElementById('modal-date').innerText = currentDetailDefect.date;
+      document.getElementById('modal-area').innerText = `${currentDetailDefect.area} (${currentDetailDefect.loc})`;
+      document.getElementById('modal-cat').innerText = currentDetailDefect.cat;
+      document.getElementById('modal-reporter').innerText = currentDetailDefect.reporter || '未註記';
+      document.getElementById('modal-desc').innerText = currentDetailDefect.desc;
+      document.getElementById('modal-progress').innerText = currentDetailDefect.progress || '尚無建商回覆紀錄';
+
+      // 刷新總表
+      renderTable();
+      updateDashboardStats();
     }
 
     // 上一案件 / 下一案件 循環切換 (delta: -1 為上一案, 1 為下一案)
@@ -1405,6 +1575,8 @@
       document.getElementById('detail-modal').classList.add('hidden');
       currentDetailDefect = null;
       isPhotoEditMode = false;
+      isCaseEditMode = false;
+      updateCaseEditUI();
       const btn = document.getElementById('btn-toggle-photo-edit');
       const text = document.getElementById('photo-edit-text');
       if (btn) btn.className = "inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition";
