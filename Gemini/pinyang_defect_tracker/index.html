@@ -302,21 +302,48 @@
     </div>
   </div>
 
-  <!-- Image Lightbox Modal (確保層級最高 z-[100]，高於 detail-modal) -->
+  <!-- Image Lightbox Modal (確保層級最高 z-[100]，高於 detail-modal，支援循環切換) -->
   <div id="lightbox-modal" onclick="if(event.target === this || event.target.id === 'lightbox-container') closeLightbox();" 
-       class="fixed inset-0 z-[100] bg-black/95 hidden flex flex-col items-center justify-center p-3 sm:p-6 backdrop-blur-md">
-    <!-- Top toolbar -->
-    <div class="absolute top-4 right-4 flex items-center gap-3 z-[110]">
-      <button type="button" onclick="deleteCurrentLightboxPhoto()" class="px-3.5 py-1.5 bg-red-600/90 hover:bg-red-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
-        <i class="fa-solid fa-trash-can"></i> 刪除此張相片
-      </button>
-      <button type="button" onclick="closeLightbox()" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition shadow">
-        <i class="fa-solid fa-xmark text-base"></i>
-      </button>
+       class="fixed inset-0 z-[100] bg-black/95 hidden flex flex-col items-center justify-center p-3 sm:p-6 backdrop-blur-md select-none">
+    
+    <!-- Top toolbar: 顯示張數與操作按鈕 -->
+    <div class="absolute top-4 inset-x-4 flex items-center justify-between z-[110] pointer-events-none">
+      <!-- 當前第幾張 / 共幾張 -->
+      <div class="pointer-events-auto bg-black/60 text-white text-xs font-mono font-semibold px-3 py-1.5 rounded-full border border-white/20 shadow flex items-center gap-1.5">
+        <i class="fa-regular fa-image text-slate-300"></i>
+        <span id="lightbox-counter">1 / 1</span>
+      </div>
+
+      <div class="pointer-events-auto flex items-center gap-3">
+        <button type="button" onclick="deleteCurrentLightboxPhoto()" class="px-3.5 py-1.5 bg-red-600/90 hover:bg-red-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
+          <i class="fa-solid fa-trash-can"></i> 刪除此相片
+        </button>
+        <button type="button" onclick="closeLightbox()" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition shadow">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
     </div>
+
+    <!-- 左箭頭 / 上一張 (循環切換) -->
+    <button type="button" id="lightbox-btn-prev" onclick="navLightbox(-1)" 
+            class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-[110] w-12 h-12 rounded-full bg-black/50 hover:bg-black/80 text-white border border-white/20 flex items-center justify-center transition shadow-xl active:scale-95">
+      <i class="fa-solid fa-chevron-left text-lg"></i>
+    </button>
+
+    <!-- 右箭頭 / 下一張 (循環切換) -->
+    <button type="button" id="lightbox-btn-next" onclick="navLightbox(1)" 
+            class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-[110] w-12 h-12 rounded-full bg-black/50 hover:bg-black/80 text-white border border-white/20 flex items-center justify-center transition shadow-xl active:scale-95">
+      <i class="fa-solid fa-chevron-right text-lg"></i>
+    </button>
+
     <!-- Image Box -->
-    <div id="lightbox-container" class="w-full h-full flex items-center justify-center p-2">
+    <div id="lightbox-container" class="w-full h-full flex items-center justify-center p-2 sm:p-8">
       <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl transition duration-200" />
+    </div>
+
+    <!-- 底部觸控滑動提示 -->
+    <div class="absolute bottom-4 z-[110] text-[11px] text-slate-400 font-medium pointer-events-none hidden sm:block">
+      可按鍵盤 ← / → 或左右點擊按鈕循環切換
     </div>
   </div>
 
@@ -1472,16 +1499,51 @@
       }
     }
 
-    function openLightbox(index) {
-      if (!currentDetailDefect || !currentDetailDefect.photos) return;
-      currentLightboxPhotoIndex = index;
-      const src = currentDetailDefect.photos[index];
-      const modal = document.getElementById('lightbox-modal');
+    function updateLightboxView() {
+      if (!currentDetailDefect || !currentDetailDefect.photos || currentDetailDefect.photos.length === 0) {
+        closeLightbox();
+        return;
+      }
+      const total = currentDetailDefect.photos.length;
+      if (currentLightboxPhotoIndex < 0) currentLightboxPhotoIndex = 0;
+      if (currentLightboxPhotoIndex >= total) currentLightboxPhotoIndex = total - 1;
+
+      const src = currentDetailDefect.photos[currentLightboxPhotoIndex];
       const img = document.getElementById('lightbox-img');
+      const counter = document.getElementById('lightbox-counter');
+      const btnPrev = document.getElementById('lightbox-btn-prev');
+      const btnNext = document.getElementById('lightbox-btn-next');
+
       img.src = src;
+      counter.innerText = `${currentLightboxPhotoIndex + 1} / ${total}`;
+
+      // 若只有 1 張照片，隱藏左右箭頭；多張時顯示
+      if (total <= 1) {
+        btnPrev.classList.add('hidden');
+        btnNext.classList.add('hidden');
+      } else {
+        btnPrev.classList.remove('hidden');
+        btnNext.classList.remove('hidden');
+      }
+    }
+
+    function openLightbox(index) {
+      if (!currentDetailDefect || !currentDetailDefect.photos || currentDetailDefect.photos.length === 0) return;
+      currentLightboxPhotoIndex = index;
+      const modal = document.getElementById('lightbox-modal');
+      updateLightboxView();
       modal.classList.remove('hidden');
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+    }
+
+    // 循環切換照片 (delta: -1 為上一張, 1 為下一張)
+    function navLightbox(delta) {
+      if (!currentDetailDefect || !currentDetailDefect.photos || currentDetailDefect.photos.length <= 1) return;
+      const total = currentDetailDefect.photos.length;
+      // 循環輪播計算
+      currentLightboxPhotoIndex = (currentLightboxPhotoIndex + delta + total) % total;
+      updateLightboxView();
     }
 
     function deleteCurrentLightboxPhoto() {
@@ -1489,9 +1551,18 @@
       if (confirm('確定刪除目前檢視的這張照片？')) {
         currentDetailDefect.photos.splice(currentLightboxPhotoIndex, 1);
         saveData();
-        closeLightbox();
         renderModalPhotos();
         renderTable();
+
+        if (currentDetailDefect.photos.length === 0) {
+          closeLightbox();
+        } else {
+          // 刪除後若超出索引則往前移一張，並繼續留在燈箱中循環查看
+          if (currentLightboxPhotoIndex >= currentDetailDefect.photos.length) {
+            currentLightboxPhotoIndex = currentDetailDefect.photos.length - 1;
+          }
+          updateLightboxView();
+        }
       }
     }
 
@@ -1501,6 +1572,42 @@
       modal.style.display = 'none';
       document.body.style.overflow = '';
       currentLightboxPhotoIndex = -1;
+    }
+
+    // 監聽鍵盤箭頭鍵：← 上一張，→ 下一張，ESC 關閉
+    window.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('lightbox-modal');
+      if (modal && !modal.classList.contains('hidden')) {
+        if (e.key === 'ArrowLeft') {
+          navLightbox(-1);
+        } else if (e.key === 'ArrowRight') {
+          navLightbox(1);
+        } else if (e.key === 'Escape') {
+          closeLightbox();
+        }
+      }
+    });
+
+    // 支援 iPad / 手機觸控左右滑動 (Swipe)
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const lightboxModalEl = document.getElementById('lightbox-modal');
+    if (lightboxModalEl) {
+      lightboxModalEl.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      lightboxModalEl.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diffX = touchEndX - touchStartX;
+        if (Math.abs(diffX) > 40) { // 滑動大於 40px
+          if (diffX > 0) {
+            navLightbox(-1); // 向右滑：上一張
+          } else {
+            navLightbox(1);  // 向左滑：下一張
+          }
+        }
+      }, { passive: true });
     }
 
     // Create Modal handlers
