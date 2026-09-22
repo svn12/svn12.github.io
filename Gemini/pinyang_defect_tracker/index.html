@@ -162,14 +162,28 @@
   <div id="detail-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
     <div class="bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-100 overflow-hidden my-auto max-h-[90vh] flex flex-col">
       <!-- Modal Header -->
-      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
-        <div class="flex items-center space-x-2">
-          <span id="modal-id" class="font-mono px-2 py-0.5 rounded bg-indigo-600 text-xs font-bold">DEF-000</span>
-          <h3 id="modal-title" class="text-base font-bold truncate">缺失詳情</h3>
+      <div class="px-5 py-3.5 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-2.5 overflow-hidden">
+          <span id="modal-id" class="font-mono px-2 py-0.5 rounded bg-indigo-600 text-xs font-bold whitespace-nowrap">DEF-000</span>
+          <h3 id="modal-title" class="text-sm sm:text-base font-bold truncate">缺失詳情</h3>
         </div>
-        <button onclick="closeDetailModal()" class="text-slate-400 hover:text-white text-lg">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- 上一案件 / 下一案件 巡迴切換 -->
+          <div class="flex items-center bg-slate-800 rounded-lg p-0.5 border border-slate-700">
+            <button type="button" onclick="navCase(-1)" class="w-8 h-8 rounded-md hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition" title="上一案件 (可按鍵盤 [ 或 PageUp)">
+              <i class="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+            <span id="case-counter" class="text-[11px] font-mono font-semibold px-2 text-slate-300">1 / 60</span>
+            <button type="button" onclick="navCase(1)" class="w-8 h-8 rounded-md hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition" title="下一案件 (可按鍵盤 ] 或 PageDown)">
+              <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+          </div>
+
+          <button onclick="closeDetailModal()" class="w-8 h-8 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition ml-1" title="關閉">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Modal Body (Scrollable) -->
@@ -216,7 +230,7 @@
       </div>
 
       <!-- Modal Footer -->
-      <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between shrink-0">
+      <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
           <span class="text-xs text-slate-500">更新狀態：</span>
           <select id="modal-status-select" onchange="updateCurrentStatus(this.value)" class="text-xs py-1.5 px-2.5 border border-slate-300 rounded-md bg-white font-medium focus:outline-none">
@@ -227,7 +241,16 @@
             <option value="已結案">已結案</option>
           </select>
         </div>
-        <button onclick="closeDetailModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition">關閉</button>
+
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="navCase(-1)" class="px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1 transition">
+            <i class="fa-solid fa-arrow-left"></i> 上一案件
+          </button>
+          <button type="button" onclick="navCase(1)" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1 transition">
+            下一案件 <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          <button onclick="closeDetailModal()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition ml-2">關閉</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1237,6 +1260,7 @@
     // Local Storage sync
     let defectList = JSON.parse(localStorage.getItem('pinyang_defects_v5')) || initialData;
     let currentDetailDefect = null;
+    let currentFilteredList = defectList; // 記錄當前過濾篩選出的案件列表
 
     function saveData() {
       localStorage.setItem('pinyang_defects_v5', JSON.stringify(defectList));
@@ -1271,6 +1295,7 @@
         return matchKw && matchCat && matchArea && matchStatus;
       });
 
+      currentFilteredList = filtered.length > 0 ? filtered : defectList;
       document.getElementById('filtered-count').innerText = filtered.length;
       const tbody = document.getElementById('defect-table-body');
       tbody.innerHTML = '';
@@ -1332,8 +1357,10 @@
     }
 
     function showDetail(id) {
-      const item = defectList.find(d => d.id === id);
-      if (!item) return;
+      const list = currentFilteredList && currentFilteredList.length > 0 ? currentFilteredList : defectList;
+      const idx = list.findIndex(d => d.id === id);
+      if (idx === -1) return;
+      const item = list[idx];
       currentDetailDefect = item;
 
       document.getElementById('modal-id').innerText = item.id + (item.official_id ? ` 【${item.official_id}】` : '');
@@ -1346,8 +1373,32 @@
       document.getElementById('modal-progress').innerText = item.progress || '尚無建商回覆紀錄';
       document.getElementById('modal-status-select').value = item.status;
 
+      // 更新彈窗內的案件序號計數器 (例如: 2 / 60)
+      const caseCounterEl = document.getElementById('case-counter');
+      if (caseCounterEl) {
+        caseCounterEl.innerText = `${idx + 1} / ${list.length}`;
+      }
+
+      // 每次切換新案件時重設照片管理模式
+      isPhotoEditMode = false;
+      const btn = document.getElementById('btn-toggle-photo-edit');
+      const text = document.getElementById('photo-edit-text');
+      if (btn) btn.className = "inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition";
+      if (text) text.innerText = "管理照片";
+
       renderModalPhotos();
       document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    // 上一案件 / 下一案件 循環切換 (delta: -1 為上一案, 1 為下一案)
+    function navCase(delta) {
+      if (!currentDetailDefect) return;
+      const list = currentFilteredList && currentFilteredList.length > 0 ? currentFilteredList : defectList;
+      const curIdx = list.findIndex(d => d.id === currentDetailDefect.id);
+      if (curIdx === -1) return;
+      const total = list.length;
+      const nextIdx = (curIdx + delta + total) % total;
+      showDetail(list[nextIdx].id);
     }
 
     function closeDetailModal() {
@@ -1574,16 +1625,29 @@
       currentLightboxPhotoIndex = -1;
     }
 
-    // 監聽鍵盤箭頭鍵：← 上一張，→ 下一張，ESC 關閉
+    // 監聽鍵盤快捷鍵：
+    // - 燈箱放大中：← 上一張，→ 下一張，ESC 關閉燈箱
+    // - 案件詳情中：[ 或 PageUp 上一案，] 或 PageDown 下一案，ESC 關閉案件
     window.addEventListener('keydown', (e) => {
-      const modal = document.getElementById('lightbox-modal');
-      if (modal && !modal.classList.contains('hidden')) {
+      const lightboxModal = document.getElementById('lightbox-modal');
+      const detailModal = document.getElementById('detail-modal');
+
+      if (lightboxModal && !lightboxModal.classList.contains('hidden')) {
         if (e.key === 'ArrowLeft') {
           navLightbox(-1);
         } else if (e.key === 'ArrowRight') {
           navLightbox(1);
         } else if (e.key === 'Escape') {
           closeLightbox();
+        }
+      } else if (detailModal && !detailModal.classList.contains('hidden')) {
+        // 未開燈箱時，若處於案件詳情彈窗
+        if (e.key === '[' || e.key === 'PageUp' || (e.altKey && e.key === 'ArrowLeft')) {
+          navCase(-1);
+        } else if (e.key === ']' || e.key === 'PageDown' || (e.altKey && e.key === 'ArrowRight')) {
+          navCase(1);
+        } else if (e.key === 'Escape') {
+          closeDetailModal();
         }
       }
     });
