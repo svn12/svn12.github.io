@@ -271,7 +271,8 @@
         <!-- Photo Section -->
           <div class="flex items-center justify-between mb-2">
             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">現場照片紀錄 (<span id="photo-count">0</span> 張)</label>
-            <div class="flex items-center gap-2">
+            <!-- 照片操作工具列：僅在「編輯內容模式」下出現 -->
+            <div id="photo-action-toolbar" class="hidden flex items-center gap-2">
               <!-- 瀏覽模式 vs 刪除管理模式切換按鈕 -->
               <button type="button" id="btn-toggle-photo-edit" onclick="togglePhotoEditMode()" class="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition">
                 <i class="fa-solid fa-pen-to-square"></i> <span id="photo-edit-text">管理照片</span>
@@ -504,7 +505,7 @@
       </div>
 
       <div class="pointer-events-auto flex items-center gap-3">
-        <button type="button" onclick="deleteCurrentLightboxPhoto()" class="px-3.5 py-1.5 bg-red-600/90 hover:bg-red-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
+        <button type="button" id="lightbox-btn-delete" onclick="deleteCurrentLightboxPhoto()" class="px-3.5 py-1.5 bg-red-600/90 hover:bg-red-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
           <i class="fa-solid fa-trash-can"></i> 刪除此相片
         </button>
         <button type="button" onclick="closeLightbox()" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition shadow">
@@ -1914,9 +1915,12 @@
 
       if (!viewMode || !editMode) return;
 
+      const photoToolbar = document.getElementById('photo-action-toolbar');
+
       if (isCaseEditMode) {
         viewMode.classList.add('hidden');
         editMode.classList.remove('hidden');
+        if (photoToolbar) photoToolbar.classList.remove('hidden');
         if (btnEdit) {
           btnEdit.className = "px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow";
           btnEditText.innerText = "儲存修改";
@@ -1924,6 +1928,17 @@
       } else {
         viewMode.classList.remove('hidden');
         editMode.classList.add('hidden');
+        if (photoToolbar) photoToolbar.classList.add('hidden');
+        // 離開編輯模式時，自動結束照片管理刪除態，回復純安全瀏覽態
+        isPhotoEditMode = false;
+        const btn = document.getElementById('btn-toggle-photo-edit');
+        const text = document.getElementById('photo-edit-text');
+        const clearBtn = document.getElementById('btn-clear-photos');
+        if (btn) btn.className = "inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition";
+        if (text) text.innerText = "管理照片";
+        if (clearBtn) clearBtn.classList.add('hidden');
+        renderModalPhotos();
+
         if (btnEdit) {
           btnEdit.className = "px-2.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow";
           btnEditText.innerText = "編輯內容";
@@ -2189,6 +2204,16 @@
 
       img.src = src;
       counter.innerText = `${currentLightboxPhotoIndex + 1} / ${total}`;
+
+      // 燈箱頂部「刪除此相片」按鈕：只有在編輯內容模式 (isCaseEditMode) 下才會出現
+      const btnDelete = document.getElementById('lightbox-btn-delete');
+      if (btnDelete) {
+        if (isCaseEditMode) {
+          btnDelete.classList.remove('hidden');
+        } else {
+          btnDelete.classList.add('hidden');
+        }
+      }
 
       // 若只有 1 張照片，隱藏左右箭頭；多張時顯示
       if (total <= 1) {
