@@ -1620,13 +1620,38 @@
     const GSHEET_CONFIG_SHEET_NAME = encodeURIComponent('類別設定');
     const GSHEET_DEFECTS_SHEET_NAME = encodeURIComponent('公設缺失追蹤清單');
 
-    // 建立 DEF 編號至照片的對照表 (確保從 Google Sheet 讀取時現場相片不丟失)
+    // 建立 DEF 編號至照片的對照表 (確保從 Google Sheet 讀取或同步時現場相片不丟失)
     const photoMapping = {};
     initialData.forEach(item => {
       if (item.photos && item.photos.length > 0) {
         photoMapping[item.id] = [...item.photos];
       }
     });
+
+    // 載入本地已持久化儲存的照片對照（防止雲端同步時沖刷掉剛上傳的現場照片）
+    try {
+      const savedPhotoMap = localStorage.getItem('PINYANG_DEFECT_PHOTOS_MAP');
+      if (savedPhotoMap) {
+        const parsedMap = JSON.parse(savedPhotoMap);
+        Object.keys(parsedMap).forEach(k => {
+          if (Array.isArray(parsedMap[k])) {
+            photoMapping[k] = [...parsedMap[k]];
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('讀取本地相片對照表失敗:', e);
+    }
+
+    function syncPhotoMappingToStorage(defectId, photos) {
+      if (!defectId) return;
+      photoMapping[defectId] = [...(photos || [])];
+      try {
+        localStorage.setItem('PINYANG_DEFECT_PHOTOS_MAP', JSON.stringify(photoMapping));
+      } catch (e) {
+        console.warn('儲存相片對照表至本地失敗:', e);
+      }
+    }
 
     // 將各種 Google Drive 分享連結或 ID 自動轉換為免登入直接渲染圖片的 URL
     function convertGoogleDriveUrl(url) {
@@ -1745,9 +1770,16 @@
                 });
               }
 
-              // 若 Google Sheet 尚未填寫自訂網址，則 fallback 使用系統預設官方對照表照片
-              if (itemPhotos.length === 0 && photoMapping[id]) {
-                itemPhotos = [...photoMapping[id]];
+              // 取得記憶體現有該案件之照片（包含使用者剛上傳但尚未同步至試算表之照片）
+              const existingDefect = defectList.find(d => d.id === id);
+              const memoryPhotos = existingDefect && Array.isArray(existingDefect.photos) ? existingDefect.photos : [];
+              const cachedPhotos = (photoMapping && Array.isArray(photoMapping[id])) ? photoMapping[id] : [];
+
+              // 採用聯集去重合併：Sheet 照片 + 記憶體中照片 + 快取對照表照片
+              const mergedPhotos = Array.from(new Set([...itemPhotos, ...memoryPhotos, ...cachedPhotos]));
+              // 同步更新快取
+              if (mergedPhotos.length > 0) {
+                photoMapping[id] = [...mergedPhotos];
               }
 
               cloudDefects.push({
@@ -1761,7 +1793,7 @@
                 reporter: cols[7] || '',
                 status: cols[8] || '待處理',
                 progress: cols[9] || '',
-                photos: itemPhotos,
+                photos: mergedPhotos,
                 note: cols[11] || ''
               });
             }
@@ -2113,6 +2145,7 @@
       currentDetailDefect.progress = progressVal;
 
       saveData();
+      syncPhotoMappingToStorage(currentDetailDefect.id, currentDetailDefect.photos);
       isCaseEditMode = false;
       updateCaseEditUI();
 
@@ -2363,6 +2396,7 @@
           if (text) text.innerText = "管理照片";
         }
         saveData();
+        syncPhotoMappingToStorage(currentDetailDefect.id, currentDetailDefect.photos);
         renderModalPhotos();
         renderTable();
       }
@@ -2379,6 +2413,7 @@
         if (btn) btn.className = "inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition";
         if (text) text.innerText = "管理照片";
         saveData();
+        syncPhotoMappingToStorage(currentDetailDefect.id, currentDetailDefect.photos);
         renderModalPhotos();
         renderTable();
       }
@@ -2446,6 +2481,7 @@
       if (confirm('確定刪除目前檢視的這張照片？')) {
         currentDetailDefect.photos.splice(currentLightboxPhotoIndex, 1);
         saveData();
+        syncPhotoMappingToStorage(currentDetailDefect.id, currentDetailDefect.photos);
         renderModalPhotos();
         renderTable();
 
@@ -2592,6 +2628,9 @@
 
       defectList.unshift(newDefect);
       saveData();
+      if (newDefect.photos && newDefect.photos.length > 0) {
+        syncPhotoMappingToStorage(newDefect.id, newDefect.photos);
+      }
       closeModal();
       renderTable();
     }
