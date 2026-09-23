@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>gpx.studio 專業 GPX 軌跡編輯器使用說明手冊</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 16mm 15mm;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: #1f2937;
+      line-height: 1.55;
+      font-size: 13.5px;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      border-bottom: 3px solid #059669;
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #065f46;
+      margin: 0 0 5px 0;
+    }
+    .subtitle {
+      font-size: 12.5px;
+      color: #4b5563;
+      margin: 0;
+    }
+    h2 {
+      font-size: 16px;
+      color: #047857;
+      border-left: 4px solid #10b981;
+      padding-left: 8px;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 14px;
+      color: #111827;
+      margin-top: 12px;
+      margin-bottom: 6px;
+      page-break-after: avoid;
+    }
+    p {
+      margin: 5px 0;
+    }
+    ul, ol {
+      margin: 5px 0;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 8px 0;
+    }
+    .card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 9px 12px;
+    }
+    .card-title {
+      font-weight: bold;
+      color: #065f46;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+    kbd {
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      padding: 1px 5px;
+      color: #111827;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 12.5px;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 6px 9px;
+      text-align: left;
+    }
+    th {
+      background-color: #f3f4f6;
+      color: #374151;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+    .tip-box {
+      background: #ecfdf5;
+      border-left: 4px solid #10b981;
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      margin: 10px 0;
+      font-size: 12.5px;
+    }
+    .footer {
+      margin-top: 24px;
+      padding-top: 8px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="title">gpx.studio 線上專業 GPX 軌跡編輯器使用說明手冊</div>
+    <div class="subtitle">免費、開源、免安裝的登山健行、越野跑步與單車路線規劃神器 ｜ 官方網址：https://gpx.studio/app</div>
+  </div>
+
+  <h2>1. 核心定位與強大特點</h2>
+  <p><strong>gpx.studio</strong> 是一款基於瀏覽器的開源高階 GPX 軌跡編輯工具，專為登山隊伍、越野跑者與自行車愛好者設計：</p>
+  <ul>
+    <li><strong>零安裝、保護隱私</strong>：所有軌跡處理都在瀏覽器本地端完成，無需上傳伺服器，安全且極速。</li>
+    <li><strong>多檔案軌跡處理</strong>：支援同時開啟數十個 GPX 檔案，進行多軌跡比對、合併（Merge）或批次管理。</li>
+    <li><strong>高度剖面與等高線豐富圖資</strong>：內建 OpenStreetMap、OpenTopoMap、Mapbox、Strava 熱門熱圖（Heatmap）及各國高解析等高線圖層。</li>
+    <li><strong>街景與路況確認</strong>：原生整合 Google 街景服務（Street View）與 Mapillary，出發前即可線上探勘登山口與林道鋪面現況。</li>
+  </ul>
+
+  <h2>2. 常用操作與工具面板</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">① 載入與新建軌跡</div>
+      <p>點擊頂部「檔案 ➔ 載入 GPX」可直接拖放檔案；或點擊側邊欄「鉛筆工具（編輯）」開始從零手繪路線。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">② 路由模式與路網貼合</div>
+      <p>支援步行（Foot）、公路自行車（Bike）、越野車（MTB）與直線手繪（Off-road），點擊即自動依林道或山徑吸附。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">③ 裁切與分割（Crop / Split）</div>
+      <p>選取軌跡後使用「剪刀工具」，可指定點位一分為二，或透過前後滑桿直接裁切掉多餘的登山口迷路或交通雜訊。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">④ 合併與反轉（Merge / Reverse）</div>
+      <p>可按順序拼接多段軌跡檔（合併為單一 GPX），或一鍵點擊「反轉方向」將下山路徑改為上山規劃。</p>
+    </div>
+  </div>
+
+  <h2>3. 核心功能與工具對照</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">工具功能</th>
+        <th style="width: 35%;">操作說明</th>
+        <th style="width: 40%;">登山與戶外應用場景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>航點管理 (Waypoint)</strong></td>
+        <td>在地圖任意處新增 POI 航點，可自訂名稱、符號與備註</td>
+        <td>標註水源地、紮營點（營地）、三角點、撤退點或岔路警示。</td>
+      </tr>
+      <tr>
+        <td><strong>高度補齊 (Add Elevation)</strong></td>
+        <td>工具列選取「新增/更新高度資料」</td>
+        <td>若自製路線缺少海拔，系統能從全球 DEM 數位高程模型自動填補高程。</td>
+      </tr>
+      <tr>
+        <td><strong>時間戳記與配速 (Time & Speed)</strong></td>
+        <td>自訂出發時間、設定平均配速（如 4 km/h）重新計算時間軸</td>
+        <td>生成擬真時間戳記，預估各山頭抵達時間與日落前折返點評估。</td>
+      </tr>
+      <tr>
+        <td><strong>簡化軌跡 (Reduce Points)</strong></td>
+        <td>利用演算法平滑化軌跡並減少航點數量</td>
+        <td>降低過大的 GPX 檔案體積，解決老舊手持 GPS 或穿戴裝置記憶體不足的問題。</td>
+      </tr>
+      <tr>
+        <td><strong>路網與圖層切換 (Layers)</strong></td>
+        <td>右上角圖層按鈕可切換 Topo 等高線、Strava 跑者熱圖</td>
+        <td>辨識熱門路徑與冷門冷門獵徑，大幅降低戶外迷途風險。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. 匯出與硬體傳送流程</h2>
+  <ul>
+    <li><strong>匯出檔案（Export）</strong>：點擊「檔案 ➔ 匯出」，可自由勾選是否包含航點（Waypoints）、是否包含時間資訊、以及是否合併多個分段。</li>
+    <li><strong>匯入 Garmin 裝置</strong>：
+      <ol>
+        <li>下載 <code>.gpx</code> 檔案至電腦或手機。</li>
+        <li>開啟 <strong>Garmin Connect</strong> 網頁版或 App ➔ 選擇「訓練與規劃 ➔ 路線 ➔ 匯入」。</li>
+        <li>點擊「傳送至裝置」，透過藍牙即時同步至 Forerunner、Fenix 等戶外腕錶導航。</li>
+      </ol>
+    </li>
+    <li><strong>匯入綠野遊蹤 / 登山客 / 健行筆記</strong>：手機瀏覽器下載 GPX 後，直接選擇以登山 App 開啟即可載入離線離線離線離線離線離線離線離線軌跡。</li>
+  </ul>
+
+  <div class="tip-box">
+    <strong>💡 專業登山者建議：</strong><br>
+    規劃縱走或勘查路線時，可先將官方公佈的國家公園步道 GPX 載入，再用 gpx.studio 的「銜接功能」加入自訂林道段，並隨時觀察底部<strong>累計爬升（Total Ascent）</strong>與<strong>高度變化率</strong>，確保體能配速合理。
+  </div>
+
+  <div class="footer">
+    文件生成時間：2026-09-23 ｜ 專案：20260625_html簡報 ｜ 檔案位置：專案根目錄
+  </div>
+
+</body>
+</html>
