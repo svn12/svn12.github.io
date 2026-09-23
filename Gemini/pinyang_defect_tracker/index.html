@@ -1445,6 +1445,7 @@
     // 核心資料庫：以 Google Sheet 雲端資料與官方內嵌資料為主 (避免 localStorage 多人不同步問題)
     let defectList = [...initialData];
     let currentDetailDefect = null;
+    let savedDetailPhotos = []; // 用於在關閉或取消編輯時精確還原未儲存的相片
     let currentFilteredList = defectList; // 記錄當前過濾篩選出的案件列表
 
     // 預設系統分類與改善狀態
@@ -1985,8 +1986,8 @@
       if (idx === -1) return;
       const item = list[idx];
       currentDetailDefect = item;
-
-      document.getElementById('modal-id').innerText = item.id + (item.official_id ? ` 【${item.official_id}】` : '');
+      savedDetailPhotos = Array.isArray(item.photos) ? [...item.photos] : []; // 備份原始照片，若取消或直接關閉時完整還原
+      pendingUploadFiles = [];
       document.getElementById('modal-title').innerText = item.loc;
       document.getElementById('modal-date').innerText = item.date;
       document.getElementById('modal-area').innerText = `${item.area} (${item.loc})`;
@@ -2112,8 +2113,15 @@
     }
 
     function cancelCaseEdit() {
+      if (currentDetailDefect) {
+        // 取消時還原照片為進入詳情時的狀態，丟棄未按儲存的上傳暫存
+        currentDetailDefect.photos = [...savedDetailPhotos];
+      }
+      pendingUploadFiles = [];
       isCaseEditMode = false;
       updateCaseEditUI();
+      renderModalPhotos();
+      renderTable();
     }
 
     async function saveCaseEdit() {
@@ -2192,6 +2200,7 @@
 
       saveData();
       syncPhotoMappingToStorage(currentDetailDefect.id, currentDetailDefect.photos);
+      savedDetailPhotos = Array.isArray(currentDetailDefect.photos) ? [...currentDetailDefect.photos] : []; // 更新基準備份
       isCaseEditMode = false;
       updateCaseEditUI();
 
@@ -2224,12 +2233,18 @@
     }
 
     function closeDetailModal() {
+      // 若處於編輯狀態且尚未點擊「儲存修改」，直接關閉時還原照片為原始狀態，絕不把未儲存預覽寫入或計入總表
+      if (currentDetailDefect && isCaseEditMode) {
+        currentDetailDefect.photos = [...savedDetailPhotos];
+      }
       document.getElementById('detail-modal').classList.add('hidden');
       currentDetailDefect = null;
+      savedDetailPhotos = [];
       pendingUploadFiles = [];
       isPhotoEditMode = false;
       isCaseEditMode = false;
       updateCaseEditUI();
+      renderTable(); // 重新渲染總表，確保照片數字完全吻合實際儲存狀態
       const btn = document.getElementById('btn-toggle-photo-edit');
       const text = document.getElementById('photo-edit-text');
       if (btn) btn.className = "inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition";
