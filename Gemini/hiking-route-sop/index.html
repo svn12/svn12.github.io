@@ -790,11 +790,11 @@
             <div class="link-desc">操作手冊 — GPX 軌跡編輯、合併、裁切技巧</div>
           </div>
         </a>
-        <a href="https://www.gpxsee.org/" target="_blank" rel="noopener" class="link-card">
+        <a href="https://www.gpxsee.org/" id="btn-gpxsee-app" onclick="return false;" class="link-card" style="cursor:pointer;">
           <span class="link-icon">📐</span>
           <div class="link-info">
-            <div class="link-name">GPXSee</div>
-            <div class="link-desc">開源 GPX/KML 路線檢視器（macOS/Win/Linux）</div>
+            <div class="link-name">開啟 GPXSee App</div>
+            <div class="link-desc">點擊直接啟動本機 GPXSee · 未安裝則前往官網</div>
           </div>
         </a>
       </div>
@@ -808,17 +808,23 @@
     <p style="margin-top:6px">Made with 🥾 for hiking lovers</p>
   </footer>
 
-  <!-- ═══ Open Downloads Folder ═══ -->
   <script>
+    // 開啟下載資料夾
     document.getElementById('btn-open-downloads').addEventListener('click', function(e) {
       e.preventDefault();
-      // 嘗試開啟 macOS 下載資料夾 (僅本機 file:// 瀏覽有效)
-      const downloadsPath = 'file:///Users/' + (location.pathname.split('/Users/')[1] || '').split('/')[0] + '/Downloads/';
-      const fallbackPath = 'file:///tmp/';
-      const w = window.open(downloadsPath, '_blank');
-      // 線上環境無法開啟 file://，提示使用者手動開啟
+      var downloadsPath = 'file:///Users/' + (location.pathname.split('/Users/')[1] || '').split('/')[0] + '/Downloads/';
+      var w = window.open(downloadsPath, '_blank');
       if (!w || w.closed) {
         alert('請手動開啟 Finder → 下載項目，找到 .gpx 檔案雙擊開啟');
+      }
+    });
+
+    // 開啟 GPXSee App
+    document.getElementById('btn-gpxsee-app').addEventListener('click', function(e) {
+      e.preventDefault();
+      var w = window.open('file:///Applications/GPXSee.app', '_blank');
+      if (!w || w.closed) {
+        window.open('https://www.gpxsee.org/', '_blank');
       }
     });
   </script>
