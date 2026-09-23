@@ -262,58 +262,35 @@
 
           <div class="flex justify-end gap-2 pt-2">
             <button type="button" onclick="cancelCaseEdit()" class="px-3.5 py-1.5 text-xs text-slate-600 hover:bg-slate-200 bg-white border border-slate-300 rounded-lg font-medium transition">取消編輯</button>
-            <button type="button" onclick="saveCaseEdit()" class="px-4 py-1.5 text-xs text-white bg-amber-600 hover:bg-amber-700 rounded-lg font-bold shadow transition flex items-center gap-1.5">
-              <i class="fa-solid fa-check"></i> 儲存修改
+            <button type="button" id="btn-save-case-bottom" onclick="saveCaseEdit()" class="px-4 py-1.5 text-xs text-white bg-amber-600 hover:bg-amber-700 rounded-lg font-bold shadow transition flex items-center gap-1.5">
+              <i class="fa-solid fa-check"></i> <span id="btn-save-case-bottom-text">儲存修改</span>
             </button>
           </div>
         </div>
 
         <!-- Photo Section -->
           <div class="flex items-center justify-between mb-2">
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">現場照片紀錄 (<span id="photo-count">0</span> 張)</label>
+            <div class="flex items-center gap-2">
+              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">現場照片紀錄 (<span id="photo-count">0</span> 張)</label>
+              <!-- 上傳進度即時顯示標籤 -->
+              <span id="upload-status-indicator" class="hidden text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                <i class="fa-solid fa-spinner fa-spin mr-1"></i> 上傳 Google 雲端中...
+              </span>
+            </div>
+
             <!-- 照片操作工具列：僅在「編輯內容模式」下出現 -->
-            <div id="photo-action-toolbar" class="hidden flex items-center gap-1.5 flex-wrap justify-end">
-              <!-- 前往品陽公設缺失專用雲端硬碟 -->
-              <a href="https://drive.google.com/drive/folders/11UFA6j24DNr8xIy8aM93OUSxzy1YOeI6?usp=sharing" target="_blank"
-                 class="inline-flex items-center gap-1 text-[11px] text-amber-800 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2 py-1 rounded-md font-medium transition" title="前往管委會『公設缺失追蹤』雲端照片資料夾">
-                <i class="fa-brands fa-google-drive text-amber-600"></i> 開啟雲端相簿
-              </a>
-              <!-- 加入雲端照片連結 -->
-              <button type="button" onclick="toggleDriveInputPanel()" class="inline-flex items-center gap-1 text-[11px] text-indigo-700 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2 py-1 rounded-md font-semibold transition" title="貼上 Google Drive 共享連結或網址">
-                <i class="fa-solid fa-link"></i> 加入雲端照片
-              </button>
+            <div id="photo-action-toolbar" class="hidden flex items-center gap-2 flex-wrap justify-end">
               <!-- 瀏覽模式 vs 刪除管理模式切換按鈕 -->
-              <button type="button" id="btn-toggle-photo-edit" onclick="togglePhotoEditMode()" class="inline-flex items-center gap-1 text-[11px] text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-md font-medium transition">
+              <button type="button" id="btn-toggle-photo-edit" onclick="togglePhotoEditMode()" class="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition">
                 <i class="fa-solid fa-pen-to-square"></i> <span id="photo-edit-text">管理照片</span>
               </button>
-              <button type="button" id="btn-clear-photos" onclick="clearAllPhotos()" class="text-[11px] text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2 py-1 rounded-md font-medium hidden transition">
+              <button type="button" id="btn-clear-photos" onclick="clearAllPhotos()" class="text-xs text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded-md font-medium hidden transition">
                 <i class="fa-solid fa-trash-can"></i> 全部刪除
               </button>
-              <label class="cursor-pointer inline-flex items-center gap-1 text-[11px] text-slate-700 hover:text-slate-900 font-medium bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-md transition" title="選擇本機圖片暫存（僅本機臨時檢視）">
-                <i class="fa-solid fa-laptop"></i> 本機相片
+              <label class="cursor-pointer inline-flex items-center gap-1.5 text-xs text-indigo-700 hover:text-indigo-800 font-semibold bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-3 py-1 rounded-md transition shadow-xs">
+                <i class="fa-solid fa-cloud-arrow-up text-indigo-600"></i> 上傳相片
                 <input type="file" id="photo-upload-input" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(event)" />
               </label>
-            </div>
-          </div>
-
-          <!-- 加入 Google Drive 照片連結輸入面板 (預設隱藏) -->
-          <div id="drive-input-panel" class="hidden mb-3 p-3 bg-gradient-to-r from-amber-50/70 to-indigo-50/70 border border-amber-200/80 rounded-xl space-y-2 text-xs">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-slate-700 flex items-center gap-1.5">
-                <i class="fa-brands fa-google-drive text-amber-600"></i> 新增雲端硬碟照片（多人跨裝置即時同步）
-              </span>
-              <button type="button" onclick="toggleDriveInputPanel()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <p class="text-[11px] text-slate-500 leading-relaxed">
-              請先將照片上傳至 <a href="https://drive.google.com/drive/folders/11UFA6j24DNr8xIy8aM93OUSxzy1YOeI6?usp=sharing" target="_blank" class="text-indigo-600 underline font-medium hover:text-indigo-800">公設缺失追蹤相簿 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>，對照片點右鍵「共用 ➔ 複製連結」貼在下方（支援多個連結，以換行或逗號隔開）：
-            </p>
-            <div class="flex gap-2">
-              <textarea id="drive-url-input" rows="2" placeholder="貼上 Google Drive 分享連結，例如：https://drive.google.com/file/d/1A2B3C.../view?usp=sharing" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs leading-normal font-mono focus:ring-2 focus:ring-indigo-400 focus:outline-none"></textarea>
-            </div>
-            <div class="flex justify-end gap-2">
-              <button type="button" onclick="addGoogleDrivePhotos()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md font-semibold text-xs transition shadow-xs flex items-center gap-1">
-                <i class="fa-solid fa-plus"></i> 確認新增至此案件
-              </button>
             </div>
           </div>
           
@@ -840,7 +817,7 @@
             "note": "公共安全項目，超過3個月未修 [管委會官方追蹤表第13項]",
             "id": "DEF-019",
             "photos": [
-                  "./photos/page_7_img_1_Image31.jpg"
+                  "https://lh3.googleusercontent.com/d/10-scLqklIaRizacB4NLK0fnCVD8P-uhV"
             ],
             "official_id": "官方 #13"
       },
@@ -982,8 +959,8 @@
             "note": "[管委會官方追蹤表第18項]",
             "id": "DEF-029",
             "photos": [
-                  "./photos/page_2_img_1_Image13.jpg",
-                  "./photos/page_2_img_2_Image14.jpg"
+                  "https://lh3.googleusercontent.com/d/1DObT3tTIs-HfGKfNpXeyjD532_tuCgMJ",
+                  "https://lh3.googleusercontent.com/d/1ElrHPA2WRKYiwJFAkkuwhLPRFbFKdq_F"
             ],
             "official_id": "官方 #18"
       },
@@ -1083,8 +1060,8 @@
             "note": "全棟防水重大瑕疵 [管委會官方追蹤表第04項]",
             "id": "DEF-036",
             "photos": [
-                  "./photos/page_16_img_1_Image61.jpg",
-                  "./photos/page_16_img_2_Image62.jpg"
+                  "https://lh3.googleusercontent.com/d/1krY5amHAAj7jb3EfaAZ_g6pYzQXhmQJh",
+                  "https://lh3.googleusercontent.com/d/1jzrhQ7KeHBPOt4UzkKgo70BXFcouXwtN"
             ],
             "official_id": "官方 #04"
       },
@@ -1114,7 +1091,7 @@
             "note": "防水層全面失效",
             "id": "DEF-038",
             "photos": [
-                  "./photos/page_8_img_1_Image34.jpg"
+                  "https://lh3.googleusercontent.com/d/1vfYoFYU3vTawvKwxx3JXRFlGg43rBpsG"
             ],
             "official_id": ""
       },
@@ -1214,8 +1191,8 @@
             "note": "[管委會官方追蹤表第11項]",
             "id": "DEF-045",
             "photos": [
-                  "./photos/page_9_img_1_Image37.jpg",
-                  "./photos/page_9_img_2_Image38.jpg"
+                  "https://lh3.googleusercontent.com/d/1zdxM2d5qDiGS9xF7_6iYgKj3SCKjTiRZ",
+                  "https://lh3.googleusercontent.com/d/1YAj9hxWQu4UNDlCP2pISjGNATG9Gi2qb"
             ],
             "official_id": "官方 #11"
       },
@@ -1231,7 +1208,7 @@
             "note": "[管委會官方追蹤表第08項]",
             "id": "DEF-046",
             "photos": [
-                  "./photos/page_12_img_1_Image49.jpg"
+                  "https://lh3.googleusercontent.com/d/1ocAGrOothaeEHL748YrBCI75W9YVHiAe"
             ],
             "official_id": "官方 #08"
       },
@@ -1247,8 +1224,8 @@
             "note": "[管委會官方追蹤表第09項]",
             "id": "DEF-047",
             "photos": [
-                  "./photos/page_11_img_1_Image45.jpg",
-                  "./photos/page_11_img_2_Image46.jpg"
+                  "https://lh3.googleusercontent.com/d/1VnCJ6L9iVcfb6vHg_PV6T7N8gWD38yEV",
+                  "https://lh3.googleusercontent.com/d/1MrzVFnbzRv0r65Y8SuhbMs6giesEYuhx"
             ],
             "official_id": "官方 #09"
       },
@@ -1264,7 +1241,7 @@
             "note": "[管委會官方追蹤表第03項]",
             "id": "DEF-048",
             "photos": [
-                  "./photos/page_17_img_1_Image65.jpg"
+                  "https://lh3.googleusercontent.com/d/1Q5cQCfi_AceUCVBK22vrFBVY0cOzF8m7"
             ],
             "official_id": "官方 #03"
       },
@@ -1322,7 +1299,7 @@
             "note": "管委會官方追蹤表第01項",
             "id": "DEF-052",
             "photos": [
-                  "./photos/page_19_img_1_Image72.jpg"
+                  "https://lh3.googleusercontent.com/d/15FGa3pix4ztD5JwZtlZVSELo3Xyvl5OF"
             ],
             "official_id": "官方 #01"
       },
@@ -1338,8 +1315,8 @@
             "note": "管委會官方追蹤表第02項",
             "id": "DEF-053",
             "photos": [
-                  "./photos/page_18_img_1_Image68.jpg",
-                  "./photos/page_18_img_2_Image69.jpg"
+                  "https://lh3.googleusercontent.com/d/1DmRXlqD6WFd8Wm-BTZyVr4cGIh783sAa",
+                  "https://lh3.googleusercontent.com/d/1nmwNtiFVtqkavEwaGUa35iijJZginx5F"
             ],
             "official_id": "官方 #02"
       },
@@ -1355,7 +1332,7 @@
             "note": "管委會官方追蹤表第06項",
             "id": "DEF-054",
             "photos": [
-                  "./photos/page_14_img_1_Image55.jpg"
+                  "https://lh3.googleusercontent.com/d/1Ob9Bz8Mut_rEJYxwAGz3quL7X2f5mgpg"
             ],
             "official_id": "官方 #06"
       },
@@ -1371,7 +1348,7 @@
             "note": "管委會官方追蹤表第07項",
             "id": "DEF-055",
             "photos": [
-                  "./photos/page_13_img_1_Image52.jpg"
+                  "https://lh3.googleusercontent.com/d/1-edrdBJw55waRVGsd8RXr2zj_IMa1WSH"
             ],
             "official_id": "官方 #07"
       },
@@ -1387,8 +1364,8 @@
             "note": "管委會官方追蹤表第10項",
             "id": "DEF-056",
             "photos": [
-                  "./photos/page_10_img_1_Image41.jpg",
-                  "./photos/page_10_img_2_Image42.jpg"
+                  "https://lh3.googleusercontent.com/d/1BiFnN7EoxEqwoZfH-TxhvqtRiCWVwo98",
+                  "https://lh3.googleusercontent.com/d/1fryudCZ6p7Z6BogTabHKN8I9pOYCvex9"
             ],
             "official_id": "官方 #10"
       },
@@ -1404,7 +1381,7 @@
             "note": "管委會官方追蹤表第14項",
             "id": "DEF-057",
             "photos": [
-                  "./photos/page_6_img_1_Image28.jpg"
+                  "https://lh3.googleusercontent.com/d/1meAWd48Ducsi6fzuDQWbPSFexcIwcv_T"
             ],
             "official_id": "官方 #14"
       },
@@ -1420,8 +1397,8 @@
             "note": "管委會官方追蹤表第15項",
             "id": "DEF-058",
             "photos": [
-                  "./photos/page_5_img_1_Image24.jpg",
-                  "./photos/page_5_img_2_Image25.jpg"
+                  "https://lh3.googleusercontent.com/d/1HToIHLC0jLFBDR9XJvtjL1Gj1ye0g3s_",
+                  "https://lh3.googleusercontent.com/d/1F7Qj9_skXKTWZcdvoieEEeO0WGW8Hw86"
             ],
             "official_id": "官方 #15"
       },
@@ -1437,7 +1414,7 @@
             "note": "管委會官方追蹤表第16項",
             "id": "DEF-059",
             "photos": [
-                  "./photos/page_4_img_1_Image21.jpg"
+                  "https://lh3.googleusercontent.com/d/1d9WlJnsG1-3lo1rSGeGPcPbFa6gPT9J-"
             ],
             "official_id": "官方 #16"
       },
@@ -1453,8 +1430,8 @@
             "note": "管委會官方追蹤表第17項",
             "id": "DEF-060",
             "photos": [
-                  "./photos/page_3_img_1_Image17.jpg",
-                  "./photos/page_3_img_2_Image18.jpg"
+                  "https://lh3.googleusercontent.com/d/10SqMy0BPTpcU9RMessXFyJTJSZT7deNx",
+                  "https://lh3.googleusercontent.com/d/18e_CnVv-607_PPzwmLvF22ceH14VbBUQ"
             ],
             "official_id": "官方 #17"
       }
@@ -2068,7 +2045,7 @@
       updateCaseEditUI();
     }
 
-    function saveCaseEdit() {
+    async function saveCaseEdit() {
       if (!currentDetailDefect) return;
 
       const dateVal = document.getElementById('edit-date').value.trim();
@@ -2085,6 +2062,48 @@
         return;
       }
 
+      // 若有待上傳的新相片，顯示載入狀態並逐一自動上傳至 Google 雲端硬碟
+      const btnEditTop = document.getElementById('btn-edit-case');
+      const btnEditTextTop = document.getElementById('btn-edit-case-text');
+      const btnSaveBottom = document.getElementById('btn-save-case-bottom');
+      const btnSaveTextBottom = document.getElementById('btn-save-case-bottom-text');
+      const uploadIndicator = document.getElementById('upload-status-indicator');
+
+      if (pendingUploadFiles && pendingUploadFiles.length > 0) {
+        if (btnEditTop) btnEditTop.disabled = true;
+        if (btnSaveBottom) btnSaveBottom.disabled = true;
+        if (btnEditTextTop) btnEditTextTop.innerText = "上傳中...";
+        if (btnSaveTextBottom) btnSaveTextBottom.innerText = "上傳雲端中...";
+        if (uploadIndicator) {
+          uploadIndicator.classList.remove('hidden');
+          uploadIndicator.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> 正在將 ${pendingUploadFiles.length} 張照片上傳至 Google 雲端...`;
+        }
+
+        try {
+          // 先移除之前 FileReader 產生的 data:image base64 預覽，換成真實 Google Drive 直連網址
+          currentDetailDefect.photos = currentDetailDefect.photos.filter(p => !p.startsWith('data:image/'));
+
+          for (let i = 0; i < pendingUploadFiles.length; i++) {
+            const file = pendingUploadFiles[i];
+            if (uploadIndicator) {
+              uploadIndicator.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> 上傳 Google 雲端中 (${i+1}/${pendingUploadFiles.length})...`;
+            }
+            const gdriveUrl = await uploadFileToGoogleDrive(file, currentDetailDefect.id);
+            if (gdriveUrl && !currentDetailDefect.photos.includes(gdriveUrl)) {
+              currentDetailDefect.photos.push(gdriveUrl);
+            }
+          }
+          pendingUploadFiles = [];
+        } catch (err) {
+          console.error('上傳 Google 雲端失敗:', err);
+          alert('部分或全部照片上傳至 Google 雲端失敗：' + err.message + '\n請確認網路連線或稍後再試。');
+        } finally {
+          if (btnEditTop) btnEditTop.disabled = false;
+          if (btnSaveBottom) btnSaveBottom.disabled = false;
+          if (uploadIndicator) uploadIndicator.classList.add('hidden');
+        }
+      }
+
       currentDetailDefect.date = dateVal;
       currentDetailDefect.area = areaVal;
       currentDetailDefect.loc = locVal;
@@ -2098,7 +2117,7 @@
       isCaseEditMode = false;
       updateCaseEditUI();
 
-      // 重新整理詳情面板數值
+      // 重新整理詳情面板數值與照片列表
       document.getElementById('modal-id').innerText = currentDetailDefect.id + (currentDetailDefect.official_id ? ` 【${currentDetailDefect.official_id}】` : '');
       document.getElementById('modal-title').innerText = currentDetailDefect.loc;
       document.getElementById('modal-date').innerText = currentDetailDefect.date;
@@ -2108,7 +2127,8 @@
       document.getElementById('modal-desc').innerText = currentDetailDefect.desc;
       document.getElementById('modal-progress').innerText = currentDetailDefect.progress || '尚無建商回覆紀錄';
 
-      // 刷新總表
+      // 刷新相片渲染與總表
+      renderModalPhotos();
       renderTable();
       updateDashboardStats();
     }
@@ -2116,6 +2136,7 @@
     // 上一案件 / 下一案件 循環切換 (delta: -1 為上一案, 1 為下一案)
     function navCase(delta) {
       if (!currentDetailDefect) return;
+      pendingUploadFiles = [];
       const list = currentFilteredList && currentFilteredList.length > 0 ? currentFilteredList : defectList;
       const curIdx = list.findIndex(d => d.id === currentDetailDefect.id);
       if (curIdx === -1) return;
@@ -2127,6 +2148,7 @@
     function closeDetailModal() {
       document.getElementById('detail-modal').classList.add('hidden');
       currentDetailDefect = null;
+      pendingUploadFiles = [];
       isPhotoEditMode = false;
       isCaseEditMode = false;
       updateCaseEditUI();
@@ -2223,73 +2245,51 @@
       });
     }
 
-    // 切換 Google Drive 照片連結輸入面板
-    function toggleDriveInputPanel() {
-      const panel = document.getElementById('drive-input-panel');
-      if (!panel) return;
-      if (panel.classList.contains('hidden')) {
-        panel.classList.remove('hidden');
-        const input = document.getElementById('drive-url-input');
-        if (input) {
-          input.value = '';
-          input.focus();
-        }
-      } else {
-        panel.classList.add('hidden');
-      }
-    }
+    // 待上傳至 Google 雲端硬碟的檔案暫存清單
+    let pendingUploadFiles = [];
 
-    // 將使用者輸入的 Google Drive 共享連結轉為直接圖片並加入目前案件
-    function addGoogleDrivePhotos() {
-      if (!currentDetailDefect) return;
-      const input = document.getElementById('drive-url-input');
-      if (!input) return;
-      const val = input.value.trim();
-      if (!val) {
-        alert('請先貼上 Google Drive 照片的分享連結！');
-        return;
+    // 上傳檔案至指定 Google 雲端硬碟資料夾 (透過 GAS 專用 Web API)
+    const PINYANG_DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/11UFA6j24DNr8xIy8aM93OUSxzy1YOeI6?usp=sharing";
+    const GAS_UPLOAD_API = "https://script.google.com/macros/s/AKfycbwhjTAwi2CpX4YRhMUM6IbQ2DEpjKL-m0vfRXIo4d4fjzgI6_LUJkRzCc2X3lRgXzzfrw/exec";
+
+    async function uploadFileToGoogleDrive(file, defectId) {
+      const buffer = await file.arrayBuffer();
+      const uint8 = new Uint8Array(buffer);
+      const int8List = [];
+      for (let i = 0; i < uint8.length; i++) {
+        const b = uint8[i];
+        int8List.push(b < 128 ? b : b - 256);
       }
 
-      // 支援多個連結（換行、逗號或空白分開）
-      const rawUrls = val.split(/[\r\n,;]+/).map(u => u.trim()).filter(u => u.length > 0);
-      let addedCount = 0;
-      if (!currentDetailDefect.photos) currentDetailDefect.photos = [];
+      const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
+      const ext = file.name.split('.').pop() || 'jpg';
+      const cleanName = `${defectId}_${timestamp}_${Math.floor(Math.random()*1000)}.${ext}`;
 
-      rawUrls.forEach(rawUrl => {
-        const directUrl = convertGoogleDriveUrl(rawUrl);
-        if (directUrl && !currentDetailDefect.photos.includes(directUrl)) {
-          currentDetailDefect.photos.push(directUrl);
-          addedCount++;
-        }
+      const params = new URLSearchParams({
+        filename: cleanName,
+        mimeType: file.type || 'image/jpeg',
+        folderUrl: PINYANG_DRIVE_FOLDER_URL
       });
 
-      if (addedCount > 0) {
-        saveData();
-        renderModalPhotos();
-        renderTable();
-        toggleDriveInputPanel();
+      const resp = await fetch(`${GAS_UPLOAD_API}?${params.toString()}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(int8List)
+      });
 
-        // 貼心提示使用者同時更新至 Google Sheet 試算表以確保所有用戶跨設備皆可見
-        const driveUrlsText = currentDetailDefect.photos.join(', ');
-        const promptMsg = `✅ 成功加入 ${addedCount} 張雲端照片！\n\n【多人跨設備永久同步提示】：\n若要讓其他住戶或手機網頁一併同步看到，請將此案件在 Google Sheet 試算表中的「現場相片」欄位貼上照片網址：\n\n${driveUrlsText}\n\n是否立即複製相片網址並前往 Google Sheet 貼上？`;
-        
-        if (confirm(promptMsg)) {
-          if (navigator.clipboard) {
-            navigator.clipboard.writeText(driveUrlsText).then(() => {
-              alert('已將照片網址複製到剪貼簿！即將為您開啟 Google Sheet...');
-              window.open(`https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/edit#gid=0`, '_blank');
-            }).catch(() => {
-              window.open(`https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/edit#gid=0`, '_blank');
-            });
-          } else {
-            window.open(`https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/edit#gid=0`, '_blank');
-          }
-        }
-      } else {
-        alert('未偵測到有效的照片連結，或該照片已在清單中。');
+      if (!resp.ok) {
+        throw new Error(`上傳 HTTP 狀態碼錯誤：${resp.status}`);
       }
+
+      const res = await resp.json();
+      if (!res.fileId) {
+        throw new Error('伺服器未回傳有效 fileId');
+      }
+
+      return `https://lh3.googleusercontent.com/d/${res.fileId}`;
     }
 
+    // 處理使用者從本機選取相片：先產生本機預覽並放入 pending 清單，等按下「儲存修改」時一次上傳 Google 雲端
     function handlePhotoUpload(e) {
       if (!currentDetailDefect) return;
       const files = e.target.files;
@@ -2298,15 +2298,15 @@
       if (!currentDetailDefect.photos) currentDetailDefect.photos = [];
 
       Array.from(files).forEach(file => {
+        pendingUploadFiles.push(file);
         const reader = new FileReader();
         reader.onload = function(evt) {
           currentDetailDefect.photos.push(evt.target.result);
-          saveData();
           renderModalPhotos();
-          renderTable();
         };
         reader.readAsDataURL(file);
       });
+
       e.target.value = '';
     }
 
@@ -2331,6 +2331,7 @@
       if (!currentDetailDefect || !currentDetailDefect.photos || currentDetailDefect.photos.length === 0) return;
       if (confirm(`確定清空本項目的所有現場照片 (共 ${currentDetailDefect.photos.length} 張)？`)) {
         currentDetailDefect.photos = [];
+        pendingUploadFiles = [];
         isPhotoEditMode = false;
         const btn = document.getElementById('btn-toggle-photo-edit');
         const text = document.getElementById('photo-edit-text');
@@ -2487,7 +2488,7 @@
       document.getElementById('create-form').reset();
     }
 
-    function handleCreateSubmit(e) {
+    async function handleCreateSubmit(e) {
       e.preventDefault();
       const maxIdNum = defectList.reduce((max, d) => {
         const num = parseInt(d.id.replace('DEF-', ''), 10) || 0;
@@ -2522,27 +2523,36 @@
 
       const photoFiles = document.getElementById('new-photos').files;
       if (photoFiles && photoFiles.length > 0) {
-        let loaded = 0;
-        Array.from(photoFiles).forEach(f => {
-          const reader = new FileReader();
-          reader.onload = function(evt) {
-            newDefect.photos.push(evt.target.result);
-            loaded++;
-            if (loaded === photoFiles.length) {
-              defectList.unshift(newDefect);
-              saveData();
-              closeModal();
-              renderTable();
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const origText = submitBtn ? submitBtn.innerText : '';
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerText = "上傳照片至雲端中...";
+        }
+
+        try {
+          for (let i = 0; i < photoFiles.length; i++) {
+            const file = photoFiles[i];
+            const gdriveUrl = await uploadFileToGoogleDrive(file, newDefect.id);
+            if (gdriveUrl && !newDefect.photos.includes(gdriveUrl)) {
+              newDefect.photos.push(gdriveUrl);
             }
-          };
-          reader.readAsDataURL(f);
-        });
-      } else {
-        defectList.unshift(newDefect);
-        saveData();
-        closeModal();
-        renderTable();
+          }
+        } catch (err) {
+          console.error('新增案件照片上傳 Google 雲端失敗:', err);
+          alert('部分照片上傳至 Google 雲端失敗：' + err.message);
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = origText;
+          }
+        }
       }
+
+      defectList.unshift(newDefect);
+      saveData();
+      closeModal();
+      renderTable();
     }
 
     function exportCSV() {
