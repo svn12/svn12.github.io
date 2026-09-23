@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>品陽大苑公設缺失追蹤系統 使用說明書</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 18mm 15mm 18mm 15mm;
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-size: 9pt;
+        color: #64748b;
+      }
+    }
+    *, *:before, *:after {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      color: #1e293b;
+      line-height: 1.5;
+      font-size: 10.5pt;
+      background: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+    .header-banner {
+      border-bottom: 2.5px solid #3b82f6;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .header-title {
+      font-size: 20pt;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      margin: 0 0 4px 0;
+    }
+    .header-subtitle {
+      font-size: 11pt;
+      color: #3b82f6;
+      font-weight: 600;
+      margin: 0;
+    }
+    .header-meta {
+      text-align: right;
+      font-size: 8.5pt;
+      color: #64748b;
+      line-height: 1.4;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 8.5pt;
+      font-weight: bold;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+    h2 {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 22px 0 10px 0;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    h3 {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 14px 0 6px 0;
+    }
+    p {
+      margin: 0 0 8px 0;
+      text-align: justify;
+    }
+    ul, ol {
+      margin: 0 0 10px 0;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    .info-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #3b82f6;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin: 12px 0;
+      font-size: 9.5pt;
+    }
+    .info-card-warning {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin: 12px 0;
+      font-size: 9.5pt;
+    }
+    .img-container {
+      margin: 12px 0;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+    .img-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+    .img-caption {
+      font-size: 8.5pt;
+      color: #64748b;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 9.5pt;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 10px;
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 50%;
+      font-size: 8pt;
+      font-weight: bold;
+      margin-right: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page 1 -->
+  <div class="header-banner">
+    <div>
+      <h1 class="header-title">品陽大苑公設缺失追蹤系統</h1>
+      <p class="header-subtitle">系統操作與雙向雲端同步完整使用手冊</p>
+    </div>
+    <div class="header-meta">
+      <div><strong>線上存取：</strong>www.jktai123.com</div>
+      <div><strong>試算表庫：</strong>Google Sheet SSOT</div>
+      <div><strong>手冊版本：</strong>v2.4 (2026/09/23)</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <strong>系統宗旨：</strong>專為品陽大苑管委會、全體住戶及第三方公設查驗團隊（國霖機電）打造之公設瑕疵管制作業平台。系統整合了住戶提報、現況照片留證、缺失修繕進度追蹤，並直接連動 Google 雲端試算表與雲端硬碟，達到無死角的多人即時協作。
+  </div>
+
+  <h2>1. 系統首頁與全域總覽 (Dashboard)</h2>
+  <p>進入系統後，頁面由頂部<strong>控制導覽列</strong>、中間<strong>狀態儀表卡片 (KPI)</strong>、多維度<strong>複合篩選列</strong>以及<strong>缺失項目清單總表</strong>四大區塊組成：</p>
+
+  <div class="img-container">
+    <img src="manual_assets/01_overview.png" alt="系統首頁儀表板">
+    <div class="img-caption">▲ 圖 1：品陽大苑缺失追蹤系統首頁架構（頂部功能鍵、KPI統計、即時篩選與案件總表）</div>
+  </div>
+
+  <h3>主要操作區塊說明：</h3>
+  <ul>
+    <li><strong>頂部狀態列：</strong>
+      <ul>
+        <li><span class="badge">管委會雲端硬碟</span>：一鍵快速直達管委會 Google Drive 存證資料夾。</li>
+        <li><span class="badge">雲端同步</span>：強制自 Google Sheet 抓取全社區最新提報缺失與類別設定。</li>
+        <li><span class="badge">類別管理</span>：增刪或微調系統分類標籤與修繕進度狀態。</li>
+        <li><span class="badge">新增缺失項目</span>：開啟快速表單登記現場新瑕疵與上傳照片。</li>
+        <li><span class="badge">匯出 CSV</span>：一鍵匯出當前所有篩選結果為 Excel/CSV 檔案供管委會會議彙報。</li>
+      </ul>
+    </li>
+    <li><strong>KPI 即時卡片：</strong>即時統計總提報項目數（如 65 項），以及「待處理」、「國霖驗收列管」、「建商查勘中」、「已改善待複驗」、「已結案」之分項件數。</li>
+    <li><strong>多維度篩選工具：</strong>支援「關鍵字搜尋（案號/位置/描述/提報人）」、「系統分類」、「空間區域」及「改善狀態」之即時即打即顯交叉比對。</li>
+  </ul>
+
+  <!-- Page 2 -->
+  <div class="page-break"></div>
+
+  <h2>2. 雲端同步機制與更新差異解析</h2>
+  <p>系統採用現代化<strong>單一真實來源 (Single Source of Truth, SSOT)</strong> 架構，讓網頁與 Google Sheet 試算表達成無縫自動連線：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">操作方式</th>
+        <th style="width: 35%;">觸發機制與運作流程</th>
+        <th style="width: 40%;">適用情境與主要效果</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>開啟網頁 / 按 F5 重新整理</strong></td>
+        <td>網頁載入時，底層在背景自動以無痕方式連線 Google Sheet API，自動拉取最新 65 筆資料並更新表格。</td>
+        <td>平常每日查看最新狀況、或者前端介面有程式碼改版時使用。</td>
+      </tr>
+      <tr>
+        <td><strong>點擊頂部「雲端同步」按鈕</strong></td>
+        <td>強制跳過瀏覽器所有本地快取，即時抓取 Google Sheet「公設缺失清單」與「類別設定」雙工作表。</td>
+        <td>其他委員或建商剛在 Google Sheet 後台編輯完畢，你想<strong>立刻無延遲看到最新紀錄與照片張數</strong>時。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. 案件詳情檢視與照片放大 (Detail Modal)</h2>
+  <p>在總表中點擊任一案件列或右側 <span class="badge">檢視</span> 圖示，即可開啟案件詳細修繕資訊窗：</p>
+
+  <div class="img-container">
+    <img src="manual_assets/02_detail_modal.png" alt="案件詳情彈窗">
+    <div class="img-caption">▲ 圖 2：案件修繕履歷檢視窗（含提報人、官方追蹤編號、改善進度及現場存證相片輪播）</div>
+  </div>
+
+  <ul>
+    <li><strong>案件定位切換：</strong>可點擊頂部「上一案」、「下一案」快捷鍵在同篩選結果內循序切換，無須頻繁進出。</li>
+    <li><strong>照片輪播與燈箱放大：</strong>點擊現場相片縮圖即可呼叫全螢幕高清燈箱，支援手機左右滑動手勢與鍵盤切換，方便現場會勘細節辨識。</li>
+    <li><strong>改善進度追蹤：</strong>清楚記載建商目前修復處置作為、工班施作進度或第三方查驗結論。</li>
+  </ul>
+
+  <!-- Page 3 -->
+  <div class="page-break"></div>
+
+  <h2>4. 案件內容編輯與相片雲端管理</h2>
+  <p>在詳情窗點擊右上方 <span class="badge">編輯內容</span> 按鈕，介面會切換至雙欄編輯工作台：</p>
+
+  <div class="img-container">
+    <img src="manual_assets/03_edit_mode.png" alt="案件編輯與相片管理工作台">
+    <div class="img-caption">▲ 圖 3：案件編輯模式（左欄修改缺失與回覆、右欄支援本機照片上傳、Google Drive 網址掛載與快速刪除）</div>
+  </div>
+
+  <h3>現場照片增刪管理：</h3>
+  <ol>
+    <li><span class="step-number">1</span><strong>電腦/手機本機上傳：</strong>點擊「選擇照片檔案」選取現場拍攝圖檔，系統會於前端進行智慧等比壓縮（最長邊 1600px，畫質清晰且傳輸順暢）。</li>
+    <li><span class="step-number">2</span><strong>貼上 Google 雲端硬碟連結：</strong>亦可直接貼上 Drive 分享網址，系統會自動轉換為直接渲染預覽圖。</li>
+    <li><span class="step-number">3</span><strong>刪除相片：</strong>滑鼠懸停於照片右上角垃圾桶或點擊「管理照片」即可單張清除；亦可「清空全部照片」。</li>
+    <li><span class="step-number">4</span><strong>雙向寫入雲端：</strong>點擊右下角「儲存修改」後，新照片自動上傳 Google Drive，並同步將雲端圖片直連網址寫回 Google Sheet 第 K 欄，確保跨裝置完全一致。</li>
+  </ol>
+
+  <div class="info-card-warning">
+    <strong>刪除案件保護：</strong>左下角設有「刪除此案件」功能，僅供誤報或完全無效案件使用。點擊後系統會跳出確認警告，確認後將同步從網頁及 Google Sheet 徹底抹除該筆紀錄。
+  </div>
+
+  <!-- Page 4 -->
+  <div class="page-break"></div>
+
+  <h2>5. 新增公設缺失作業流程 (Create Defect)</h2>
+  <p>當巡檢人員或住戶在公共空間發現新瑕疵時，點擊頂部 <span class="badge">+ 新增缺失項目</span> 開啟表單：</p>
+
+  <div class="img-container">
+    <img src="manual_assets/04_create_modal.png" alt="新增缺失表單">
+    <div class="img-caption">▲ 圖 4：新增缺失表單（支援自動編號、樓層空間、瑕疵描述與直接上傳現場佐證）</div>
+  </div>
+
+  <ul>
+    <li><strong>系統編號：</strong>系統依現有資料庫自動流水編排（例如目前最新為 <code>DEF-066</code>）。</li>
+    <li><strong>空間與位置：</strong>詳列「空間區域」（如地下室、頂樓/RF、梯廳）與「具體位置」（如 B2停車場15號車位旁連續壁）。</li>
+    <li><strong>系統分類：</strong>選定主要瑕疵性質（漏水滲水、給排水系統、門禁弱電、消防安檢、土建五金、環境管理）。</li>
+    <li><strong>現場相片上傳：</strong>可同步選取照片檔案，按下「送出並儲存」後系統即自動完成上傳及資料庫登錄。</li>
+  </ul>
+
+  <h2>6. 系統分類與改善狀態自訂管理 (Configuration)</h2>
+  <p>點擊頂部 <span class="badge">類別管理</span> 按鈕，管委會委員可隨時依社區需求自訂分類標籤：</p>
+
+  <div class="img-container">
+    <img src="manual_assets/05_config_modal.png" alt="類別管理彈窗">
+    <div class="img-caption">▲ 圖 5：類別與狀態管理視窗（自訂各項工程分類標籤與流程狀態）</div>
+  </div>
+
+  <ul>
+    <li><strong>動態擴充：</strong>可隨時新增例如「景觀植栽」、「公設弱電」等新類別，或調整自訂狀態流程。</li>
+    <li><strong>雲端雙向同步：</strong>所有類別異動均同步記錄至 Google Sheet 試算表之「類別設定」工作表中，其他裝置重整後同步生效。</li>
+  </ul>
+
+</body>
+</html>
