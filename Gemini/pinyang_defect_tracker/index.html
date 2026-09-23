@@ -1686,29 +1686,50 @@
       return url;
     }
 
-    // 解析 CSV 單列 (妥善處理包含逗號與引號的字串)
-    function parseCSVLine(text) {
-      const result = [];
-      let cur = '';
-      let inQuotes = false;
+    // 解析完整 CSV 字串（遵守 RFC 4180 標準，妥善處理引號內的多行換行與逗號）
+    function parseCSV(text) {
+      const rows = [];
+      let currentRow = [];
+      let currentVal = '';
+      let insideQuote = false;
+
       for (let i = 0; i < text.length; i++) {
         const c = text[i];
+        const next = text[i + 1];
+
         if (c === '"') {
-          if (inQuotes && text[i + 1] === '"') {
-            cur += '"';
+          if (insideQuote && next === '"') {
+            currentVal += '"';
             i++;
           } else {
-            inQuotes = !inQuotes;
+            insideQuote = !insideQuote;
           }
-        } else if (c === ',' && !inQuotes) {
-          result.push(cur.trim());
-          cur = '';
+        } else if (c === ',' && !insideQuote) {
+          currentRow.push(currentVal.trim());
+          currentVal = '';
+        } else if ((c === '\r' || c === '\n') && !insideQuote) {
+          if (c === '\r' && next === '\n') {
+            i++;
+          }
+          currentRow.push(currentVal.trim());
+          if (currentRow.some(col => col.length > 0)) {
+            rows.push(currentRow);
+          }
+          currentRow = [];
+          currentVal = '';
         } else {
-          cur += c;
+          currentVal += c;
         }
       }
-      result.push(cur.trim());
-      return result;
+
+      if (currentVal.length > 0 || currentRow.length > 0) {
+        currentRow.push(currentVal.trim());
+        if (currentRow.some(col => col.length > 0)) {
+          rows.push(currentRow);
+        }
+      }
+
+      return rows;
     }
 
     // 全域同步：從 Google Sheet 同時拉取「公設缺失清單」與「類別設定」
@@ -1729,12 +1750,12 @@
         const cfgResp = await fetch(`https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/gviz/tq?tqx=out:csv&sheet=${GSHEET_CONFIG_SHEET_NAME}&nocache=${Date.now()}`);
         if (cfgResp.ok) {
           const cfgText = await cfgResp.text();
-          const cfgLines = cfgText.split(/\r?\n/).filter(line => line.trim().length > 0);
-          if (cfgLines.length > 1) {
+          const cfgRows = parseCSV(cfgText);
+          if (cfgRows.length > 1) {
             const newCats = [];
             const newStatuses = [];
-            for (let i = 1; i < cfgLines.length; i++) {
-              const cols = parseCSVLine(cfgLines[i]);
+            for (let i = 1; i < cfgRows.length; i++) {
+              const cols = cfgRows[i];
               const cVal = cols[0];
               const sVal = cols[1];
               if (cVal && !newCats.includes(cVal)) newCats.push(cVal);
@@ -1750,12 +1771,12 @@
         const defResp = await fetch(`https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/gviz/tq?tqx=out:csv&sheet=${GSHEET_DEFECTS_SHEET_NAME}&nocache=${Date.now()}`);
         if (defResp.ok) {
           const defText = await defResp.text();
-          const defLines = defText.split(/\r?\n/).filter(line => line.trim().length > 0);
-          if (defLines.length > 1) {
+          const defRows = parseCSV(defText);
+          if (defRows.length > 1) {
             // 欄位順序：系統編號(0), 官方/立案編號(1), 提報日期(2), 區域空間(3), 具體位置(4), 系統分類(5), 缺失描述(6), 提報人(7), 處理狀態(8), 建商回覆/改善進度(9), 現場相片(10), 備註(11)
             const cloudDefects = [];
-            for (let i = 1; i < defLines.length; i++) {
-              const cols = parseCSVLine(defLines[i]);
+            for (let i = 1; i < defRows.length; i++) {
+              const cols = defRows[i];
               if (!cols[0]) continue;
               const id = cols[0];
               const rawPhotosCol = cols[10] || '';
