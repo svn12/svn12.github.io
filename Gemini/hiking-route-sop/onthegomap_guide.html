@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>On The Go Map 完整使用說明手冊</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: #24292f;
+      line-height: 1.6;
+      font-size: 14px;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      border-bottom: 3px solid #2563eb;
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+    }
+    .title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #1e3a8a;
+      margin: 0 0 6px 0;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin: 0;
+    }
+    h2 {
+      font-size: 17px;
+      color: #1e40af;
+      border-left: 4px solid #3b82f6;
+      padding-left: 8px;
+      margin-top: 22px;
+      margin-bottom: 10px;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 15px;
+      color: #0f172a;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      page-break-after: avoid;
+    }
+    p {
+      margin: 6px 0;
+    }
+    ul, ol {
+      margin: 6px 0;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 10px 0;
+    }
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 10px 14px;
+    }
+    .card-title {
+      font-weight: bold;
+      color: #1e293b;
+      margin-bottom: 4px;
+      font-size: 13.5px;
+    }
+    kbd {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11.5px;
+      padding: 1px 5px;
+      color: #0f172a;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 7px 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: #334155;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 10px;
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+    .tip-box {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+    .footer {
+      margin-top: 30px;
+      padding-top: 10px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 11px;
+      color: #94a3b8;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="title">On The Go Map (onthegomap.com) 完整使用說明手冊</div>
+    <div class="subtitle">極簡高效的跑步、自行車、健行路線規劃與 GPX 匯出指南 ｜ 官方網址：https://onthegomap.com/#/create</div>
+  </div>
+
+  <h2>1. 核心定位與特色</h2>
+  <p><strong>On The Go Map</strong> 是一款輕量、免安裝、免登入即可使用的線上路徑測量與規劃工具，適合跑者、單車騎士、登山健行者及賽事主辦方。</p>
+  <ul>
+    <li><strong>自動道路貼合（Auto-Snap）</strong>：點擊任意兩點，自動沿著 OpenStreetMap 實際可行道路計算最短路徑。</li>
+    <li><strong>即時距離與爬升</strong>：點擊地圖時立即計算總里程（公里/英里切換）與高程剖面圖（Elevation Profile）。</li>
+    <li><strong>裝置無縫相容</strong>：支援 GPX 格式導出，可直接傳送至 Garmin、Wahoo、COROS、Apple Watch 或各類跑步 APP。</li>
+  </ul>
+
+  <h2>2. 路線繪製與編輯操作</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">📍 建立路線</div>
+      <p>在地圖上點擊第 1 點作為起點，依序點擊後續各點，系統自動依路網貼合連線。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">↔️ 拖曳與調整</div>
+      <p>滑鼠拖曳既有的端點可改變位置；拖曳兩點之間的路線線段可直接插入新的中繼途經點。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">🗑️ 刪除航點</div>
+      <p>按住 <kbd>Shift</kbd> 鍵點擊點位可直接刪除，或將點位拖曳至出現的垃圾桶圖示放開。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">↩️ 復原與重做</div>
+      <p>誤觸隨時可用上方工具列的 Undo / Redo 按鈕，或鍵盤快速鍵 <kbd>Ctrl/Cmd + Z</kbd>。</p>
+    </div>
+  </div>
+
+  <h2>3. 規劃模式（Routing Modes）切換</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">模式</th>
+        <th style="width: 35%;">貼合行為與路網</th>
+        <th style="width: 40%;">適用場景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Foot（步行 / 跑步）</strong></td>
+        <td>優先貼合人行道、公園小徑、林道步道、行人天橋</td>
+        <td>路跑、越野跑、市區漫步、健行登山</td>
+      </tr>
+      <tr>
+        <td><strong>Bike（自行車）</strong></td>
+        <td>貼合適合單車騎行的柏油路、單車專用道，避開禁行道路</td>
+        <td>公路車巡航、河濱自行車道、長途單車騎乘</td>
+      </tr>
+      <tr>
+        <td><strong>Car（汽車）</strong></td>
+        <td>遵循行車道路行駛方向（單行道、幹道等最快路徑）</td>
+        <td>自駕巡航、機車路線大方向確認</td>
+      </tr>
+      <tr>
+        <td><strong>Manual（手繪直線）</strong></td>
+        <td>不貼合道路，兩點間以直線連接（快捷鍵：按住 <kbd>Ctrl/Cmd</kbd> 點擊）</td>
+        <td>穿越無圖資開放草地、廣場、渡輪、沙灘或自訂越野路段</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. 實用進階功能</h2>
+  <ul>
+    <li><strong>單位切換</strong>：直接點擊畫面左下角/上方標註的「里程數字」，可一鍵在 <code>mi (英里)</code> 與 <code>km (公里)</code> 間快速轉換。</li>
+    <li><strong>高程剖面圖（Elevation Profile）</strong>：點擊地圖旁的「山峰/等高線圖示」，底部即展開即時高度圖，滑鼠滑過圖表可同步對應地圖所在位置與爬升難度。</li>
+    <li><strong>折返與循環（Out & Back / Loop）</strong>：提供一鍵「折返 (Reverse/Out-and-Back)」功能，自動原路返回起點倍增里程。</li>
+    <li><strong>GPX / KML 匯出</strong>：完成路線後點擊 <strong>Export</strong>，選擇 <strong>GPX Track</strong> 下載，即可匯入 Garmin Connect、Strava、Wikiloc 等平台。</li>
+    <li><strong>免登入儲存與分享</strong>：點擊「Share」可生成直達連結，無需帳號即能轉寄朋友；亦可註冊儲存到個人帳號永久管理。</li>
+  </ul>
+
+  <h2>5. 鍵盤快速鍵對照表</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 30%;">快速鍵</th>
+        <th style="width: 70%;">功能說明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><kbd>?</kbd></td>
+        <td>顯示系統完整快速鍵說明面板</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + 點擊</td>
+        <td>暫時切換為 Manual（手動畫直線）模式，忽視道路自動貼合</td>
+      </tr>
+      <tr>
+        <td><kbd>Shift</kbd> + 點擊航點</td>
+        <td>快速刪除該航點</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl/Cmd</kbd> + <kbd>Z</kbd></td>
+        <td>復原上一步操作（Undo）</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl/Cmd</kbd> + <kbd>Y</kbd> / <kbd>Shift+Cmd+Z</kbd></td>
+        <td>重做下一步操作（Redo）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip-box">
+    <strong>💡 行動裝置（手機/平板）小技巧：</strong><br>
+    在 Safari 或 Chrome 開啟 <code>onthegomap.com</code> 後，使用「加入主畫面（Add to Home Screen）」，即可全螢幕如原生 App 般在戶外快速點圖測距與查看等高線！
+  </div>
+
+  <div class="footer">
+    文件生成時間：2026-09-23 ｜ 專案：20260625_html簡報 ｜ 檔案位置：專案根目錄
+  </div>
+
+</body>
+</html>
