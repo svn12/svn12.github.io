@@ -388,10 +388,41 @@
           <i class="fa-solid fa-sliders text-indigo-400"></i>
           <h3 class="font-bold text-base">類別管理（系統分類 & 改善狀態）</h3>
         </div>
-        <button onclick="closeConfigModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        <div class="flex items-center gap-2">
+          <a href="https://docs.google.com/spreadsheets/d/1Xq-7DfZ1RtgtabUnj5KkBvDy7-5iI4z9lnBpxSmXCvI/edit#gid=0" target="_blank" 
+             class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-medium flex items-center gap-1.5 transition" title="前往 Google Sheet 試算表">
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> 開啟 Google Sheet
+          </a>
+          <button onclick="closeConfigModal()" class="w-8 h-8 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+        </div>
       </div>
 
       <div class="p-6 space-y-6 overflow-y-auto text-sm">
+        <!-- 雲端試算表同步狀態列 -->
+        <div class="bg-indigo-50/70 border border-indigo-200 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-sm shadow-xs shrink-0">
+              <i class="fa-solid fa-table-cells"></i>
+            </div>
+            <div>
+              <div class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                <span>Google Sheet 雲端集中管理</span>
+                <span id="sync-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  <i class="fa-solid fa-cloud-arrow-down text-[9px] mr-0.5"></i> 已連結
+                </span>
+              </div>
+              <div class="text-[11px] text-slate-500 mt-0.5" id="sync-time-hint">
+                工作表：「類別設定」・社群多人隨時共享最新分類與狀態
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button" id="btn-sync-gsheet" onclick="syncFromGoogleSheet(true)" class="px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-300 hover:border-indigo-400 font-bold rounded-lg text-xs flex items-center gap-1.5 shadow-xs transition active:scale-95">
+              <i class="fa-solid fa-rotate"></i> <span>立即從雲端同步</span>
+            </button>
+          </div>
+        </div>
+
         <!-- 系統分類管理 -->
         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
           <div class="flex items-center justify-between mb-3">
@@ -1488,6 +1519,7 @@
     function openConfigModal() {
       renderConfigTags();
       document.getElementById('config-modal').classList.remove('hidden');
+      syncFromGoogleSheet(false);
     }
 
     function closeConfigModal() {
@@ -1560,6 +1592,85 @@
       if (confirm(`確定刪除狀態「${target}」？\n（歷史案件中若有此狀態仍會保留文字，僅從未來選單移除）`)) {
         statusList.splice(index, 1);
         saveCategoryAndStatus();
+      }
+    }
+
+    // Google Sheet 雲端同步核心設定
+    const GSHEET_DOC_ID = '1Xq-7DfZ1RtgtabUnj5KkBvDy7-5iI4z9lnBpxSmXCvI';
+    const GSHEET_CONFIG_SHEET_NAME = encodeURIComponent('類別設定');
+    const GSHEET_CONFIG_CSV_URL = `https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/gviz/tq?tqx=out:csv&sheet=${GSHEET_CONFIG_SHEET_NAME}&t=${Date.now()}`;
+
+    async function syncFromGoogleSheet(isManual = false) {
+      const btn = document.getElementById('btn-sync-gsheet');
+      const badge = document.getElementById('sync-status-badge');
+      const timeHint = document.getElementById('sync-time-hint');
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>同步中...</span>`;
+      }
+      if (badge) {
+        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300";
+        badge.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-[9px] mr-0.5"></i> 讀取雲端...`;
+      }
+
+      try {
+        const resp = await fetch(`https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/gviz/tq?tqx=out:csv&sheet=${GSHEET_CONFIG_SHEET_NAME}&nocache=${Date.now()}`);
+        if (!resp.ok) throw new Error('雲端試算表回應異常');
+        const csvText = await resp.text();
+
+        // 簡易 CSV 解析 (以換行切分，取第一欄為分類，第二欄為狀態)
+        const lines = csvText.split(/\r?\n/).filter(line => line.trim().length > 0);
+        if (lines.length > 1) {
+          const newCats = [];
+          const newStatuses = [];
+
+          // 從第二列 (index 1) 開始為資料
+          for (let i = 1; i < lines.length; i++) {
+            // 解析 CSV 逗號與雙引號
+            const cols = lines[i].split(',').map(c => c.replace(/^"|"$/g, '').trim());
+            const cVal = cols[0];
+            const sVal = cols[1];
+
+            if (cVal && !newCats.includes(cVal)) newCats.push(cVal);
+            if (sVal && !newStatuses.includes(sVal)) newStatuses.push(sVal);
+          }
+
+          if (newCats.length > 0) categoryList = newCats;
+          if (newStatuses.length > 0) statusList = newStatuses;
+
+          saveCategoryAndStatus();
+
+          const nowTime = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          if (badge) {
+            badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+            badge.innerHTML = `<i class="fa-solid fa-check text-[9px] mr-0.5"></i> 雲端已同步`;
+          }
+          if (timeHint) {
+            timeHint.innerText = `最後同步：今天 ${nowTime}・已從 Google Sheet 取得最新 ${categoryList.length} 個分類與 ${statusList.length} 個狀態`;
+          }
+
+          if (isManual) {
+            alert(`已成功從 Google Sheet 雲端試算表同步！\n\n系統分類：共 ${categoryList.length} 項\n改善狀態：共 ${statusList.length} 項`);
+          }
+        }
+      } catch (err) {
+        console.warn('從 Google Sheet 同步類別失敗，使用本地快取:', err);
+        if (badge) {
+          badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-300";
+          badge.innerHTML = `<i class="fa-solid fa-circle-exclamation text-[9px] mr-0.5"></i> 本地模式`;
+        }
+        if (timeHint) {
+          timeHint.innerText = `目前離線或使用本地快取；可點擊右側按鈕重新連線同步。`;
+        }
+        if (isManual) {
+          alert('連線 Google Sheet 失敗，已保留本地現有類別設定。\n請確認網路連線或稍後再試。');
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-rotate"></i> <span>立即從雲端同步</span>`;
+        }
       }
     }
 
@@ -2191,6 +2302,7 @@
     populateSelectOptions();
     updateDashboardStats();
     renderTable();
+    syncFromGoogleSheet(false); // 網頁載入時自動從 Google Sheet 取得最新分類與狀態
   </script>
 </body>
 </html>
