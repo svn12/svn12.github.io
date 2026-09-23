@@ -260,11 +260,16 @@
             <textarea id="edit-progress" rows="3" class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-amber-400 focus:outline-none"></textarea>
           </div>
 
-          <div class="flex justify-end gap-2 pt-2">
-            <button type="button" onclick="cancelCaseEdit()" class="px-3.5 py-1.5 text-xs text-slate-600 hover:bg-slate-200 bg-white border border-slate-300 rounded-lg font-medium transition">取消編輯</button>
-            <button type="button" id="btn-save-case-bottom" onclick="saveCaseEdit()" class="px-4 py-1.5 text-xs text-white bg-amber-600 hover:bg-amber-700 rounded-lg font-bold shadow transition flex items-center gap-1.5">
-              <i class="fa-solid fa-check"></i> <span id="btn-save-case-bottom-text">儲存修改</span>
+          <div class="flex items-center justify-between pt-2 border-t border-amber-200/60 mt-2">
+            <button type="button" onclick="deleteCurrentDefect()" class="px-3 py-1.5 text-xs text-red-600 hover:text-white hover:bg-red-600 bg-red-50 border border-red-200 rounded-lg font-bold transition flex items-center gap-1.5 shadow-xs">
+              <i class="fa-solid fa-trash-can"></i> 刪除此案件紀錄
             </button>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="cancelCaseEdit()" class="px-3.5 py-1.5 text-xs text-slate-600 hover:bg-slate-200 bg-white border border-slate-300 rounded-lg font-medium transition">取消編輯</button>
+              <button type="button" id="btn-save-case-bottom" onclick="saveCaseEdit()" class="px-4 py-1.5 text-xs text-white bg-amber-600 hover:bg-amber-700 rounded-lg font-bold shadow transition flex items-center gap-1.5">
+                <i class="fa-solid fa-check"></i> <span id="btn-save-case-bottom-text">儲存修改</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -2288,13 +2293,18 @@
 
       currentDetailDefect.photos.forEach((src, idx) => {
         const div = document.createElement('div');
-        div.className = "relative rounded-xl overflow-hidden border border-slate-200 bg-slate-100 aspect-video flex items-center justify-center shadow-sm transition hover:shadow-md";
+        div.className = "group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-100 aspect-video flex items-center justify-center shadow-sm transition hover:shadow-md";
 
         if (isPhotoEditMode) {
           // 管理/刪除模式：不可點開放大，點擊直接刪除，外框微紅警示
           div.classList.add('ring-2', 'ring-red-400');
           div.innerHTML = `
-            <img src="${src}" loading="lazy" decoding="async" class="w-full h-full object-cover opacity-80" />
+            <img src="${src}" loading="lazy" decoding="async" class="w-full h-full object-cover opacity-80" 
+                 onerror="this.parentElement.querySelector('.img-error-hint').classList.remove('hidden'); this.style.display='none';" />
+            <div class="img-error-hint hidden flex flex-col items-center justify-center p-2 text-center text-slate-400">
+              <i class="fa-solid fa-triangle-exclamation text-amber-500 mb-1"></i>
+              <span class="text-[10px]">照片無法載入</span>
+            </div>
             <button type="button" onclick="removePhoto(${idx})" 
                     class="absolute inset-0 m-auto w-10 h-10 bg-red-600 hover:bg-red-700 text-white rounded-full text-sm font-bold flex items-center justify-center shadow-lg transition active:scale-95" 
                     title="刪除此張相片">
@@ -2303,14 +2313,32 @@
             <span class="absolute bottom-1.5 left-2 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">相片 ${idx+1}</span>
           `;
         } else {
-          // 預設純瀏覽模式：整張照片大面積隨便點、隨便滑，絕不誤觸刪除
+          // 預設瀏覽模式：支援點開放大，右上角亦提供快捷刪除按鈕
           div.className += " cursor-pointer";
-          div.onclick = () => openLightbox(idx);
+          div.onclick = (e) => {
+            if (e.target.closest('.btn-quick-delete-photo')) return;
+            openLightbox(idx);
+          };
           div.innerHTML = `
-            <img src="${src}" loading="lazy" decoding="async" class="w-full h-full object-cover pointer-events-none hover:scale-105 transition duration-300" alt="現場照片 ${idx+1}" />
+            <img src="${src}" loading="lazy" decoding="async" class="w-full h-full object-cover pointer-events-none hover:scale-105 transition duration-300" alt="現場照片 ${idx+1}"
+                 onerror="this.parentElement.querySelector('.img-error-hint').classList.remove('hidden'); this.style.display='none';" />
+            <div class="img-error-hint hidden flex flex-col items-center justify-center p-2 text-center text-slate-400">
+              <i class="fa-solid fa-image-slash text-slate-400 text-xl mb-1"></i>
+              <span class="text-[11px] text-slate-500">無效或無法載入之相片</span>
+              <button type="button" onclick="removePhoto(${idx})" class="mt-1 px-2 py-0.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded text-[10px] font-semibold">
+                <i class="fa-solid fa-trash-can mr-0.5"></i> 清除此筆
+              </button>
+            </div>
+            <!-- 右上角快捷刪除按鈕 (Hover 或觸控時可直接刪除) -->
+            <button type="button" onclick="removePhoto(${idx})" 
+                    class="btn-quick-delete-photo absolute top-1.5 right-1.5 w-7 h-7 bg-black/60 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs shadow transition active:scale-90 opacity-80 sm:opacity-0 group-hover:opacity-100" 
+                    title="刪除此照片">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
             <div class="absolute bottom-1.5 right-1.5 pointer-events-none bg-black/60 text-white text-[11px] px-2 py-0.5 rounded-md flex items-center gap-1 shadow">
               <i class="fa-solid fa-magnifying-glass-plus text-xs"></i> <span>放大</span>
             </div>
+            <span class="absolute bottom-1.5 left-2 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">相片 ${idx+1}</span>
           `;
         }
         gallery.appendChild(div);
@@ -2426,6 +2454,24 @@
       e.target.value = '';
     }
 
+    // 將照片異動 (刪除/清空) 自動即時同步寫回 Google Sheet 試算表
+    async function syncPhotosToCloud(defectId, photos) {
+      if (!defectId) return;
+      try {
+        const params = new URLSearchParams({
+          action: 'updatePhotos',
+          defectId: defectId
+        });
+        await fetch(`${GAS_UPLOAD_API}?${params.toString()}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(photos || [])
+        });
+      } catch (err) {
+        console.warn('同步相片異動至 Google Sheet 失敗:', err);
+      }
+    }
+
     function removePhoto(index) {
       if (!currentDetailDefect) return;
       if (confirm('確定刪除這張現場照片？')) {
@@ -2439,6 +2485,7 @@
         }
         saveData();
         syncPhotoMappingToStorage(currentDetailDefect.id, currentDetailDefect.photos);
+        syncPhotosToCloud(currentDetailDefect.id, currentDetailDefect.photos);
         renderModalPhotos();
         renderTable();
       }
@@ -2456,9 +2503,51 @@
         if (text) text.innerText = "管理照片";
         saveData();
         syncPhotoMappingToStorage(currentDetailDefect.id, currentDetailDefect.photos);
+        syncPhotosToCloud(currentDetailDefect.id, []);
         renderModalPhotos();
         renderTable();
       }
+    }
+
+    // 刪除整筆案件紀錄功能 (本地 + 雲端 Google Sheet 同步刪除)
+    async function deleteCurrentDefect() {
+      if (!currentDetailDefect) return;
+      const targetId = currentDetailDefect.id;
+      const targetLoc = currentDetailDefect.loc;
+
+      if (!confirm(`⚠️ 警告：確定要永久刪除案件【${targetId}】（${targetLoc}）嗎？\n\n此操作將同步自 Google Sheet 雲端試算表移除，請謹慎操作！`)) {
+        return;
+      }
+
+      // 1. 本地資料移除
+      defectList = defectList.filter(d => d.id !== targetId);
+      if (photoMapping[targetId]) {
+        delete photoMapping[targetId];
+        try {
+          localStorage.setItem('PINYANG_DEFECT_PHOTOS_MAP', JSON.stringify(photoMapping));
+        } catch (e) {}
+      }
+      saveData();
+
+      // 2. 呼叫 GAS 同步自 Google Sheet 刪除該列
+      try {
+        const params = new URLSearchParams({
+          action: 'deleteDefect',
+          defectId: targetId
+        });
+        fetch(`${GAS_UPLOAD_API}?${params.toString()}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({})
+        });
+      } catch (err) {
+        console.warn('雲端刪除案件失敗:', err);
+      }
+
+      closeDetailModal();
+      renderTable();
+      updateDashboardStats();
+      alert(`已成功刪除案件【${targetId}】！`);
     }
 
     function updateLightboxView() {
