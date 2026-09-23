@@ -1628,13 +1628,13 @@
       }
     });
 
-    // 載入本地已持久化儲存的照片對照（防止雲端同步時沖刷掉剛上傳的現場照片）
+    // 載入本地已持久化儲存的照片對照（防止雲端同步時沖刷掉剛上傳的現場照片，並自動過濾無效髒 ID）
     try {
       const savedPhotoMap = localStorage.getItem('PINYANG_DEFECT_PHOTOS_MAP');
       if (savedPhotoMap) {
         const parsedMap = JSON.parse(savedPhotoMap);
         Object.keys(parsedMap).forEach(k => {
-          if (Array.isArray(parsedMap[k])) {
+          if (k.startsWith('DEF-') && Array.isArray(parsedMap[k])) {
             photoMapping[k] = [...parsedMap[k]];
           }
         });
@@ -1778,7 +1778,8 @@
             for (let i = 1; i < defRows.length; i++) {
               const cols = defRows[i];
               if (!cols[0]) continue;
-              const id = cols[0];
+              const id = cols[0].trim();
+              if (!id.startsWith('DEF-')) continue; // 嚴格防護：只接受 DEF- 開頭的系統編號，阻絕髒資料
               const rawPhotosCol = cols[10] || '';
               let itemPhotos = [];
 
