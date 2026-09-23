@@ -121,9 +121,17 @@
 
     <!-- Table Section -->
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-      <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
-        <h2 class="font-bold text-slate-800 text-sm">缺失項目清單 (<span id="filtered-count">0</span> 項)</h2>
-        <span class="text-xs text-slate-500">點擊任一項目查看現場相片與修繕明細</span>
+      <div class="px-5 py-3.5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <h2 class="font-bold text-slate-800 text-sm">缺失項目清單 (<span id="filtered-count">0</span> 項)</h2>
+          <span id="sync-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 inline-flex items-center">
+            <i class="fa-solid fa-spinner fa-spin text-[9px] mr-1"></i> 連線同步中
+          </span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="sync-time-hint" class="text-xs text-slate-400 hidden sm:inline-block">正在從 Google Sheet 同步最新紀錄...</span>
+          <span class="text-xs text-slate-500">點擊任一項目查看現場相片與修繕明細</span>
+        </div>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-sm">
@@ -1742,10 +1750,19 @@
     async function syncAllFromGoogleSheet(isManual = false) {
       const headerBtn = document.getElementById('header-btn-sync');
       const headerText = document.getElementById('header-sync-text');
+      const badge = document.getElementById('sync-status-badge');
+      const timeHint = document.getElementById('sync-time-hint');
 
       if (headerBtn) {
         headerBtn.disabled = true;
         if (headerText) headerText.innerText = "同步中...";
+      }
+      if (badge) {
+        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 inline-flex items-center";
+        badge.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-[9px] mr-1"></i> 連線同步中`;
+      }
+      if (timeHint) {
+        timeHint.innerText = "正在從 Google Sheet 同步最新紀錄...";
       }
 
       let defectSuccess = false;
@@ -1798,17 +1815,9 @@
                 });
               }
 
-              // 取得記憶體現有該案件之照片（包含使用者剛上傳但尚未同步至試算表之照片）
-              const existingDefect = defectList.find(d => d.id === id);
-              const memoryPhotos = existingDefect && Array.isArray(existingDefect.photos) ? existingDefect.photos : [];
-              const cachedPhotos = (photoMapping && Array.isArray(photoMapping[id])) ? photoMapping[id] : [];
-
-              // 採用聯集去重合併：Sheet 照片 + 記憶體中照片 + 快取對照表照片
-              const mergedPhotos = Array.from(new Set([...itemPhotos, ...memoryPhotos, ...cachedPhotos]));
-              // 同步更新快取
-              if (mergedPhotos.length > 0) {
-                photoMapping[id] = [...mergedPhotos];
-              }
+              // 以 Google Sheet 試算表上的照片為單一真實來源 (SSOT)
+              // 覆蓋本地快取，確保在雲端或任何裝置刪除/清空照片後，能百分之百同步呈現
+              photoMapping[id] = [...itemPhotos];
 
               cloudDefects.push({
                 id: id,
@@ -1821,13 +1830,17 @@
                 reporter: cols[7] || '',
                 status: cols[8] || '待處理',
                 progress: cols[9] || '',
-                photos: mergedPhotos,
+                photos: [...itemPhotos],
                 note: cols[11] || ''
               });
             }
             if (cloudDefects.length > 0) {
               defectList = cloudDefects;
               defectSuccess = true;
+              // 雲端同步完成後，將最新乾淨的 photoMapping 同步覆寫回 localStorage 快取
+              try {
+                localStorage.setItem('PINYANG_DEFECT_PHOTOS_MAP', JSON.stringify(photoMapping));
+              } catch (e) {}
             }
           }
         }
@@ -1853,6 +1866,13 @@
         }
       } catch (err) {
         console.warn('Google Sheet 雲端同步失敗，使用系統內建最新資料:', err);
+        if (badge) {
+          badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300 inline-flex items-center";
+          badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-[9px] mr-1"></i> 離線暫存`;
+        }
+        if (timeHint) {
+          timeHint.innerText = "無法連線至 Google 雲端，已呈現本地最新快取資料";
+        }
         if (isManual) {
           alert('連線 Google Sheet 失敗，已保留目前畫面資料。\n請檢查網路連線後再試。');
         }
