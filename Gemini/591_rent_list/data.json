@@ -1,5 +1,5 @@
 {
-  "fetched_time": "2026-09-23 22:19:13",
+  "fetched_time": "2026-09-23 22:23:19",
   "rentals": [
     {
       "district": "大安區",
@@ -11,7 +11,7 @@
       "address": "大安區-師大路",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 70 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/21/178995593310606709.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/21/178995593310606709.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22045639"
     },
     {
@@ -50,7 +50,7 @@
       "address": "大安區-信義路二段86巷25號",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 97 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2025/10/26/176144237430739201.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2025/10/26/176144237430739201.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22045817"
     },
     {
@@ -61,9 +61,9 @@
       "price_contain": "水費/網路/瓦斯費",
       "size_floor": "9坪 6F/6F",
       "address": "大安區-泰順街26巷",
-      "refresh_time": "49分鐘內更新",
+      "refresh_time": "53分鐘內更新",
       "yesterday_views": "昨日 129 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2023/04/23/168224481346113508.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2023/04/23/168224481346113508.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21903695"
     },
     {
@@ -76,7 +76,7 @@
       "address": "大安區-敦化南路一段187巷",
       "refresh_time": "2小時內更新",
       "yesterday_views": "昨日 23 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/04/08/177565844763433302.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/04/08/177565844763433302.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22043312"
     },
     {
@@ -102,7 +102,7 @@
       "address": "大安區-市民大道四段",
       "refresh_time": "5小時內更新",
       "yesterday_views": "昨日 15 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/23/179015809411266309.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/23/179015809411266309.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21986579"
     },
     {
@@ -115,7 +115,7 @@
       "address": "大安區-泰順街2巷",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 29 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/18/178973116531625604.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/18/178973116531625604.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22037128"
     },
     {
@@ -128,7 +128,7 @@
       "address": "大安區-大安路一段175巷",
       "refresh_time": "13小時內更新",
       "yesterday_views": "昨日 8 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/03/15/177355445948237903.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/03/15/177355445948237903.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21085813"
     },
     {
@@ -180,8 +180,21 @@
       "address": "大安區-通化街101巷23弄",
       "refresh_time": "2小時內更新",
       "yesterday_views": "昨日 38 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2020/05/03/158850004237183507.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2020/05/03/158850004237183507.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21891712"
+    },
+    {
+      "district": "大安區",
+      "title": "信義路3段AIT旁大安森林公園套房",
+      "kind": "獨立套房",
+      "price": "12,000 元",
+      "price_contain": "無",
+      "size_floor": "6坪 3F/4F",
+      "address": "大安區-信義路三段",
+      "refresh_time": "3小時內更新",
+      "yesterday_views": "昨日 58 人瀏覽",
+      "cover_img": "https://img1.591.com.tw/house/2026/04/27/177726143634212604.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/22018619"
     },
     {
       "district": "大安區",
@@ -198,19 +211,6 @@
     },
     {
       "district": "大安區",
-      "title": "可租補師大永康商圈刷卡門禁分租套房",
-      "kind": "分租套房",
-      "price": "12,000 元",
-      "price_contain": "管理費",
-      "size_floor": "7坪 5F/5F",
-      "address": "大安區-金山南路二段141巷",
-      "refresh_time": "3小時內更新",
-      "yesterday_views": "昨日 20 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2024/06/30/171972740705339009.jpg!510x400.jpg",
-      "url": "https://rent.591.com.tw/21960072"
-    },
-    {
-      "district": "大安區",
       "title": "優質雅房可短租！忠孝敦化商圈，誠可議",
       "kind": "分租套房",
       "price": "12,000 元",
@@ -224,6 +224,19 @@
     },
     {
       "district": "大安區",
+      "title": "可租補師大永康商圈刷卡門禁分租套房",
+      "kind": "分租套房",
+      "price": "12,000 元",
+      "price_contain": "管理費",
+      "size_floor": "7坪 5F/5F",
+      "address": "大安區-金山南路二段141巷",
+      "refresh_time": "3小時內更新",
+      "yesterday_views": "昨日 20 人瀏覽",
+      "cover_img": "https://img1.591.com.tw/house/2024/06/30/171972740705339009.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/21960072"
+    },
+    {
+      "district": "大安區",
       "title": "信義安和捷運站三分鐘.近世貿.全新套房",
       "kind": "分租套房",
       "price": "12,000 元",
@@ -232,7 +245,7 @@
       "address": "大安區-文昌街",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 155 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2011/08/31/131479707555437809.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2011/08/31/131479707555437809.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22052423"
     },
     {
@@ -245,7 +258,7 @@
       "address": "大安區-新生南路三段54巷",
       "refresh_time": "4天前更新",
       "yesterday_views": "昨日 26 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/18/178969698745237702.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/18/178969698745237702.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22030387"
     },
     {
@@ -258,7 +271,7 @@
       "address": "大安區-延吉街",
       "refresh_time": "6小時內更新",
       "yesterday_views": "昨日 17 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/11/178914072550508202.png!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/11/178914072550508202.png!510x400.jpg",
       "url": "https://rent.591.com.tw/21994784"
     },
     {
@@ -271,7 +284,7 @@
       "address": "大安區-安居街48號",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 37 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2022/06/27/165633975224622807.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2022/06/27/165633975224622807.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22005154"
     },
     {
@@ -284,7 +297,7 @@
       "address": "大安區-和平東路三段",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 63 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/22/179005934788045308.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/22/179005934788045308.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22049346"
     },
     {
@@ -297,8 +310,21 @@
       "address": "大安區-潮州街107巷",
       "refresh_time": "8小時內更新",
       "yesterday_views": "昨日 9 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2024/09/24/172716155754160703.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2024/09/24/172716155754160703.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22029492"
+    },
+    {
+      "district": "大安區",
+      "title": "通化街靜巷雅緻套房.供應變頻冷氣台電計價",
+      "kind": "獨立套房",
+      "price": "12,600 元",
+      "price_contain": "無",
+      "size_floor": "5坪 2F/5F",
+      "address": "大安區-通化街",
+      "refresh_time": "3小時內更新",
+      "yesterday_views": "昨日 64 人瀏覽",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/17/178964158959004704.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/22034676"
     },
     {
       "district": "大安區",
@@ -321,9 +347,9 @@
       "price_contain": "網路",
       "size_floor": "10坪 3F/4F",
       "address": "大安區-泰順街44巷",
-      "refresh_time": "36分鐘內更新",
+      "refresh_time": "40分鐘內更新",
       "yesterday_views": "昨日 40 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2024/04/26/171410505603548508.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2024/04/26/171410505603548508.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22004769"
     },
     {
@@ -334,10 +360,36 @@
       "price_contain": "水費/網路",
       "size_floor": "5坪 4F/4F",
       "address": "大安區-忠孝東路三段251巷3弄",
-      "refresh_time": "6小時內更新",
+      "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 45 人瀏覽",
       "cover_img": "https://img1.591.com.tw/house/2026/08/13/178659756367607600.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21926685"
+    },
+    {
+      "district": "大安區",
+      "title": "優質套房、麟光站、垃圾代收",
+      "kind": "獨立套房",
+      "price": "13,000 元",
+      "price_contain": "水費/網路/第四臺",
+      "size_floor": "8坪 頂樓加蓋/7F",
+      "address": "大安區-臥龍街",
+      "refresh_time": "3分鐘內更新",
+      "yesterday_views": "昨日 44 人瀏覽",
+      "cover_img": "https://img1.591.com.tw/house/2025/06/07/174929202497111701.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/15177995"
+    },
+    {
+      "district": "大安區",
+      "title": "通化商圈、生活機能佳、上班族最愛",
+      "kind": "獨立套房",
+      "price": "13,000 元",
+      "price_contain": "水費/電費/網路等",
+      "size_floor": "5坪 5F/5F",
+      "address": "大安區-通化街123巷31號",
+      "refresh_time": "3小時內更新",
+      "yesterday_views": "昨日 20 人瀏覽",
+      "cover_img": "https://img2.591.com.tw/house/2026/02/27/177217576804346803.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/22007264"
     },
     {
       "district": "大安區",
@@ -362,21 +414,8 @@
       "address": "大安區-敦化南路一段",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 42 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/07/21/178462746454222704.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/07/21/178462746454222704.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22015561"
-    },
-    {
-      "district": "大安區",
-      "title": "優質套房、麟光站、垃圾代收",
-      "kind": "獨立套房",
-      "price": "13,000 元",
-      "price_contain": "水費/網路/第四臺",
-      "size_floor": "8坪 頂樓加蓋/7F",
-      "address": "大安區-臥龍街",
-      "refresh_time": "4小時內更新",
-      "yesterday_views": "昨日 44 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2025/06/07/174929202497111701.jpg!510x400.jpg",
-      "url": "https://rent.591.com.tw/15177995"
     },
     {
       "district": "大安區",
@@ -401,7 +440,7 @@
       "address": "大安區-敦化南路一段160巷",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 48 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/08/31/178815676550565901.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/08/31/178815676550565901.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21925392"
     },
     {
@@ -414,7 +453,7 @@
       "address": "大安區-大安路一段19巷",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 19 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/02/178833266150693300.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/02/178833266150693300.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21940288"
     },
     {
@@ -425,7 +464,7 @@
       "price_contain": "管理費/網路/第四臺等",
       "size_floor": "4坪 7F/12F",
       "address": "大安區-大安路一段",
-      "refresh_time": "9分鐘內更新",
+      "refresh_time": "13分鐘內更新",
       "yesterday_views": "昨日 6 人瀏覽",
       "cover_img": "https://img1.591.com.tw/house/2026/08/31/178815007441030007.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21988567"
@@ -440,7 +479,7 @@
       "address": "大安區-大安路一段31巷",
       "refresh_time": "昨日更新",
       "yesterday_views": "昨日 9 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/15/178947619519367107.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/15/178947619519367107.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21924961"
     },
     {
@@ -453,7 +492,7 @@
       "address": "大安區-羅斯福路二段180巷112號",
       "refresh_time": "18小時內更新",
       "yesterday_views": "昨日 18 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2020/12/26/160894467024880660.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2020/12/26/160894467024880660.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21965761"
     },
     {
@@ -490,7 +529,7 @@
       "price_contain": "網路/第四臺",
       "size_floor": "6坪 3F/5F",
       "address": "大安區-文昌街",
-      "refresh_time": "49分鐘內更新",
+      "refresh_time": "53分鐘內更新",
       "yesterday_views": "昨日 36 人瀏覽",
       "cover_img": "https://img1.591.com.tw/house/2026/08/26/178773333390715904.jpeg!510x400.jpg",
       "url": "https://rent.591.com.tw/21899780"
@@ -505,7 +544,7 @@
       "address": "大安區-文昌街",
       "refresh_time": "2小時內更新",
       "yesterday_views": "昨日 36 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/08/27/178776206602541203.jpeg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/08/27/178776206602541203.jpeg!510x400.jpg",
       "url": "https://rent.591.com.tw/21902062"
     },
     {
@@ -531,7 +570,7 @@
       "address": "大安區-忠孝東路四段216巷33弄",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 11 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/08/10/178637543263379202.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/08/10/178637543263379202.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21943092"
     },
     {
@@ -570,7 +609,7 @@
       "address": "大安區-復興南路二段",
       "refresh_time": "2小時內更新",
       "yesterday_views": "昨日 307 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/21/178996403296603103.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/21/178996403296603103.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22046203"
     },
     {
@@ -607,9 +646,9 @@
       "price_contain": "水費/第四臺/瓦斯費",
       "size_floor": "5坪 1F/5F",
       "address": "大安區-通化街165巷",
-      "refresh_time": "49分鐘內更新",
+      "refresh_time": "54分鐘內更新",
       "yesterday_views": "昨日 10 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/video/cover/2026-09-20/3252390.png!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/video/cover/2026-09-20/3252390.png!510x400.jpg",
       "url": "https://rent.591.com.tw/22044682"
     },
     {
@@ -648,7 +687,7 @@
       "address": "大安區-通化街165巷",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 58 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/20/178987492261050006.png!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/20/178987492261050006.png!510x400.jpg",
       "url": "https://rent.591.com.tw/22042780"
     },
     {
@@ -659,9 +698,9 @@
       "price_contain": "無",
       "size_floor": "5坪 1F/4F",
       "address": "大安區-文昌街250巷2弄",
-      "refresh_time": "43分鐘內更新",
+      "refresh_time": "47分鐘內更新",
       "yesterday_views": "暫無資料",
-      "cover_img": "https://img2.591.com.tw/video/cover/2026-09-23/3256013.png!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/video/cover/2026-09-23/3256013.png!510x400.jpg",
       "url": "https://rent.591.com.tw/22063305"
     },
     {
@@ -674,7 +713,7 @@
       "address": "大安區-文昌街250巷2弄",
       "refresh_time": "2小時內更新",
       "yesterday_views": "暫無資料",
-      "cover_img": "https://img2.591.com.tw/video/cover/2026-09-23/3255992.png!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/video/cover/2026-09-23/3255992.png!510x400.jpg",
       "url": "https://rent.591.com.tw/22063212"
     },
     {
@@ -700,7 +739,7 @@
       "address": "大安區-延吉街70巷11弄",
       "refresh_time": "9小時內更新",
       "yesterday_views": "昨日 16 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/11/178911128532897604.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/11/178911128532897604.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22004369"
     },
     {
@@ -713,7 +752,7 @@
       "address": "大安區-通化街171巷30弄",
       "refresh_time": "9小時內更新",
       "yesterday_views": "昨日 13 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/18/178972069402932008.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/18/178972069402932008.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22036164"
     },
     {
@@ -739,7 +778,7 @@
       "address": "大安區-樂業街159巷",
       "refresh_time": "16小時內更新",
       "yesterday_views": "昨日 7 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/07/04/178313034705526607.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/07/04/178313034705526607.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21999457"
     },
     {
@@ -750,9 +789,9 @@
       "price_contain": "管理費/水費/網路等",
       "size_floor": "8坪 4F/4F",
       "address": "大安區-羅斯福路三段333巷",
-      "refresh_time": "24分鐘內更新",
+      "refresh_time": "28分鐘內更新",
       "yesterday_views": "昨日 58 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2011/01/14/129499513002716909.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2011/01/14/129499513002716909.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21912293"
     },
     {
@@ -763,9 +802,9 @@
       "price_contain": "管理費/水費/網路等",
       "size_floor": "8坪 4F/4F",
       "address": "大安區-泰順街54巷",
-      "refresh_time": "34分鐘內更新",
+      "refresh_time": "38分鐘內更新",
       "yesterday_views": "昨日 54 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2019/09/07/156786722699874601.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2019/09/07/156786722699874601.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21912217"
     },
     {
@@ -817,8 +856,21 @@
       "address": "大安區-忠孝東路三段",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 93 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2009/12/17/126106128596361806.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2009/12/17/126106128596361806.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21975858"
+    },
+    {
+      "district": "大安區",
+      "title": "🚉近信義安和站✨獨立洗衣機✨電熱水器✨可申請租補",
+      "kind": "獨立套房",
+      "price": "16,000 元",
+      "price_contain": "水費/網路/第四臺",
+      "size_floor": "6坪 3F/5F",
+      "address": "大安區-文昌街",
+      "refresh_time": "3小時內更新",
+      "yesterday_views": "昨日 12 人瀏覽",
+      "cover_img": "https://img1.591.com.tw/house/2026/08/27/178778299518812209.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/22014950"
     },
     {
       "district": "大安區",
@@ -843,7 +895,7 @@
       "address": "大安區-通化街19巷6弄",
       "refresh_time": "8小時內更新",
       "yesterday_views": "昨日 10 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/11/178913808991769009.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/11/178913808991769009.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21998156"
     },
     {
@@ -869,7 +921,7 @@
       "address": "大安區-永康街17巷16號",
       "refresh_time": "3天前更新",
       "yesterday_views": "昨日 8 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/07/18/178433995688880504.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/07/18/178433995688880504.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21951248"
     },
     {
@@ -895,7 +947,7 @@
       "address": "大安區-安居街60巷",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 14 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/16/178954607411854903.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/16/178954607411854903.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22057323"
     },
     {
@@ -908,7 +960,7 @@
       "address": "大安區-瑞安街142巷",
       "refresh_time": "5小時內更新",
       "yesterday_views": "昨日 54 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/21/178998273558455805.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/21/178998273558455805.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22052530"
     },
     {
@@ -934,7 +986,7 @@
       "address": "大安區-瑞安街142巷",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 18 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/04/178853232250599009.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/04/178853232250599009.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/20774069"
     },
     {
@@ -947,7 +999,7 @@
       "address": "大安區-安和路二段171巷",
       "refresh_time": "8小時內更新",
       "yesterday_views": "昨日 11 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/10/178902086816761907.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/10/178902086816761907.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21988862"
     },
     {
@@ -960,7 +1012,7 @@
       "address": "大安區-通化街19巷6弄",
       "refresh_time": "昨日更新",
       "yesterday_views": "昨日 22 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/18/178966348281441100.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/18/178966348281441100.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22005956"
     },
     {
@@ -973,7 +1025,7 @@
       "address": "大安區-辛亥路二段",
       "refresh_time": "2小時內更新",
       "yesterday_views": "昨日 8 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/08/23/178745042672690309.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/08/23/178745042672690309.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21880510"
     },
     {
@@ -986,7 +1038,7 @@
       "address": "大安區-大安路二段3巷38號",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 74 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/video/cover/2025-11-20/2723904.png!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/video/cover/2025-11-20/2723904.png!510x400.jpg",
       "url": "https://rent.591.com.tw/20162105"
     },
     {
@@ -997,9 +1049,9 @@
       "price_contain": "無",
       "size_floor": "3.5坪 5F/5F",
       "address": "大安區-辛亥路二段",
-      "refresh_time": "2小時內更新",
+      "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 22 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/08/18/178702943568210305.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/08/18/178702943568210305.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22051635"
     },
     {
@@ -1038,7 +1090,7 @@
       "address": "大安區-師大路49巷12號",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 109 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/21/179000337608323505.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/21/179000337608323505.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22052130"
     },
     {
@@ -1062,9 +1114,9 @@
       "price_contain": "無",
       "size_floor": "6坪 1F/4F",
       "address": "大安區-文昌街250巷2弄",
-      "refresh_time": "5分鐘內更新",
+      "refresh_time": "9分鐘內更新",
       "yesterday_views": "暫無資料",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/23/179017288580602501.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/video/cover/2026-09-23/3256038.png!510x400.jpg",
       "url": "https://rent.591.com.tw/22063431"
     },
     {
@@ -1090,7 +1142,7 @@
       "address": "大安區-和平東路三段406巷",
       "refresh_time": "2小時內更新",
       "yesterday_views": "昨日 11 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/16/178956511197248203.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/16/178956511197248203.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22026183"
     },
     {
@@ -1103,7 +1155,7 @@
       "address": "大安區-新生南路三段54巷7號",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 11 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/08/27/178779301719637401.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/08/27/178779301719637401.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21902497"
     },
     {
@@ -1129,7 +1181,7 @@
       "address": "大安區-信義路二段10巷",
       "refresh_time": "14小時內更新",
       "yesterday_views": "昨日 2 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/05/23/177950730972095406.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/05/23/177950730972095406.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21922830"
     },
     {
@@ -1155,7 +1207,7 @@
       "address": "大安區-建國南路一段175巷7號",
       "refresh_time": "3天前更新",
       "yesterday_views": "昨日 27 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/21/178998438019579705.png!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/21/178998438019579705.png!510x400.jpg",
       "url": "https://rent.591.com.tw/22050637"
     },
     {
@@ -1168,7 +1220,7 @@
       "address": "大安區-嘉興街",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 32 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2019/02/18/155045493450333603.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2019/02/18/155045493450333603.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21937168"
     },
     {
@@ -1194,7 +1246,7 @@
       "address": "大安區-通化街",
       "refresh_time": "4天前更新",
       "yesterday_views": "昨日 11 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/20/178989470809474008.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/20/178989470809474008.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22012444"
     },
     {
@@ -1207,7 +1259,7 @@
       "address": "大安區-復興南路二段160巷11號",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 63 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/03/178843991910429209.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/03/178843991910429209.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21949531"
     },
     {
@@ -1233,7 +1285,7 @@
       "address": "大安區-建國南路一段175巷",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 20 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/08/21/178729855234797009.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/08/21/178729855234797009.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22043299"
     },
     {
@@ -1246,7 +1298,7 @@
       "address": "大安區-建國南路一段175巷",
       "refresh_time": "10小時內更新",
       "yesterday_views": "昨日 5 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/08/19/178707528639226508.png!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/08/19/178707528639226508.png!510x400.jpg",
       "url": "https://rent.591.com.tw/22003321"
     },
     {
@@ -1259,7 +1311,7 @@
       "address": "大安區-建國南路一段175巷",
       "refresh_time": "11小時內更新",
       "yesterday_views": "昨日 5 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/08/19/178711833883795803.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/08/19/178711833883795803.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22000753"
     },
     {
@@ -1272,7 +1324,7 @@
       "address": "大安區-信義路四段",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 48 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/18/178973089967531605.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/18/178973089967531605.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22037112"
     },
     {
@@ -1285,7 +1337,7 @@
       "address": "大安區-仁愛路三段123巷13弄4號",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 65 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2013/01/29/135942948230413508.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2013/01/29/135942948230413508.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21902959"
     },
     {
@@ -1311,7 +1363,7 @@
       "address": "大安區-敦化南路二段5號",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 33 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/01/20/176886984950739406.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/01/20/176886984950739406.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21894441"
     },
     {
@@ -1335,9 +1387,9 @@
       "price_contain": "水費/網路/第四臺",
       "size_floor": "4坪 2F/2F",
       "address": "松山區-八德路四段",
-      "refresh_time": "58分鐘內更新",
+      "refresh_time": "2小時內更新",
       "yesterday_views": "昨日 86 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/video/cover/2026-09-17/3248703.png!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/video/cover/2026-09-17/3248703.png!510x400.jpg",
       "url": "https://rent.591.com.tw/21928101"
     },
     {
@@ -1376,7 +1428,7 @@
       "address": "松山區-松河街",
       "refresh_time": "14小時內更新",
       "yesterday_views": "昨日 12 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/14/178937278774706304.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/14/178937278774706304.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22011342"
     },
     {
@@ -1402,7 +1454,7 @@
       "address": "松山區-南京東路五段291巷35弄",
       "refresh_time": "2小時內更新",
       "yesterday_views": "暫無資料",
-      "cover_img": "https://img2.591.com.tw/house/2025/05/20/174772483316667902.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2025/05/20/174772483316667902.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22062975"
     },
     {
@@ -1428,8 +1480,21 @@
       "address": "松山區-八德路四段204巷7弄",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 61 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2014/09/24/141154871007259708.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2014/09/24/141154871007259708.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21900878"
+    },
+    {
+      "district": "松山區",
+      "title": "可申請租補小巨蛋捷運站美套房",
+      "kind": "獨立套房",
+      "price": "11,000 元",
+      "price_contain": "管理費/水費/網路等",
+      "size_floor": "5坪 7F/7F",
+      "address": "松山區-延吉街30巷",
+      "refresh_time": "3小時內更新",
+      "yesterday_views": "暫無資料",
+      "cover_img": "https://img1.591.com.tw/house/2021/05/14/162097325239312570.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/22061905"
     },
     {
       "district": "松山區",
@@ -1441,7 +1506,7 @@
       "address": "松山區-撫遠街367巷",
       "refresh_time": "9小時內更新",
       "yesterday_views": "昨日 10 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/07/21/178464043322454506.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/07/21/178464043322454506.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22027089"
     },
     {
@@ -1493,7 +1558,7 @@
       "address": "松山區-南京東路四段",
       "refresh_time": "6小時內更新",
       "yesterday_views": "昨日 48 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/08/178883871615865809.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/08/178883871615865809.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21974535"
     },
     {
@@ -1506,7 +1571,7 @@
       "address": "松山區-永吉路180巷42弄",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 5 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2025/03/11/174169266446715708.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2025/03/11/174169266446715708.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21996270"
     },
     {
@@ -1519,7 +1584,7 @@
       "address": "松山區-市民大道四段",
       "refresh_time": "10小時內更新",
       "yesterday_views": "昨日 4 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/11/178911080466059102.jpeg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/11/178911080466059102.jpeg!510x400.jpg",
       "url": "https://rent.591.com.tw/21995445"
     },
     {
@@ -1545,8 +1610,21 @@
       "address": "松山區-五常街281巷1弄1號",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 138 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2023/06/14/168674582891946237.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2023/06/14/168674582891946237.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22052741"
+    },
+    {
+      "district": "松山區",
+      "title": "小資首選、租屋補助、南京三民、共用洗衣機",
+      "kind": "獨立套房",
+      "price": "12,000 元",
+      "price_contain": "網路/第四臺",
+      "size_floor": "4坪 4F/4F",
+      "address": "松山區-寶清街",
+      "refresh_time": "3小時內更新",
+      "yesterday_views": "昨日 25 人瀏覽",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/18/178970354058311705.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/21941321"
     },
     {
       "district": "松山區",
@@ -1563,19 +1641,6 @@
     },
     {
       "district": "松山區",
-      "title": "小資首選、租屋補助、南京三民、共用洗衣機",
-      "kind": "獨立套房",
-      "price": "12,000 元",
-      "price_contain": "網路/第四臺",
-      "size_floor": "4坪 4F/4F",
-      "address": "松山區-寶清街",
-      "refresh_time": "3小時內更新",
-      "yesterday_views": "昨日 25 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/18/178970354058311705.jpg!510x400.jpg",
-      "url": "https://rent.591.com.tw/21941321"
-    },
-    {
-      "district": "松山區",
       "title": "松山捷運站1分鐘水岸運動公園邊間河景窗B",
       "kind": "獨立套房",
       "price": "12,000 元",
@@ -1584,7 +1649,7 @@
       "address": "松山區-松河街",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 30 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2023/09/16/169484885623574701.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2023/09/16/169484885623574701.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21960953"
     },
     {
@@ -1610,7 +1675,7 @@
       "address": "松山區-敦化北路145巷41號",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 52 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/21/178996253702552202.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/21/178996253702552202.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22010362"
     },
     {
@@ -1636,7 +1701,7 @@
       "address": "松山區-遼寧街63巷",
       "refresh_time": "3天前更新",
       "yesterday_views": "昨日 19 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2025/08/29/175645133871048800.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2025/08/29/175645133871048800.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22047537"
     },
     {
@@ -1649,7 +1714,7 @@
       "address": "松山區-光復北路",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 9 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/15/178945630218219103.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/15/178945630218219103.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22017236"
     },
     {
@@ -1688,7 +1753,7 @@
       "address": "松山區-光復北路",
       "refresh_time": "11小時內更新",
       "yesterday_views": "昨日 2 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/14/178935786187996402.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/14/178935786187996402.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21967164"
     },
     {
@@ -1701,7 +1766,7 @@
       "address": "松山區-松河街",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 26 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2020/07/01/159357027066953404.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2020/07/01/159357027066953404.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21958886"
     },
     {
@@ -1714,7 +1779,7 @@
       "address": "松山區-松河街",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 64 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2008/05/19/121116924342.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2008/05/19/121116924342.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21961003"
     },
     {
@@ -1727,7 +1792,7 @@
       "address": "松山區-南京東路五段389巷15弄",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 32 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/12/178920419318567600.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/12/178920419318567600.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22001373"
     },
     {
@@ -1740,7 +1805,7 @@
       "address": "松山區-南京東路五段234號",
       "refresh_time": "10小時內更新",
       "yesterday_views": "昨日 21 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2023/09/24/169552433539625366.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2023/09/24/169552433539625366.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22008265"
     },
     {
@@ -1753,7 +1818,7 @@
       "address": "松山區-新東街6巷",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 64 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/08/27/178780057989045806.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/08/27/178780057989045806.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22033861"
     },
     {
@@ -1779,8 +1844,21 @@
       "address": "松山區-八德路二段366巷",
       "refresh_time": "6小時內更新",
       "yesterday_views": "昨日 22 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/16/178956718797847202.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/16/178956718797847202.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22026366"
+    },
+    {
+      "district": "松山區",
+      "title": "直通松信路,黃金二樓,鬧中取靜,一層一戶,房廁有窗",
+      "kind": "獨立套房",
+      "price": "13,800 元",
+      "price_contain": "水費/網路/第四臺",
+      "size_floor": "7坪 2F/5F",
+      "address": "松山區-饒河街61巷12弄",
+      "refresh_time": "3小時內更新",
+      "yesterday_views": "昨日 26 人瀏覽",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/11/178908658907402906.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/21986646"
     },
     {
       "district": "松山區",
@@ -1792,7 +1870,7 @@
       "address": "松山區-富錦街",
       "refresh_time": "昨日更新",
       "yesterday_views": "昨日 22 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/06/21/178202228968520905.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/06/21/178202228968520905.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22053845"
     },
     {
@@ -1805,7 +1883,7 @@
       "address": "松山區-饒河街61巷12弄",
       "refresh_time": "昨日更新",
       "yesterday_views": "昨日 8 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/18/178970238437813309.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/18/178970238437813309.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22034062"
     },
     {
@@ -1870,7 +1948,7 @@
       "address": "松山區-光復北路",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 18 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/05/178857824412449606.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/05/178857824412449606.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21958052"
     },
     {
@@ -1896,7 +1974,7 @@
       "address": "松山區-光復北路",
       "refresh_time": "11小時內更新",
       "yesterday_views": "昨日 7 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/03/178839379649636703.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/03/178839379649636703.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22057654"
     },
     {
@@ -1909,7 +1987,7 @@
       "address": "松山區-八德路三段106巷",
       "refresh_time": "2小時內更新",
       "yesterday_views": "暫無資料",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/11/178911073590189006.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/11/178911073590189006.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22063124"
     },
     {
@@ -1922,7 +2000,7 @@
       "address": "松山區-八德路三段106巷",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 135 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/02/178835891115637508.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/02/178835891115637508.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21892804"
     },
     {
@@ -1948,7 +2026,7 @@
       "address": "松山區-八德路三段",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 149 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/21/178999785497740601.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/21/178999785497740601.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22051678"
     },
     {
@@ -1959,7 +2037,7 @@
       "price_contain": "水費/網路/第四臺",
       "size_floor": "5坪 4F/4F",
       "address": "松山區-延吉街",
-      "refresh_time": "40分鐘內更新",
+      "refresh_time": "44分鐘內更新",
       "yesterday_views": "昨日 7 人瀏覽",
       "cover_img": "https://img1.591.com.tw/house/2026/09/13/178928178717499107.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22004759"
@@ -1974,7 +2052,7 @@
       "address": "松山區-南京東路五段251巷32弄",
       "refresh_time": "6小時內更新",
       "yesterday_views": "昨日 33 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/07/07/178342921604507207.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/07/07/178342921604507207.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22055764"
     },
     {
@@ -2000,7 +2078,7 @@
       "address": "松山區-八德路三段155巷26弄",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 30 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/07/30/178540073764479608.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/07/30/178540073764479608.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21963580"
     },
     {
@@ -2013,7 +2091,7 @@
       "address": "松山區-南京東路五段",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 111 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/17/178962961100563004.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/17/178962961100563004.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22029923"
     },
     {
@@ -2024,7 +2102,7 @@
       "price_contain": "無",
       "size_floor": "7坪 4F/4F",
       "address": "松山區-南京東路五段",
-      "refresh_time": "5小時內更新",
+      "refresh_time": "6小時內更新",
       "yesterday_views": "昨日 65 人瀏覽",
       "cover_img": "https://img2.591.com.tw/house/2026/09/19/178975190131458709.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22038093"
@@ -2052,7 +2130,7 @@
       "address": "松山區-南京東路五段",
       "refresh_time": "9小時內更新",
       "yesterday_views": "昨日 22 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/15/178945692867697706.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/15/178945692867697706.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22017333"
     },
     {
@@ -2065,7 +2143,7 @@
       "address": "松山區-八德路四段",
       "refresh_time": "13小時內更新",
       "yesterday_views": "昨日 39 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/21/178999723187971403.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/21/178999723187971403.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21180025"
     },
     {
@@ -2078,7 +2156,7 @@
       "address": "松山區-興安街",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 72 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/16/178956097366590609.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/16/178956097366590609.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22025899"
     },
     {
@@ -2089,9 +2167,9 @@
       "price_contain": "網路/第四臺",
       "size_floor": "6坪 頂樓加蓋/4F",
       "address": "松山區-南京東路四段133巷4弄",
-      "refresh_time": "49分鐘內更新",
+      "refresh_time": "53分鐘內更新",
       "yesterday_views": "昨日 1 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/video/cover/2026-09-11/3241293.png!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/video/cover/2026-09-11/3241293.png!510x400.jpg",
       "url": "https://rent.591.com.tw/21992581"
     },
     {
@@ -2102,9 +2180,9 @@
       "price_contain": "網路/第四臺",
       "size_floor": "5坪 頂樓加蓋/4F",
       "address": "松山區-南京東路四段133巷4弄",
-      "refresh_time": "55分鐘內更新",
+      "refresh_time": "60分鐘內更新",
       "yesterday_views": "昨日 3 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/video/cover/2026-09-10/3240689.png!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/video/cover/2026-09-10/3240689.png!510x400.jpg",
       "url": "https://rent.591.com.tw/21989274"
     },
     {
@@ -2130,7 +2208,7 @@
       "address": "松山區-光復北路",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 65 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/video/cover/2025-04-05/2190070.png!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/video/cover/2025-04-05/2190070.png!510x400.jpg",
       "url": "https://rent.591.com.tw/22042258"
     },
     {
@@ -2143,7 +2221,7 @@
       "address": "松山區-八德路四段",
       "refresh_time": "8小時內更新",
       "yesterday_views": "昨日 2 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/09/178895993645427002.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/09/178895993645427002.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21946650"
     },
     {
@@ -2156,7 +2234,7 @@
       "address": "松山區-復興南路一段",
       "refresh_time": "5天前更新",
       "yesterday_views": "昨日 29 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/video/cover/2026-09-19/3250795.png!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/video/cover/2026-09-19/3250795.png!510x400.jpg",
       "url": "https://rent.591.com.tw/22039410"
     },
     {
@@ -2169,7 +2247,7 @@
       "address": "松山區-民生東路五段",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 12 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/04/15/177623649657141801.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/04/15/177623649657141801.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21960056"
     },
     {
@@ -2182,7 +2260,7 @@
       "address": "松山區-南京東路五段",
       "refresh_time": "4小時內更新",
       "yesterday_views": "昨日 111 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/22/179007055835731403.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/22/179007055835731403.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22042600"
     },
     {
@@ -2234,8 +2312,34 @@
       "address": "松山區-南京東路四段179巷9弄",
       "refresh_time": "10小時內更新",
       "yesterday_views": "昨日 13 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/16/178955062315628504.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/16/178955062315628504.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22024884"
+    },
+    {
+      "district": "松山區",
+      "title": "交通便.生活佳.裝潢新.設備全",
+      "kind": "獨立套房",
+      "price": "20,000 元",
+      "price_contain": "管理費/水費/網路等",
+      "size_floor": "8坪 2F/4F",
+      "address": "松山區-八德路三段155巷1號",
+      "refresh_time": "3小時內更新",
+      "yesterday_views": "昨日 33 人瀏覽",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/15/178947042042920709.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/22019110"
+    },
+    {
+      "district": "中正區",
+      "title": "台電大樓捷運舒適溫馨公寓套房",
+      "kind": "獨立套房",
+      "price": "10,000 元",
+      "price_contain": "水費/網路/第四臺",
+      "size_floor": "7坪 頂樓加蓋/4F",
+      "address": "中正區-羅斯福路三段",
+      "refresh_time": "3小時內更新",
+      "yesterday_views": "昨日 26 人瀏覽",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/05/178861678218024401.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/22004530"
     },
     {
       "district": "中正區",
@@ -2258,9 +2362,9 @@
       "price_contain": "水費/網路/第四臺",
       "size_floor": "4坪 頂樓加蓋/5F",
       "address": "中正區-師大路",
-      "refresh_time": "49分鐘內更新",
+      "refresh_time": "53分鐘內更新",
       "yesterday_views": "昨日 12 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/video/cover/2026-09-21/3253508.png!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/video/cover/2026-09-21/3253508.png!510x400.jpg",
       "url": "https://rent.591.com.tw/22050397"
     },
     {
@@ -2271,7 +2375,7 @@
       "price_contain": "管理費/水費/網路等",
       "size_floor": "3坪 頂樓加蓋/5F",
       "address": "中正區-汀州路二段240號",
-      "refresh_time": "13小時內更新",
+      "refresh_time": "14小時內更新",
       "yesterday_views": "昨日 37 人瀏覽",
       "cover_img": "https://img2.591.com.tw/house/2026/09/22/179005476154461900.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22054621"
@@ -2286,7 +2390,7 @@
       "address": "中正區-和平西路二段",
       "refresh_time": "13小時內更新",
       "yesterday_views": "昨日 21 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/08/27/178783407985861004.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/08/27/178783407985861004.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21182937"
     },
     {
@@ -2299,7 +2403,7 @@
       "address": "中正區-羅斯福路三段244巷2弄",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 16 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/06/03/178045703436321701.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/06/03/178045703436321701.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21930208"
     },
     {
@@ -2312,7 +2416,7 @@
       "address": "中正區-羅斯福路一段9巷",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 48 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/22/179004714982647607.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/22/179004714982647607.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22053758"
     },
     {
@@ -2325,7 +2429,7 @@
       "address": "中正區-羅斯福路三段244巷9弄",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 51 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/17/178965793252078509.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/17/178965793252078509.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22032427"
     },
     {
@@ -2364,7 +2468,7 @@
       "address": "中正區-羅斯福路一段9巷",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 59 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/19/178979876050527509.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/19/178979876050527509.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22039787"
     },
     {
@@ -2403,7 +2507,7 @@
       "address": "中正區-福州街",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 109 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/17/178963345280475400.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/17/178963345280475400.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22030204"
     },
     {
@@ -2507,7 +2611,7 @@
       "address": "中正區-許昌街2號",
       "refresh_time": "4小時內更新",
       "yesterday_views": "昨日 39 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/17/178961333034746803.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/17/178961333034746803.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22027886"
     },
     {
@@ -2557,7 +2661,7 @@
       "price_contain": "管理費",
       "size_floor": "8坪 12F/15F",
       "address": "中正區-南昌路二段178號",
-      "refresh_time": "20分鐘內更新",
+      "refresh_time": "24分鐘內更新",
       "yesterday_views": "昨日 26 人瀏覽",
       "cover_img": "https://img1.591.com.tw/house/2026/09/22/179000724884193801.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22022025"
@@ -2572,7 +2676,7 @@
       "address": "中正區-水源路",
       "refresh_time": "8小時內更新",
       "yesterday_views": "昨日 86 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2024/12/17/173441446665639106.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2024/12/17/173441446665639106.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22052008"
     },
     {
@@ -2598,7 +2702,7 @@
       "address": "中正區-杭州南路一段101巷",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 21 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/08/178884430929123107.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/08/178884430929123107.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21952804"
     },
     {
@@ -2611,7 +2715,7 @@
       "address": "中正區-羅斯福路三段128巷",
       "refresh_time": "14小時內更新",
       "yesterday_views": "昨日 3 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/08/06/178600861410896805.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/08/06/178600861410896805.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21782406"
     },
     {
@@ -2624,7 +2728,7 @@
       "address": "中正區-廈門街25巷4弄",
       "refresh_time": "18小時內更新",
       "yesterday_views": "昨日 3 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2021/05/27/162205869462589346.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2021/05/27/162205869462589346.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21965759"
     },
     {
@@ -2663,7 +2767,7 @@
       "address": "中正區-濟南路二段",
       "refresh_time": "昨日更新",
       "yesterday_views": "昨日 12 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2022/11/30/166977452466764900.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2022/11/30/166977452466764900.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21937288"
     },
     {
@@ -2676,7 +2780,7 @@
       "address": "中正區-濟南路二段",
       "refresh_time": "昨日更新",
       "yesterday_views": "昨日 5 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2022/11/30/166977452466764900.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2022/11/30/166977452466764900.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21937285"
     },
     {
@@ -2689,7 +2793,7 @@
       "address": "中正區-重慶南路三段16巷",
       "refresh_time": "5天前更新",
       "yesterday_views": "昨日 11 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/08/17/178695239927553003.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/08/17/178695239927553003.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21951012"
     },
     {
@@ -2702,7 +2806,7 @@
       "address": "中正區-懷寧街",
       "refresh_time": "昨日更新",
       "yesterday_views": "昨日 79 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/22/179004110047594706.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/22/179004110047594706.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22053000"
     },
     {
@@ -2713,9 +2817,9 @@
       "price_contain": "水費/網路/瓦斯費",
       "size_floor": "5坪 4F/5F",
       "address": "中正區-新生南路一段140巷10弄",
-      "refresh_time": "10分鐘內更新",
+      "refresh_time": "14分鐘內更新",
       "yesterday_views": "昨日 4 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/15/178947019044260604.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/15/178947019044260604.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22019109"
     },
     {
@@ -2728,7 +2832,7 @@
       "address": "中正區-南昌路一段51巷3弄",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 28 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/23/179016455861397401.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/23/179016455861397401.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22030988"
     },
     {
@@ -2741,7 +2845,7 @@
       "address": "中正區-杭州南路二段",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 55 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/09/17/178961975401258100.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/09/17/178961975401258100.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21951039"
     },
     {
@@ -2754,7 +2858,7 @@
       "address": "中正區-新生南路一段140巷10弄",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 14 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2025/08/27/175625397338924801.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2025/08/27/175625397338924801.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22010813"
     },
     {
@@ -2767,8 +2871,21 @@
       "address": "中正區-汀州路255巷5弄",
       "refresh_time": "8小時內更新",
       "yesterday_views": "昨日 7 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/03/27/177457625389110401.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/03/27/177457625389110401.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21948000"
+    },
+    {
+      "district": "中正區",
+      "title": "【雙租補✨小南門6分鐘】寵物/報稅/西門/入籍",
+      "kind": "獨立套房",
+      "price": "17,000 元",
+      "price_contain": "管理費/水費/清潔費",
+      "size_floor": "7坪 4F/5F",
+      "address": "中正區-中華路二段",
+      "refresh_time": "28分鐘內更新",
+      "yesterday_views": "昨日 98 人瀏覽",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/22/179005591858153301.jpg!510x400.jpg",
+      "url": "https://rent.591.com.tw/22054723"
     },
     {
       "district": "中正區",
@@ -2780,7 +2897,7 @@
       "address": "中正區-中華路二段",
       "refresh_time": "5小時內更新",
       "yesterday_views": "昨日 72 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2023/09/18/169505137929402559.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2023/09/18/169505137929402559.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22045451"
     },
     {
@@ -2806,7 +2923,7 @@
       "address": "中正區-中華路二段",
       "refresh_time": "7小時內更新",
       "yesterday_views": "昨日 34 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/21/178996148580783506.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/21/178996148580783506.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22047182"
     },
     {
@@ -2871,7 +2988,7 @@
       "address": "中正區-臨沂街57巷",
       "refresh_time": "10小時內更新",
       "yesterday_views": "昨日 7 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/08/28/178791070080528601.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/08/28/178791070080528601.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21912156"
     },
     {
@@ -2884,7 +3001,7 @@
       "address": "中正區-臨沂街57巷40號",
       "refresh_time": "3天前更新",
       "yesterday_views": "昨日 12 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/08/31/178814973301406506.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/08/31/178814973301406506.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21951499"
     },
     {
@@ -2923,7 +3040,7 @@
       "address": "中正區-晉江街",
       "refresh_time": "8小時內更新",
       "yesterday_views": "昨日 8 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2025/08/27/175626214974906705.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2025/08/27/175626214974906705.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22033640"
     },
     {
@@ -2936,7 +3053,7 @@
       "address": "中正區-晉江街",
       "refresh_time": "9小時內更新",
       "yesterday_views": "暫無資料",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/15/178946502378856308.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/15/178946502378856308.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22060440"
     },
     {
@@ -2947,7 +3064,7 @@
       "price_contain": "無",
       "size_floor": "5.6坪 2F/6F",
       "address": "中正區-晉江街",
-      "refresh_time": "2小時內更新",
+      "refresh_time": "3分鐘內更新",
       "yesterday_views": "昨日 72 人瀏覽",
       "cover_img": "https://img2.591.com.tw/house/2026/09/20/178987894533862903.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/22043046"
@@ -2975,7 +3092,7 @@
       "address": "中正區-汀州路一段149巷7號",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 51 人瀏覽",
-      "cover_img": "https://img2.591.com.tw/house/2026/09/11/178909408199490403.jpg!510x400.jpg",
+      "cover_img": "https://img1.591.com.tw/house/2026/09/11/178909408199490403.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21991219"
     },
     {
@@ -2988,7 +3105,7 @@
       "address": "中正區-南昌路二段18巷",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 40 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2022/08/07/165986564669181810.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2022/08/07/165986564669181810.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21800941"
     },
     {
@@ -3001,7 +3118,7 @@
       "address": "中正區-衡陽路",
       "refresh_time": "3小時內更新",
       "yesterday_views": "昨日 37 人瀏覽",
-      "cover_img": "https://img1.591.com.tw/house/2026/05/14/177876776770676705.jpg!510x400.jpg",
+      "cover_img": "https://img2.591.com.tw/house/2026/05/14/177876776770676705.jpg!510x400.jpg",
       "url": "https://rent.591.com.tw/21965787"
     }
   ],
