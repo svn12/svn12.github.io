@@ -272,25 +272,55 @@
           <div class="flex items-center justify-between mb-2">
             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">現場照片紀錄 (<span id="photo-count">0</span> 張)</label>
             <!-- 照片操作工具列：僅在「編輯內容模式」下出現 -->
-            <div id="photo-action-toolbar" class="hidden flex items-center gap-2">
+            <div id="photo-action-toolbar" class="hidden flex items-center gap-1.5 flex-wrap justify-end">
+              <!-- 前往品陽公設缺失專用雲端硬碟 -->
+              <a href="https://drive.google.com/drive/folders/1zCOmE0JETlxANA2ZkXz7FgzD8JQc7Hfe?usp=sharing" target="_blank"
+                 class="inline-flex items-center gap-1 text-[11px] text-amber-800 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2 py-1 rounded-md font-medium transition" title="前往管委會『公設缺失追蹤』雲端照片資料夾">
+                <i class="fa-brands fa-google-drive text-amber-600"></i> 開啟雲端相簿
+              </a>
+              <!-- 加入雲端照片連結 -->
+              <button type="button" onclick="toggleDriveInputPanel()" class="inline-flex items-center gap-1 text-[11px] text-indigo-700 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2 py-1 rounded-md font-semibold transition" title="貼上 Google Drive 共享連結或網址">
+                <i class="fa-solid fa-link"></i> 加入雲端照片
+              </button>
               <!-- 瀏覽模式 vs 刪除管理模式切換按鈕 -->
-              <button type="button" id="btn-toggle-photo-edit" onclick="togglePhotoEditMode()" class="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition">
+              <button type="button" id="btn-toggle-photo-edit" onclick="togglePhotoEditMode()" class="inline-flex items-center gap-1 text-[11px] text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-md font-medium transition">
                 <i class="fa-solid fa-pen-to-square"></i> <span id="photo-edit-text">管理照片</span>
               </button>
-              <button type="button" id="btn-clear-photos" onclick="clearAllPhotos()" class="text-xs text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded-md font-medium hidden transition">
+              <button type="button" id="btn-clear-photos" onclick="clearAllPhotos()" class="text-[11px] text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2 py-1 rounded-md font-medium hidden transition">
                 <i class="fa-solid fa-trash-can"></i> 全部刪除
               </button>
-              <label class="cursor-pointer inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 font-semibold bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-md transition">
-                <i class="fa-solid fa-camera"></i> 上傳相片
+              <label class="cursor-pointer inline-flex items-center gap-1 text-[11px] text-slate-700 hover:text-slate-900 font-medium bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-md transition" title="選擇本機圖片暫存（僅本機臨時檢視）">
+                <i class="fa-solid fa-laptop"></i> 本機相片
                 <input type="file" id="photo-upload-input" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(event)" />
               </label>
+            </div>
+          </div>
+
+          <!-- 加入 Google Drive 照片連結輸入面板 (預設隱藏) -->
+          <div id="drive-input-panel" class="hidden mb-3 p-3 bg-gradient-to-r from-amber-50/70 to-indigo-50/70 border border-amber-200/80 rounded-xl space-y-2 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                <i class="fa-brands fa-google-drive text-amber-600"></i> 新增雲端硬碟照片（多人跨裝置即時同步）
+              </span>
+              <button type="button" onclick="toggleDriveInputPanel()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              請先將照片上傳至 <a href="https://drive.google.com/drive/folders/1zCOmE0JETlxANA2ZkXz7FgzD8JQc7Hfe?usp=sharing" target="_blank" class="text-indigo-600 underline font-medium hover:text-indigo-800">公設缺失追蹤相簿 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>，對照片點右鍵「共用 ➔ 複製連結」貼在下方（支援多個連結，以換行或逗號隔開）：
+            </p>
+            <div class="flex gap-2">
+              <textarea id="drive-url-input" rows="2" placeholder="貼上 Google Drive 分享連結，例如：https://drive.google.com/file/d/1A2B3C.../view?usp=sharing" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs leading-normal font-mono focus:ring-2 focus:ring-indigo-400 focus:outline-none"></textarea>
+            </div>
+            <div class="flex justify-end gap-2">
+              <button type="button" onclick="addGoogleDrivePhotos()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md font-semibold text-xs transition shadow-xs flex items-center gap-1">
+                <i class="fa-solid fa-plus"></i> 確認新增至此案件
+              </button>
             </div>
           </div>
           
           <div id="modal-photo-gallery" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <!-- Dynamic Photos -->
           </div>
-          <p id="no-photo-hint" class="text-xs text-slate-400 italic py-4 text-center bg-slate-50 border border-dashed border-slate-200 rounded-lg">尚無照片，可點擊上方「上傳相片」新增</p>
+          <p id="no-photo-hint" class="text-xs text-slate-400 italic py-4 text-center bg-slate-50 border border-dashed border-slate-200 rounded-lg">尚無照片，進入「編輯內容」後可點擊「加入雲端照片」或上傳</p>
       </div>
 
       <!-- Modal Footer -->
@@ -377,7 +407,13 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">現場相片 (支援多張)</label>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-semibold text-slate-600">現場相片 (Google Drive 雲端照片連結 / 本機檔案)</label>
+            <a href="https://drive.google.com/drive/folders/1zCOmE0JETlxANA2ZkXz7FgzD8JQc7Hfe?usp=sharing" target="_blank" class="text-[11px] text-amber-700 hover:text-amber-800 flex items-center gap-1 font-medium">
+              <i class="fa-brands fa-google-drive text-amber-600"></i> 開啟雲端相簿 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+          <input type="text" id="new-drive-urls" placeholder="貼上 Google Drive 分享連結（多個可用逗號或換行隔開）" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-xs mb-2 font-mono" />
           <input type="file" id="new-photos" accept="image/*" multiple class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
         </div>
 
@@ -1615,6 +1651,39 @@
       }
     });
 
+    // 將各種 Google Drive 分享連結或 ID 自動轉換為免登入直接渲染圖片的 URL
+    function convertGoogleDriveUrl(url) {
+      if (!url) return '';
+      url = url.trim();
+      if (!url) return '';
+
+      // 1. 若已經是 lh3.googleusercontent.com 或 direct 圖片
+      if (url.includes('lh3.googleusercontent.com/d/')) {
+        return url;
+      }
+
+      // 2. 匹配 Google Drive file id: /file/d/FILE_ID 或 ?id=FILE_ID 或 id=FILE_ID
+      const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
+                          url.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
+                          url.match(/id=([a-zA-Z0-9_-]+)/);
+
+      if (fileIdMatch && fileIdMatch[1]) {
+        return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}`;
+      }
+
+      // 3. 一般外部 http/https 圖片網址直接保留
+      if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('./') || url.startsWith('data:image/')) {
+        return url;
+      }
+
+      // 4. 若純粹是一串 20 字元以上的 Drive ID
+      if (/^[a-zA-Z0-9_-]{25,}$/.test(url)) {
+        return `https://lh3.googleusercontent.com/d/${url}`;
+      }
+
+      return url;
+    }
+
     // 解析 CSV 單列 (妥善處理包含逗號與引號的字串)
     function parseCSVLine(text) {
       const result = [];
@@ -1687,6 +1756,23 @@
               const cols = parseCSVLine(defLines[i]);
               if (!cols[0]) continue;
               const id = cols[0];
+              const rawPhotosCol = cols[10] || '';
+              let itemPhotos = [];
+
+              // 若 Google Sheet 中的「現場相片」欄位含有網址或 Drive 連結 (支援以逗號/分號/換行/空格分隔)
+              if (rawPhotosCol.includes('http://') || rawPhotosCol.includes('https://') || rawPhotosCol.includes('drive.google.com') || rawPhotosCol.includes('lh3.googleusercontent.com')) {
+                const parts = rawPhotosCol.split(/[\r\n,;]+/).map(p => p.trim()).filter(p => p.length > 0);
+                parts.forEach(p => {
+                  const directUrl = convertGoogleDriveUrl(p);
+                  if (directUrl) itemPhotos.push(directUrl);
+                });
+              }
+
+              // 若 Google Sheet 尚未填寫自訂網址，則 fallback 使用系統預設官方對照表照片
+              if (itemPhotos.length === 0 && photoMapping[id]) {
+                itemPhotos = [...photoMapping[id]];
+              }
+
               cloudDefects.push({
                 id: id,
                 official_id: cols[1] || '',
@@ -1698,7 +1784,7 @@
                 reporter: cols[7] || '',
                 status: cols[8] || '待處理',
                 progress: cols[9] || '',
-                photos: photoMapping[id] || [],
+                photos: itemPhotos,
                 note: cols[11] || ''
               });
             }
@@ -1937,6 +2023,8 @@
         if (btn) btn.className = "inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition";
         if (text) text.innerText = "管理照片";
         if (clearBtn) clearBtn.classList.add('hidden');
+        const drivePanel = document.getElementById('drive-input-panel');
+        if (drivePanel) drivePanel.classList.add('hidden');
         renderModalPhotos();
 
         if (btnEdit) {
@@ -2133,6 +2221,73 @@
         }
         gallery.appendChild(div);
       });
+    }
+
+    // 切換 Google Drive 照片連結輸入面板
+    function toggleDriveInputPanel() {
+      const panel = document.getElementById('drive-input-panel');
+      if (!panel) return;
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        const input = document.getElementById('drive-url-input');
+        if (input) {
+          input.value = '';
+          input.focus();
+        }
+      } else {
+        panel.classList.add('hidden');
+      }
+    }
+
+    // 將使用者輸入的 Google Drive 共享連結轉為直接圖片並加入目前案件
+    function addGoogleDrivePhotos() {
+      if (!currentDetailDefect) return;
+      const input = document.getElementById('drive-url-input');
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) {
+        alert('請先貼上 Google Drive 照片的分享連結！');
+        return;
+      }
+
+      // 支援多個連結（換行、逗號或空白分開）
+      const rawUrls = val.split(/[\r\n,;]+/).map(u => u.trim()).filter(u => u.length > 0);
+      let addedCount = 0;
+      if (!currentDetailDefect.photos) currentDetailDefect.photos = [];
+
+      rawUrls.forEach(rawUrl => {
+        const directUrl = convertGoogleDriveUrl(rawUrl);
+        if (directUrl && !currentDetailDefect.photos.includes(directUrl)) {
+          currentDetailDefect.photos.push(directUrl);
+          addedCount++;
+        }
+      });
+
+      if (addedCount > 0) {
+        saveData();
+        renderModalPhotos();
+        renderTable();
+        toggleDriveInputPanel();
+
+        // 貼心提示使用者同時更新至 Google Sheet 試算表以確保所有用戶跨設備皆可見
+        const driveUrlsText = currentDetailDefect.photos.join(', ');
+        const promptMsg = `✅ 成功加入 ${addedCount} 張雲端照片！\n\n【多人跨設備永久同步提示】：\n若要讓其他住戶或手機網頁一併同步看到，請將此案件在 Google Sheet 試算表中的「現場相片」欄位貼上照片網址：\n\n${driveUrlsText}\n\n是否立即複製相片網址並前往 Google Sheet 貼上？`;
+        
+        if (confirm(promptMsg)) {
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(driveUrlsText).then(() => {
+              alert('已將照片網址複製到剪貼簿！即將為您開啟 Google Sheet...');
+              window.open(`https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/edit#gid=0`, '_blank');
+            }).catch(() => {
+              window.open(`https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/edit#gid=0`, '_blank');
+            });
+          } else {
+            window.open(`https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/edit#gid=0`, '_blank');
+          }
+        }
+      } else {
+        alert('未偵測到有效的照片連結，或該照片已在清單中。');
+      }
     }
 
     function handlePhotoUpload(e) {
@@ -2352,6 +2507,18 @@
         progress: '尚未排定查驗',
         photos: []
       };
+
+      // 解析輸入的 Google Drive 雲端照片連結
+      const driveUrlsInput = document.getElementById('new-drive-urls');
+      if (driveUrlsInput && driveUrlsInput.value.trim()) {
+        const rawUrls = driveUrlsInput.value.trim().split(/[\r\n,;]+/).map(u => u.trim()).filter(u => u.length > 0);
+        rawUrls.forEach(u => {
+          const directUrl = convertGoogleDriveUrl(u);
+          if (directUrl && !newDefect.photos.includes(directUrl)) {
+            newDefect.photos.push(directUrl);
+          }
+        });
+      }
 
       const photoFiles = document.getElementById('new-photos').files;
       if (photoFiles && photoFiles.length > 0) {
