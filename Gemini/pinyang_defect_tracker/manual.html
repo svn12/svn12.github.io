@@ -252,19 +252,19 @@
 
   <div class="img-container">
     <img src="manual_assets/03_edit_mode.png" alt="案件編輯與相片管理工作台">
-    <div class="img-caption">▲ 圖 3：案件編輯模式（左欄修改缺失與回覆、右欄支援本機照片上傳、Google Drive 網址掛載與快速刪除）</div>
+    <div class="img-caption">▲ 圖 3：案件編輯模式（左欄修改缺失與回覆、右欄支援本機照片上傳、剪貼簿直貼與快速刪除）</div>
   </div>
 
-  <h3>現場照片增刪管理：</h3>
+  <h3>現場照片增刪與剪貼簿貼上功能：</h3>
   <ol>
-    <li><span class="step-number">1</span><strong>電腦/手機本機上傳：</strong>點擊「選擇照片檔案」選取現場拍攝圖檔，系統會於前端進行智慧等比壓縮（最長邊 1600px，畫質清晰且傳輸順暢）。</li>
-    <li><span class="step-number">2</span><strong>貼上 Google 雲端硬碟連結：</strong>亦可直接貼上 Drive 分享網址，系統會自動轉換為直接渲染預覽圖。</li>
-    <li><span class="step-number">3</span><strong>刪除相片：</strong>滑鼠懸停於照片右上角垃圾桶或點擊「管理照片」即可單張清除；亦可「清空全部照片」。</li>
-    <li><span class="step-number">4</span><strong>雙向寫入雲端：</strong>點擊右下角「儲存修改」後，新照片自動上傳 Google Drive，並同步將雲端圖片直連網址寫回 Google Sheet 第 K 欄，確保跨裝置完全一致。</li>
+    <li><span class="step-number">1</span><strong>從剪貼簿直接貼上相片（快捷鍵最強大）：</strong>只要在 LINE、電腦截圖工具或手機截圖按下「複製」，在案件編輯工作台視窗中<strong>直接按下鍵盤 <code>Ctrl+V</code>（Windows）或 <code>Cmd+V</code>（Mac）</strong>，或點擊「<span class="badge">貼上剪貼簿相片</span>」按鈕，截圖即刻轉換為預覽圖片，無須另存檔案！</li>
+    <li><span class="step-number">2</span><strong>電腦/手機本機選取檔案：</strong>點擊「<span class="badge">上傳相片</span>」選取拍攝圖檔，系統會於前端進行智慧等比壓縮（最長邊 1600px，兼具清晰畫質與極速傳輸）。</li>
+    <li><span class="step-number">3</span><strong>刪除相片：</strong>滑鼠懸停於照片右上角垃圾桶或點擊「管理照片」即可單張清除；亦可「全部刪除」。</li>
+    <li><span class="step-number">4</span><strong>雙向寫入雲端：</strong>點擊右下角「儲存修改」後，新上傳或貼上的照片會自動同步至 Google Drive 雲端資料夾，並將直連網址寫入 Google Sheet 第 K 欄，跨裝置即刻一致同步。</li>
   </ol>
 
   <div class="info-card-warning">
-    <strong>刪除案件保護：</strong>左下角設有「刪除此案件」功能，僅供誤報或完全無效案件使用。點擊後系統會跳出確認警告，確認後將同步從網頁及 Google Sheet 徹底抹除該筆紀錄。
+    <strong>刪除案件保護：</strong>左下角設有「刪除此案件紀錄」功能，僅供誤報或完全無效案件使用。點擊後系統會跳出確認警告，確認後將同步從網頁及 Google Sheet 徹底抹除該筆紀錄。
   </div>
 
   <!-- Page 4 -->
@@ -275,14 +275,19 @@
 
   <div class="img-container">
     <img src="manual_assets/04_create_modal.png" alt="新增缺失表單">
-    <div class="img-caption">▲ 圖 4：新增缺失表單（支援自動編號、樓層空間、瑕疵描述與直接上傳現場佐證）</div>
+    <div class="img-caption">▲ 圖 4：新增缺失表單（支援自動編號、樓層空間、瑕疵描述、剪貼簿直貼與選檔預覽）</div>
   </div>
 
   <ul>
     <li><strong>系統編號：</strong>系統依現有資料庫自動流水編排（例如目前最新為 <code>DEF-066</code>）。</li>
     <li><strong>空間與位置：</strong>詳列「空間區域」（如地下室、頂樓/RF、梯廳）與「具體位置」（如 B2停車場15號車位旁連續壁）。</li>
     <li><strong>系統分類：</strong>選定主要瑕疵性質（漏水滲水、給排水系統、門禁弱電、消防安檢、土建五金、環境管理）。</li>
-    <li><strong>現場相片上傳：</strong>可同步選取照片檔案，按下「送出並儲存」後系統即自動完成上傳及資料庫登錄。</li>
+    <li><strong>現場相片上傳與剪貼簿貼上：</strong>
+      <ul>
+        <li>可直接點擊「<span class="badge">貼上剪貼簿相片 (Ctrl+V)</span>」或直接按快捷鍵貼入 LINE 中的報修截圖。</li>
+        <li>亦可點選本機圖檔，下方會立即呈現縮圖預覽並提供刪除叉叉，確認無誤後點擊「儲存提報」即自動上傳登錄。</li>
+      </ul>
+    </li>
   </ul>
 
   <h2>6. 系統分類與改善狀態自訂管理 (Configuration)</h2>
