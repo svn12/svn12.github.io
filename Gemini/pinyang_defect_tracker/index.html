@@ -300,6 +300,10 @@
               <button type="button" id="btn-clear-photos" onclick="clearAllPhotos()" class="text-xs text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded-md font-medium hidden transition">
                 <i class="fa-solid fa-trash-can"></i> 全部刪除
               </button>
+              <!-- 從剪貼簿貼上照片按鈕 -->
+              <button type="button" onclick="pasteImageFromClipboard()" class="inline-flex items-center gap-1.5 text-xs text-amber-800 hover:text-amber-900 font-semibold bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1 rounded-md transition shadow-xs" title="點擊貼上剪貼簿圖片，或直接按 Ctrl+V / Cmd+V">
+                <i class="fa-regular fa-clipboard text-amber-600"></i> 貼上剪貼簿相片
+              </button>
               <label class="cursor-pointer inline-flex items-center gap-1.5 text-xs text-indigo-700 hover:text-indigo-800 font-semibold bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-3 py-1 rounded-md transition shadow-xs">
                 <i class="fa-solid fa-cloud-arrow-up text-indigo-600"></i> 上傳相片
                 <input type="file" id="photo-upload-input" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(event)" />
@@ -310,7 +314,7 @@
           <div id="modal-photo-gallery" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <!-- Dynamic Photos -->
           </div>
-          <p id="no-photo-hint" class="text-xs text-slate-400 italic py-4 text-center bg-slate-50 border border-dashed border-slate-200 rounded-lg">尚無照片，進入「編輯內容」後可點擊「加入雲端照片」或上傳</p>
+          <p id="no-photo-hint" class="text-xs text-slate-400 italic py-4 text-center bg-slate-50 border border-dashed border-slate-200 rounded-lg">尚無照片，進入「編輯內容」後可點擊「上傳相片」或「貼上剪貼簿相片」(支援 Ctrl+V / Cmd+V)</p>
       </div>
 
       <!-- Modal Footer -->
@@ -398,13 +402,15 @@
 
         <div>
           <div class="flex items-center justify-between mb-1">
-            <label class="block text-xs font-semibold text-slate-600">現場相片 (Google Drive 雲端照片連結 / 本機檔案)</label>
-            <a href="https://drive.google.com/drive/folders/11UFA6j24DNr8xIy8aM93OUSxzy1YOeI6?usp=sharing" target="_blank" class="text-[11px] text-amber-700 hover:text-amber-800 flex items-center gap-1 font-medium">
-              <i class="fa-brands fa-google-drive text-amber-600"></i> 開啟雲端相簿 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-            </a>
+            <label class="block text-xs font-semibold text-slate-600">現場相片 (支援本機檔案 / 剪貼簿截圖貼上)</label>
+            <button type="button" onclick="pasteImageToCreateModal()" class="text-[11px] text-amber-800 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2 py-0.5 rounded font-semibold flex items-center gap-1 transition">
+              <i class="fa-regular fa-clipboard text-amber-600"></i> 貼上剪貼簿相片 (Ctrl+V)
+            </button>
           </div>
-          <input type="text" id="new-drive-urls" placeholder="貼上 Google Drive 分享連結（多個可用逗號或換行隔開）" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-xs mb-2 font-mono" />
-          <input type="file" id="new-photos" accept="image/*" multiple class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+          <input type="file" id="new-photos" accept="image/*" multiple onchange="handleNewDefectPhotoFiles(event)" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+          <div id="new-photos-preview-gallery" class="hidden grid grid-cols-3 gap-2 mt-2 p-2 bg-slate-50 rounded-lg border border-slate-200">
+            <!-- 預覽相片 -->
+          </div>
         </div>
 
         <div class="pt-3 flex justify-end gap-2 border-t border-slate-100">
@@ -2158,8 +2164,6 @@
         if (btn) btn.className = "inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md font-medium transition";
         if (text) text.innerText = "管理照片";
         if (clearBtn) clearBtn.classList.add('hidden');
-        const drivePanel = document.getElementById('drive-input-panel');
-        if (drivePanel) drivePanel.classList.add('hidden');
 
         if (btnEdit) {
           btnEdit.disabled = false;
@@ -2538,15 +2542,13 @@
       return `https://lh3.googleusercontent.com/d/${res.fileId}`;
     }
 
-    // 處理使用者從本機選取相片：先產生本機預覽並放入 pending 清單，等按下「儲存修改」時一次上傳 Google 雲端
-    function handlePhotoUpload(e) {
-      if (!currentDetailDefect) return;
-      const files = e.target.files;
-      if (!files || files.length === 0) return;
-
+    // 通用：將一組圖片檔案（本機選取或剪貼簿貼上）加入目前正在編輯的案件中
+    function addFilesToCurrentDefect(files) {
+      if (!currentDetailDefect || !files || files.length === 0) return;
       if (!currentDetailDefect.photos) currentDetailDefect.photos = [];
 
       Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
         pendingUploadFiles.push(file);
         const reader = new FileReader();
         reader.onload = function(evt) {
@@ -2555,8 +2557,49 @@
         };
         reader.readAsDataURL(file);
       });
+    }
 
+    // 處理使用者從本機選取相片
+    function handlePhotoUpload(e) {
+      if (!currentDetailDefect) return;
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        addFilesToCurrentDefect(files);
+      }
       e.target.value = '';
+    }
+
+    // 從系統剪貼簿讀取圖片貼上 (支援點擊按鈕授權讀取剪貼簿)
+    async function pasteImageFromClipboard() {
+      if (!currentDetailDefect) return;
+      if (!isCaseEditMode) {
+        alert('請先點擊「編輯內容」進入編輯模式，即可貼上照片！');
+        return;
+      }
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.read) {
+          alert('您的瀏覽器不支援直接存取剪貼簿 API，請直接在此視窗按下鍵盤快捷鍵「Ctrl+V」(Windows) 或「Cmd+V」(Mac) 即可貼上圖片！');
+          return;
+        }
+        const clipboardItems = await navigator.clipboard.read();
+        let foundImage = false;
+        for (const item of clipboardItems) {
+          for (const type of item.types) {
+            if (type.startsWith('image/')) {
+              const blob = await item.getType(type);
+              const file = new File([blob], `paste_${Date.now()}.png`, { type });
+              addFilesToCurrentDefect([file]);
+              foundImage = true;
+            }
+          }
+        }
+        if (!foundImage) {
+          alert('剪貼簿中目前沒有圖片！請先複製/截圖照片後再試，或直接按 Ctrl+V / Cmd+V 貼上。');
+        }
+      } catch (err) {
+        console.warn('Clipboard API 讀取失敗，提示用戶使用鍵盤貼上快捷鍵:', err);
+        alert('請直接在目前視窗按下鍵盤快捷鍵「Ctrl+V」(Windows) 或「Cmd+V」(Mac)，即可瞬間貼上截圖相片！');
+      }
     }
 
     // 將照片異動 (刪除/清空) 自動即時同步寫回 Google Sheet 試算表
@@ -2790,15 +2833,101 @@
       }, { passive: true });
     }
 
+    // 新增案件表單的暫存相片清單（支援本機檔案與剪貼簿貼上檔案）
+    let newDefectPendingFiles = [];
+
+    function handleNewDefectPhotoFiles(e) {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        addNewDefectPendingFiles(Array.from(files));
+      }
+      e.target.value = '';
+    }
+
+    function addNewDefectPendingFiles(files) {
+      if (!files || files.length === 0) return;
+      files.forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        newDefectPendingFiles.push(file);
+      });
+      renderNewDefectPhotosPreview();
+    }
+
+    function renderNewDefectPhotosPreview() {
+      const gallery = document.getElementById('new-photos-preview-gallery');
+      if (!gallery) return;
+      if (newDefectPendingFiles.length === 0) {
+        gallery.classList.add('hidden');
+        gallery.innerHTML = '';
+        return;
+      }
+      gallery.classList.remove('hidden');
+      gallery.innerHTML = '';
+
+      newDefectPendingFiles.forEach((file, idx) => {
+        const div = document.createElement('div');
+        div.className = "relative rounded-lg overflow-hidden border border-slate-200 aspect-video bg-slate-100 flex items-center justify-center";
+        const img = document.createElement('img');
+        img.className = "w-full h-full object-cover";
+        const reader = new FileReader();
+        reader.onload = (e) => { img.src = e.target.result; };
+        reader.readAsDataURL(file);
+
+        const delBtn = document.createElement('button');
+        delBtn.type = "button";
+        delBtn.className = "absolute top-1 right-1 w-5 h-5 bg-black/60 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-[10px] shadow transition";
+        delBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+        delBtn.onclick = () => {
+          newDefectPendingFiles.splice(idx, 1);
+          renderNewDefectPhotosPreview();
+        };
+
+        div.appendChild(img);
+        div.appendChild(delBtn);
+        gallery.appendChild(div);
+      });
+    }
+
+    async function pasteImageToCreateModal() {
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.read) {
+          alert('請直接在新增視窗按下鍵盤快捷鍵「Ctrl+V」(Windows) 或「Cmd+V」(Mac) 即可直接貼上截圖！');
+          return;
+        }
+        const clipboardItems = await navigator.clipboard.read();
+        let found = false;
+        for (const item of clipboardItems) {
+          for (const type of item.types) {
+            if (type.startsWith('image/')) {
+              const blob = await item.getType(type);
+              const file = new File([blob], `paste_create_${Date.now()}.png`, { type });
+              addNewDefectPendingFiles([file]);
+              found = true;
+            }
+          }
+        }
+        if (!found) {
+          alert('剪貼簿中目前沒有圖片！請先複製或截圖後再試。');
+        }
+      } catch (err) {
+        console.warn('貼上至新增彈窗失敗:', err);
+        alert('請直接在新增視窗按下鍵盤快捷鍵「Ctrl+V」(Windows) 或「Cmd+V」(Mac) 即可貼上照片！');
+      }
+    }
+
     // Create Modal handlers
     function openModal() {
       document.getElementById('new-date').value = new Date().toISOString().split('T')[0];
+      newDefectPendingFiles = [];
+      renderNewDefectPhotosPreview();
       document.getElementById('create-modal').classList.remove('hidden');
     }
 
     function closeModal() {
       document.getElementById('create-modal').classList.add('hidden');
       document.getElementById('create-form').reset();
+      newDefectPendingFiles = [];
+      renderNewDefectPhotosPreview();
     }
 
     async function handleCreateSubmit(e) {
@@ -2822,35 +2951,23 @@
         photos: []
       };
 
-      // 解析輸入的 Google Drive 雲端照片連結
-      const driveUrlsInput = document.getElementById('new-drive-urls');
-      if (driveUrlsInput && driveUrlsInput.value.trim()) {
-        const rawUrls = driveUrlsInput.value.trim().split(/[\r\n,;]+/).map(u => u.trim()).filter(u => u.length > 0);
-        rawUrls.forEach(u => {
-          const directUrl = convertGoogleDriveUrl(u);
-          if (directUrl && !newDefect.photos.includes(directUrl)) {
-            newDefect.photos.push(directUrl);
-          }
-        });
-      }
-
-      const photoFiles = document.getElementById('new-photos').files;
-      if (photoFiles && photoFiles.length > 0) {
+      if (newDefectPendingFiles && newDefectPendingFiles.length > 0) {
         const submitBtn = e.target.querySelector('button[type="submit"]');
         const origText = submitBtn ? submitBtn.innerText : '';
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.innerText = "上傳照片至雲端中...";
+          submitBtn.innerText = `上傳 ${newDefectPendingFiles.length} 張照片至雲端中...`;
         }
 
         try {
-          for (let i = 0; i < photoFiles.length; i++) {
-            const file = photoFiles[i];
+          for (let i = 0; i < newDefectPendingFiles.length; i++) {
+            const file = newDefectPendingFiles[i];
             const gdriveUrl = await uploadFileToGoogleDrive(file, newDefect.id);
             if (gdriveUrl && !newDefect.photos.includes(gdriveUrl)) {
               newDefect.photos.push(gdriveUrl);
             }
           }
+          newDefectPendingFiles = [];
         } catch (err) {
           console.error('新增案件照片上傳 Google 雲端失敗:', err);
           alert('部分照片上傳至 Google 雲端失敗：' + err.message);
@@ -2870,6 +2987,41 @@
       closeModal();
       renderTable();
     }
+
+    // 全域鍵盤快捷鍵貼上監聽 (Ctrl+V / Cmd+V)
+    window.addEventListener('paste', (e) => {
+      const clipboardData = e.clipboardData || window.clipboardData;
+      if (!clipboardData || !clipboardData.items) return;
+
+      const items = clipboardData.items;
+      const imageFiles = [];
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const blob = items[i].getAsFile();
+          if (blob) {
+            imageFiles.push(blob);
+          }
+        }
+      }
+
+      if (imageFiles.length === 0) return;
+
+      // 1. 若目前開啟並處於案件詳情編輯模式
+      const detailModal = document.getElementById('detail-modal');
+      if (detailModal && !detailModal.classList.contains('hidden') && isCaseEditMode) {
+        e.preventDefault();
+        addFilesToCurrentDefect(imageFiles);
+        return;
+      }
+
+      // 2. 若目前開啟新增缺失視窗
+      const createModal = document.getElementById('create-modal');
+      if (createModal && !createModal.classList.contains('hidden')) {
+        e.preventDefault();
+        addNewDefectPendingFiles(imageFiles);
+        return;
+      }
+    });
 
     function exportCSV() {
       let csvContent = "\uFEFF編號,提報日期,區域空間,具體位置,系統分類,缺失描述,提報人,狀態,改善進度\n";
