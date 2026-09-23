@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>Google My Maps (我的地圖) 完整使用說明手冊</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 16mm 15mm;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: #202124;
+      line-height: 1.55;
+      font-size: 13.5px;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      border-bottom: 3px solid #1a73e8;
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1a73e8;
+      margin: 0 0 5px 0;
+    }
+    .subtitle {
+      font-size: 12.5px;
+      color: #5f6368;
+      margin: 0;
+    }
+    h2 {
+      font-size: 16px;
+      color: #185abc;
+      border-left: 4px solid #1a73e8;
+      padding-left: 8px;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 14px;
+      color: #202124;
+      margin-top: 12px;
+      margin-bottom: 6px;
+      page-break-after: avoid;
+    }
+    p {
+      margin: 5px 0;
+    }
+    ul, ol {
+      margin: 5px 0;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 8px 0;
+    }
+    .card {
+      background: #f8f9fa;
+      border: 1px solid #dadce0;
+      border-radius: 6px;
+      padding: 9px 12px;
+    }
+    .card-title {
+      font-weight: bold;
+      color: #1a73e8;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+    kbd {
+      background: #f1f3f4;
+      border: 1px solid #bdc1c6;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      padding: 1px 5px;
+      color: #202124;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 12.5px;
+    }
+    th, td {
+      border: 1px solid #dadce0;
+      padding: 6px 9px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f3f4;
+      color: #3c4043;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    .tip-box {
+      background: #e8f0fe;
+      border-left: 4px solid #1a73e8;
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      margin: 10px 0;
+      font-size: 12.5px;
+    }
+    .footer {
+      margin-top: 24px;
+      padding-top: 8px;
+      border-top: 1px solid #dadce0;
+      font-size: 11px;
+      color: #80868b;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="title">Google My Maps (我的地圖) 完整使用說明手冊</div>
+    <div class="subtitle">旅遊行程規劃、自訂景點圖層、資料批量匯入與協同共享指南 ｜ 網址：https://www.google.com/maps/d/u/0/</div>
+  </div>
+
+  <h2>1. 核心定位與優勢</h2>
+  <p><strong>Google My Maps (Google 我的地圖)</strong> 是 Google 官方提供的個人化地圖製作雲端服務，地圖檔案自動儲存在 Google 雲端硬碟 (Google Drive)，支援跨裝置即時同步：</p>
+  <ul>
+    <li><strong>多圖層管理（Layers）</strong>：單一地圖可建立多達 10 個獨立圖層（如：Day 1、美食餐廳、住宿飯店、備案清單），可自由勾選顯示或隱藏。</li>
+    <li><strong>客製化地標與樣式</strong>：自訂數百種專屬圖標、顏色代碼，並可在地標內嵌入自訂筆記、照片與 YouTube 影片。</li>
+    <li><strong>表格批量匯入（Batch Import）</strong>：支援將 Google Sheets、Excel (.xlsx)、CSV、KML/KMZ 或 GPX 檔案直接批次匯入並在地圖上精確標記。</li>
+    <li><strong>多人協作與分享</strong>：如同 Google Docs 一樣，可邀請朋友共同即時編輯行程，或公開嵌入至個人網站與部落格。</li>
+  </ul>
+
+  <h2>2. 快速上手操作流程</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">① 建立新地圖與命名</div>
+      <p>進入網站點擊「+ 建立新地圖」，點擊左上角「無標題的地圖」即可輸入自訂地圖名稱與詳細描述。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">② 規劃多圖層架構</div>
+      <p>點擊「新增圖層」，將圖層重新命名（例如：「第 1 天行程」、「必吃美食」），方便分門別類管理。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">③ 搜尋與新增地點</div>
+      <p>在頂部搜尋欄輸入景點或地址，搜尋到後點擊彈出卡片下方的「+ 新增至地圖」即可加入目前選取的圖層。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">④ 自訂圖標與內容</div>
+      <p>點擊地點旁的「顏料桶」可修改顏色與圖標形狀；點擊「鉛筆」可新增備註；點擊「相機」可上傳實景圖片。</p>
+    </div>
+  </div>
+
+  <h2>3. 工具列核心功能圖解</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">工具按鈕</th>
+        <th style="width: 35%;">功能說明</th>
+        <th style="width: 40%;">使用場景與技巧</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>選取項目 (手掌)</strong></td>
+        <td>拖曳平移地圖、點擊選取地點</td>
+        <td>瀏覽與檢視地圖時的預設狀態。</td>
+      </tr>
+      <tr>
+        <td><strong>新增標記 (圖釘)</strong></td>
+        <td>在任意座標位置手動釘選地點</td>
+        <td>標記沒有門牌地址的地點（如登山登山口、秘密露營地、集合空地）。</td>
+      </tr>
+      <tr>
+        <td><strong>繪製線條 (折線)</strong></td>
+        <td>繪製自訂線條、多邊形區域或行車路線</td>
+        <td>框選健行路徑、繪製景區徒步路線，或圈出特定活動範圍與行政區。</td>
+      </tr>
+      <tr>
+        <td><strong>新增路線 (轉向箭頭)</strong></td>
+        <td>建立導航路線圖層（開車 / 騎單車 / 步行）</td>
+        <td>自動規劃 A 點到 B 點的最佳交通路線，會獨立生成一個路線圖層。</td>
+      </tr>
+      <tr>
+        <td><strong>測量距離 (量尺)</strong></td>
+        <td>拉線即時測量實際直線距離與面積</td>
+        <td>評估景點之間的距離，或計算封閉區域之佔地面積。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. 進階技巧與資料整合</h2>
+  <ul>
+    <li><strong>批次匯入資料（Google Sheet / Excel）</strong>：
+      <br>在空白圖層點擊「匯入」，選取包含「地址」或「經緯度（Latitude/Longitude）」的試算表，系統會自動批量生成所有標記點，極適合大量商家、會員或景點名單管理。</li>
+    <li><strong>底圖模式切換（Base Map）</strong>：
+      <br>在左側控制面板最下方展開「底圖」，可自由切換為「衛星影像圖」、「地形圖」、「暗色地圖」或「簡約淺色圖」。</li>
+    <li><strong>匯出 KML / KMZ</strong>：
+      <br>點擊地圖標題旁的「⋮ (三點選單)」選擇「匯出為 KML/KMZ」，可將完整圖資匯出至 Google Earth 或其他登山 GPS 軟體。</li>
+  </ul>
+
+  <h2>5. 手機檢視與外出使用技巧</h2>
+  <div class="tip-box">
+    <strong>📱 在手機 Google 地圖 App 查看我的地圖：</strong><br>
+    開啟手機版 <strong>Google Maps App</strong> ➔ 點擊底部「<strong>已儲存 (Saved)</strong>」➔ 滑動至最右側點選「<strong>地圖 (Maps)</strong>」➔ 即可直接點開你在電腦上建立的「我的地圖」！在旅途中能隨時切換圖層、點擊景點並一鍵開啟即時導航。
+  </div>
+
+  <div class="footer">
+    文件生成時間：2026-09-23 ｜ 專案：20260625_html簡報 ｜ 檔案位置：專案根目錄
+  </div>
+
+</body>
+</html>
