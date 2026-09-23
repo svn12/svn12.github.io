@@ -2012,13 +2012,21 @@
 
       const photoToolbar = document.getElementById('photo-action-toolbar');
 
+      const btnSaveBottom = document.getElementById('btn-save-case-bottom');
+      const btnSaveTextBottom = document.getElementById('btn-save-case-bottom-text');
+
       if (isCaseEditMode) {
         viewMode.classList.add('hidden');
         editMode.classList.remove('hidden');
         if (photoToolbar) photoToolbar.classList.remove('hidden');
         if (btnEdit) {
+          btnEdit.disabled = false;
           btnEdit.className = "px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow";
           btnEditText.innerText = "儲存修改";
+        }
+        if (btnSaveBottom) {
+          btnSaveBottom.disabled = false;
+          if (btnSaveTextBottom) btnSaveTextBottom.innerText = "儲存修改";
         }
       } else {
         viewMode.classList.remove('hidden');
@@ -2036,8 +2044,13 @@
         if (drivePanel) drivePanel.classList.add('hidden');
 
         if (btnEdit) {
+          btnEdit.disabled = false;
           btnEdit.className = "px-2.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow";
           btnEditText.innerText = "編輯內容";
+        }
+        if (btnSaveBottom) {
+          btnSaveBottom.disabled = false;
+          if (btnSaveTextBottom) btnSaveTextBottom.innerText = "儲存修改";
         }
       }
     }
@@ -2129,8 +2142,14 @@
           console.error('上傳 Google 雲端失敗:', err);
           alert('部分或全部照片上傳至 Google 雲端失敗：' + err.message + '\n請確認網路連線或稍後再試。');
         } finally {
-          if (btnEditTop) btnEditTop.disabled = false;
-          if (btnSaveBottom) btnSaveBottom.disabled = false;
+          if (btnEditTop) {
+            btnEditTop.disabled = false;
+            if (btnEditTextTop) btnEditTextTop.innerText = "儲存修改";
+          }
+          if (btnSaveBottom) {
+            btnSaveBottom.disabled = false;
+            if (btnSaveTextBottom) btnSaveTextBottom.innerText = "儲存修改";
+          }
           if (uploadIndicator) uploadIndicator.classList.add('hidden');
         }
       }
