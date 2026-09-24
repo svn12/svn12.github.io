@@ -29,7 +29,8 @@
           <p class="text-xs text-slate-400">住戶提報・第三方驗收（國霖）列管・修繕比對平台</p>
         </div>
       </div>
-      <div class="flex flex-wrap items-center gap-2">
+      <!-- Desktop Actions (md:flex) -->
+      <div class="hidden md:flex flex-wrap items-center gap-2">
         <a href="品陽大苑公設缺失追蹤系統_使用說明書.pdf" target="_blank" 
            class="inline-flex items-center gap-1.5 px-3 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm rounded-lg shadow-sm transition active:scale-95 border border-rose-500/50" 
            title="開啟並下載詳細圖文使用說明書 (PDF)">
@@ -52,6 +53,53 @@
         <button onclick="exportCSV()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg border border-slate-700 transition">
           <i class="fa-solid fa-file-export"></i> 匯出 CSV
         </button>
+      </div>
+
+      <!-- Mobile Actions Bar (md:hidden) -->
+      <div class="flex md:hidden items-center justify-between gap-2 pt-2 border-t border-slate-800">
+        <button onclick="openModal()" class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm transition">
+          <i class="fa-solid fa-plus"></i> 新增缺失項目
+        </button>
+        <div class="relative">
+          <button type="button" id="mobile-menu-btn" onclick="toggleMobileMenu()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg border border-slate-700 transition active:scale-95">
+            <i class="fa-solid fa-bars"></i>
+            <span>選單</span>
+            <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" id="mobile-menu-arrow"></i>
+          </button>
+
+          <!-- Mobile Dropdown Menu -->
+          <div id="mobile-dropdown-menu" class="hidden absolute right-0 mt-2 w-56 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-50 py-1.5 divide-y divide-slate-700/60 animate-in fade-in zoom-in-95 duration-150">
+            <div class="py-1">
+              <a href="品陽大苑公設缺失追蹤系統_使用說明書.pdf" target="_blank" onclick="toggleMobileMenu(false)"
+                 class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-rose-300 hover:bg-slate-700/80 font-medium transition">
+                <i class="fa-solid fa-book-open w-4 text-rose-400"></i>
+                <span>📖 使用手冊 (PDF)</span>
+              </a>
+              <a href="https://drive.google.com/drive/folders/1QCEU35mD-lheqTMsrB6bla2AcD-RTtz9?usp=drive_link" target="_blank" onclick="toggleMobileMenu(false)"
+                 class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-amber-300 hover:bg-slate-700/80 font-medium transition">
+                <i class="fa-brands fa-google-drive w-4 text-amber-400"></i>
+                <span>管委會雲端硬碟</span>
+              </a>
+            </div>
+            <div class="py-1">
+              <button type="button" onclick="syncAllFromGoogleSheet(true); toggleMobileMenu(false);"
+                      class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-emerald-300 hover:bg-slate-700/80 font-medium transition text-left">
+                <i class="fa-solid fa-rotate w-4 text-emerald-400"></i>
+                <span>雲端同步</span>
+              </button>
+              <button type="button" onclick="openConfigModal(); toggleMobileMenu(false);"
+                      class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-700/80 font-medium transition text-left">
+                <i class="fa-solid fa-sliders w-4 text-indigo-400"></i>
+                <span>類別管理</span>
+              </button>
+              <button type="button" onclick="exportCSV(); toggleMobileMenu(false);"
+                      class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-700/80 font-medium transition text-left">
+                <i class="fa-solid fa-file-export w-4 text-slate-400"></i>
+                <span>匯出 CSV</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -1749,6 +1797,33 @@
     }
 
     // 將各種 Google Drive 分享連結或 ID 自動轉換為免登入直接渲染圖片的 URL
+    // 手機版下拉選單切換
+    function toggleMobileMenu(forceState) {
+      const menu = document.getElementById('mobile-dropdown-menu');
+      const arrow = document.getElementById('mobile-menu-arrow');
+      if (!menu) return;
+      const isHidden = menu.classList.contains('hidden');
+      const shouldOpen = typeof forceState === 'boolean' ? forceState : isHidden;
+      if (shouldOpen) {
+        menu.classList.remove('hidden');
+        if (arrow) arrow.classList.add('rotate-180');
+      } else {
+        menu.classList.add('hidden');
+        if (arrow) arrow.classList.remove('rotate-180');
+      }
+    }
+
+    // 點擊選單外部自動關閉
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('mobile-dropdown-menu');
+      const btn = document.getElementById('mobile-menu-btn');
+      if (menu && !menu.classList.contains('hidden')) {
+        if (!menu.contains(e.target) && !btn.contains(e.target)) {
+          toggleMobileMenu(false);
+        }
+      }
+    });
+
     function convertGoogleDriveUrl(url) {
       if (!url) return '';
       url = url.trim();
