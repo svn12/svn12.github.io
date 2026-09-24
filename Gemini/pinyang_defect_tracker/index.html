@@ -181,18 +181,39 @@
             <i class="fa-solid fa-spinner fa-spin text-[9px] mr-1"></i> 連線同步中
           </span>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <!-- 排序控制 -->
+          <div class="flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200">
+            <i class="fa-solid fa-arrow-down-short-wide text-xs text-indigo-600"></i>
+            <span class="text-xs font-semibold text-slate-600">排序：</span>
+            <select id="sort-order" onchange="renderTable()" class="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer">
+              <option value="id-desc">最新案件在最前 (DEF-067 → DEF-001)</option>
+              <option value="date-desc">最新日期在最前 (2026-09-24 → 06-01)</option>
+              <option value="id-asc">編號由小到大 (DEF-001 → DEF-067)</option>
+              <option value="date-asc">日期由舊到新 (2026-06-01 → 09-24)</option>
+            </select>
+          </div>
           <span id="sync-time-hint" class="text-xs text-slate-400 hidden sm:inline-block">正在從 Google Sheet 同步最新紀錄...</span>
-          <span class="text-xs text-slate-500">點擊任一項目查看現場相片與修繕明細</span>
+          <span class="text-xs text-slate-500 hidden md:inline-block">點擊任一項目查看現場相片與修繕明細</span>
         </div>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-sm">
           <thead>
-            <tr class="bg-slate-50 text-slate-600 font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
-              <th class="py-3 px-3">系統編號</th>
+            <tr class="bg-slate-50 text-slate-600 font-semibold text-xs uppercase tracking-wider border-b border-slate-200 select-none">
+              <th class="py-3 px-3 cursor-pointer hover:bg-slate-100 transition" onclick="toggleSortById()" title="點擊切換編號排序">
+                <span class="inline-flex items-center gap-1">
+                  <span>系統編號</span>
+                  <i id="sort-icon-id" class="fa-solid fa-sort text-slate-400 text-[10px]"></i>
+                </span>
+              </th>
               <th class="py-3 px-3">官方/立案編號</th>
-              <th class="py-3 px-3">提報日期</th>
+              <th class="py-3 px-3 cursor-pointer hover:bg-slate-100 transition" onclick="toggleSortByDate()" title="點擊切換日期排序">
+                <span class="inline-flex items-center gap-1">
+                  <span>提報日期</span>
+                  <i id="sort-icon-date" class="fa-solid fa-sort text-slate-400 text-[10px]"></i>
+                </span>
+              </th>
               <th class="py-3 px-3">區域與位置</th>
               <th class="py-3 px-3">系統類別</th>
               <th class="py-3 px-4">缺失詳情摘要</th>
@@ -2121,6 +2142,33 @@
         return matchKw && matchCat && matchArea && matchStatus;
       });
 
+      // 讀取當前選擇的排序規則（預設最新案件在最前）
+      const sortSelect = document.getElementById('sort-order');
+      const sortOrder = sortSelect ? sortSelect.value : 'id-desc';
+
+      filtered.sort((a, b) => {
+        const numA = parseInt((a.id || '').replace('DEF-', ''), 10) || 0;
+        const numB = parseInt((b.id || '').replace('DEF-', ''), 10) || 0;
+        const dateA = a.date || '';
+        const dateB = b.date || '';
+
+        if (sortOrder === 'id-desc') {
+          return numB - numA;
+        } else if (sortOrder === 'id-asc') {
+          return numA - numB;
+        } else if (sortOrder === 'date-desc') {
+          if (dateA === dateB) return numB - numA;
+          return dateB.localeCompare(dateA);
+        } else if (sortOrder === 'date-asc') {
+          if (dateA === dateB) return numA - numB;
+          return dateA.localeCompare(dateB);
+        }
+        return 0;
+      });
+
+      // 更新表頭排序箭頭圖示
+      updateSortIcons(sortOrder);
+
       currentFilteredList = filtered.length > 0 ? filtered : defectList;
       document.getElementById('filtered-count').innerText = filtered.length;
       const tbody = document.getElementById('defect-table-body');
@@ -2182,6 +2230,54 @@
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    // 更新表頭排序指示器圖示
+    function updateSortIcons(sortOrder) {
+      const iconId = document.getElementById('sort-icon-id');
+      const iconDate = document.getElementById('sort-icon-date');
+      if (iconId) {
+        if (sortOrder === 'id-desc') {
+          iconId.className = "fa-solid fa-arrow-down-9-1 text-indigo-600 text-[11px]";
+        } else if (sortOrder === 'id-asc') {
+          iconId.className = "fa-solid fa-arrow-up-1-9 text-indigo-600 text-[11px]";
+        } else {
+          iconId.className = "fa-solid fa-sort text-slate-400 text-[10px]";
+        }
+      }
+      if (iconDate) {
+        if (sortOrder === 'date-desc') {
+          iconDate.className = "fa-solid fa-arrow-down-wide-short text-indigo-600 text-[11px]";
+        } else if (sortOrder === 'date-asc') {
+          iconDate.className = "fa-solid fa-arrow-up-short-wide text-indigo-600 text-[11px]";
+        } else {
+          iconDate.className = "fa-solid fa-sort text-slate-400 text-[10px]";
+        }
+      }
+    }
+
+    // 點擊「系統編號」表頭切換：最新(desc) ⇋ 最舊(asc)
+    function toggleSortById() {
+      const sortSelect = document.getElementById('sort-order');
+      if (!sortSelect) return;
+      if (sortSelect.value === 'id-desc') {
+        sortSelect.value = 'id-asc';
+      } else {
+        sortSelect.value = 'id-desc';
+      }
+      renderTable();
+    }
+
+    // 點擊「提報日期」表頭切換：最新(desc) ⇋ 最舊(asc)
+    function toggleSortByDate() {
+      const sortSelect = document.getElementById('sort-order');
+      if (!sortSelect) return;
+      if (sortSelect.value === 'date-desc') {
+        sortSelect.value = 'date-asc';
+      } else {
+        sortSelect.value = 'date-desc';
+      }
+      renderTable();
     }
 
     function showDetail(id) {
