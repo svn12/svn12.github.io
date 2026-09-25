@@ -171,7 +171,7 @@
     <div class="header-meta">
       <div><strong>線上存取：</strong>www.jktai123.com</div>
       <div><strong>試算表庫：</strong>Google Sheet SSOT</div>
-      <div><strong>手冊版本：</strong>v2.4 (2026/09/23)</div>
+      <div><strong>手冊版本：</strong>v2.6 (2026/09/25)</div>
     </div>
   </div>
 
@@ -184,22 +184,30 @@
 
   <div class="img-container">
     <img src="manual_assets/01_overview.png" alt="系統首頁儀表板">
-    <div class="img-caption">▲ 圖 1：品陽大苑缺失追蹤系統首頁架構（頂部功能鍵、KPI統計、即時篩選與案件總表）</div>
+    <div class="img-caption">▲ 圖 1：品陽大苑缺失追蹤系統首頁架構（頂部功能鍵、KPI統計、即時篩選、最新置頂排序與案件總表）</div>
   </div>
 
   <h3>主要操作區塊說明：</h3>
   <ul>
-    <li><strong>頂部狀態列：</strong>
+    <li><strong>頂部控制導覽列：</strong>
       <ul>
+        <li><span class="badge" style="background:#ffe4e6;color:#be123c;border-color:#fecdd3;">📖 使用手冊</span>：主畫面直接點擊即刻在新分頁開啟或下載本完整圖文 PDF 說明書。</li>
         <li><span class="badge">管委會雲端硬碟</span>：一鍵快速直達管委會 Google Drive 存證資料夾。</li>
         <li><span class="badge">雲端同步</span>：強制自 Google Sheet 抓取全社區最新提報缺失與類別設定。</li>
         <li><span class="badge">類別管理</span>：增刪或微調系統分類標籤與修繕進度狀態。</li>
-        <li><span class="badge">新增缺失項目</span>：開啟快速表單登記現場新瑕疵與上傳照片。</li>
+        <li><span class="badge" style="background:#e0e7ff;color:#4338ca;border-color:#c7d2fe;">+ 新增缺失項目</span>：開啟快速表單登記現場新瑕疵與上傳照片。</li>
         <li><span class="badge">匯出 CSV</span>：一鍵匯出當前所有篩選結果為 Excel/CSV 檔案供管委會會議彙報。</li>
+        <li><strong>📱 手機版貼心優化：</strong>在手機等窄螢幕裝置上，頂部自動轉換為「＋ 新增缺失項目」與「☰ 選單 ⌵」下拉式浮動選單，版面清爽俐落且不佔垂直空間。</li>
       </ul>
     </li>
-    <li><strong>KPI 即時卡片：</strong>即時統計總提報項目數（如 65 項），以及「待處理」、「國霖驗收列管」、「建商查勘中」、「已改善待複驗」、「已結案」之分項件數。</li>
-    <li><strong>多維度篩選工具：</strong>支援「關鍵字搜尋（案號/位置/描述/提報人）」、「系統分類」、「空間區域」及「改善狀態」之即時即打即顯交叉比對。</li>
+    <li><strong>KPI 即時卡片：</strong>即時統計總提報項目數（如 67 項），以及「待處理」、「國霖驗收列管」、「建商查勘中」、「已改善待複驗」、「已結案」之分項件數。</li>
+    <li><strong>多維度篩選與最新案件置頂排序：</strong>
+      <ul>
+        <li><strong>多條件過濾：</strong>支援「關鍵字搜尋（案號/位置/描述/提報人）」、「系統分類」、「空間區域」及「改善狀態」即打即顯交叉比對。</li>
+        <li><strong>最新案件置頂（預設）：</strong>系統進入預設自動將編號最大、最新提報的案件排在最上方（DEF-067 → DEF-001），方便委員第一時間掌握最新提報。</li>
+        <li><strong>多維度排序切換：</strong>清單上方提供「排序下拉選單」，並支援直接點選表格<strong>「系統編號」</strong>或<strong>「提報日期」</strong>表頭，即可瞬間切換由新到舊或由舊到新排序。</li>
+      </ul>
+    </li>
   </ul>
 
   <!-- Page 2 -->
@@ -219,7 +227,7 @@
     <tbody>
       <tr>
         <td><strong>開啟網頁 / 按 F5 重新整理</strong></td>
-        <td>網頁載入時，底層在背景自動以無痕方式連線 Google Sheet API，自動拉取最新 65 筆資料並更新表格。</td>
+        <td>網頁載入時，底層在背景自動以無痕方式連線 Google Sheet API，自動拉取最新 67 筆資料並更新表格。</td>
         <td>平常每日查看最新狀況、或者前端介面有程式碼改版時使用。</td>
       </tr>
       <tr>
@@ -279,7 +287,7 @@
   </div>
 
   <ul>
-    <li><strong>系統編號：</strong>系統依現有資料庫自動流水編排（例如目前最新為 <code>DEF-066</code>）。</li>
+    <li><strong>系統編號：</strong>系統依現有資料庫自動流水編排（例如目前最新為 <code>DEF-068</code>）。</li>
     <li><strong>空間與位置：</strong>詳列「空間區域」（如地下室、頂樓/RF、梯廳）與「具體位置」（如 B2停車場15號車位旁連續壁）。</li>
     <li><strong>系統分類：</strong>選定主要瑕疵性質（漏水滲水、給排水系統、門禁弱電、消防安檢、土建五金、環境管理）。</li>
     <li><strong>現場相片上傳與剪貼簿貼上：</strong>
@@ -301,6 +309,29 @@
   <ul>
     <li><strong>動態擴充：</strong>可隨時新增例如「景觀植栽」、「公設弱電」等新類別，或調整自訂狀態流程。</li>
     <li><strong>雲端雙向同步：</strong>所有類別異動均同步記錄至 Google Sheet 試算表之「類別設定」工作表中，其他裝置重整後同步生效。</li>
+  </ul>
+
+  <!-- Page 5 -->
+  <div class="page-break"></div>
+
+  <h2>7. 手機行動版操作指南 (Mobile Interface)</h2>
+  <p>為方便管委會委員與住戶在現場巡檢時以手機瀏覽，系統針對行動裝置窄螢幕進行深度響應式（RWD）優化：</p>
+
+  <div class="img-container" style="max-width: 360px; margin: 12px auto;">
+    <img src="manual_assets/06_mobile_menu.png" alt="手機版下拉式選單">
+    <div class="img-caption">▲ 圖 6：手機版精簡導覽列與「☰ 選單 ⌵」下拉浮動選單</div>
+  </div>
+
+  <ul>
+    <li><strong>首頁版面精簡：</strong>頂部自動收攏多餘按鈕，僅保留核心的「＋ 新增缺失項目」與「☰ 選單 ⌵」，釋放更多垂直空間便於閱讀列表與照片。</li>
+    <li><strong>下拉式功能選單：</strong>
+      <ul>
+        <li>點擊「<strong>☰ 選單 ⌵</strong>」即可隨時展開或收合浮動功能面板。</li>
+        <li>內建：<strong>使用手冊 (PDF)</strong>、<strong>管委會雲端硬碟</strong>、<strong>雲端同步</strong>、<strong>類別管理</strong>與<strong>匯出 CSV</strong>。</li>
+        <li>點選任意項目或點擊視窗空白處，選單會自動智慧收合。</li>
+      </ul>
+    </li>
+    <li><strong>手機貼圖與拍照：</strong>支援手機直接拍照上傳、選取相簿照片，或於 LINE/剪貼簿複製圖片後點擊貼上，行動巡檢回報更便捷。</li>
   </ul>
 
 </body>
