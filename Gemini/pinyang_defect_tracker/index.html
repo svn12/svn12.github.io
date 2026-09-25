@@ -16,10 +16,12 @@
     @media print {
       @page {
         size: A4 portrait;
-        margin: 3mm 5mm !important;
+        margin: 5mm 6mm !important;
       }
       *, *::before, *::after {
         box-sizing: border-box !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
       html, body {
         width: 100% !important;
@@ -28,11 +30,9 @@
         margin: 0 !important;
         padding: 0 !important;
         background: #fff !important;
-        font-size: 8.5px !important;
-        line-height: 1.15 !important;
+        font-size: 10px !important;
+        line-height: 1.25 !important;
         overflow: hidden !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
       }
       /* 僅顯示列印視窗，隱藏其他所有網頁結構 */
       body > :not(#equipment-report-modal) {
@@ -59,6 +59,7 @@
         max-height: 100% !important;
         overflow: hidden !important;
         border-radius: 0 !important;
+        background: transparent !important;
       }
       /* 隱藏彈窗標題列、說明提示與底部按鈕 */
       #equipment-report-modal > div > div:first-child,
@@ -77,48 +78,72 @@
         position: static !important;
         width: 100% !important;
         max-width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        margin: 0 auto !important;
+        padding: 4mm 6mm !important;
         box-shadow: none !important;
         border: none !important;
         page-break-after: avoid !important;
         page-break-inside: avoid !important;
-        zoom: 0.90 !important;
+        font-size: 10px !important;
+        line-height: 1.25 !important;
+      }
+      #eq-rep-print-container h1 {
+        font-size: 15px !important;
+        font-weight: 800 !important;
       }
       .rep-sec {
-        margin-bottom: 2px !important;
+        margin-bottom: 5px !important;
         page-break-inside: avoid !important;
-        border: 1px solid #475569 !important;
+        border: 1px solid #94a3b8 !important;
+        border-radius: 2px !important;
+        overflow: hidden !important;
       }
       .rep-sec-header {
-        padding: 1px 4px !important;
-        font-size: 9px !important;
+        padding: 2.5px 6px !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
         background-color: #f1f5f9 !important;
+        border-bottom: 1px solid #cbd5e1 !important;
+      }
+      .rep-sec table {
+        border-collapse: collapse !important;
+        width: 100% !important;
       }
       .rep-sec table td {
-        padding: 1px 3px !important;
-        font-size: 8.5px !important;
-        line-height: 1.15 !important;
+        padding: 3px 6px !important;
+        font-size: 9.5px !important;
+        line-height: 1.25 !important;
+        border-color: #e2e8f0 !important;
       }
       .field-label {
-        width: 80px !important;
+        width: 90px !important;
         background-color: #f8fafc !important;
         font-weight: 600 !important;
+        color: #475569 !important;
+        border-right: 1px solid #e2e8f0 !important;
       }
       .rep-checkbox-item {
         display: inline-flex !important;
         align-items: center !important;
-        gap: 2px !important;
-        font-size: 8px !important;
-        line-height: 1.1 !important;
+        gap: 3px !important;
+        font-size: 9.5px !important;
+        line-height: 1.2 !important;
+        color: #1e293b !important;
       }
       .rep-checkbox-item input {
-        margin: 0 1px 0 0 !important;
-        transform: scale(0.75) !important;
+        margin: 0 !important;
+        transform: scale(0.9) !important;
+        accent-color: #0284c7 !important;
       }
       .rep-sign-box {
-        min-height: 38px !important;
-        padding: 2px !important;
+        min-height: 48px !important;
+        padding: 4px 6px !important;
+      }
+      .rep-sign-box .font-bold {
+        font-size: 9.5px !important;
+      }
+      .rep-sign-box .text-\[10px\] {
+        font-size: 8.5px !important;
       }
       #eq-rep-print-container input,
       #eq-rep-print-container textarea {
@@ -126,9 +151,11 @@
         background: transparent !important;
         box-shadow: none !important;
         resize: none !important;
-        color: #000 !important;
-        padding: 0 !important;
-        font-size: 8.5px !important;
+        color: #0f172a !important;
+        padding: 1px 2px !important;
+        font-size: 9.5px !important;
+        font-family: inherit !important;
+        line-height: 1.25 !important;
       }
     }</style>
 </head>
