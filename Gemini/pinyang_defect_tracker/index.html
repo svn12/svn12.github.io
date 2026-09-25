@@ -2288,6 +2288,10 @@
       currentDetailDefect = item;
       savedDetailPhotos = Array.isArray(item.photos) ? [...item.photos] : []; // 備份原始照片，若取消或直接關閉時完整還原
       pendingUploadFiles = [];
+      const modalIdEl = document.getElementById('modal-id');
+      if (modalIdEl) {
+        modalIdEl.innerText = item.id + (item.official_id && item.official_id !== '-' ? ` 【${item.official_id}】` : '');
+      }
       document.getElementById('modal-title').innerText = item.loc;
       document.getElementById('modal-date').innerText = item.date;
       document.getElementById('modal-area').innerText = `${item.area} (${item.loc})`;
