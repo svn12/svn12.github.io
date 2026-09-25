@@ -3799,8 +3799,31 @@
       const container = document.getElementById('eq-rep-print-container');
       if (!container) return;
 
-      // 無論 Mac 或 iPadOS，全面採用原頁面極致精確的 @media print 輸出，避免新開視窗遺失 Tailwind 或計算誤差
+      // 取得單據編號與日期以設定匯出/列印 PDF 檔名
+      const docIdEl = document.getElementById('rep-doc-id');
+      const docId = docIdEl ? docIdEl.innerText.trim() : 'EQ-REP';
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const printDate = `${yyyy}${mm}${dd}`;
+
+      // 暫存原網頁標題，改為「單據編號_列印日期」作為 PDF 預設檔名
+      const originalTitle = document.title;
+      document.title = `${docId}_${printDate}`;
+
+      // 列印完成或取消後自動還原網頁標題
+      const restoreTitle = () => {
+        document.title = originalTitle;
+        window.removeEventListener('afterprint', restoreTitle);
+      };
+      window.addEventListener('afterprint', restoreTitle);
+
+      // 無論 Mac 或 iPadOS，全面採用原頁面極致精確的 @media print 輸出
       window.print();
+
+      // 針對部分瀏覽器未正常觸發 afterprint 之備援還原
+      setTimeout(restoreTitle, 2000);
     }
 
     function exportCSV() {
