@@ -16,7 +16,10 @@
     @media print {
       @page {
         size: A4 portrait;
-        margin: 6mm 8mm;
+        margin: 5mm 6mm !important;
+      }
+      *, *::before, *::after {
+        box-sizing: border-box !important;
       }
       html, body {
         width: 100% !important;
@@ -24,22 +27,25 @@
         margin: 0 !important;
         padding: 0 !important;
         background: #fff !important;
-        font-size: 11px !important;
+        font-size: 9.5px !important;
+        line-height: 1.2 !important;
         overflow: hidden !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
-      /* 隱藏除了列印容器以外的所有主體內容 */
-      body > * {
+      /* 僅顯示列印視窗，隱藏其他所有網頁結構 */
+      body > :not(#equipment-report-modal) {
         display: none !important;
       }
-      body > #equipment-report-modal {
+      #equipment-report-modal {
         display: block !important;
         position: static !important;
         background: transparent !important;
         padding: 0 !important;
         margin: 0 !important;
         width: 100% !important;
-        height: auto !important;
-        overflow: visible !important;
+        height: 100% !important;
+        overflow: hidden !important;
       }
       #equipment-report-modal > div {
         max-width: 100% !important;
@@ -52,6 +58,7 @@
         overflow: visible !important;
         border-radius: 0 !important;
       }
+      /* 隱藏彈窗標題列、說明提示與底部按鈕 */
       #equipment-report-modal > div > div:first-child,
       #equipment-report-modal > div > div:nth-child(2),
       #equipment-report-modal > div > div:last-child {
@@ -75,7 +82,41 @@
         page-break-after: avoid !important;
         page-break-inside: avoid !important;
       }
-      /* 列印時輸入框與多行文字轉為純文字底線外觀 */
+      .rep-sec {
+        margin-bottom: 2.5px !important;
+        page-break-inside: avoid !important;
+        border: 1px solid #64748b !important;
+      }
+      .rep-sec-header {
+        padding: 1px 4px !important;
+        font-size: 10px !important;
+        background-color: #f1f5f9 !important;
+      }
+      .rep-sec table td {
+        padding: 1.5px 3.5px !important;
+        font-size: 9.5px !important;
+        line-height: 1.15 !important;
+      }
+      .field-label {
+        width: 85px !important;
+        background-color: #f8fafc !important;
+        font-weight: 600 !important;
+      }
+      .rep-checkbox-item {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 2px !important;
+        font-size: 9px !important;
+        line-height: 1.1 !important;
+      }
+      .rep-checkbox-item input {
+        margin: 0 1px 0 0 !important;
+        transform: scale(0.8) !important;
+      }
+      .rep-sign-box {
+        min-height: 42px !important;
+        padding: 2px !important;
+      }
       #eq-rep-print-container input,
       #eq-rep-print-container textarea {
         border-color: transparent !important;
@@ -83,19 +124,9 @@
         box-shadow: none !important;
         resize: none !important;
         color: #000 !important;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
+        padding: 0 !important;
       }
-      /* 緊湊控制，確保 100% 單頁容納 */
-      .rep-sec {
-        margin-bottom: 5px !important;
-        page-break-inside: avoid !important;
-      }
-      .rep-sec table td {
-        padding: 3px 5px !important;
-      }
-    }
-  </style>
+    }</style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-16">
 
@@ -3764,59 +3795,66 @@
       const container = document.getElementById('eq-rep-print-container');
       if (!container) return;
 
-      const clone = container.cloneNode(true);
-      
-      const originalInputs = container.querySelectorAll('input, textarea');
-      const clonedInputs = clone.querySelectorAll('input, textarea');
-      
-      for (let i = 0; i < originalInputs.length; i++) {
-        const orig = originalInputs[i];
-        const target = clonedInputs[i];
-        if (!orig || !target) continue;
-        
-        if (orig.type === 'checkbox') {
-          if (orig.checked) {
-            target.setAttribute('checked', 'checked');
-            target.checked = true;
-          } else {
-            target.removeAttribute('checked');
-            target.checked = false;
-          }
-        } else if (orig.tagName.toLowerCase() === 'textarea') {
-          const span = document.createElement('div');
-          span.className = "text-slate-900 leading-tight whitespace-pre-wrap py-0.5 text-[10.5px]";
-          span.innerText = orig.value || '';
-          target.parentNode.replaceChild(span, target);
-        } else {
-          const span = document.createElement('span');
-          span.className = "text-slate-900 font-semibold px-0.5 text-[10.5px]";
-          span.innerText = orig.value || '';
-          target.parentNode.replaceChild(span, target);
-        }
-      }
+      // 檢查是否為 iOS / iPadOS / 行動裝置 Safari
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-      const printWin = window.open('', '_blank', 'width=850,height=1150');
-      if (!printWin) {
+      if (isIOS) {
+        // 在 iPad / iPhone 上，直接利用原頁面的 @media print 輸出，原生支援最完美且不丟失 Tailwind
         window.print();
-        return;
+      } else {
+        // 在桌面版瀏覽器上，複製一份精簡視窗列印
+        const clone = container.cloneNode(true);
+        const originalInputs = container.querySelectorAll('input, textarea');
+        const clonedInputs = clone.querySelectorAll('input, textarea');
+        
+        for (let i = 0; i < originalInputs.length; i++) {
+          const orig = originalInputs[i];
+          const target = clonedInputs[i];
+          if (!orig || !target) continue;
+          
+          if (orig.type === 'checkbox') {
+            if (orig.checked) {
+              target.setAttribute('checked', 'checked');
+              target.checked = true;
+            } else {
+              target.removeAttribute('checked');
+              target.checked = false;
+            }
+          } else if (orig.tagName.toLowerCase() === 'textarea') {
+            const span = document.createElement('div');
+            span.className = "text-slate-900 leading-tight whitespace-pre-wrap py-0.5 text-[9.5px]";
+            span.innerText = orig.value || '';
+            target.parentNode.replaceChild(span, target);
+          } else {
+            const span = document.createElement('span');
+            span.className = "text-slate-900 font-semibold px-0.5 text-[9.5px]";
+            span.innerText = orig.value || '';
+            target.parentNode.replaceChild(span, target);
+          }
+        }
+
+        const printWin = window.open('', '_blank', 'width=850,height=1150');
+        if (!printWin) {
+          window.print();
+          return;
+        }
+
+        const doc = printWin.document;
+        doc.open();
+        doc.write('<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><title>社區公有設備檢修與根因追蹤單</title><style>@page{size:A4 portrait;margin:5mm 6mm;}*,*::before,*::after{box-sizing:border-box!important;}html,body{margin:0!important;padding:0!important;background:#fff!important;color:#0f172a!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif!important;font-size:9.5px!important;line-height:1.2!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}#eq-rep-print-container{width:100%!important;max-width:100%!important;padding:0!important;margin:0!important;box-shadow:none!important;border:none!important;}.rep-sec{margin-bottom:2.5px!important;page-break-inside:avoid!important;border:1px solid #64748b!important;}.rep-sec-header{padding:1px 4px!important;font-size:10px!important;background-color:#f1f5f9!important;}.rep-sec table td{padding:1.5px 3.5px!important;font-size:9.5px!important;line-height:1.15!important;}.field-label{width:85px!important;font-weight:600!important;background-color:#f8fafc!important;}.rep-checkbox-item{display:inline-flex!important;align-items:center!important;gap:2px!important;font-size:9px!important;line-height:1.1!important;}.rep-checkbox-item input{margin:0 1px 0 0!important;transform:scale(0.8)!important;}.rep-sign-box{min-height:42px!important;padding:2px!important;}</style></head><body class="p-0"></body></html>');
+        doc.close();
+
+        const twLink = doc.createElement('script');
+        twLink.src = 'https://cdn.tailwindcss.com';
+        doc.head.appendChild(twLink);
+
+        doc.body.appendChild(doc.importNode(clone, true));
+
+        setTimeout(function() {
+          printWin.focus();
+          printWin.print();
+        }, 500);
       }
-
-      const doc = printWin.document;
-      doc.open();
-      doc.write('<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><title>社區公有設備檢修與根因追蹤單</title><style>@page { size: A4 portrait; margin: 5mm 8mm;}* { box-sizing: border-box !important;}html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; color: #0f172a !important; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif !important; font-size: 10px !important; line-height: 1.25 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}#eq-rep-print-container { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; border: none !important;}.rep-sec { margin-bottom: 3.5px !important; page-break-inside: avoid !important; border-width: 1px !important;}.rep-sec-header { padding: 1.5px 6px !important; font-size: 10.5px !important;}.rep-sec table td { padding: 1.5px 4px !important; font-size: 10px !important; line-height: 1.2 !important;}.rep-sec table td.field-label { width: 95px !important; font-weight: 600 !important; background-color: #f8fafc !important;}.rep-checkbox-item { display: inline-flex !important; align-items: center !important; gap: 2px !important; font-size: 9.5px !important; line-height: 1.15 !important;}.rep-checkbox-item input { margin: 0 1px 0 0 !important; transform: scale(0.85) !important;}.rep-sign-box { min-height: 48px !important; padding: 3px !important;}</style></head><body class="p-0"></body></html>');
-      doc.close();
-
-      // 將 Tailwind 樣式 link 與克隆內容以 DOM 方式安全注入，避免任何 HTML 字串解析衝突
-      const twLink = doc.createElement('script');
-      twLink.src = 'https://cdn.tailwindcss.com';
-      doc.head.appendChild(twLink);
-
-      doc.body.appendChild(doc.importNode(clone, true));
-
-      setTimeout(function() {
-        printWin.focus();
-        printWin.print();
-      }, 500);
     }
 
     function exportCSV() {
