@@ -123,17 +123,48 @@
         border-right: 1px solid #e2e8f0 !important;
       }
       .rep-checkbox-item {
-        display: inline-flex !important;
-        align-items: center !important;
+        display: flex !important;
+        align-items: flex-start !important;
         gap: 3px !important;
-        font-size: 9.5px !important;
-        line-height: 1.2 !important;
+        font-size: 9px !important;
+        line-height: 1.25 !important;
         color: #1e293b !important;
+        margin-bottom: 2px !important;
       }
       .rep-checkbox-item input {
-        margin: 0 !important;
+        margin: 2px 2px 0 0 !important;
         transform: scale(0.9) !important;
         accent-color: #0284c7 !important;
+        flex-shrink: 0 !important;
+      }
+      /* 強制第五區塊在列印時保持「左、右雙欄」並排，絕不折行堆疊 */
+      #eq-rep-print-container .grid-cols-1.md\:grid-cols-2 {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0 !important;
+      }
+      #eq-rep-print-container .grid-cols-1.md\:grid-cols-2 > div:first-child {
+        border-right: 1px solid #cbd5e1 !important;
+        border-bottom: none !important;
+        padding-right: 8px !important;
+        padding-top: 0 !important;
+      }
+      #eq-rep-print-container .grid-cols-1.md\:grid-cols-2 > div:last-child {
+        padding-left: 8px !important;
+        padding-top: 0 !important;
+      }
+      /* 強制第六區塊在列印時保持 4 欄並排 */
+      #eq-rep-print-container .grid-cols-2.sm\:grid-cols-4 {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 0 !important;
+      }
+      #eq-rep-print-container .grid-cols-2.sm\:grid-cols-4 > div {
+        border-right: 1px solid #cbd5e1 !important;
+        border-bottom: none !important;
+      }
+      #eq-rep-print-container .grid-cols-2.sm\:grid-cols-4 > div:last-child {
+        border-right: none !important;
       }
       .rep-sign-box {
         min-height: 48px !important;
