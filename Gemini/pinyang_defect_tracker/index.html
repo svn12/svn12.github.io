@@ -14,10 +14,86 @@
     .status-badge-已改善待複驗 { background-color: #e0e7ff; color: #4338ca; border-color: #a5b4fc; }
     .status-badge-已結案 { background-color: #dcfce7; color: #15803d; border-color: #86efac; }
     @media print {
-      body * { visibility: hidden; }
-      #eq-rep-print-container, #eq-rep-print-container * { visibility: visible; }
-      #eq-rep-print-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
-      @page { size: A4 portrait; margin: 10mm; }
+      @page {
+        size: A4 portrait;
+        margin: 6mm 8mm;
+      }
+      html, body {
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+        font-size: 11px !important;
+        overflow: hidden !important;
+      }
+      /* 隱藏除了列印容器以外的所有主體內容 */
+      body > * {
+        display: none !important;
+      }
+      body > #equipment-report-modal {
+        display: block !important;
+        position: static !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      #equipment-report-modal > div {
+        max-width: 100% !important;
+        width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        border-radius: 0 !important;
+      }
+      #equipment-report-modal > div > div:first-child,
+      #equipment-report-modal > div > div:nth-child(2),
+      #equipment-report-modal > div > div:last-child {
+        display: none !important;
+      }
+      #equipment-report-modal > div > div:nth-child(3) {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        overflow: visible !important;
+      }
+      #eq-rep-print-container {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      /* 列印時輸入框與多行文字轉為純文字底線外觀 */
+      #eq-rep-print-container input,
+      #eq-rep-print-container textarea {
+        border-color: transparent !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        resize: none !important;
+        color: #000 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+      }
+      /* 緊湊控制，確保 100% 單頁容納 */
+      .rep-sec {
+        margin-bottom: 5px !important;
+        page-break-inside: avoid !important;
+      }
+      .rep-sec table td {
+        padding: 3px 5px !important;
+      }
     }
   </style>
 </head>
@@ -467,7 +543,7 @@
       <div class="p-4 sm:p-6 overflow-y-auto bg-slate-100">
         <div id="eq-rep-print-container" class="bg-white p-6 sm:p-8 rounded-xl shadow-md border border-slate-200 max-w-[210mm] mx-auto text-slate-900 font-sans text-xs leading-normal">
           <!-- Document Header -->
-          <div class="border-b-2 border-slate-900 pb-3 mb-3">
+          <div class="border-b-2 border-slate-900 pb-1.5 mb-2">
             <div class="flex justify-between items-start">
               <div>
                 <h1 class="text-lg sm:text-xl font-black tracking-wide text-slate-900">社區公有設備檢修與根因追蹤表</h1>
@@ -481,7 +557,7 @@
           </div>
 
           <!-- Section 1: 基本資料 -->
-          <div class="mb-3 border border-slate-400 rounded-xs overflow-hidden">
+          <div class="rep-sec mb-2 border border-slate-400 rounded-xs overflow-hidden">
             <div class="bg-slate-100 px-3 py-1 font-bold text-slate-800 flex justify-between items-center border-b border-slate-300">
               <span>一、設備與檢修基本資料</span>
               <span class="text-[10px] text-sky-700 font-semibold">基本資訊</span>
@@ -511,7 +587,7 @@
           </div>
 
           <!-- Section 2: 現象與原因診斷 -->
-          <div class="mb-3 border border-slate-400 rounded-xs overflow-hidden">
+          <div class="rep-sec mb-2 border border-slate-400 rounded-xs overflow-hidden">
             <div class="bg-slate-100 px-3 py-1 font-bold text-slate-800 flex justify-between items-center border-b border-slate-300">
               <span>二、故障現象與原因分析（出了什麼問題？為什麼出問題？）</span>
               <span class="text-[10px] text-sky-700 font-semibold">現象與診斷</span>
@@ -535,7 +611,7 @@
           </div>
 
           <!-- Section 3: 現場處置紀錄與決策依據 -->
-          <div class="mb-3 border border-slate-400 rounded-xs overflow-hidden">
+          <div class="rep-sec mb-2 border border-slate-400 rounded-xs overflow-hidden">
             <div class="bg-slate-100 px-3 py-1 font-bold text-slate-800 flex justify-between items-center border-b border-slate-300">
               <span>三、現場處置紀錄與決策依據（當下怎麼處理？為什麼這樣處理？）</span>
               <span class="text-[10px] text-sky-700 font-semibold">處置過程</span>
@@ -563,7 +639,7 @@
           </div>
 
           <!-- Section 4: 檢修結果與複檢規劃 -->
-          <div class="mb-3 border border-slate-400 rounded-xs overflow-hidden">
+          <div class="rep-sec mb-2 border border-slate-400 rounded-xs overflow-hidden">
             <div class="bg-slate-100 px-3 py-1 font-bold text-slate-800 flex justify-between items-center border-b border-slate-300">
               <span>四、檢修結果與複檢規劃</span>
               <span class="text-[10px] text-sky-700 font-semibold">狀態追蹤</span>
@@ -611,7 +687,7 @@
           </div>
 
           <!-- Section 5: 例行檢修漏檢根因分析與防範機制 -->
-          <div class="mb-3 border border-slate-400 rounded-xs overflow-hidden">
+          <div class="rep-sec mb-2 border border-slate-400 rounded-xs overflow-hidden">
             <div class="bg-slate-100 px-3 py-1 font-bold text-slate-800 flex justify-between items-center border-b border-slate-300">
               <span>五、例行檢修漏檢根因分析與防範機制（為什麼沒抓到？如何避免重演？）</span>
               <span class="text-[10px] text-sky-700 font-semibold">管理與SOP回饋</span>
@@ -647,39 +723,39 @@
           </div>
 
           <!-- Section 6: 多方確認與簽核軌跡 -->
-          <div class="mb-4 border border-slate-400 rounded-xs overflow-hidden">
+          <div class="rep-sec mb-2 border border-slate-400 rounded-xs overflow-hidden">
             <div class="bg-slate-100 px-3 py-1 font-bold text-slate-800 flex justify-between items-center border-b border-slate-300">
               <span>六、多方確認與簽核軌跡</span>
               <span class="text-[10px] text-sky-700 font-semibold">責任簽章</span>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-300 text-[11px] p-2 bg-white min-h-[90px]">
+            <div class="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-300 text-[11px] p-2 bg-white min-h-[68px]">
               <div class="p-1 flex flex-col justify-between">
                 <div>
                   <div class="font-bold text-slate-800">檢修廠商工程師（技術責任）</div>
                   <div class="text-[10px] text-slate-500">確認工法安全並記錄量測數據</div>
                 </div>
-                <div class="pt-6 text-slate-400 text-[10px] border-b border-dashed border-slate-300 pb-0.5">簽名：_______________</div>
+                <div class="pt-4 text-slate-400 text-[10px] border-b border-dashed border-slate-300 pb-0.5">簽名：_______________</div>
               </div>
               <div class="p-1 flex flex-col justify-between">
                 <div>
                   <div class="font-bold text-slate-800">物業管理中心／總幹事（現場驗收）</div>
                   <div class="text-[10px] text-slate-500">會同抽測並核實異常排除</div>
                 </div>
-                <div class="pt-6 text-slate-400 text-[10px] border-b border-dashed border-slate-300 pb-0.5">簽名：_______________</div>
+                <div class="pt-4 text-slate-400 text-[10px] border-b border-dashed border-slate-300 pb-0.5">簽名：_______________</div>
               </div>
               <div class="p-1 flex flex-col justify-between">
                 <div>
                   <div class="font-bold text-slate-800">管委會設備委員（審核監督）</div>
                   <div class="text-[10px] text-slate-500">審查處置合理性與複檢排程</div>
                 </div>
-                <div class="pt-6 text-slate-400 text-[10px] border-b border-dashed border-slate-300 pb-0.5">簽名：_______________</div>
+                <div class="pt-4 text-slate-400 text-[10px] border-b border-dashed border-slate-300 pb-0.5">簽名：_______________</div>
               </div>
               <div class="p-1 flex flex-col justify-between">
                 <div>
                   <div class="font-bold text-slate-800">主任委員（核定結案／備查）</div>
                   <div class="text-[10px] text-slate-500">核可費用並授權列管結案</div>
                 </div>
-                <div class="pt-6 text-slate-400 text-[10px] border-b border-dashed border-slate-300 pb-0.5">簽名：_______________</div>
+                <div class="pt-4 text-slate-400 text-[10px] border-b border-dashed border-slate-300 pb-0.5">簽名：_______________</div>
               </div>
             </div>
           </div>
@@ -3685,7 +3761,94 @@
     }
 
     function printEquipmentReport() {
-      window.print();
+      const container = document.getElementById('eq-rep-print-container');
+      if (!container) return;
+
+      // 讀取當前表單所有動態填寫的值與勾選狀態
+      const clone = container.cloneNode(true);
+      
+      // 將 input / textarea 的 value 轉為純文字，確保列印 100% 完整顯示且不佔用游標高度
+      const originalInputs = container.querySelectorAll('input, textarea');
+      const clonedInputs = clone.querySelectorAll('input, textarea');
+      
+      for (let i = 0; i < originalInputs.length; i++) {
+        const orig = originalInputs[i];
+        const target = clonedInputs[i];
+        if (!orig || !target) continue;
+        
+        if (orig.type === 'checkbox') {
+          if (orig.checked) {
+            target.setAttribute('checked', 'checked');
+            target.checked = true;
+          } else {
+            target.removeAttribute('checked');
+            target.checked = false;
+          }
+        } else if (orig.tagName.toLowerCase() === 'textarea') {
+          const span = document.createElement('div');
+          span.className = "text-slate-900 leading-tight whitespace-pre-wrap py-0.5 text-[10.5px]";
+          span.innerText = orig.value || '';
+          target.parentNode.replaceChild(span, target);
+        } else {
+          const span = document.createElement('span');
+          span.className = "text-slate-900 font-semibold px-0.5 text-[10.5px]";
+          span.innerText = orig.value || '';
+          target.parentNode.replaceChild(span, target);
+        }
+      }
+
+      // 開啟專屬純淨列印視窗，保證絕對是單頁 A4 尺寸
+      const printWin = window.open('', '_blank', 'width=850,height=1150');
+      if (!printWin) {
+        window.print();
+        return;
+      }
+
+      printWin.document.open();
+      printWin.document.write(`
+        <!DOCTYPE html>
+        <html lang="zh-TW">
+        <head>
+          <meta charset="UTF-8">
+          <title>社區公有設備檢修與根因追蹤單_${document.getElementById('rep-doc-id') ? document.getElementById('rep-doc-id').innerText : 'EQ-REP'}</title>
+          <script src="https://cdn.tailwindcss.com"></script>
+          <style>
+            @page {
+              size: A4 portrait;
+              margin: 8mm 10mm;
+            }
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
+              background: #fff;
+              color: #0f172a;
+              margin: 0;
+              padding: 0;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .rep-sec {
+              margin-bottom: 6px !important;
+              page-break-inside: avoid !important;
+            }
+            .rep-sec table td {
+              padding: 2.5px 4px !important;
+            }
+          </style>
+        </head>
+        <body class="p-0">
+          ${clone.outerHTML}
+          <script>
+            window.onload = function() {
+              setTimeout(function() {
+                window.focus();
+                window.print();
+              }, 400);
+            };
+          </script>
+        </body>
+        </html>
+      `);
+      printWin.document.close();
     }
 
     function exportCSV() {
