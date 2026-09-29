@@ -620,6 +620,9 @@
           <h3 class="text-sm sm:text-base font-bold truncate">社區公有設備檢修與根因追蹤單 (A4 標準表單)</h3>
         </div>
         <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="saveEquipmentReportToSystem()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow" title="將表單檢修結果與處置直接更新回追蹤系統">
+            <i class="fa-solid fa-floppy-disk"></i> <span>儲存回系統</span>
+          </button>
           <button type="button" onclick="printEquipmentReport()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow">
             <i class="fa-solid fa-print"></i> <span>列印 / 匯出 PDF</span>
           </button>
@@ -869,8 +872,11 @@
 
       <!-- Modal Footer -->
       <div class="px-5 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0">
-        <span class="text-xs text-slate-500">可使用瀏覽器內建列印對話框儲存為 PDF 或直接發送實體印表機。</span>
+        <span class="text-xs text-slate-500">修改檢修結果或處置說明後，可直接儲存同步回追蹤清單，或匯出為 PDF 簽核單。</span>
         <div class="flex items-center gap-2">
+          <button type="button" onclick="saveEquipmentReportToSystem()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow-sm transition flex items-center gap-1.5 active:scale-95">
+            <i class="fa-solid fa-floppy-disk"></i> 儲存並同步回系統
+          </button>
           <button type="button" onclick="printEquipmentReport()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm transition flex items-center gap-1.5">
             <i class="fa-solid fa-print"></i> 列印 / 匯出 PDF
           </button>
@@ -4045,11 +4051,147 @@
 
       const modalEl = document.getElementById('equipment-report-modal');
       if (modalEl) modalEl.classList.remove('hidden');
+
+      // 初始化檢修結果單選連動監聽
+      initReportCheckboxes();
+    }
+
+    function initReportCheckboxes() {
+      const chkDone = document.getElementById('res-chk-done');
+      const chkTemp = document.getElementById('res-chk-temp');
+      const chkMaterial = document.getElementById('res-chk-material');
+      const chkVendor = document.getElementById('res-chk-vendor');
+      const chkRecheckYes = document.getElementById('res-chk-recheck-yes');
+      const chkRecheckNo = document.getElementById('res-chk-recheck-no');
+
+      const resultCheckboxes = [chkDone, chkTemp, chkMaterial, chkVendor];
+      resultCheckboxes.forEach(chk => {
+        if (!chk) return;
+        chk.onclick = () => {
+          if (chk.checked) {
+            resultCheckboxes.forEach(other => {
+              if (other && other !== chk) other.checked = false;
+            });
+            // 若勾選完全修復，預設將是否需要複檢設為「否」
+            if (chk === chkDone) {
+              if (chkRecheckNo) chkRecheckNo.checked = true;
+              if (chkRecheckYes) chkRecheckYes.checked = false;
+            } else {
+              // 暫時恢復、待料或待原廠檢測，預設需要複檢
+              if (chkRecheckYes) chkRecheckYes.checked = true;
+              if (chkRecheckNo) chkRecheckNo.checked = false;
+            }
+          }
+        };
+      });
+
+      if (chkRecheckYes && chkRecheckNo) {
+        chkRecheckYes.onclick = () => {
+          if (chkRecheckYes.checked) chkRecheckNo.checked = false;
+        };
+        chkRecheckNo.onclick = () => {
+          if (chkRecheckNo.checked) chkRecheckYes.checked = false;
+        };
+      }
     }
 
     function closeEquipmentReportModal() {
       const modalEl = document.getElementById('equipment-report-modal');
       if (modalEl) modalEl.classList.add('hidden');
+    }
+
+    // 將追蹤單編修結果與檢修結論正式同步回大樓公設缺失追蹤系統
+    function saveEquipmentReportToSystem() {
+      if (!currentReportDefect) {
+        alert('未指定對應之缺失案件！');
+        return;
+      }
+
+      // 1. 取得檢修結論與連動狀態
+      const chkDone = document.getElementById('res-chk-done');
+      const chkTemp = document.getElementById('res-chk-temp');
+      const chkMaterial = document.getElementById('res-chk-material');
+      const chkVendor = document.getElementById('res-chk-vendor');
+      const chkRecheckYes = document.getElementById('res-chk-recheck-yes');
+      const chkRecheckNo = document.getElementById('res-chk-recheck-no');
+
+      let newStatus = currentReportDefect.status;
+      let resultText = '';
+      if (chkDone && chkDone.checked) {
+        newStatus = '已結案';
+        resultText = '完全修復 (驗收通過結案)';
+      } else if (chkTemp && chkTemp.checked) {
+        newStatus = '已改善待複驗';
+        resultText = '暫時恢復 (列管待複驗)';
+      } else if (chkMaterial && chkMaterial.checked) {
+        newStatus = '改善中';
+        resultText = '待料更換中';
+      } else if (chkVendor && chkVendor.checked) {
+        newStatus = '改善中';
+        resultText = '待原廠專業檢測中';
+      }
+
+      // 2. 取得現場處置與說明欄位
+      const causeDesc = document.getElementById('rep-cause-desc') ? document.getElementById('rep-cause-desc').value.trim() : '';
+      const act1 = document.getElementById('rep-act-1') ? document.getElementById('rep-act-1').value.trim() : '';
+      const act1Why = document.getElementById('rep-act-1-why') ? document.getElementById('rep-act-1-why').value.trim() : '';
+      const causeReason = document.getElementById('rep-cause-reason') ? document.getElementById('rep-cause-reason').value.trim() : '';
+      const nextDate = document.getElementById('rep-next-date') ? document.getElementById('rep-next-date').value.trim() : '';
+
+      // 若使用者在表單有修改缺失描述，同步更新
+      if (causeDesc && causeDesc !== currentReportDefect.desc) {
+        currentReportDefect.desc = causeDesc;
+      }
+
+      // 3. 組合最新結構化維修進度軌跡
+      const now = new Date();
+      const dateStr = `${now.getMonth() + 1}/${now.getDate()}`;
+      let logPart = `【${dateStr} 檢修追蹤單紀錄】：`;
+      if (act1) logPart += `處置：${act1}；`;
+      if (resultText) logPart += `檢修結論：${resultText}；`;
+      if (chkRecheckYes && chkRecheckYes.checked && nextDate) {
+        logPart += `預約下次複驗：${nextDate}；`;
+      }
+      if (causeReason && !currentReportDefect.progress.includes(causeReason.substring(0, 20))) {
+        logPart += `原因研判：${causeReason.substring(0, 50)}...；`;
+      }
+      logPart = logPart.replace(/；$/, '');
+
+      // 更新進度與狀態
+      currentReportDefect.status = newStatus;
+      if (currentReportDefect.progress) {
+        currentReportDefect.progress = `${currentReportDefect.progress}；${logPart}`;
+      } else {
+        currentReportDefect.progress = logPart;
+      }
+
+      // 4. 更新系統全局資料與畫面重繪
+      saveData();
+      renderTable();
+      updateDashboardStats();
+
+      // 若當前詳情彈窗正打開著該筆案件，即時刷新詳情視窗
+      if (currentDetailDefect && currentDetailDefect.id === currentReportDefect.id) {
+        currentDetailDefect.status = newStatus;
+        currentDetailDefect.desc = currentReportDefect.desc;
+        currentDetailDefect.progress = currentReportDefect.progress;
+        
+        const descEl = document.getElementById('modal-desc');
+        if (descEl) descEl.innerText = currentDetailDefect.desc;
+        const progEl = document.getElementById('modal-progress');
+        if (progEl) progEl.innerText = currentDetailDefect.progress;
+        
+        const sel = document.getElementById('modal-status-select');
+        if (sel) sel.value = newStatus;
+
+        const badge = document.getElementById('modal-status-badge');
+        if (badge) {
+          const style = getStatusBadgeStyle(newStatus);
+          badge.innerHTML = `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${style.bg} ${style.text} ${style.border} border">${newStatus}</span>`;
+        }
+      }
+
+      alert(`🎉 檢修追蹤單已成功儲存回系統！\n\n- 案件編號：${currentReportDefect.id}\n- 更新狀態：${newStatus}\n- 最新進度：已自動記錄至修繕軌跡。\n\n大樓總表與儀表板已即時刷新！`);
     }
 
     function printEquipmentReport() {
