@@ -171,7 +171,7 @@
     <div class="header-meta">
       <div><strong>線上存取：</strong>www.jktai123.com</div>
       <div><strong>試算表庫：</strong>Google Sheet SSOT</div>
-      <div><strong>手冊版本：</strong>v2.6 (2026/09/25)</div>
+      <div><strong>手冊版本：</strong>v2.7 (2026/09/30)</div>
     </div>
   </div>
 
@@ -196,15 +196,16 @@
         <li><span class="badge">雲端同步</span>：強制自 Google Sheet 抓取全社區最新提報缺失與類別設定。</li>
         <li><span class="badge">類別管理</span>：增刪或微調系統分類標籤與修繕進度狀態。</li>
         <li><span class="badge" style="background:#e0e7ff;color:#4338ca;border-color:#c7d2fe;">+ 新增缺失項目</span>：開啟快速表單登記現場新瑕疵與上傳照片。</li>
+        <li><span class="badge" style="background:#0284c7;color:#ffffff;border-color:#0369a1;">📄 檢修追蹤單</span>：開啟「社區公有設備檢修與根因追蹤表」標準 A4 單據產生器。</li>
         <li><span class="badge">匯出 CSV</span>：一鍵匯出當前所有篩選結果為 Excel/CSV 檔案供管委會會議彙報。</li>
         <li><strong>📱 手機版貼心優化：</strong>在手機等窄螢幕裝置上，頂部自動轉換為「＋ 新增缺失項目」與「☰ 選單 ⌵」下拉式浮動選單，版面清爽俐落且不佔垂直空間。</li>
       </ul>
     </li>
-    <li><strong>KPI 即時卡片：</strong>即時統計總提報項目數（如 67 項），以及「待處理」、「國霖驗收列管」、「建商查勘中」、「已改善待複驗」、「已結案」之分項件數。</li>
+    <li><strong>KPI 即時卡片：</strong>即時統計總提報項目數（目前累計 <strong>70 項</strong>），以及「待處理」、「國霖驗收列管」、「建商查勘中」、「已改善待複驗」、「已結案/已完成」之分項件數。</li>
     <li><strong>多維度篩選與最新案件置頂排序：</strong>
       <ul>
         <li><strong>多條件過濾：</strong>支援「關鍵字搜尋（案號/位置/描述/提報人）」、「系統分類」、「空間區域」及「改善狀態」即打即顯交叉比對。</li>
-        <li><strong>最新案件置頂（預設）：</strong>系統進入預設自動將編號最大、最新提報的案件排在最上方（DEF-067 → DEF-001），方便委員第一時間掌握最新提報。</li>
+        <li><strong>最新案件置頂（預設）：</strong>系統進入預設自動將編號最大、最新提報的案件排在最上方（DEF-070 → DEF-001），方便委員第一時間掌握最新提報。</li>
         <li><strong>多維度排序切換：</strong>清單上方提供「排序下拉選單」，並支援直接點選表格<strong>「系統編號」</strong>或<strong>「提報日期」</strong>表頭，即可瞬間切換由新到舊或由舊到新排序。</li>
       </ul>
     </li>
@@ -327,11 +328,57 @@
     <li><strong>下拉式功能選單：</strong>
       <ul>
         <li>點擊「<strong>☰ 選單 ⌵</strong>」即可隨時展開或收合浮動功能面板。</li>
-        <li>內建：<strong>使用手冊 (PDF)</strong>、<strong>管委會雲端硬碟</strong>、<strong>雲端同步</strong>、<strong>類別管理</strong>與<strong>匯出 CSV</strong>。</li>
+        <li>內建：<strong>使用手冊 (PDF)</strong>、<strong>管委會雲端硬碟</strong>、<strong>雲端同步</strong>、<strong>類別管理</strong>、<strong>檢修追蹤單</strong>與<strong>匯出 CSV</strong>。</li>
         <li>點選任意項目或點擊視窗空白處，選單會自動智慧收合。</li>
       </ul>
     </li>
     <li><strong>手機貼圖與拍照：</strong>支援手機直接拍照上傳、選取相簿照片，或於 LINE/剪貼簿複製圖片後點擊貼上，行動巡檢回報更便捷。</li>
+  </ul>
+
+  <!-- Page 6 -->
+  <div class="page-break"></div>
+
+  <h2>8. 社區公有設備檢修與根因追蹤單 (A4 標準表單)</h2>
+  <p>為落實管委會標準表單作業規範，本系統全面內建<strong>「社區公有設備檢修與根因追蹤單」</strong>（單號規範：<code>EQ-REP-YYYY-xxxx</code>），專供重要公設設備檢修、廠商回覆、管委會內部簽核與根因防範作業使用：</p>
+
+  <div class="img-container">
+    <img src="manual_assets/07_equipment_report.png" alt="社區公有設備檢修與根因追蹤單">
+    <div class="img-caption">▲ 圖 7：社區公有設備檢修與根因追蹤單（自動帶入案件資料、支援現場即打即改、六大維度標準化檢修表單）</div>
+  </div>
+
+  <h3>功能特色與六大維度架構：</h3>
+  <ul>
+    <li><strong>多重便捷入口：</strong>
+      <ul>
+        <li><strong>總表捷徑：</strong>點擊清單每一列最右側操作欄的 <span class="badge" style="background:#0284c7;color:#ffffff;border-color:#0369a1;">📄</span> 單據圖示，立即帶入該案件自動生成單據。</li>
+        <li><strong>案件詳情 Header：</strong>檢視任一案件時，頂部直接提供「檢修追蹤單」按鈕。</li>
+        <li><strong>全域導覽列：</strong>頂部選單與手機下拉選單隨時可開啟「檢修追蹤單」，並支援快速切換任意案件。</li>
+      </ul>
+    </li>
+    <li><strong>自動化欄位智慧推斷：</strong>
+      <ul>
+        <li><strong>單據編號：</strong>自動轉換為社區標準規範，如 <code>DEF-066</code> 自動編碼為 <code>EQ-REP-2026-0066</code>。</li>
+        <li><strong>協力廠商智慧推斷：</strong>系統依空間與系統分類自動帶入專業廠商（如日立永大電梯、國霖機電、水電工務等）。</li>
+        <li><strong>現象與處置完整帶入：</strong>報修現象、建商歷次改善進度、會同人員皆自動填入對應欄位，大幅減少重打文書時間。</li>
+      </ul>
+    </li>
+    <li><strong>六大標準管理維度：</strong>
+      <ol>
+        <li><strong>設備與檢修基本資料：</strong>設備空間名稱、日期時間、協力廠商、檢修人員職稱及管委會會同人。</li>
+        <li><strong>故障現象與原因分析：</strong>報修原由、初步研判與現場實際狀態。</li>
+        <li><strong>現場處置紀錄與決策依據：</strong>第一時間處置作為與決策理由（如保障公共安全、安排後續備料）。</li>
+        <li><strong>檢修結果與複檢規劃：</strong>完全修復/暫時恢復/待料中/待原廠檢測、是否列管複檢、下次預約時間及附件憑據清單。</li>
+        <li><strong>例行檢修漏檢根因分析（管理與 SOP 回饋）：</strong>可直接於線上勾選制度、人員或巡檢盲點，並填寫長效防範對策。</li>
+        <li><strong>多方確認與簽核軌跡：</strong>預設「檢修工程師」、「社區總幹事」、「設備規劃委員」、「主任委員」四方橫向簽名蓋章欄位。</li>
+      </ol>
+    </li>
+    <li><strong>極致 A4 單頁列印與 PDF 檔名規範化（Mac / iPad 雙向完美支援）：</strong>
+      <ul>
+        <li><strong>100% 版面一致：</strong>徹底解決列印模式下雙欄折行堆疊問題，以精確 CSS Print 規則確保螢幕所見與列印結果 1:1 左右對稱。</li>
+        <li><strong>Page 1 of 1 單頁保證：</strong>內建微縮版面設計，徹底杜絕跨頁與空白第 2 頁。</li>
+        <li><strong>PDF 儲存自動命名：</strong>點擊「列印 / 匯出 PDF」時，系統動態將網頁標題代換為 <code>[單據編號]_[列印日期]</code>（例如 <code>EQ-REP-2026-0066_20260930.pdf</code>），儲存 PDF 時自動成為標準檔名，列印結束後秒級還原網頁原始標題。</li>
+      </ul>
+    </li>
   </ul>
 
 </body>
