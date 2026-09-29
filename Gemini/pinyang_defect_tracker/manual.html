@@ -196,7 +196,8 @@
         <li><span class="badge">雲端同步</span>：強制自 Google Sheet 抓取全社區最新提報缺失與類別設定。</li>
         <li><span class="badge">類別管理</span>：增刪或微調系統分類標籤與修繕進度狀態。</li>
         <li><span class="badge" style="background:#e0e7ff;color:#4338ca;border-color:#c7d2fe;">+ 新增缺失項目</span>：開啟快速表單登記現場新瑕疵與上傳照片。</li>
-        <li><span class="badge" style="background:#0284c7;color:#ffffff;border-color:#0369a1;">📄 檢修追蹤單</span>：開啟「社區公有設備檢修與根因追蹤表」標準 A4 單據產生器。</li>
+        <li><span class="badge">檢修追蹤單</span>：開啟「社區公有設備檢修與根因追蹤表」標準 A4 單據產生器。</li>
+        <li><span class="badge" style="background:#0284c7;color:#ffffff;border-color:#0369a1;">🕒 歷史更新記錄</span>：開啟全系統歷史更新履歷彈窗，即時查看每日巡檢結論、重大修繕結案與版本歷程。</li>
         <li><span class="badge">匯出 CSV</span>：一鍵匯出當前所有篩選結果為 Excel/CSV 檔案供管委會會議彙報。</li>
         <li><strong>📱 手機版貼心優化：</strong>在手機等窄螢幕裝置上，頂部自動轉換為「＋ 新增缺失項目」與「☰ 選單 ⌵」下拉式浮動選單，版面清爽俐落且不佔垂直空間。</li>
       </ul>
@@ -328,7 +329,7 @@
     <li><strong>下拉式功能選單：</strong>
       <ul>
         <li>點擊「<strong>☰ 選單 ⌵</strong>」即可隨時展開或收合浮動功能面板。</li>
-        <li>內建：<strong>使用手冊 (PDF)</strong>、<strong>管委會雲端硬碟</strong>、<strong>雲端同步</strong>、<strong>類別管理</strong>、<strong>檢修追蹤單</strong>與<strong>匯出 CSV</strong>。</li>
+        <li>內建：<strong>使用手冊 (PDF)</strong>、<strong>歷史更新記錄</strong>、<strong>管委會雲端硬碟</strong>、<strong>雲端同步</strong>、<strong>類別管理</strong>、<strong>檢修追蹤單</strong>與<strong>匯出 CSV</strong>。</li>
         <li>點選任意項目或點擊視窗空白處，選單會自動智慧收合。</li>
       </ul>
     </li>
@@ -379,6 +380,30 @@
         <li><strong>PDF 儲存自動命名：</strong>點擊「列印 / 匯出 PDF」時，系統動態將網頁標題代換為 <code>[單據編號]_[列印日期]</code>（例如 <code>EQ-REP-2026-0066_20260930.pdf</code>），儲存 PDF 時自動成為標準檔名，列印結束後秒級還原網頁原始標題。</li>
       </ul>
     </li>
+  </ul>
+
+  <!-- Page 7 -->
+  <div class="page-break"></div>
+
+  <h2>9. 歷史更新記錄模組 (Changelog Live Log)</h2>
+  <p>為方便管委會委員、監委與全體住戶隨時檢閱社區公設修繕的最新里程碑、排程巡檢結論與系統改版紀錄，系統於頂部導覽列全面實裝<strong>「歷史更新記錄」</strong>功能：</p>
+
+  <div class="img-container">
+    <img src="manual_assets/08_changelog_modal.png" alt="歷史更新記錄彈窗">
+    <div class="img-caption">▲ 圖 8：歷史更新記錄檢視視窗（整合每日巡檢進度、重大案件修繕結案與版本歷史時間軸）</div>
+  </div>
+
+  <h3>主要功能與資訊維度：</h3>
+  <ul>
+    <li><strong>一鍵開啟時間軸：</strong>點擊桌機導覽列的 <span class="badge" style="background:#0284c7;color:#ffffff;border-color:#0369a1;">🕒 歷史更新記錄</span> 按鈕（或手機版選單內的「歷史更新記錄」），即可呼叫全螢幕時間軸彈窗。</li>
+    <li><strong>三大關鍵資訊同步呈現：</strong>
+      <ol>
+        <li><strong>每日巡檢動態：</strong>即時呈現每日 23:00 自動喚醒檢視 LINE 社群之住戶反映與公務公告排查結果。</li>
+        <li><strong>案件修繕重大進展：</strong>精確記錄重大公設案件（如 DEF-066 客梯按鍵與貨梯許可證、DEF-069 地下室門禁警報與車道 e-tag 修復）之廠商回覆、檢測結論與結案狀態。</li>
+        <li><strong>功能版本迭代：</strong>記載檢修追蹤表單、雙欄列印優化、使用手冊升級等功能里程碑。</li>
+      </ol>
+    </li>
+    <li><strong>跨載具無障礙閱讀：</strong>彈窗支援桌機、平板與智慧型手機自我適應縮放，並於頂部直連使用手冊 PDF，底部附帶 Google Sheet 資料源狀態提示。</li>
   </ul>
 
 </body>

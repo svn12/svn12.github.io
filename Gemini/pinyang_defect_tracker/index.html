@@ -225,8 +225,11 @@
         <button onclick="openModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm transition">
           <i class="fa-solid fa-plus"></i> 新增缺失項目
         </button>
-        <button onclick="openEquipmentReportModal()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-sky-700 hover:bg-sky-600 text-white font-medium text-sm rounded-lg shadow-sm transition active:scale-95" title="產生社區公有設備檢修與根因追蹤單 (A4 標準表單)">
+        <button onclick="openEquipmentReportModal()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg border border-slate-700 transition" title="產生社區公有設備檢修與根因追蹤單 (A4 標準表單)">
           <i class="fa-solid fa-file-invoice"></i> <span>檢修追蹤單</span>
+        </button>
+        <button onclick="openChangelogModal()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-sky-700 hover:bg-sky-600 text-white font-bold text-sm rounded-lg shadow-sm transition active:scale-95" title="開啟系統與社區公設修繕歷史更新記錄">
+          <i class="fa-solid fa-clock-rotate-left text-base"></i> <span>歷史更新記錄</span>
         </button>
         <button onclick="exportCSV()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg border border-slate-700 transition">
           <i class="fa-solid fa-file-export"></i> 匯出 CSV
@@ -253,6 +256,11 @@
                 <i class="fa-solid fa-book-open w-4 text-rose-400"></i>
                 <span>使用手冊 (PDF)</span>
               </a>
+              <button type="button" onclick="openChangelogModal(); toggleMobileMenu(false);"
+                      class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-sky-300 hover:bg-slate-700/80 font-medium transition text-left">
+                <i class="fa-solid fa-clock-rotate-left w-4 text-sky-400"></i>
+                <span>歷史更新記錄</span>
+              </button>
               <a href="https://drive.google.com/drive/folders/1QCEU35mD-lheqTMsrB6bla2AcD-RTtz9?usp=drive_link" target="_blank" onclick="toggleMobileMenu(false)"
                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-amber-300 hover:bg-slate-700/80 font-medium transition">
                 <i class="fa-brands fa-google-drive w-4 text-amber-400"></i>
@@ -271,8 +279,8 @@
                 <span>類別管理</span>
               </button>
               <button type="button" onclick="openEquipmentReportModal(); toggleMobileMenu(false);"
-                      class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-sky-300 hover:bg-slate-700/80 font-medium transition text-left">
-                <i class="fa-solid fa-file-invoice w-4 text-sky-400"></i>
+                      class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-700/80 font-medium transition text-left">
+                <i class="fa-solid fa-file-invoice w-4 text-slate-400"></i>
                 <span>檢修追蹤單 (A4)</span>
               </button>
               <button type="button" onclick="exportCSV(); toggleMobileMenu(false);"
@@ -1054,6 +1062,158 @@
 
       <div class="px-6 py-3 bg-slate-100 border-t border-slate-200 flex justify-end shrink-0">
         <button type="button" onclick="closeConfigModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold transition">完成關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Changelog Modal (歷史更新記錄彈窗) -->
+  <div id="changelog-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-3xl w-full shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      <!-- Header -->
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-sky-600/30 text-sky-400 flex items-center justify-center border border-sky-500/30">
+            <i class="fa-solid fa-clock-rotate-left text-base"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white flex items-center gap-2">
+              品陽大苑缺失系統｜歷史更新記錄
+              <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/30">SSOT Live Log</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">管委會公設追蹤、修繕進度與系統迭代完整履歷</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="品陽大苑公設缺失追蹤系統_使用說明書.pdf" target="_blank" 
+             class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-rose-300 border border-slate-700 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-book-open text-xs text-rose-400"></i> 使用手冊 v2.7
+          </a>
+          <button type="button" onclick="closeChangelogModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Body / Timeline Content -->
+      <div class="p-6 overflow-y-auto space-y-6 text-sm divide-y divide-slate-100">
+
+        <!-- 2026-09-30 -->
+        <div class="pt-4 first:pt-0">
+          <div class="flex items-center gap-2.5 mb-2.5">
+            <span class="px-2.5 py-1 rounded-md bg-sky-100 text-sky-800 font-bold text-xs font-mono">2026-09-30</span>
+            <span class="font-bold text-slate-800 text-sm">系統使用手冊 v2.7 發布與歷史更新記錄模組上線</span>
+            <span class="ml-auto text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">最新版本</span>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
+            <div class="flex items-start gap-2">
+              <span class="text-sky-600 font-bold">•</span>
+              <span><strong>歷史更新記錄彈窗整合</strong>：導覽列全新實裝「歷史更新記錄」快捷按鈕，隨時掌握每日 23:00 自動巡檢結論、重大公設進度與系統更新歷程。</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-sky-600 font-bold">•</span>
+              <span><strong>使用手冊 v2.7 發布</strong>：新增第 8 章「社區公有設備檢修與根因追蹤單 (A4 標準表單)」完整操作指引，更新 70 筆最新案件統計數據，並重整生成 9 頁高解析度 PDF 供委員與住戶下載。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2026-09-29 -->
+        <div class="pt-5">
+          <div class="flex items-center gap-2.5 mb-2.5">
+            <span class="px-2.5 py-1 rounded-md bg-slate-200 text-slate-800 font-bold text-xs font-mono">2026-09-29</span>
+            <span class="font-bold text-slate-800 text-sm">DEF-069 修繕完成結案 & DEF-066 貨梯許可證張貼與按鍵送檢</span>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
+            <div class="flex items-start gap-2">
+              <span class="text-emerald-600 font-bold">✔</span>
+              <span><strong>DEF-069（門禁保全系統／B3門禁警報與車道感應）➔ 已完成</strong>：宗亞資訊今日進場完成檢測，B1~B4 門禁警報問題修繕完成且實測不會誤報；汽機車道 e-tag 通行異常排查完畢。</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-amber-600 font-bold">⧖</span>
+              <span><strong>DEF-066（客梯關門鍵異常與貨梯使用許可證）➔ 改善中</strong>：永大電梯送達貨梯「建築物昇降設備使用許可證」並張貼現場影本；客梯關門按鍵持續檢測中，已向原廠申請全新按鍵待料更換。</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-blue-600 font-bold">🏢</span>
+              <span><strong>第一階段梯廳驗收展開</strong>：品陽建設依公文於上午 09:30 起進場進行九個樓層（2F、6F、8F、11F、12F、13F、14F、17F、20F）梯廳批土油漆修繕驗收。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2026-09-28 -->
+        <div class="pt-5">
+          <div class="flex items-center gap-2.5 mb-2.5">
+            <span class="px-2.5 py-1 rounded-md bg-slate-200 text-slate-800 font-bold text-xs font-mono">2026-09-28</span>
+            <span class="font-bold text-slate-800 text-sm">LINE 社群每日定時檢閱（公設無新增缺失，列管案件維持 70 筆）</span>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
+            <div class="flex items-start gap-2">
+              <span class="text-slate-500 font-bold">•</span>
+              <span>完成 23:00 自動巡檢，確認社群無新增公設報修提報，全系統案件數維持 70 筆（DEF-001 ~ DEF-070），主表與備份鏡像表同步校驗無誤。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2026-09-27 -->
+        <div class="pt-5">
+          <div class="flex items-center gap-2.5 mb-2.5">
+            <span class="px-2.5 py-1 rounded-md bg-slate-200 text-slate-800 font-bold text-xs font-mono">2026-09-27</span>
+            <span class="font-bold text-slate-800 text-sm">常駐守護定時任務上線 & 第一階段梯廳驗收公文發布</span>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
+            <div class="flex items-start gap-2">
+              <span class="text-slate-500 font-bold">•</span>
+              <span><strong>管委會正式公告</strong>：總幹事隋志宏發布實體公文，宣布 9/29 起安排第一階段梯廳驗收（共 9 個樓層梯廳）。</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-slate-500 font-bold">•</span>
+              <span><strong>定時守護任務</strong>：建立每日 23:00 自動喚醒檢閱 LINE 社群機制，雙向同步 Google Sheet、備份鏡像表與 GitHub Pages。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2026-09-26 -->
+        <div class="pt-5">
+          <div class="flex items-center gap-2.5 mb-2.5">
+            <span class="px-2.5 py-1 rounded-md bg-slate-200 text-slate-800 font-bold text-xs font-mono">2026-09-26</span>
+            <span class="font-bold text-slate-800 text-sm">新增列管 DEF-069、DEF-070 & 列印雙欄排版 100% 一致性優化</span>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
+            <div class="flex items-start gap-2">
+              <span class="text-slate-500 font-bold">•</span>
+              <span><strong>新增案件 DEF-069</strong>：B3 停車場門禁讀卡機警報發熱異常、對講機防拆警報誤觸問題。</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-slate-500 font-bold">•</span>
+              <span><strong>新增案件 DEF-070</strong>：B2 停車場各感應門片缺乏推/拉明確指示標籤，建請管委會統一張貼改善。</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-slate-500 font-bold">•</span>
+              <span><strong>列印輸出修復</strong>：修正 A4 表單列印時雙欄被瀏覽器折行為單欄之問題，確保螢幕預覽與實體列印 100% 左右對稱單頁呈現。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2026-09-25 -->
+        <div class="pt-5">
+          <div class="flex items-center gap-2.5 mb-2.5">
+            <span class="px-2.5 py-1 rounded-md bg-slate-200 text-slate-800 font-bold text-xs font-mono">2026-09-25</span>
+            <span class="font-bold text-slate-800 text-sm">「社區公有設備檢修與根因追蹤單」模組正式上線</span>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
+            <div class="flex items-start gap-2">
+              <span class="text-slate-500 font-bold">•</span>
+              <span>依據社區管理標準規範推出 <code>EQ-REP-YYYY-xxxx</code> 檢修追蹤表單，支援一鍵帶入案件資訊、例行漏檢根因勾選、四方簽名區，並支援 Mac / iPad A4 單頁列印與 PDF 自動帶入標準檔名。</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0">
+        <span class="text-xs text-slate-500">
+          <i class="fa-solid fa-database text-emerald-600 mr-1"></i>資料來源：Google Sheet（已同步累計 70 筆公設紀錄）
+        </span>
+        <button type="button" onclick="closeChangelogModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold transition">關閉視窗</button>
       </div>
     </div>
   </div>
@@ -3925,6 +4085,23 @@
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+    }
+
+    // 歷史更新記錄彈窗 (Changelog Modal) 開關
+    function openChangelogModal() {
+      const modal = document.getElementById('changelog-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeChangelogModal() {
+      const modal = document.getElementById('changelog-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
     }
 
     // Init
