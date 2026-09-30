@@ -171,7 +171,7 @@
     <div class="header-meta">
       <div><strong>線上存取：</strong>www.jktai123.com</div>
       <div><strong>試算表庫：</strong>Google Sheet SSOT</div>
-      <div><strong>手冊版本：</strong>v2.8 (2026/09/30)</div>
+      <div><strong>手冊版本：</strong>v2.9 (2026/09/30)</div>
     </div>
   </div>
 
@@ -428,8 +428,43 @@
           </ul>
         </li>
       </ol>
+  <!-- Page 8 -->
+  <div class="page-break"></div>
+
+  <h2>10. 社區公告與公文記錄模組 (Official Notices)</h2>
+  <p>為落實社區資訊公開透明，並健全管委會正式公文、驗收通知、廠商檢修進度與即時宣導事項的彙整與歷史保存，系統於主導覽列全面實裝獨立的<strong>「社區公告記錄」</strong>模組，並直接與 Google Sheet「社區公告清單」工作表即時雙向連動：</p>
+
+  <div class="img-container">
+    <img src="manual_assets/09_announcements_modal.png" alt="社區公告記錄檢視視窗">
+    <div class="img-caption">▲ 圖 9：社區公告記錄檢視視窗（整合官方公文編號、發布單位、影響範圍、關聯公設案件快速跳轉與實體公文原件查閱）</div>
+  </div>
+
+  <h3>主要功能特色與操作指引：</h3>
+  <ul>
+    <li><strong>一鍵開啟與動態計數徽章：</strong>
+      <ul>
+        <li>桌機導覽列設有 <span class="badge" style="background:#d97706;color:#ffffff;border-color:#b45309;">📢 社區公告記錄</span> 醒目按鈕，後方附帶動態數量徽章，即時呈現目前列管之公告總則數。</li>
+        <li>手機版點擊「☰ 選單 ⌵」，亦可隨時叫出獨立公告視窗，支援行動裝置無障礙流暢瀏覽。</li>
+      </ul>
     </li>
-    <li><strong>跨載具無障礙閱讀：</strong>彈窗支援桌機、平板與智慧型手機自我適應縮放，並於頂部直連使用手冊 PDF，底部附帶 Google Sheet 資料源狀態提示。</li>
+    <li><strong>多維度即時檢索與類別篩選：</strong>
+      <ul>
+        <li><strong>關鍵字搜尋：</strong>支援同時對「公告主旨」、「公告內文」、「發布單位（總幹事/秘書/主委）」或「公文編號（如 ANN-2026-0003）」進行即時毫秒級過濾。</li>
+        <li><strong>類別篩選：</strong>快速分類切換<strong>「公設驗收」</strong>、<strong>「設備檢修」</strong>、<strong>「管委宣導」</strong>與<strong>「一般行政」</strong>四大公務面向。</li>
+      </ul>
+    </li>
+    <li><strong>結構化公告卡片與跨模組案件聯動：</strong>
+      <ul>
+        <li><strong>完整公務元資料：</strong>每則公告清晰標記編號、日期、類別、執行狀態、發布單位與相關公設影響範圍。</li>
+        <li><strong>關聯公設案件快速跳轉：</strong>公告若提及具體公設缺失（如 <code>DEF-066</code>、<code>DEF-069</code>、<code>DEF-071</code>），點擊對應之關聯缺失徽章，系統自動關閉公告視窗並秒級呼叫出該公設案件的完整詳情彈窗。</li>
+        <li><strong>實體公文 1200×1700 Ultra-HD 原件直連：</strong>凡具有正式管委會大印與發文字號之公告（例如梯廳驗收公文），提供<strong>「查閱實體公文原件」</strong>按鈕，一鍵開啟向量級印刷高解析原件預覽。</li>
+      </ul>
+    </li>
+    <li><strong>雲端雙向同步與 launchd 定時守護：</strong>
+      <ul>
+        <li>公告資料庫獨立存放於官方 Google Sheet 的<strong>「社區公告清單」</strong>工作表，點擊導覽列「雲端同步」或系統開機自動排程時，自動雙向同步最新發布之公告。</li>
+      </ul>
+    </li>
   </ul>
 
 </body>

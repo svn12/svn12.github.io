@@ -228,6 +228,10 @@
         <button onclick="openChangelogModal()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-sky-700 hover:bg-sky-600 text-white font-bold text-sm rounded-lg shadow-sm transition active:scale-95" title="開啟系統與社區公設修繕歷史更新記錄">
           <i class="fa-solid fa-clock-rotate-left text-base"></i> <span>歷史更新記錄</span>
         </button>
+        <button onclick="openAnnouncementsModal()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm rounded-lg shadow-sm transition active:scale-95 border border-amber-400/40" title="開啟社區管委會正式公文、驗收公告與即時通知清單">
+          <i class="fa-solid fa-bullhorn text-base"></i> <span>社區公告記錄</span>
+          <span id="announcement-count-badge" class="px-1.5 py-0.2 bg-white/25 rounded-full text-xs font-mono">4</span>
+        </button>
         <button onclick="exportCSV()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg border border-slate-700 transition">
           <i class="fa-solid fa-file-export"></i> 匯出 CSV
         </button>
@@ -257,6 +261,12 @@
                       class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-sky-300 hover:bg-slate-700/80 font-medium transition text-left">
                 <i class="fa-solid fa-clock-rotate-left w-4 text-sky-400"></i>
                 <span>歷史更新記錄</span>
+              </button>
+              <button type="button" onclick="openAnnouncementsModal(); toggleMobileMenu(false);"
+                      class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-amber-300 hover:bg-slate-700/80 font-medium transition text-left">
+                <i class="fa-solid fa-bullhorn w-4 text-amber-400"></i>
+                <span>社區公告記錄</span>
+                <span id="mobile-announcement-count-badge" class="ml-auto px-1.5 py-0.2 bg-amber-500/20 text-amber-300 text-xs rounded-full border border-amber-500/30">4</span>
               </button>
               <a href="https://drive.google.com/drive/folders/1QCEU35mD-lheqTMsrB6bla2AcD-RTtz9?usp=drive_link" target="_blank" onclick="toggleMobileMenu(false)"
                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-amber-300 hover:bg-slate-700/80 font-medium transition">
@@ -1214,9 +1224,73 @@
       <!-- Footer -->
       <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0">
         <span class="text-xs text-slate-500">
-          <i class="fa-solid fa-database text-emerald-600 mr-1"></i>資料來源：Google Sheet（已同步累計 70 筆公設紀錄）
+          <i class="fa-solid fa-database text-emerald-600 mr-1"></i>資料來源：Google Sheet（已同步累計 71 筆公設紀錄）
         </span>
         <button type="button" onclick="closeChangelogModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold transition">關閉視窗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Announcements Modal (社區公告記錄獨立彈窗) -->
+  <div id="announcements-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      <!-- Header -->
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+            <i class="fa-solid fa-bullhorn text-base"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white flex items-center gap-2">
+              品陽大苑｜社區公告與公文記錄
+              <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30">Official Notices</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">管委會正式公文、驗收通知、設備修繕公告與即時宣導完整彙整</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeAnnouncementsModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters & Search Toolbar -->
+      <div class="px-6 py-3 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div class="flex items-center gap-2 flex-1 min-w-[200px]">
+          <div class="relative w-full max-w-xs">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+            <input type="text" id="announcement-search" oninput="renderAnnouncementsList()" placeholder="搜尋公告主旨、內文或編號..." 
+                   class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none" />
+          </div>
+          <select id="announcement-cat-filter" onchange="renderAnnouncementsList()" 
+                  class="bg-white border border-slate-300 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+            <option value="">全部公告類別</option>
+            <option value="公設驗收">公設驗收</option>
+            <option value="設備檢修">設備檢修</option>
+            <option value="管委宣導">管委宣導</option>
+            <option value="一般行政">一般行政</option>
+          </select>
+        </div>
+        <div class="text-xs text-slate-500 flex items-center gap-2">
+          <span>共 <strong id="announcements-count" class="text-amber-700 font-bold">0</strong> 筆公告記錄</span>
+          <span class="text-slate-300">|</span>
+          <span class="text-[11px] text-slate-400">已連結 Google Sheet「社區公告清單」</span>
+        </div>
+      </div>
+
+      <!-- Body / Announcements List -->
+      <div id="announcements-list-container" class="p-6 overflow-y-auto space-y-4 text-sm max-h-[60vh] divide-y divide-slate-100">
+        <!-- Announcements Rendered Here -->
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0">
+        <span class="text-xs text-slate-500 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-check text-emerald-600"></i>
+          <span>每日 23:00 自動巡檢並連線 Google Sheet 試算表即時更新</span>
+        </span>
+        <button type="button" onclick="closeAnnouncementsModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold transition">關閉視窗</button>
       </div>
     </div>
   </div>
@@ -2490,6 +2564,61 @@
     const GSHEET_DOC_ID = '1Xq-7DfZ1RtgtabUnj5KkBvDy7-5iI4z9lnBpxSmXCvI';
     const GSHEET_CONFIG_SHEET_NAME = encodeURIComponent('類別設定');
     const GSHEET_DEFECTS_SHEET_NAME = encodeURIComponent('公設缺失追蹤清單');
+    const GSHEET_ANNOUNCEMENTS_SHEET_NAME = encodeURIComponent('社區公告清單');
+
+    // 社區官方公告資料庫 (同步自 Google Sheet，並內建完整官方公告 Baseline)
+    const initialAnnouncements = [
+      {
+        id: "ANN-2026-0004",
+        date: "2026-09-29",
+        category: "設備檢修",
+        title: "B3門禁讀卡機警報排除及客貨梯許可證張貼作業",
+        issuer: "管委會物業中心（總幹事隋志宏）",
+        scope: "B3停車場門禁、全棟客梯及貨梯",
+        content: "一、宗亞資訊今日進場完成檢測，B1~B4 門禁讀卡警報問題已修復並實測無誤報；汽機車道 e-tag 通行異常排查完畢。\n二、永大電梯已送達貨梯「建築物昇降設備使用許可證」並張貼現場影本，客梯關門按鍵已向原廠申請全新按鍵待料更換中。",
+        attachment: "",
+        defect_ids: "DEF-066, DEF-069",
+        status: "已執行"
+      },
+      {
+        id: "ANN-2026-0003",
+        date: "2026-09-26",
+        category: "公設驗收",
+        title: "社區第一階段梯廳驗收事宜",
+        issuer: "品陽大苑管理委員會（總幹事隋志宏發布）",
+        scope: "2F、6F、8F、11F、12F、13F、14F、17F、20F 共九個樓層梯廳",
+        content: "品陽建設公司已經協調管委會，定於 115 年 9 月 29 日（星期二）上午 09:30 起，安排進行第一階段梯廳驗收工作。\n此次驗收樓層為：2F、6F、8F、11F、12F、13F、14F、17F、20F，共計九個樓層梯廳。\n造成不便，敬請見諒，並感謝各位住戶的配合與體諒。",
+        attachment: "https://drive.google.com/uc?id=11EdyND17oHE6PWo3Qv1eGMElrsF2ZTcI",
+        defect_ids: "DEF-071",
+        status: "現正進行"
+      },
+      {
+        id: "ANN-2026-0002",
+        date: "2026-09-25",
+        category: "管委宣導",
+        title: "高樓層公設推射窗清潔通風作業說明及關閉確認",
+        issuer: "管委會物業中心（1F秘書）",
+        scope: "全棟公設梯廳高樓層推射窗",
+        content: "住戶詢問公設高樓層推射窗開啟狀況，經物業查證係因清潔人員施作拖地作業，清潔劑藥水味較重，為加速空氣流通短暫開啟通風。現已全數巡檢確認確實關妥鎖定，請全體住戶安心。",
+        attachment: "",
+        defect_ids: "",
+        status: "已結案"
+      },
+      {
+        id: "ANN-2026-0001",
+        date: "2026-09-25",
+        category: "設備檢修",
+        title: "全棟客梯關門按鍵異常及臨時防護措施說明",
+        issuer: "品陽大苑管理委員會 / 1F物業秘書",
+        scope: "全棟客梯車廂（無障礙側及一般側）",
+        content: "針對客梯車廂關門鍵自行亮起及按鍵損傷異常，日立永大電梯師傅已到場檢修調校，左側無障礙電梯關門鍵暫停功能並張貼「待料（關）暫停使用」警語，避免住戶誤觸，待中秋連假料件到貨後進場全面更換全新組件。",
+        attachment: "",
+        defect_ids: "DEF-066",
+        status: "改善中"
+      }
+    ];
+
+    let announcementList = [...initialAnnouncements];
 
     // 建立 DEF 編號至照片的對照表 (確保從 Google Sheet 讀取或同步時現場相片不丟失)
     const photoMapping = {};
@@ -2729,9 +2858,44 @@
           }
         }
 
+        // 3. 同步社區公告清單 (Google Sheet「社區公告清單」工作表)
+        try {
+          const annResp = await fetch(`https://docs.google.com/spreadsheets/d/${GSHEET_DOC_ID}/gviz/tq?tqx=out:csv&sheet=${GSHEET_ANNOUNCEMENTS_SHEET_NAME}&nocache=${Date.now()}`);
+          if (annResp.ok) {
+            const annText = await annResp.text();
+            const annRows = parseCSV(annText);
+            if (annRows.length > 1) {
+              // 欄位順序：公告編號(0), 發布日期(1), 公告類別(2), 公告主旨(3), 發布單位(4), 相關公設/影響範圍(5), 公告內文/說明(6), 附件/公文原件(7), 關聯缺失編號(8), 狀態(9)
+              const cloudAnnouncements = [];
+              for (let i = 1; i < annRows.length; i++) {
+                const cols = annRows[i];
+                if (!cols[0]) continue;
+                cloudAnnouncements.push({
+                  id: cols[0].trim(),
+                  date: cols[1] || '',
+                  category: cols[2] || '一般行政',
+                  title: cols[3] || '',
+                  issuer: cols[4] || '',
+                  scope: cols[5] || '',
+                  content: cols[6] || '',
+                  attachment: cols[7] ? convertGoogleDriveUrl(cols[7]) : '',
+                  defect_ids: cols[8] || '',
+                  status: cols[9] || '已發布'
+                });
+              }
+              if (cloudAnnouncements.length > 0) {
+                announcementList = cloudAnnouncements;
+              }
+            }
+          }
+        } catch (annErr) {
+          console.warn('同步社區公告清單時略過或異常:', annErr);
+        }
+
         saveCategoryAndStatus();
         renderTable();
         updateDashboardStats();
+        updateAnnouncementBadges();
 
         const badge = document.getElementById('sync-status-badge');
         const timeHint = document.getElementById('sync-time-hint');
@@ -2746,7 +2910,7 @@
         }
 
         if (isManual) {
-          alert(`🎉 雲端同步完成！\n\n已自 Google Sheet 載入：\n- 缺失案件：共 ${defectList.length} 筆\n- 系統分類：共 ${categoryList.length} 項\n- 改善狀態：共 ${statusList.length} 項\n\n所有住戶即時看見一致的最新紀錄！`);
+          alert(`🎉 雲端同步完成！\n\n已自 Google Sheet 載入：\n- 缺失案件：共 ${defectList.length} 筆\n- 社區公告：共 ${announcementList.length} 則\n- 系統分類：共 ${categoryList.length} 項\n- 改善狀態：共 ${statusList.length} 項\n\n所有住戶即時看見一致的最新紀錄！`);
         }
       } catch (err) {
         console.warn('Google Sheet 雲端同步失敗，使用系統內建最新資料:', err);
@@ -4257,11 +4421,153 @@
       }
     }
 
+    // 社區公告記錄彈窗 (Announcements Modal) 開關與渲染邏輯
+    function openAnnouncementsModal() {
+      const modal = document.getElementById('announcements-modal');
+      if (modal) {
+        renderAnnouncementsList();
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeAnnouncementsModal() {
+      const modal = document.getElementById('announcements-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function updateAnnouncementBadges() {
+      const b1 = document.getElementById('announcement-count-badge');
+      const b2 = document.getElementById('mobile-announcement-count-badge');
+      if (b1) b1.innerText = announcementList.length;
+      if (b2) b2.innerText = announcementList.length;
+    }
+
+    function renderAnnouncementsList() {
+      const container = document.getElementById('announcements-list-container');
+      const countEl = document.getElementById('announcements-count');
+      const searchKw = (document.getElementById('announcement-search')?.value || '').trim().toLowerCase();
+      const catFilter = document.getElementById('announcement-cat-filter')?.value || '';
+
+      if (!container) return;
+
+      const filtered = announcementList.filter(item => {
+        if (catFilter && item.category !== catFilter) return false;
+        if (searchKw) {
+          const matchKw = (item.title || '').toLowerCase().includes(searchKw) ||
+                          (item.content || '').toLowerCase().includes(searchKw) ||
+                          (item.id || '').toLowerCase().includes(searchKw) ||
+                          (item.issuer || '').toLowerCase().includes(searchKw) ||
+                          (item.scope || '').toLowerCase().includes(searchKw);
+          if (!matchKw) return false;
+        }
+        return true;
+      });
+
+      if (countEl) countEl.innerText = filtered.length;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-slate-400">
+            <i class="fa-solid fa-bullhorn text-4xl mb-3 text-slate-300"></i>
+            <p class="font-medium text-sm">查無符合條件的公告記錄</p>
+            <p class="text-xs text-slate-400 mt-1">請嘗試更換篩選條件或關鍵字</p>
+          </div>
+        `;
+        return;
+      }
+
+      const catBadges = {
+        '公設驗收': 'bg-indigo-100 text-indigo-800 border-indigo-200',
+        '設備檢修': 'bg-sky-100 text-sky-800 border-sky-200',
+        '管委宣導': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        '一般行政': 'bg-slate-100 text-slate-800 border-slate-200'
+      };
+
+      const statusBadges = {
+        '現正進行': 'bg-amber-100 text-amber-800 border-amber-300',
+        '已執行': 'bg-emerald-100 text-emerald-800 border-emerald-300',
+        '已結案': 'bg-slate-100 text-slate-700 border-slate-300',
+        '改善中': 'bg-sky-100 text-sky-800 border-sky-300'
+      };
+
+      container.innerHTML = filtered.map(item => {
+        const catClass = catBadges[item.category] || 'bg-slate-100 text-slate-800 border-slate-200';
+        const stClass = statusBadges[item.status] || 'bg-slate-100 text-slate-700 border-slate-200';
+        const isOfficialDoc = item.attachment && item.attachment.length > 0;
+
+        // 關聯缺失標籤
+        let defectTagsHtml = '';
+        if (item.defect_ids) {
+          const ids = item.defect_ids.split(/[\s,]+/).map(s => s.trim()).filter(s => s.length > 0);
+          defectTagsHtml = ids.map(did => `
+            <button type="button" onclick="closeAnnouncementsModal(); showDefectDetail('${did}');" 
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition" title="點擊檢視 ${did} 案件詳情">
+              <i class="fa-solid fa-link text-[10px]"></i> ${did}
+            </button>
+          `).join('');
+        }
+
+        return `
+          <div class="pt-4 first:pt-0">
+            <div class="bg-white rounded-xl border border-slate-200 hover:border-amber-400/80 transition-all p-4.5 sm:p-5 shadow-xs space-y-3">
+              <!-- Top Row: Date, ID, Category & Status -->
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.8 rounded-md bg-slate-900 text-amber-300 font-bold text-xs font-mono tracking-wider">${item.id}</span>
+                  <span class="text-xs font-semibold text-slate-500 font-mono"><i class="fa-regular fa-calendar mr-1"></i>${item.date}</span>
+                  <span class="px-2 py-0.5 rounded text-xs font-bold border ${catClass}">${item.category}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold border ${stClass}">${item.status}</span>
+                </div>
+              </div>
+
+              <!-- Title & Issuer -->
+              <div>
+                <h4 class="text-base font-bold text-slate-900 flex items-start gap-2">
+                  <span>${item.title}</span>
+                </h4>
+                <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs text-slate-500 mt-1">
+                  <span><i class="fa-solid fa-stamp text-slate-400 mr-1"></i>發布單位：<strong class="text-slate-700 font-medium">${item.issuer}</strong></span>
+                  ${item.scope ? `<span><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>影響範圍：<span class="text-slate-700">${item.scope}</span></span>` : ''}
+                </div>
+              </div>
+
+              <!-- Content Box -->
+              <div class="bg-slate-50/80 rounded-lg p-3 text-xs sm:text-sm text-slate-700 whitespace-pre-line leading-relaxed border border-slate-200/60 font-sans">
+                ${item.content}
+              </div>
+
+              <!-- Bottom Row: Defect Links & Attachment -->
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  ${defectTagsHtml ? `<span class="text-xs text-slate-400 font-medium">關聯公設：</span>${defectTagsHtml}` : ''}
+                </div>
+                <div class="flex items-center gap-2">
+                  ${isOfficialDoc ? `
+                    <button type="button" onclick="openLightbox('${item.attachment}', '${item.title} (公文原件)')" 
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold shadow-sm transition active:scale-95" title="以高解析原件放大查閱實體公文">
+                      <i class="fa-solid fa-file-contract"></i> 查閱實體公文原件
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     // Init
     populateSelectOptions();
     updateDashboardStats();
+    updateAnnouncementBadges();
     renderTable();
-    syncFromGoogleSheet(false); // 網頁載入時自動從 Google Sheet 取得最新分類與狀態
+    syncFromGoogleSheet(false); // 網頁載入時自動從 Google Sheet 取得最新分類、狀態與公告清單
   </script>
 </body>
 </html>
