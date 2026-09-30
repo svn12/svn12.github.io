@@ -322,12 +322,19 @@
       .quote-box { font-size: 0.8em !important; }
       
       /* 縮小卡片內邊距以釋放手機螢幕空間 */
-      .stat-card { padding: 12px 16px; }
-      .adv-card { padding: 12px; }
-      .vs-col { padding: 12px; }
-      .conclusion-card { padding: 12px; }
-      .main-info-card { padding: 16px; }
-      .side-info-card { padding: 16px; }
+      .stat-card { padding: 10px 14px !important; }
+      .adv-card { padding: 10px !important; }
+      .vs-panel { padding: 10px !important; }
+      .vs-col { padding: 10px !important; }
+      .conclusion-card { padding: 10px !important; }
+      .main-info-card { padding: 14px !important; }
+      .side-info-card { padding: 14px !important; }
+
+      /* 使特定過長內容可以滾動 (針對手機版極端情況) */
+      .reveal .slides section {
+        max-height: 90vh !important;
+        overflow-y: auto !important;
+      }
     }
   </style>
 </head>
