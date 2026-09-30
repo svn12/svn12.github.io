@@ -171,7 +171,7 @@
     <div class="header-meta">
       <div><strong>線上存取：</strong>www.jktai123.com</div>
       <div><strong>試算表庫：</strong>Google Sheet SSOT</div>
-      <div><strong>手冊版本：</strong>v2.7 (2026/09/30)</div>
+      <div><strong>手冊版本：</strong>v2.8 (2026/09/30)</div>
     </div>
   </div>
 
@@ -196,18 +196,17 @@
         <li><span class="badge">雲端同步</span>：強制自 Google Sheet 抓取全社區最新提報缺失與類別設定。</li>
         <li><span class="badge">類別管理</span>：增刪或微調系統分類標籤與修繕進度狀態。</li>
         <li><span class="badge" style="background:#e0e7ff;color:#4338ca;border-color:#c7d2fe;">+ 新增缺失項目</span>：開啟快速表單登記現場新瑕疵與上傳照片。</li>
-        <li><span class="badge">檢修追蹤單</span>：開啟「社區公有設備檢修與根因追蹤表」標準 A4 單據產生器。</li>
         <li><span class="badge" style="background:#0284c7;color:#ffffff;border-color:#0369a1;">🕒 歷史更新記錄</span>：開啟全系統歷史更新履歷彈窗，即時查看每日巡檢結論、重大修繕結案與版本歷程。</li>
         <li><span class="badge">匯出 CSV</span>：一鍵匯出當前所有篩選結果為 Excel/CSV 檔案供管委會會議彙報。</li>
-        <li><strong>📱 手機版貼心優化：</strong>在手機等窄螢幕裝置上，頂部自動轉換為「＋ 新增缺失項目」與「☰ 選單 ⌵」下拉式浮動選單，版面清爽俐落且不佔垂直空間。</li>
+        <li><strong>📱 介面清爽與行動優化：</strong>導覽列經過精簡去冗餘，將「檢修追蹤單」整合於清單每筆案件右側與詳情彈窗內，避免版面擁擠；手機版自動切換為「＋ 新增」與「☰ 選單 ⌵」抽屜選單。</li>
       </ul>
     </li>
-    <li><strong>KPI 即時卡片：</strong>即時統計總提報項目數（目前累計 <strong>70 項</strong>），以及「待處理」、「國霖驗收列管」、「建商查勘中」、「已改善待複驗」、「已結案/已完成」之分項件數。</li>
+    <li><strong>KPI 即時卡片：</strong>即時統計總提報項目數（目前累計 <strong>71 項</strong>，最新包含 DEF-071 第一階段梯廳驗收列管案），以及「待處理」、「國霖驗收列管」、「建商查勘中」、「已改善待複驗」、「已結案/已完成」之分項件數。</li>
     <li><strong>多維度篩選與最新案件置頂排序：</strong>
       <ul>
         <li><strong>多條件過濾：</strong>支援「關鍵字搜尋（案號/位置/描述/提報人）」、「系統分類」、「空間區域」及「改善狀態」即打即顯交叉比對。</li>
-        <li><strong>最新案件置頂（預設）：</strong>系統進入預設自動將編號最大、最新提報的案件排在最上方（DEF-070 → DEF-001），方便委員第一時間掌握最新提報。</li>
-        <li><strong>多維度排序切換：</strong>清單上方提供「排序下拉選單」，並支援直接點選表格<strong>「系統編號」</strong>或<strong>「提報日期」</strong>表頭，即可瞬間切換由新到舊或由舊到新排序。</li>
+        <li><strong>最新案件置頂（預設）：</strong>系統進入預設自動將編號最大、最新提報的案件排在最上方（DEF-071 → DEF-001），方便第一時間掌握最新修繕。</li>
+        <li><strong>多維度排序切換：</strong>清單上方提供「排序下拉選單」，並支援直接點選表格<strong>「系統編號」</strong>或<strong>「提報日期」</strong>表頭，瞬間切換正反向排序。</li>
       </ul>
     </li>
   </ul>
@@ -221,21 +220,26 @@
   <table>
     <thead>
       <tr>
-        <th style="width: 25%;">操作方式</th>
-        <th style="width: 35%;">觸發機制與運作流程</th>
-        <th style="width: 40%;">適用情境與主要效果</th>
+        <th style="width: 22%;">機制類別</th>
+        <th style="width: 38%;">運作技術與連線流程</th>
+        <th style="width: 40%;">核心特性與適用情境</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><strong>開啟網頁 / 按 F5 重新整理</strong></td>
-        <td>網頁載入時，底層在背景自動以無痕方式連線 Google Sheet API，自動拉取最新 67 筆資料並更新表格。</td>
-        <td>平常每日查看最新狀況、或者前端介面有程式碼改版時使用。</td>
+        <td><strong>點擊頂部「🔄 雲端同步」</strong></td>
+        <td>透過 Google Visualization API 旁路連線 Google Sheet，強制附加時間戳（無快取干擾），以 SPA 局部局部非同步更新記憶體。</td>
+        <td><strong>僅更新資料、保留目前畫面狀態</strong>。搜尋關鍵字與篩選不會遺失，速度最快、消耗流量最低；適合隨時查看現場修繕最新進展。</td>
       </tr>
       <tr>
-        <td><strong>點擊頂部「雲端同步」按鈕</strong></td>
-        <td>強制跳過瀏覽器所有本地快取，即時抓取 Google Sheet「公設缺失清單」與「類別設定」雙工作表。</td>
-        <td>其他委員或建商剛在 Google Sheet 後台編輯完畢，你想<strong>立刻無延遲看到最新紀錄與照片張數</strong>時。</td>
+        <td><strong>瀏覽器 Refresh (F5 / 重新整理)</strong></td>
+        <td>向伺服器重新請求下載完整的 HTML 架構、CSS 樣式表與 JavaScript 程式碼。</td>
+        <td><strong>更新網頁程式本體</strong>。會重置當前搜尋與已打開的彈窗；適合系統功能改版、新增按鈕或樣式微調後載入最新網頁代碼。</td>
+      </tr>
+      <tr>
+        <td><strong>macOS 系統 launchd 守護服務</strong></td>
+        <td>註冊於 macOS 系統層底層服務（<code>com.jktai.pinyang.defect_tracker</code>），每天 23:00 自動定時喚醒。</td>
+        <td><strong>電腦關機重開後 100% 自動恢復</strong>。自動全量鏡像備份至「公設缺失備份」工作表，並自動校對同步 GitHub Pages，免手動介入。</td>
       </tr>
     </tbody>
   </table>
@@ -250,7 +254,8 @@
 
   <ul>
     <li><strong>案件定位切換：</strong>可點擊頂部「上一案」、「下一案」快捷鍵在同篩選結果內循序切換，無須頻繁進出。</li>
-    <li><strong>照片輪播與燈箱放大：</strong>點擊現場相片縮圖即可呼叫全螢幕高清燈箱，支援手機左右滑動手勢與鍵盤切換，方便現場會勘細節辨識。</li>
+    <li><strong>照片輪播與燈箱放大 (Lightbox)：</strong>點擊現場相片縮圖即可呼叫全螢幕高清燈箱，支援手機左右滑動手勢與鍵盤切換。</li>
+    <li><strong>Ultra-HD 向量級公文原件支援：</strong>針對重要實體公文（如 DEF-071 第一階段梯廳驗收公告），全面導入 1200×1700 超高解析圖檔，放大 10 倍依然極致銳利，細節章印一覽無遺。</li>
     <li><strong>改善進度追蹤：</strong>清楚記載建商目前修復處置作為、工班施作進度或第三方查驗結論。</li>
   </ul>
 
@@ -373,6 +378,19 @@
         <li><strong>多方確認與簽核軌跡：</strong>預設「檢修工程師」、「社區總幹事」、「設備規劃委員」、「主任委員」四方橫向簽名蓋章欄位。</li>
       </ol>
     </li>
+    <li><strong>雙向資料同步回寫機制（重大升級）：</strong>
+      <ul>
+        <li><strong>現場編修即時存檔：</strong>在追蹤單右上角或表單最底部點擊「<span class="badge" style="background:#7c3aed;color:#ffffff;border-color:#6d28d9;">💾 儲存並同步回系統</span>」，可將現場修改的廠商資訊、現象說明、處置進度與根因對策直接回寫存入全域案件資料。</li>
+        <li><strong>檢修結果自動連動案件狀態：</strong>勾選「完全修復並正常運作」且確認無須複檢時，系統自動將該缺失狀態連動為<strong>「已結案」</strong>；若勾選暫時恢復或待料列管，則連動為<strong>「待複驗」</strong>。</li>
+        <li><strong>進度軌跡結構化自動附加：</strong>處置紀錄若有新增內容，系統會自動在案件的「歷次改善進度」追加帶有日期的 <code>[現場檢修記錄]</code> 軌跡，確保處置歷程完整保留。</li>
+        <li><strong>即時全域 UI 刷新：</strong>儲存完成後，主畫面清單與詳情彈窗立即同步刷新，無須手動重新整理頁面。</li>
+      </ul>
+    </li>
+    <li><strong>第四區塊單選互斥防呆：</strong>
+      <ul>
+        <li>檢修結果之「完全修復 / 暫時恢復 / 待料 / 待原廠」全面實裝單選互斥邏輯，杜絕重複勾選；當切換選項時，後續「複檢」與「預約時間」自動智慧預設，防範人為疏失。</li>
+      </ul>
+    </li>
     <li><strong>極致 A4 單頁列印與 PDF 檔名規範化（Mac / iPad 雙向完美支援）：</strong>
       <ul>
         <li><strong>100% 版面一致：</strong>徹底解決列印模式下雙欄折行堆疊問題，以精確 CSS Print 規則確保螢幕所見與列印結果 1:1 左右對稱。</li>
@@ -399,8 +417,16 @@
     <li><strong>三大關鍵資訊同步呈現：</strong>
       <ol>
         <li><strong>每日巡檢動態：</strong>即時呈現每日 23:00 自動喚醒檢視 LINE 社群之住戶反映與公務公告排查結果。</li>
-        <li><strong>案件修繕重大進展：</strong>精確記錄重大公設案件（如 DEF-066 客梯按鍵與貨梯許可證、DEF-069 地下室門禁警報與車道 e-tag 修復）之廠商回覆、檢測結論與結案狀態。</li>
-        <li><strong>功能版本迭代：</strong>記載檢修追蹤表單、雙欄列印優化、使用手冊升級等功能里程碑。</li>
+        <li><strong>案件修繕重大進展：</strong>精確記錄重大公設案件（如 DEF-066 客梯按鍵與貨梯許可證、DEF-069 地下室門禁警報與車道 e-tag 修復、DEF-071 梯廳驗收列管）之廠商回覆、檢測結論與結案狀態。</li>
+        <li><strong>功能版本迭代（v2.8 重大更新）：</strong>
+          <ul>
+            <li>收錄 <strong>DEF-071 第一階段梯廳驗收公文案</strong>（總列管案件增至 71 筆）。</li>
+            <li>新增<strong>實體公文 1200×1700 Ultra-HD 印刷級原件</strong>檢視支援，解決細小文字模糊問題。</li>
+            <li>檢修追蹤單實裝<strong>「💾 儲存並同步回系統」雙向回寫機制</strong>與第四區塊單選互斥防呆。</li>
+            <li>頂部導覽列去冗餘優化，釋放視覺空間。</li>
+            <li>納入 macOS <code>launchd</code> 開機關機守護服務與雲端同步機制剖析。</li>
+          </ul>
+        </li>
       </ol>
     </li>
     <li><strong>跨載具無障礙閱讀：</strong>彈窗支援桌機、平板與智慧型手機自我適應縮放，並於頂部直連使用手冊 PDF，底部附帶 Google Sheet 資料源狀態提示。</li>
