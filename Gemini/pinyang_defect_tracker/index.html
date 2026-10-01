@@ -2577,7 +2577,7 @@
         issuer: "品陽大苑管理委員會（主委 17F-3 李先生）",
         scope: "全社區物業管理、現場主管櫃檯行政、公共清潔與安全警衛",
         content: "主委 17F-3 李先生於社群記事本發布社區每月固定合約費用供住戶參考：\n一、物業管理維護費用（每月 235,200 元含稅）：\n  - 現場主管/總幹事 1名（每日8hr週休二日）：78,000 元/月\n  - 財務秘書 1名（每日8hr週休二日，6/1進駐）：60,000 元/月\n  - 清潔員 2名（每日8hr週休二日，5/1進駐）：86,000 元/月（單價43,000元）\n  - 營業稅 5%：11,200 元\n二、安全管理維護費用（每月 170,100 元含稅）：\n  - 24小時門禁安全管理保全員（1哨3人力，全年無休）：162,000 元/月\n  - 營業稅 5%：8,100 元\n※ 社區每月物業與安全管理固定合約費用總計為 405,300 元。",
-        attachment: "https://drive.google.com/uc?id=1scBRTvd6VSa3uTynDb_b2PBF648iN8JW",
+        attachment: "https://drive.google.com/uc?id=1rugIg_-KoCtn1528KQKP2o-y7-jt3KrG",
         defect_ids: "-",
         status: "已公告"
       },
@@ -4564,14 +4564,34 @@
           extraAttachmentsHtml = `
             <div class="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
               <span class="text-slate-400 font-medium">實體報價單圖片：</span>
-              <a href="https://drive.google.com/uc?id=1scBRTvd6VSa3uTynDb_b2PBF648iN8JW" target="_blank" rel="noopener noreferrer"
-                 class="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-md font-bold transition" title="另開分頁直接開啟物業管理維護費用報價單原圖">
-                <i class="fa-solid fa-file-image text-amber-600"></i> 物業管理報價單 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-0.5"></i>
+              <a href="https://drive.google.com/uc?id=1rugIg_-KoCtn1528KQKP2o-y7-jt3KrG" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-md font-bold transition" title="另開分頁直接開啟物業管理維護費用報價單高清原圖">
+                <i class="fa-solid fa-file-image text-amber-600"></i> 物業管理報價單 (高清) <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-0.5"></i>
               </a>
               <a href="https://drive.google.com/uc?id=1OGtGNFZIZFrSNDL2XWV5j1EwsRVKsCq2" target="_blank" rel="noopener noreferrer"
                  class="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-300 rounded-md font-bold transition" title="另開分頁直接開啟安全管理維護費用報價單原圖">
                 <i class="fa-solid fa-file-image text-indigo-600"></i> 安全管理報價單 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-0.5"></i>
               </a>
+            </div>
+          `;
+        }
+
+        // 比照缺失詳情照片展示方式：若有公文/報價單圖片，直接在卡片內顯示視覺縮圖預覽區塊，點擊亦可直接放大
+        let photoPreviewHtml = '';
+        if (isOfficialDoc) {
+          photoPreviewHtml = `
+            <div class="pt-2">
+              <div class="text-[11px] font-semibold text-slate-500 mb-1.5 flex items-center gap-1">
+                <i class="fa-regular fa-image text-slate-400"></i> 實體文件預覽 (點擊放大)
+              </div>
+              <div class="w-48 sm:w-56 group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-100 aspect-[4/3] flex items-center justify-center shadow-xs transition hover:shadow-md cursor-pointer"
+                   onclick="openLightbox('${item.attachment}', '${item.title} (公文原件)')" title="點擊以高解析度放大檢視">
+                <img src="${item.attachment}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" alt="${item.title}"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'p-3 text-xs text-slate-400 text-center\\'><i class=\\'fa-solid fa-file-contract text-slate-300 text-2xl mb-1\\'></i><br>請點下方按鈕開啟公文</div>';" />
+                <div class="absolute bottom-1.5 right-1.5 pointer-events-none bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-md flex items-center gap-1 shadow">
+                  <i class="fa-solid fa-magnifying-glass-plus text-xs"></i> <span>放大</span>
+                </div>
+              </div>
             </div>
           `;
         }
@@ -4605,6 +4625,7 @@
               <!-- Content Box -->
               <div class="bg-slate-50/80 rounded-lg p-3 text-xs sm:text-sm text-slate-700 whitespace-pre-line leading-relaxed border border-slate-200/60 font-sans">
                 ${item.content}
+                ${photoPreviewHtml}
                 ${extraAttachmentsHtml}
               </div>
 
@@ -4617,7 +4638,7 @@
                   ${isOfficialDoc ? `
                     <a href="${item.attachment}" target="_blank" rel="noopener noreferrer"
                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold shadow-sm transition active:scale-95" title="另開分頁直接開啟公文原件圖片">
-                      <i class="fa-solid fa-arrow-up-right-from-square"></i> 另開原圖連結
+                       <i class="fa-solid fa-arrow-up-right-from-square"></i> 另開原圖連結
                     </a>
                     <button type="button" onclick="openLightbox('${item.attachment}', '${item.title} (公文原件)')" 
                             class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-xs font-bold shadow-sm transition active:scale-95" title="以高解析原件在燈箱放大查閱">
