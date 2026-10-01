@@ -1266,6 +1266,7 @@
           <select id="announcement-cat-filter" onchange="renderAnnouncementsList()" 
                   class="bg-white border border-slate-300 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none">
             <option value="">全部公告類別</option>
+            <option value="合約財務">合約財務</option>
             <option value="公設驗收">公設驗收</option>
             <option value="設備檢修">設備檢修</option>
             <option value="管委宣導">管委宣導</option>
@@ -2576,7 +2577,7 @@
         issuer: "品陽大苑管理委員會（主委 17F-3 李先生）",
         scope: "全社區物業管理、現場主管櫃檯行政、公共清潔與安全警衛",
         content: "主委 17F-3 李先生於社群記事本發布社區每月固定合約費用供住戶參考：\n一、物業管理維護費用（每月 235,200 元含稅）：\n  - 現場主管/總幹事 1名（每日8hr週休二日）：78,000 元/月\n  - 財務秘書 1名（每日8hr週休二日，6/1進駐）：60,000 元/月\n  - 清潔員 2名（每日8hr週休二日，5/1進駐）：86,000 元/月（單價43,000元）\n  - 營業稅 5%：11,200 元\n二、安全管理維護費用（每月 170,100 元含稅）：\n  - 24小時門禁安全管理保全員（1哨3人力，全年無休）：162,000 元/月\n  - 營業稅 5%：8,100 元\n※ 社區每月物業與安全管理固定合約費用總計為 405,300 元。",
-        attachment: "screenshots/contract_quote_property.png",
+        attachment: "https://drive.google.com/uc?id=1scBRTvd6VSa3uTynDb_b2PBF648iN8JW",
         defect_ids: "-",
         status: "已公告"
       },
@@ -3802,14 +3803,39 @@
       }
     }
 
-    function openLightbox(index) {
-      if (!currentDetailDefect || !currentDetailDefect.photos || currentDetailDefect.photos.length === 0) return;
-      currentLightboxPhotoIndex = index;
+    function openLightbox(indexOrUrl, customTitle) {
       const modal = document.getElementById('lightbox-modal');
+      const img = document.getElementById('lightbox-img');
+      const counter = document.getElementById('lightbox-counter');
+      const btnPrev = document.getElementById('lightbox-btn-prev');
+      const btnNext = document.getElementById('lightbox-btn-next');
+      const btnDelete = document.getElementById('lightbox-btn-delete');
+
+      // 若傳入的是直接圖片 URL 字串 (例如公告公文原件)
+      if (typeof indexOrUrl === 'string') {
+        currentLightboxPhotoIndex = -1;
+        if (img) img.src = indexOrUrl;
+        if (counter) counter.innerText = customTitle || '公文原件';
+        if (btnPrev) btnPrev.classList.add('hidden');
+        if (btnNext) btnNext.classList.add('hidden');
+        if (btnDelete) btnDelete.classList.add('hidden');
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+        }
+        return;
+      }
+
+      // 一般案件照片索引
+      if (!currentDetailDefect || !currentDetailDefect.photos || currentDetailDefect.photos.length === 0) return;
+      currentLightboxPhotoIndex = indexOrUrl;
       updateLightboxView();
-      modal.classList.remove('hidden');
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
     }
 
     // 循環切換照片 (delta: -1 為上一張, 1 為下一張)
@@ -4466,7 +4492,14 @@
 
       if (!container) return;
 
-      const filtered = announcementList.filter(item => {
+      // 嚴格依最新日期由新到舊排序（若日期相同則依編號倒序，最新公告置頂）
+      const sortedList = [...announcementList].sort((a, b) => {
+        const dateDiff = (b.date || '').localeCompare(a.date || '');
+        if (dateDiff !== 0) return dateDiff;
+        return (b.id || '').localeCompare(a.id || '');
+      });
+
+      const filtered = sortedList.filter(item => {
         if (catFilter && item.category !== catFilter) return false;
         if (searchKw) {
           const matchKw = (item.title || '').toLowerCase().includes(searchKw) ||
@@ -4493,6 +4526,7 @@
       }
 
       const catBadges = {
+        '合約財務': 'bg-rose-100 text-rose-800 border-rose-200',
         '公設驗收': 'bg-indigo-100 text-indigo-800 border-indigo-200',
         '設備檢修': 'bg-sky-100 text-sky-800 border-sky-200',
         '管委宣導': 'bg-emerald-100 text-emerald-800 border-emerald-200',
@@ -4500,6 +4534,7 @@
       };
 
       const statusBadges = {
+        '已公告': 'bg-purple-100 text-purple-800 border-purple-300',
         '現正進行': 'bg-amber-100 text-amber-800 border-amber-300',
         '已執行': 'bg-emerald-100 text-emerald-800 border-emerald-300',
         '已結案': 'bg-slate-100 text-slate-700 border-slate-300',
@@ -4521,6 +4556,24 @@
               <i class="fa-solid fa-link text-[10px]"></i> ${did}
             </button>
           `).join('');
+        }
+
+        // 針對特定公告提供多附件快捷連結（如合約報價單）
+        let extraAttachmentsHtml = '';
+        if (item.id === 'ANN-2026-0005') {
+          extraAttachmentsHtml = `
+            <div class="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
+              <span class="text-slate-400 font-medium">實體報價單圖片：</span>
+              <a href="https://drive.google.com/uc?id=1scBRTvd6VSa3uTynDb_b2PBF648iN8JW" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-md font-bold transition" title="另開分頁直接開啟物業管理維護費用報價單原圖">
+                <i class="fa-solid fa-file-image text-amber-600"></i> 物業管理報價單 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-0.5"></i>
+              </a>
+              <a href="https://drive.google.com/uc?id=1OGtGNFZIZFrSNDL2XWV5j1EwsRVKsCq2" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-300 rounded-md font-bold transition" title="另開分頁直接開啟安全管理維護費用報價單原圖">
+                <i class="fa-solid fa-file-image text-indigo-600"></i> 安全管理報價單 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-0.5"></i>
+              </a>
+            </div>
+          `;
         }
 
         return `
@@ -4552,6 +4605,7 @@
               <!-- Content Box -->
               <div class="bg-slate-50/80 rounded-lg p-3 text-xs sm:text-sm text-slate-700 whitespace-pre-line leading-relaxed border border-slate-200/60 font-sans">
                 ${item.content}
+                ${extraAttachmentsHtml}
               </div>
 
               <!-- Bottom Row: Defect Links & Attachment -->
@@ -4561,9 +4615,13 @@
                 </div>
                 <div class="flex items-center gap-2">
                   ${isOfficialDoc ? `
+                    <a href="${item.attachment}" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold shadow-sm transition active:scale-95" title="另開分頁直接開啟公文原件圖片">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i> 另開原圖連結
+                    </a>
                     <button type="button" onclick="openLightbox('${item.attachment}', '${item.title} (公文原件)')" 
-                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold shadow-sm transition active:scale-95" title="以高解析原件放大查閱實體公文">
-                      <i class="fa-solid fa-file-contract"></i> 查閱實體公文原件
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-xs font-bold shadow-sm transition active:scale-95" title="以高解析原件在燈箱放大查閱">
+                      <i class="fa-solid fa-magnifying-glass-plus"></i> 燈箱放大
                     </button>
                   ` : ''}
                 </div>
