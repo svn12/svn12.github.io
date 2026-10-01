@@ -3803,7 +3803,9 @@
       }
     }
 
-    function openLightbox(indexOrUrl, customTitle) {
+    let customLightboxList = null;
+
+    function openLightbox(indexOrUrl, customTitle, photoList) {
       const modal = document.getElementById('lightbox-modal');
       const img = document.getElementById('lightbox-img');
       const counter = document.getElementById('lightbox-counter');
@@ -3811,7 +3813,23 @@
       const btnNext = document.getElementById('lightbox-btn-next');
       const btnDelete = document.getElementById('lightbox-btn-delete');
 
-      // 若傳入的是直接圖片 URL 字串 (例如公告公文原件)
+      // 若有傳入多張照片陣列 (例如公告的多頁公文)
+      if (Array.isArray(photoList) && photoList.length > 0) {
+        customLightboxList = photoList;
+        currentLightboxPhotoIndex = typeof indexOrUrl === 'number' ? indexOrUrl : 0;
+        updateCustomLightboxView(customTitle);
+        if (btnDelete) btnDelete.classList.add('hidden');
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+        }
+        return;
+      }
+
+      customLightboxList = null;
+
+      // 若傳入的是單一直接圖片 URL 字串
       if (typeof indexOrUrl === 'string') {
         currentLightboxPhotoIndex = -1;
         if (img) img.src = indexOrUrl;
@@ -3838,8 +3856,38 @@
       }
     }
 
+    function updateCustomLightboxView(customTitle) {
+      if (!customLightboxList || customLightboxList.length === 0) return;
+      const total = customLightboxList.length;
+      if (currentLightboxPhotoIndex < 0) currentLightboxPhotoIndex = 0;
+      if (currentLightboxPhotoIndex >= total) currentLightboxPhotoIndex = total - 1;
+
+      const src = customLightboxList[currentLightboxPhotoIndex];
+      const img = document.getElementById('lightbox-img');
+      const counter = document.getElementById('lightbox-counter');
+      const btnPrev = document.getElementById('lightbox-btn-prev');
+      const btnNext = document.getElementById('lightbox-btn-next');
+
+      if (img) img.src = src;
+      if (counter) counter.innerText = `${customTitle || '文件'} (${currentLightboxPhotoIndex + 1} / ${total})`;
+
+      if (total <= 1) {
+        if (btnPrev) btnPrev.classList.add('hidden');
+        if (btnNext) btnNext.classList.add('hidden');
+      } else {
+        if (btnPrev) btnPrev.classList.remove('hidden');
+        if (btnNext) btnNext.classList.remove('hidden');
+      }
+    }
+
     // 循環切換照片 (delta: -1 為上一張, 1 為下一張)
     function navLightbox(delta) {
+      if (customLightboxList && customLightboxList.length > 1) {
+        const total = customLightboxList.length;
+        currentLightboxPhotoIndex = (currentLightboxPhotoIndex + delta + total) % total;
+        updateCustomLightboxView();
+        return;
+      }
       if (!currentDetailDefect || !currentDetailDefect.photos || currentDetailDefect.photos.length <= 1) return;
       const total = currentDetailDefect.photos.length;
       // 循環輪播計算
@@ -4576,9 +4624,36 @@
           `;
         }
 
-        // 比照缺失詳情照片展示方式：若有公文/報價單圖片，直接在卡片內顯示視覺縮圖預覽區塊，點擊亦可直接放大
+        // 比照缺失詳情照片展示方式：若有公文/報價單圖片，直接在卡片內顯示視覺縮圖預覽區塊，支援多頁照片並排與點擊燈箱循環
         let photoPreviewHtml = '';
-        if (isOfficialDoc) {
+        if (item.id === 'ANN-2026-0005') {
+          const annPhotos = [
+            { title: '第 1 頁：物業管理維護費用報價單', url: 'https://drive.google.com/uc?id=1rugIg_-KoCtn1528KQKP2o-y7-jt3KrG' },
+            { title: '第 2 頁：安全管理維護費用報價單', url: 'https://drive.google.com/uc?id=1OGtGNFZIZFrSNDL2XWV5j1EwsRVKsCq2' }
+          ];
+          const photoUrls = annPhotos.map(p => p.url);
+
+          photoPreviewHtml = `
+            <div class="pt-2">
+              <div class="text-[11px] font-semibold text-slate-500 mb-1.5 flex items-center justify-between">
+                <span class="flex items-center gap-1"><i class="fa-regular fa-image text-slate-400"></i> 實體報價單公文原件（共 2 頁，點擊放大並可左右切換）</span>
+                <span class="text-[10px] text-amber-700 font-mono bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">共 2 張原圖</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                ${annPhotos.map((p, pIdx) => `
+                  <div class="group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-100 aspect-[4/3] flex items-center justify-center shadow-xs transition hover:shadow-md cursor-pointer"
+                       onclick="openLightbox(${pIdx}, '${item.title}', ${JSON.stringify(photoUrls).replace(/"/g, '&quot;')})" title="點擊放大檢視 ${p.title}">
+                    <img src="${p.url}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" alt="${p.title}"
+                         onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'p-3 text-xs text-slate-400 text-center\\'><i class=\\'fa-solid fa-file-contract text-slate-300 text-2xl mb-1\\'></i><br>${p.title}</div>';" />
+                    <div class="absolute bottom-1.5 right-1.5 pointer-events-none bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-md flex items-center gap-1 shadow">
+                      <i class="fa-solid fa-magnifying-glass-plus text-xs"></i> <span>第 ${pIdx + 1} 頁</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else if (isOfficialDoc) {
           photoPreviewHtml = `
             <div class="pt-2">
               <div class="text-[11px] font-semibold text-slate-500 mb-1.5 flex items-center gap-1">
