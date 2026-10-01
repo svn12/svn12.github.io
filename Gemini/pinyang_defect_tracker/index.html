@@ -230,7 +230,7 @@
         </button>
         <button onclick="openAnnouncementsModal()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm rounded-lg shadow-sm transition active:scale-95 border border-amber-400/40" title="開啟社區管委會正式公文、驗收公告與即時通知清單">
           <i class="fa-solid fa-bullhorn text-base"></i> <span>社區公告記錄</span>
-          <span id="announcement-count-badge" class="px-1.5 py-0.2 bg-white/25 rounded-full text-xs font-mono">4</span>
+          <span id="announcement-count-badge" class="px-1.5 py-0.2 bg-white/25 rounded-full text-xs font-mono">5</span>
         </button>
         <button onclick="exportCSV()" class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg border border-slate-700 transition">
           <i class="fa-solid fa-file-export"></i> 匯出 CSV
@@ -266,7 +266,7 @@
                       class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-amber-300 hover:bg-slate-700/80 font-medium transition text-left">
                 <i class="fa-solid fa-bullhorn w-4 text-amber-400"></i>
                 <span>社區公告記錄</span>
-                <span id="mobile-announcement-count-badge" class="ml-auto px-1.5 py-0.2 bg-amber-500/20 text-amber-300 text-xs rounded-full border border-amber-500/30">4</span>
+                <span id="mobile-announcement-count-badge" class="ml-auto px-1.5 py-0.2 bg-amber-500/20 text-amber-300 text-xs rounded-full border border-amber-500/30">5</span>
               </button>
               <a href="https://drive.google.com/drive/folders/1QCEU35mD-lheqTMsrB6bla2AcD-RTtz9?usp=drive_link" target="_blank" onclick="toggleMobileMenu(false)"
                  class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-amber-300 hover:bg-slate-700/80 font-medium transition">
@@ -2568,6 +2568,18 @@
 
     // 社區官方公告資料庫 (同步自 Google Sheet，並內建完整官方公告 Baseline)
     const initialAnnouncements = [
+      {
+        id: "ANN-2026-0005",
+        date: "2026-09-30",
+        category: "合約財務",
+        title: "社區物業管理與安全維護固定合約費用報價明細",
+        issuer: "品陽大苑管理委員會（主委 17F-3 李先生）",
+        scope: "全社區物業管理、現場主管櫃檯行政、公共清潔與安全警衛",
+        content: "主委 17F-3 李先生於社群記事本發布社區每月固定合約費用供住戶參考：\n一、物業管理維護費用（每月 235,200 元含稅）：\n  - 現場主管/總幹事 1名（每日8hr週休二日）：78,000 元/月\n  - 財務秘書 1名（每日8hr週休二日，6/1進駐）：60,000 元/月\n  - 清潔員 2名（每日8hr週休二日，5/1進駐）：86,000 元/月（單價43,000元）\n  - 營業稅 5%：11,200 元\n二、安全管理維護費用（每月 170,100 元含稅）：\n  - 24小時門禁安全管理保全員（1哨3人力，全年無休）：162,000 元/月\n  - 營業稅 5%：8,100 元\n※ 社區每月物業與安全管理固定合約費用總計為 405,300 元。",
+        attachment: "screenshots/contract_quote_property.png",
+        defect_ids: "-",
+        status: "已公告"
+      },
       {
         id: "ANN-2026-0004",
         date: "2026-09-29",
