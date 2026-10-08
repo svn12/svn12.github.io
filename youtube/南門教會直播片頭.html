@@ -42,26 +42,17 @@
         font-size: 50px; 
         */
         /* width:1920px; */
+        /* height: 100vh; */
+        /* background-image: url(../img/hero.jpg); */
+        /* background-size: auto; */
+        /* background-position: center; */
         margin: 0;
-        background-color: #000;
-      }
-
-      .bg-fade-layer {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
+        /* Full height */
         background-position: top;
         background-repeat: no-repeat;
         background-size: cover;
-        z-index: -1;
-        transition: opacity 1.8s ease-in-out;
-        opacity: 0;
-        pointer-events: none;
-      }
-      .bg-fade-layer.active {
-        opacity: 1;
+        /* background-image: url('data:image/jpeg;base64,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'); */
+        background-image: url("https://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg");
       }
 
        .container {
@@ -311,8 +302,8 @@
   </head>
 
   <body>
-    <div id="bgLayer1" class="bg-fade-layer active"></div>
-    <div id="bgLayer2" class="bg-fade-layer"></div>
+    <!-- <audio src="https://docs.google.com/uc?export=download&id=1IW7-y1GdaE8I89406iVHDlTsJz_exALY"  type="audio/mpeg" autoplay loop>
+    </audio> -->
     <div class="container">
       <!-- <img src="https://www.w3schools.com/w3images/notebook.jpg" alt="Notebook" style="width:100%;"> -->
 
@@ -362,12 +353,12 @@
     <div class="scroll-left">
       <h2 id="scrollText"></h2>
     </div>
-    <audio
-      id="bgm"
-      src="https://pub-78ea0d4b46964114ac28dd5c6e53460d.r2.dev/%E5%8F%B0%E8%AA%9E%E7%89%87%E9%A0%AD%E9%9F%B3%E6%A8%82.mp3"
-      preload="auto"
+    <!-- <audio
+      src="../doc/南門教會台語直播首頁.mp3"
+      type="audio/mpeg"
+      autoplay
       loop
-    ></audio>
+    ></audio> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
       // img_Src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQja5a_9x_nigBTrMw0jI8oyUARzNMDK84LSN_GxnJAZeAKt9GqL4yJmONdu7OZG4VdOxU&usqp=CAU';
@@ -396,9 +387,6 @@
       scrollText.addEventListener("animationiteration", setImage);
       scrollText.addEventListener("click", setImage);
 
-      CurTime.style.cursor = "pointer";
-      Bdate.style.cursor = "pointer";
-
       Bdate.addEventListener("click", () => {
         window.open("./南門教會華語禮拜直播片頭.html");
       });
@@ -406,7 +394,7 @@
         window.open("https://pctnm.tw/download_weekly.php");
       });
       CurTime.addEventListener("click", () => {
-        window.open("./南門教會華語禮拜直播片頭.html");
+        window.open("https://pctnm.tw/download_weekly.php");
       });
       document.querySelector(".text-block").addEventListener("click", () => {
         window.open(
@@ -415,76 +403,49 @@
       });
 
       async function Read_SheetData() {
-        let data = null;
-        try {
-          data = await RsheetData(fileLink, "台語禮拜");
-        } catch (e) {
-          console.warn("RsheetData 讀取異常:", e);
-        }
-
-        // 備援機制 1：若 API 失敗，嘗試從 LocalStorage 讀取最後一次成功的快取
-        if (!data || !Array.isArray(data) || !data[1]) {
-          try {
-            const cached = localStorage.getItem("nm_sheet_cache_tai");
-            if (cached) data = JSON.parse(cached);
-          } catch (e) {}
-        }
-
-        // 備援機制 2：保底預設資料，確保永不白屏
-        if (!data || !Array.isArray(data) || !data[1]) {
-          data = [
-            [],
-            [
-              "基督學徒",
-              "杜崇信牧師",
-              "腓立比書 2:13-16",
-              "",
-              "https://pctnm.tw/download_weekly.php",
-              "南門長老教會網路直播",
-              "https://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg"
-            ],
-            [],
-            [],
-            ["台北南門教會台語禮拜"]
-          ];
-        } else {
-          // 成功取得時自動更新快取
-          try {
-            localStorage.setItem("nm_sheet_cache_tai", JSON.stringify(data));
-          } catch (e) {}
-        }
-
-        imageArr = [];
-        data[1].forEach((item, index) => {
-          if (index > 5 && item && item !== "") {
-            imageArr.push(item);
+        //document.querySelector("#myTable1").innerHTML = '';
+        await RsheetData(fileLink, "台語禮拜").then((data) => {
+          data[1].forEach((item, index) => {
+            if (index > 5 && item !== "") {
+              imageArr.push(item);
+            }
+          });
+          if (imageArr.length == 0) {
+            imageArr = [
+              "https://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg",
+              "https://www.pctnm.tw/images/main/94ea826b6ea9923e0ba550e1b91a6c02.jpg",
+              "https://www.pctnm.tw/images/main/de0ee6118741dd3a94cdb1fc1042c995.jpg",
+            ];
           }
+          subj.textContent = data[1][0];
+          speaker.textContent = data[1][2];
+          poem.textContent = data[1][1];
+          // if (data[1][4] === '') {
+
+          //   church.textContent = `南門長老教會網路直播 ${data[1][3]}`;
+          //   // Dtime.textContent = `華語禮拜 8:30  台語禮拜 10:30 `;
+
+          // } else {
+          //   church.textContent = `南門長老教會網路直播 ${data[1][4]}`;
+          //   // Dtime.textContent = ` ${data[1][3]} 10:30 `;
+          // }
+          //	TableShow(data,"#myTable1");`
+         // church.textContent = `台北南門教會台語禮拜`;
+          church.textContent = data[4][0];;
+          // img.src = data[1][6];
+          // document.body.style.backgroundImage = `url(${data[1][6]})`;
+          document.body.style.backgroundImage = `url(${imageArr[0]})`;
+          // document.body.style.backgroundImage = `url(${imageArr[0]})`;
+          scrollText.textContent = data[1][5].replace(/[\r\n,\n]/g, " ");
+          ratio = scrollText.scrollWidth / scrollText.clientWidth;
+          setAniKeyFrame(Math.ceil(ratio * 100));
+          setAniDuration(Math.ceil(ratio * 1000 * oneFrameDuration));
+
+          Bdate.textContent = data[1][3];
+
+          //weeklyReport.src=`http://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data[1][4]}`
+          let qrcode = new QRCode("qrcode", `${data[1][4]}`);
         });
-        if (imageArr.length === 0) {
-          imageArr = [
-            "https://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg",
-            "https://www.pctnm.tw/images/main/94ea826b6ea9923e0ba550e1b91a6c02.jpg",
-            "https://www.pctnm.tw/images/main/de0ee6118741dd3a94cdb1fc1042c995.jpg",
-          ];
-        }
-        subj.textContent = data[1][0] || "";
-        speaker.textContent = data[1][2] || "";
-        poem.textContent = data[1][1] || "";
-        church.textContent = (data[4] && data[4][0]) ? data[4][0] : "台北南門教會台語禮拜";
-        if (imageArr[0]) {
-          bgLayer1.style.backgroundImage = `url("${imageArr[0]}")`;
-        }
-        scrollText.textContent = (data[1][5] || "").replace(/[\r\n,\n]/g, " ");
-        ratio = scrollText.scrollWidth / scrollText.clientWidth;
-        setAniKeyFrame(Math.ceil(ratio * 100));
-        setAniDuration(Math.ceil(ratio * 1000 * oneFrameDuration));
-
-        Bdate.textContent = data[1][3] || "";
-
-        try {
-          document.getElementById("qrcode").innerHTML = "";
-          new QRCode("qrcode", `${data[1][4] || ""}`);
-        } catch (e) {}
       }
 
       function setDate() {
@@ -499,27 +460,12 @@
        // CurTime.innerText = ` ${hour}:${mins}:${seconds}`;
         CurTime.innerText = ` ${hour}:${mins}`;
       }
-      const bgLayer1 = document.getElementById("bgLayer1");
-      const bgLayer2 = document.getElementById("bgLayer2");
-      let activeBg = 1;
-
       function setImage() {
-        if (!imageArr || imageArr.length <= 1) return;
-        if (++curImage >= imageArr.length) {
+        if (++curImage == imageArr.length) {
           curImage = 0;
         }
-        const nextUrl = imageArr[curImage];
-        const nextLayer = activeBg === 1 ? bgLayer2 : bgLayer1;
-        const curLayer = activeBg === 1 ? bgLayer1 : bgLayer2;
-
-        const img = new Image();
-        img.onload = () => {
-          nextLayer.style.backgroundImage = `url("${nextUrl}")`;
-          nextLayer.classList.add("active");
-          curLayer.classList.remove("active");
-          activeBg = activeBg === 1 ? 2 : 1;
-        };
-        img.src = nextUrl;
+        // img.src = imageArr[curImage];
+        document.body.style.backgroundImage = `url(${imageArr[curImage]})`;
       }
       function setAniDuration(duration) {
         scrollText.getAnimations()[0]["effect"].updateTiming({
@@ -560,80 +506,6 @@
       // window.onload = function () {
       //   var context = new AudioContext();
       // };
-
-      // 電腦直接輸出：音訊控制與全螢幕互動
-      const bgm = document.getElementById("bgm");
-      bgm.volume = 0.8;
-
-      // 畫面 HUD 提示浮水印 (1.5 秒自動淡出)
-      const hud = document.createElement("div");
-      hud.id = "audio-hud";
-      hud.style.cssText =
-        "position:fixed;bottom:3.5em;right:2vw;background:rgba(0,0,0,0.75);color:#00ffcc;padding:6px 14px;border-radius:6px;font-size:1.1rem;font-family:monospace,sans-serif;z-index:999;opacity:0;transition:opacity 0.25s ease;pointer-events:none;text-shadow:0 0 4px #000;";
-      document.body.appendChild(hud);
-
-      let hudTimer = null;
-      function showHud(text) {
-        hud.textContent = text;
-        hud.style.opacity = "1";
-        clearTimeout(hudTimer);
-        hudTimer = setTimeout(() => {
-          hud.style.opacity = "0";
-        }, 1500);
-      }
-
-      function startAudio() {
-        if (bgm && bgm.paused) {
-          bgm.play().catch((e) => console.log("等待互動:", e));
-        }
-      }
-
-      // 首次點擊頁面任意處進入全螢幕並播放
-      window.addEventListener(
-        "click",
-        () => {
-          startAudio();
-          showHud(`▶ 播放中 (${Math.round(bgm.volume * 100)}%)`);
-          if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(() => {});
-          }
-        },
-        { once: true }
-      );
-
-      // 鍵盤快捷鍵：Space 播放/暫停、M 靜音切換、F 全螢幕、Up 音量+、Down 音量-
-      window.addEventListener("keydown", (e) => {
-        if (e.code === "Space") {
-          e.preventDefault();
-          if (bgm.paused) {
-            bgm.play().catch(() => {});
-            showHud("▶ 播放");
-          } else {
-            bgm.pause();
-            showHud("⏸ 暫停");
-          }
-          return;
-        }
-
-        startAudio();
-        if (e.key.toLowerCase() === "m") {
-          bgm.muted = !bgm.muted;
-          showHud(bgm.muted ? "🔇 靜音" : `🔊 音量: ${Math.round(bgm.volume * 100)}%`);
-        } else if (e.key.toLowerCase() === "f") {
-          !document.fullscreenElement
-            ? document.documentElement.requestFullscreen().catch(() => {})
-            : document.exitFullscreen().catch(() => {});
-        } else if (e.key === "ArrowUp") {
-          e.preventDefault();
-          bgm.muted = false;
-          bgm.volume = Math.min(1, Math.round((bgm.volume + 0.1) * 10) / 10);
-          showHud(`🔊 音量: ${Math.round(bgm.volume * 100)}%`);
-        } else if (e.key === "ArrowDown") {
-          e.preventDefault();
-          bgm.volume = Math.max(0, Math.round((bgm.volume - 0.1) * 10) / 10);
-          showHud(bgm.volume === 0 ? "🔇 音量: 0% (無聲)" : `🔊 音量: ${Math.round(bgm.volume * 100)}%`);
-        }
-      });
     </script>
   </body>
 </html>

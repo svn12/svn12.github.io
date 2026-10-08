@@ -400,13 +400,13 @@
       Bdate.style.cursor = "pointer";
 
       Bdate.addEventListener("click", () => {
-        window.open("./南門教會直播片頭_v2.html");
+        location.href = "./南門教會直播片頭_v2.html";
       });
       barcode.addEventListener("click", () => {
         window.open("https://pctnm.tw/download_weekly.php");
       });
       CurTime.addEventListener("click", () => {
-        window.open("./南門教會直播片頭_v2.html");
+        location.href = "./南門教會直播片頭_v2.html";
       });
       document.querySelector(".text-block").addEventListener("click", () => {
         window.open(
@@ -567,13 +567,13 @@
       document.body.appendChild(hud);
 
       let hudTimer = null;
-      function showHud(text) {
-        hud.textContent = text;
+      function showHud(htmlOrText, duration = 1500) {
+        hud.innerHTML = htmlOrText;
         hud.style.opacity = "1";
         clearTimeout(hudTimer);
         hudTimer = setTimeout(() => {
           hud.style.opacity = "0";
-        }, 1500);
+        }, duration);
       }
 
       function startAudio() {
@@ -595,7 +595,7 @@
         { once: true }
       );
 
-      // 鍵盤快捷鍵：Space 播放/暫停、M 靜音切換、F 全螢幕、Up 音量+、Down 音量-
+      // 鍵盤快捷鍵：Space 播放/暫停、M 靜音切換、F 全螢幕、Up 音量+、Down 音量-、H 說明
       window.addEventListener("keydown", (e) => {
         if (e.code === "Space") {
           e.preventDefault();
@@ -610,19 +610,33 @@
         }
 
         startAudio();
-        if (e.key.toLowerCase() === "m") {
+        if (e.code === "KeyM" || e.key.toLowerCase() === "m") {
+          e.preventDefault();
           bgm.muted = !bgm.muted;
           showHud(bgm.muted ? "🔇 靜音" : `🔊 音量: ${Math.round(bgm.volume * 100)}%`);
-        } else if (e.key.toLowerCase() === "f") {
+        } else if (e.code === "KeyF" || e.key.toLowerCase() === "f") {
+          e.preventDefault();
           !document.fullscreenElement
             ? document.documentElement.requestFullscreen().catch(() => {})
             : document.exitFullscreen().catch(() => {});
-        } else if (e.key === "ArrowUp") {
+        } else if (e.code === "KeyH" || e.key.toLowerCase() === "h") {
+          e.preventDefault();
+          showHud(`
+            <div style="font-weight:bold;margin-bottom:6px;color:#fff;border-bottom:1px solid rgba(255,255,255,0.25);padding-bottom:3px;text-align:center;">⌨️ 快捷鍵說明</div>
+            <table style="border-collapse:collapse;font-size:0.9rem;color:#f1f5f9;text-align:left;">
+              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">Space</span></td><td>播放 / 暫停</td></tr>
+              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">↑ (ArrowUp)</span></td><td>音量增加 (+10%)</td></tr>
+              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">↓ (ArrowDown)</span></td><td>音量降低 (-10%)</td></tr>
+              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">M</span></td><td>靜音開關</td></tr>
+              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">F</span></td><td>全螢幕切換</td></tr>
+            </table>
+          `, 3000);
+        } else if (e.code === "ArrowUp" || e.key === "ArrowUp") {
           e.preventDefault();
           bgm.muted = false;
           bgm.volume = Math.min(1, Math.round((bgm.volume + 0.1) * 10) / 10);
           showHud(`🔊 音量: ${Math.round(bgm.volume * 100)}%`);
-        } else if (e.key === "ArrowDown") {
+        } else if (e.code === "ArrowDown" || e.key === "ArrowDown") {
           e.preventDefault();
           bgm.volume = Math.max(0, Math.round((bgm.volume - 0.1) * 10) / 10);
           showHud(bgm.volume === 0 ? "🔇 音量: 0% (無聲)" : `🔊 音量: ${Math.round(bgm.volume * 100)}%`);
