@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
      <!-- <script src="https://svn12.github.io/js/Fetch.js"></script> -->
     <script src="https://www.jktai123.com/js/Fetch.js"></script>
-    <title>南門教會台語禮拜直播片頭</title>
+    <title>南門教會華語禮拜直播片頭</title>
 
     <style>
       @font-face {
@@ -323,7 +323,7 @@
         <!-- <a  href="https://svn12.github.io/youtube/南門教會直播片頭.html">週報 -->
         <figure id="barcode" style="display: none">
           <!-- <img 
-            src="https://api.qrserver.com/v1/create-qr-code/?data=https://pctnm.tw/download_weekly.php &amp;size=200x200"
+            src="https://api.qrserver.com/v1/create-qr-code/?data=http://www.pctnm.tw/download_weekly.php &amp;size=200x200"
             /> -->
           <!-- <img src="pic_trulli.jpg" alt="Trulli" style="width:100%"> -->
 
@@ -364,7 +364,7 @@
     </div>
     <audio
       id="bgm"
-      src="https://pub-78ea0d4b46964114ac28dd5c6e53460d.r2.dev/%E5%8F%B0%E8%AA%9E%E7%89%87%E9%A0%AD%E9%9F%B3%E6%A8%82.mp3"
+      src="https://pub-78ea0d4b46964114ac28dd5c6e53460d.r2.dev/%E8%8F%AF%E8%AA%9E%E7%89%87%E9%A0%AD%E9%9F%B3%E6%A8%82.mp3"
       preload="auto"
       loop
     ></audio>
@@ -400,13 +400,13 @@
       Bdate.style.cursor = "pointer";
 
       Bdate.addEventListener("click", () => {
-        window.open("./南門教會華語禮拜直播片頭.html");
+        window.open("./南門教會直播片頭_v2.html");
       });
       barcode.addEventListener("click", () => {
         window.open("https://pctnm.tw/download_weekly.php");
       });
       CurTime.addEventListener("click", () => {
-        window.open("./南門教會華語禮拜直播片頭.html");
+        window.open("./南門教會直播片頭_v2.html");
       });
       document.querySelector(".text-block").addEventListener("click", () => {
         window.open(
@@ -417,7 +417,7 @@
       async function Read_SheetData() {
         let data = null;
         try {
-          data = await RsheetData(fileLink, "台語禮拜");
+          data = await RsheetData(fileLink, "華語禮拜");
         } catch (e) {
           console.warn("RsheetData 讀取異常:", e);
         }
@@ -425,7 +425,7 @@
         // 備援機制 1：若 API 失敗，嘗試從 LocalStorage 讀取最後一次成功的快取
         if (!data || !Array.isArray(data) || !data[1]) {
           try {
-            const cached = localStorage.getItem("nm_sheet_cache_tai");
+            const cached = localStorage.getItem("nm_sheet_cache_mandarin");
             if (cached) data = JSON.parse(cached);
           } catch (e) {}
         }
@@ -435,22 +435,21 @@
           data = [
             [],
             [
-              "基督學徒",
-              "杜崇信牧師",
-              "腓立比書 2:13-16",
+              "活出基督",
+              "鍾主亮牧師",
+              "腓立比書 2:1-11",
               "",
               "https://pctnm.tw/download_weekly.php",
-              "南門長老教會網路直播",
+              "南門長老教會網路直播 華語禮拜",
               "https://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg"
             ],
             [],
             [],
-            ["台北南門教會台語禮拜"]
+            ["台北南門教會華語禮拜"]
           ];
         } else {
-          // 成功取得時自動更新快取
           try {
-            localStorage.setItem("nm_sheet_cache_tai", JSON.stringify(data));
+            localStorage.setItem("nm_sheet_cache_mandarin", JSON.stringify(data));
           } catch (e) {}
         }
 
@@ -470,7 +469,7 @@
         subj.textContent = data[1][0] || "";
         speaker.textContent = data[1][2] || "";
         poem.textContent = data[1][1] || "";
-        church.textContent = (data[4] && data[4][0]) ? data[4][0] : "台北南門教會台語禮拜";
+        church.textContent = (data[4] && data[4][0]) ? data[4][0] : "台北南門教會華語禮拜";
         if (imageArr[0]) {
           bgLayer1.style.backgroundImage = `url("${imageArr[0]}")`;
         }
@@ -555,11 +554,6 @@
       }
       //setInterval(setDate, 1000);
       setInterval(setDate, 2000);
-      // setInterval(setImage, 115000);
-      // setDate();
-      // window.onload = function () {
-      //   var context = new AudioContext();
-      // };
 
       // 電腦直接輸出：音訊控制與全螢幕互動
       const bgm = document.getElementById("bgm");
