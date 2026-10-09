@@ -557,6 +557,9 @@
 
       // 電腦直接輸出：音訊控制與全螢幕互動
       const bgm = document.getElementById("bgm");
+      if (bgm && bgm.src) {
+        bgm.src = bgm.src.split("?")[0] + "?t=" + new Date().getTime();
+      }
       bgm.volume = 0.8;
 
       // 畫面 HUD 提示浮水印 (1.5 秒自動淡出)
