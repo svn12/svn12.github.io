@@ -430,12 +430,29 @@
         ["台北南門教會華語禮拜"]
       ];
 
+      function normalizeImageUrl(url) {
+        if (!url || typeof url !== "string") return null;
+        url = url.trim();
+        const imgMatch = url.match(/=IMAGE\(["']?(https?:\/\/[^"']+)["']?\)/i);
+        if (imgMatch) url = imgMatch[1];
+        const gdriveMatch = url.match(/drive\.google\.com\/(?:file\/d\/|uc\?id=|thumbnail\?id=)([a-zA-Z0-9_-]+)/);
+        if (gdriveMatch) {
+          return `https://lh3.googleusercontent.com/d/${gdriveMatch[1]}=w1920`;
+        }
+        const lh3Match = url.match(/lh3\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/);
+        if (lh3Match) {
+          return `https://lh3.googleusercontent.com/d/${lh3Match[1]}=w1920`;
+        }
+        return url.startsWith("http") ? url : null;
+      }
+
       function renderData(data) {
         if (!data || !Array.isArray(data) || !data[1]) return;
         imageArr = [];
         data[1].forEach((item, index) => {
-          if (index > 5 && typeof item === "string" && item.trim().startsWith("http")) {
-            imageArr.push(item.trim());
+          if (index > 5) {
+            const cleanUrl = normalizeImageUrl(item);
+            if (cleanUrl) imageArr.push(cleanUrl);
           }
         });
         if (imageArr.length === 0) {
