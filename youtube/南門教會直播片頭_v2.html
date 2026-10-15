@@ -585,29 +585,64 @@
         }, duration);
       }
 
+      function isFullscreen() {
+        return !!(document.fullscreenElement || document.webkitFullscreenElement);
+      }
+
       function startAudio() {
+        if (!isFullscreen()) return;
         if (bgm && bgm.paused) {
           bgm.play().catch((e) => console.log("等待互動:", e));
         }
       }
 
-      // 首次點擊頁面任意處進入全螢幕並播放
-      window.addEventListener(
-        "click",
-        () => {
-          startAudio();
-          showHud(`▶ 播放中 (${Math.round(bgm.volume * 100)}%)`);
-          if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(() => {});
+      // 全螢幕切換監聽：僅全螢幕時輸出聲音，退出時自動暫停
+      function onFullscreenChange() {
+        if (isFullscreen()) {
+          bgm.play().then(() => {
+            showHud(`▶ 全畫面播放中 (${Math.round(bgm.volume * 100)}%)`);
+          }).catch((e) => console.log("等待互動:", e));
+        } else {
+          bgm.pause();
+          showHud("🔇 退出全螢幕，已暫停聲音");
+        }
+      }
+      document.addEventListener("fullscreenchange", onFullscreenChange);
+      document.addEventListener("webkitfullscreenchange", onFullscreenChange);
+
+      // 點擊頁面任意處進入全螢幕（排除互動連結）
+      window.addEventListener("click", (e) => {
+        if (
+          e.target.closest("a") ||
+          e.target.closest("#CurTime") ||
+          e.target.closest("#barcode") ||
+          e.target.closest(".text-block")
+        ) {
+          return;
+        }
+        if (!isFullscreen()) {
+          const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+          if (req) {
+            req.call(document.documentElement).then(() => {
+              bgm.play().catch(() => {});
+            }).catch(() => {});
           }
-        },
-        { once: true }
-      );
+        }
+      });
 
       // 鍵盤快捷鍵：Space 播放/暫停、M 靜音切換、F 全螢幕、Up 音量+、Down 音量-、H 說明
       window.addEventListener("keydown", (e) => {
         if (e.code === "Space") {
           e.preventDefault();
+          if (!isFullscreen()) {
+            const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+            if (req) {
+              req.call(document.documentElement).then(() => {
+                bgm.play().catch(() => {});
+              }).catch(() => {});
+            }
+            return;
+          }
           if (bgm.paused) {
             bgm.play().catch(() => {});
             showHud("▶ 播放");
@@ -618,16 +653,27 @@
           return;
         }
 
+        if (e.code === "KeyF" || e.key.toLowerCase() === "f") {
+          e.preventDefault();
+          if (!isFullscreen()) {
+            const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+            if (req) {
+              req.call(document.documentElement).then(() => {
+                bgm.play().catch(() => {});
+              }).catch(() => {});
+            }
+          } else {
+            const exit = document.exitFullscreen || document.webkitExitFullscreen;
+            if (exit) exit.call(document).catch(() => {});
+          }
+          return;
+        }
+
         startAudio();
         if (e.code === "KeyM" || e.key.toLowerCase() === "m") {
           e.preventDefault();
           bgm.muted = !bgm.muted;
           showHud(bgm.muted ? "🔇 靜音" : `🔊 音量: ${Math.round(bgm.volume * 100)}%`);
-        } else if (e.code === "KeyF" || e.key.toLowerCase() === "f") {
-          e.preventDefault();
-          !document.fullscreenElement
-            ? document.documentElement.requestFullscreen().catch(() => {})
-            : document.exitFullscreen().catch(() => {});
         } else if (e.code === "KeyH" || e.key.toLowerCase() === "h") {
           e.preventDefault();
           showHud(`
