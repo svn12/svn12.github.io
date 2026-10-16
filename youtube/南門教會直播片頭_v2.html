@@ -396,7 +396,7 @@
       scrollText.addEventListener("animationiteration", setImage);
       scrollText.addEventListener("click", setImage);
 
-      // 滑鼠點選鎖定狀態：Default 只有右上角 Bdate 點選有效，其餘區塊無效，按 T 切換
+      // 滑鼠點選鎖定狀態：Default 只有右上角 Bdate、下方 scrollText、空白處全螢幕切換有效，按 T 解鎖其餘區塊
       let isMouseClickUnlocked = false;
 
       function updateClickableCursor() {
@@ -405,28 +405,13 @@
         if (typeof barcode !== "undefined" && barcode) barcode.style.cursor = isUnlocked ? "pointer" : "default";
         const tblk = document.querySelector(".text-block");
         if (tblk) tblk.style.cursor = isUnlocked ? "pointer" : "default";
-        if (scrollText) scrollText.style.cursor = isUnlocked ? "pointer" : "default";
         const ch = document.querySelector("#church");
         if (ch) ch.style.cursor = isUnlocked ? "pointer" : "default";
+
+        // Bdate 與 scrollText 永遠是 pointer
         Bdate.style.cursor = "pointer";
+        if (scrollText) scrollText.style.cursor = "pointer";
       }
-      updateClickableCursor();
-
-      // 全域 Capture 階段攔截非右上角 Bdate 的點擊
-      window.addEventListener(
-        "click",
-        (e) => {
-          if (isMouseClickUnlocked) return;
-          if (!e.target.closest("#Bdate")) {
-            e.stopImmediatePropagation();
-            e.preventDefault();
-          }
-        },
-        true
-      );
-
-      CurTime.style.cursor = "pointer";
-      Bdate.style.cursor = "pointer";
       updateClickableCursor();
 
       Bdate.addEventListener("click", () => {
@@ -639,6 +624,22 @@
         return !!(document.fullscreenElement || document.webkitFullscreenElement);
       }
 
+      function toggleFullscreen() {
+        if (!isFullscreen()) {
+          const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+          if (req) {
+            req.call(document.documentElement).then(() => {
+              bgm.play().catch(() => {});
+            }).catch(() => {});
+          }
+        } else {
+          const exit = document.exitFullscreen || document.webkitExitFullscreen;
+          if (exit) {
+            exit.call(document).catch(() => {});
+          }
+        }
+      }
+
       function startAudio() {
         if (!isFullscreen()) return;
         if (bgm && bgm.paused) {
@@ -660,37 +661,51 @@
       document.addEventListener("fullscreenchange", onFullscreenChange);
       document.addEventListener("webkitfullscreenchange", onFullscreenChange);
 
-      // 點擊頁面任意處進入全螢幕（排除互動連結）
-      window.addEventListener("click", (e) => {
-        if (
-          e.target.closest("a") ||
-          e.target.closest("#CurTime") ||
-          e.target.closest("#barcode") ||
-          e.target.closest(".text-block")
-        ) {
-          return;
-        }
-        if (!isFullscreen()) {
-          const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
-          if (req) {
-            req.call(document.documentElement).then(() => {
-              bgm.play().catch(() => {});
-            }).catch(() => {});
+      // 滑鼠點選控制架構：
+      // 1. 右上角日期時間區塊 (#Bdate)：Always 有效 (同頁切換場次，不觸發全螢幕切換)
+      // 2. 下方跑馬燈文字 (#scrollText)：Always 有效 (切換背景底圖，不觸發全螢幕切換)
+      // 3. 受保護外部連結區塊 (.text-block, #church, #barcode, #CurTime)：預設鎖定無效，按 Key "T" 解鎖後才有效
+      // 4. 空白處 (Background / 任意非互動區)：Always 有效，作為 Full Screen TOGGLE 切換
+      window.addEventListener(
+        "click",
+        (e) => {
+          // 1. 右上角日期時間：放行原生跳轉
+          if (e.target.closest("#Bdate")) return;
+
+          // 2. 下方跑馬燈文字：放行切換背景底圖
+          if (e.target.closest("#scrollText")) return;
+
+          // 3. 受保護的外部資料與連結區塊 (.text-block, #church, #barcode, #CurTime)
+          const isProtectedBlock =
+            e.target.closest(".text-block") ||
+            e.target.closest("#church") ||
+            e.target.closest("#barcode") ||
+            e.target.closest("#CurTime") ||
+            e.target.closest("a");
+
+          if (isProtectedBlock) {
+            if (!isMouseClickUnlocked) {
+              // 鎖定狀態下，禁止打開外部連結與試算表，且不觸發全螢幕切換
+              e.stopImmediatePropagation();
+              e.preventDefault();
+              return;
+            }
+            // 已解鎖狀態：放行點擊開啟連結，不觸發全螢幕切換
+            return;
           }
-        }
-      });
+
+          // 4. 其餘點擊皆視為「空白處」：執行全螢幕 TOGGLE（非全螢幕則進入，全螢幕則退出）
+          toggleFullscreen();
+        },
+        true
+      );
 
       // 鍵盤快捷鍵：Space 播放/暫停、M 靜音切換、F 全螢幕、Up 音量+、Down 音量-、H 說明
       window.addEventListener("keydown", (e) => {
         if (e.code === "Space") {
           e.preventDefault();
           if (!isFullscreen()) {
-            const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
-            if (req) {
-              req.call(document.documentElement).then(() => {
-                bgm.play().catch(() => {});
-              }).catch(() => {});
-            }
+            toggleFullscreen();
             return;
           }
           if (bgm.paused) {
@@ -705,17 +720,7 @@
 
         if (e.code === "KeyF" || e.key.toLowerCase() === "f") {
           e.preventDefault();
-          if (!isFullscreen()) {
-            const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
-            if (req) {
-              req.call(document.documentElement).then(() => {
-                bgm.play().catch(() => {});
-              }).catch(() => {});
-            }
-          } else {
-            const exit = document.exitFullscreen || document.webkitExitFullscreen;
-            if (exit) exit.call(document).catch(() => {});
-          }
+          toggleFullscreen();
           return;
         }
 

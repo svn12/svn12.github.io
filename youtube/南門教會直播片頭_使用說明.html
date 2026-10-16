@@ -42,6 +42,12 @@
       border-left: 4px solid #3182ce;
       padding-left: 10px;
     }
+    h3 {
+      font-size: 16px;
+      color: #2d3748;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
     p, li {
       font-size: 14.5px;
       color: #4a5568;
@@ -124,6 +130,7 @@
     .badge-green { background: #c6f6d5; color: #22543d; }
     .badge-blue { background: #bee3f8; color: #2a4365; }
     .badge-red { background: #fed7d7; color: #742a2a; }
+    .badge-purple { background: #e9d8fd; color: #553c9a; }
     @media print {
       body { background: #fff; padding: 0; }
       .container { box-shadow: none; padding: 15px; max-width: 100%; }
@@ -142,24 +149,33 @@
       <li><strong>主日排版助手 (多功能整合工作台)</strong>：<br><a href="https://www.jktai123.com/Gemini/sermon_ppt/index.html" target="_blank">https://www.jktai123.com/Gemini/sermon_ppt/index.html</a></li>
     </ul>
 
-    <h2>2. 直播片頭防誤觸安全機制 (全新架構)</h2>
+    <h2>2. 直播片頭滑鼠點選與防誤觸架構</h2>
     <div class="card-alert">
-      <div class="card-alert-title">🔒 現場防誤觸設計考量</div>
-      <p style="margin: 0;">為防止現場轉播時導播或操作人員不慎晃動滑鼠、誤點擊螢幕導致意外跳轉頁面或彈出新視窗，片頭系統全面採用<b>雙模鎖定架構</b>：</p>
+      <div class="card-alert-title">🔒 現場操控與防誤觸分層設計</div>
+      <p style="margin: 0;">為兼顧轉播現場隨手切換全螢幕與換底圖的高效操控，同時杜絕晃動滑鼠誤觸彈出新分頁，片頭系統採用精確分層點選機制：</p>
     </div>
 
+    <h3>🟢 常態有效區塊 (Always 有效，無論鎖定與否)</h3>
     <ul>
-      <li><span class="badge badge-red">預設 Default 鎖定</span> <strong>僅右上角「日期時間區塊」點選有效</strong>：
+      <li><span class="badge badge-purple">右上角日期時間</span> <strong>點擊直接同頁切換場次</strong>：點擊右上角（如 <code>20261018 10:30</code>），同頁跳轉切換華語與台語禮拜（<code>location.href</code> 不開新分頁），游標常態顯示手指指標。</li>
+      <li><span class="badge badge-green">下方跑馬燈文字</span> <strong>點擊手動更換背景底圖</strong>：點擊底部跑馬燈字幕（<code>#scrollText</code>），立即淡入切換至下一張背景照片（<code>setImage</code>），游標常態顯示手指指標。</li>
+      <li><span class="badge badge-blue">畫面空白處</span> <strong>Full Screen TOGGLE 全螢幕切換</strong>：滑鼠左鍵點擊畫面任意非互動空白處（底圖背景、容器周圍），即時切換全螢幕模式（未全螢幕時進入全螢幕並播放片頭音樂；已全螢幕時退出全螢幕並暫停音樂）。</li>
+    </ul>
+
+    <h3>🔒 受保護外部連結區塊 (Default 鎖定，按 Key "T" 切換解鎖)</h3>
+    <ul>
+      <li><strong>受保護對象</strong>：
         <ul>
-          <li>點擊右上角（如 <code>20261018 10:30</code>），可直接同頁跳轉切換華語與台語禮拜（<code>location.href</code> 不開新分頁）。</li>
-          <li><b>其餘畫面所有區塊點選一律無效</b>（點選講道題目/經文不誤開試算表、背景空白處不誤觸全螢幕、走馬燈不誤換背景圖、QR Code 不誤開週報），游標自動呈現箭頭（<code>default</code>）。</li>
+          <li>中間講道資訊卡（<code>.text-block</code> ➔ 點擊開 Google 試算表）</li>
+          <li>教會名稱連結（<code>#church</code> ➔ 點擊開 YouTube 頻道）</li>
+          <li>週報下載連結（<code>#barcode</code> QR Code 與 <code>#CurTime</code> 左側時間 ➔ 點擊開週報網頁）</li>
         </ul>
       </li>
-      <li><span class="badge badge-green">按鍵 T 切換解鎖</span> <strong>隨時切換啟用 / 鎖定</strong>：
+      <li><span class="badge badge-red">預設 Default 鎖定</span>：上述區塊點選<b>全面鎖定無效</b>，游標自動呈現一般箭頭（<code>default</code>），防止誤觸跳轉，亦不觸發全螢幕切換。</li>
+      <li><span class="badge badge-green">按鍵 T 切換解鎖</span>：按鍵盤 <span class="kbd">T</span> 鍵可隨時切換受保護區塊之解鎖狀態：
         <ul>
-          <li>按鍵盤 <span class="kbd">T</span> 鍵：即時在「防誤觸鎖定」與「全畫面點選啟用」之間雙向切換。</li>
-          <li>解鎖狀態下右下角 HUD 即時提示：<code>🔓 滑鼠點選已全部啟用 (按 T 鎖定)</code>，游標恢復手指指標。</li>
-          <li>鎖定狀態下右下角 HUD 即時提示：<code>🔒 滑鼠點選已鎖定 (僅右上角有效，按 T 解鎖)</code>。</li>
+          <li>解鎖狀態下右下角 HUD 提示：<code>🔓 滑鼠點選已全部啟用 (按 T 鎖定)</code>，游標恢復手指指標。</li>
+          <li>鎖定狀態下右下角 HUD 提示：<code>🔒 滑鼠點選已鎖定 (僅右上角有效，按 T 解鎖)</code>。</li>
         </ul>
       </li>
     </ul>
@@ -177,12 +193,12 @@
         <tr>
           <td><span class="kbd">T</span></td>
           <td><strong>點選鎖定切換</strong></td>
-          <td>切換「僅右上角有效 (防誤觸鎖定)」與「全畫面點選有效」</td>
+          <td>切換外部連結區塊之「防誤觸鎖定」與「全部點選啟用」</td>
         </tr>
         <tr>
           <td><span class="kbd">Space</span></td>
           <td><strong>播放 / 暫停</strong></td>
-          <td>片頭循環背景音樂無縫播放與暫停切換</td>
+          <td>片頭循環背景音樂無縫播放與暫停切換（未全螢幕時自動進入全螢幕）</td>
         </tr>
         <tr>
           <td><span class="kbd">↑</span> (ArrowUp)</td>
@@ -202,7 +218,7 @@
         <tr>
           <td><span class="kbd">F</span></td>
           <td><strong>全螢幕切換</strong></td>
-          <td>進入或退出瀏覽器全螢幕模式</td>
+          <td>進入或退出瀏覽器全螢幕模式 (TOGGLE)</td>
         </tr>
         <tr>
           <td><span class="kbd">H</span></td>
