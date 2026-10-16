@@ -396,8 +396,38 @@
       scrollText.addEventListener("animationiteration", setImage);
       scrollText.addEventListener("click", setImage);
 
+      // 滑鼠點選鎖定狀態：Default 只有右上角 Bdate 點選有效，其餘區塊無效，按 T 切換
+      let isMouseClickUnlocked = false;
+
+      function updateClickableCursor() {
+        const isUnlocked = isMouseClickUnlocked;
+        CurTime.style.cursor = isUnlocked ? "pointer" : "default";
+        if (typeof barcode !== "undefined" && barcode) barcode.style.cursor = isUnlocked ? "pointer" : "default";
+        const tblk = document.querySelector(".text-block");
+        if (tblk) tblk.style.cursor = isUnlocked ? "pointer" : "default";
+        if (scrollText) scrollText.style.cursor = isUnlocked ? "pointer" : "default";
+        const ch = document.querySelector("#church");
+        if (ch) ch.style.cursor = isUnlocked ? "pointer" : "default";
+        Bdate.style.cursor = "pointer";
+      }
+      updateClickableCursor();
+
+      // 全域 Capture 階段攔截非右上角 Bdate 的點擊
+      window.addEventListener(
+        "click",
+        (e) => {
+          if (isMouseClickUnlocked) return;
+          if (!e.target.closest("#Bdate")) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+          }
+        },
+        true
+      );
+
       CurTime.style.cursor = "pointer";
       Bdate.style.cursor = "pointer";
+      updateClickableCursor();
 
       Bdate.addEventListener("click", () => {
         location.href = "./南門教會直播片頭_v2.html";
@@ -684,6 +714,18 @@
           return;
         }
 
+        if (e.code === "KeyT" || e.key.toLowerCase() === "t") {
+          e.preventDefault();
+          isMouseClickUnlocked = !isMouseClickUnlocked;
+          updateClickableCursor();
+          if (isMouseClickUnlocked) {
+            showHud("🔓 滑鼠點選已全部啟用 (按 T 鎖定)");
+          } else {
+            showHud("🔒 滑鼠點選已鎖定 (僅右上角有效，按 T 解鎖)");
+          }
+          return;
+        }
+
         startAudio();
         if (e.code === "KeyM" || e.key.toLowerCase() === "m") {
           e.preventDefault();
@@ -699,6 +741,7 @@
               <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">↓ (ArrowDown)</span></td><td>音量降低 (-10%)</td></tr>
               <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">M</span></td><td>靜音開關</td></tr>
               <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">F</span></td><td>全螢幕切換</td></tr>
+              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">T</span></td><td>滑鼠點選 鎖定 / 解除切換</td></tr>
             </table>
           `, 3000);
         } else if (e.code === "ArrowUp" || e.key === "ArrowUp") {

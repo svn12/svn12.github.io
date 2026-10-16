@@ -249,9 +249,17 @@
 
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.8rem;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 1.5rem;
             margin-bottom: 1.8rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .main-layout > div {
+            min-width: 0;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         /* 桌面大螢幕版寬度與預覽高度自適應放大 */
@@ -335,8 +343,25 @@
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
-            height: 380px;
+            height: auto;
+            min-height: 380px;
             justify-content: flex-start;
+        }
+
+        .scripture-range-card {
+            background: var(--card-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 0.65rem 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .scripture-range-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        [data-theme="light"] .scripture-range-card {
+            background: rgba(255, 255, 255, 0.7);
         }
 
         .input-item {
@@ -990,6 +1015,514 @@
             color: #1d4ed8 !important;
             font-weight: 700 !important;
         }
+
+        /* ================= 禮拜直播片頭背景圖管理分頁樣式 ================= */
+        .intro-bg-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            min-width: 0;
+        }
+
+        .intro-service-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.5rem 0.8rem;
+            border-radius: 10px;
+            border: 1px solid var(--panel-border);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .intro-service-pills {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .intro-pill-btn {
+            background: transparent;
+            border: 1px solid var(--panel-border);
+            color: var(--text-sub);
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .intro-pill-btn:hover {
+            color: var(--text-main);
+            border-color: var(--accent);
+        }
+
+        .intro-pill-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px var(--accent-glow);
+        }
+
+        .intro-btn-secondary {
+            background: var(--card-bg) !important;
+            color: var(--text-main) !important;
+            border: 1px solid var(--panel-border) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .intro-btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.1) !important;
+            color: var(--accent) !important;
+            border-color: var(--accent) !important;
+        }
+
+        .intro-info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            padding: 0.7rem 0.85rem;
+            font-size: 0.82rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .intro-info-row {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .intro-info-label {
+            color: var(--text-sub);
+            font-weight: 600;
+            min-width: 65px;
+            flex-shrink: 0;
+        }
+
+        .intro-info-val {
+            color: var(--text-main);
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .intro-upload-zone {
+            border: 2px dashed var(--panel-border);
+            border-radius: 12px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.01);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .intro-upload-zone:hover, .intro-upload-zone.dragover {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.06);
+        }
+
+        .intro-upload-zone p {
+            margin: 0.25rem 0;
+            font-size: 0.82rem;
+            color: var(--text-sub);
+        }
+
+        .intro-upload-zone strong {
+            color: var(--accent);
+        }
+
+        .intro-img-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 420px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 0.2rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .intro-img-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+            background: var(--card-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            padding: 0.45rem 0.65rem;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+            min-width: 0;
+        }
+
+        .intro-img-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .intro-img-card.active-preview {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .intro-card-thumb {
+            width: 68px;
+            height: 42px;
+            border-radius: 6px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #000;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .intro-card-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .intro-card-badge {
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            font-size: 0.62rem;
+            padding: 1px 3px;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+
+        .intro-card-badge.first {
+            background: #e11d48;
+        }
+
+        .intro-card-meta {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .intro-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            flex-shrink: 0;
+        }
+
+        .intro-icon-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--panel-border);
+            color: var(--text-sub);
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.78rem;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .intro-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-main);
+            border-color: var(--accent);
+        }
+
+        .intro-icon-btn.btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        /* 16:9 預覽螢幕 */
+        .intro-preview-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .intro-preview-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.5rem 0.8rem;
+            border-radius: 10px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .intro-screen {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            user-select: none;
+        }
+
+        .intro-bg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-position: center top;
+            background-repeat: no-repeat;
+            background-size: cover;
+            transition: opacity 1.8s ease-in-out;
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .intro-bg-layer.active {
+            opacity: 1;
+        }
+
+        .intro-screen-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2% 3%;
+            box-sizing: border-box;
+            transition: opacity 0.3s ease;
+        }
+
+        .intro-screen-overlay.hidden-overlay {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .intro-live-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .intro-live-qr {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .intro-live-qr-box {
+            width: 46px;
+            height: 46px;
+            background: #fff;
+            padding: 2px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .intro-live-qr-box img, .intro-live-qr-box canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
+        .intro-live-qr-caption {
+            font-size: 0.65rem;
+            color: #fff;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .intro-live-center {
+            text-align: center;
+            flex: 1;
+        }
+
+        .intro-live-curtime {
+            color: rgb(54, 185, 199);
+            font-size: 1.45rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 3px #000;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .intro-live-church {
+            color: #f1f1f1;
+            font-size: 1.05rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 3px #000;
+            margin-top: 1px;
+        }
+
+        .intro-live-date {
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 3px #000;
+            text-align: right;
+            min-width: 70px;
+        }
+
+        .intro-live-body {
+            position: absolute;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 82%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .intro-live-card {
+            background: rgba(237, 245, 201, 0.88);
+            backdrop-filter: blur(4px);
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            max-width: 90%;
+            white-space: nowrap;
+        }
+
+        .intro-live-subj {
+            color: #1d4ed8;
+            font-size: 1.4rem;
+            font-weight: 900;
+            text-shadow: 1px 1px 1px rgba(255, 160, 122, 0.8);
+            margin-bottom: 0.15rem;
+            white-space: normal;
+        }
+
+        .intro-live-speaker {
+            color: #dc2626;
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-shadow: 1px 1px 1px #fff;
+            margin-bottom: 0.1rem;
+        }
+
+        .intro-live-poem {
+            color: #6b21a8;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 1px #fff;
+        }
+
+        .intro-live-marquee {
+            width: 100%;
+            height: 28px;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(2px);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .intro-live-marquee-text {
+            position: absolute;
+            white-space: nowrap;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px #000;
+            will-change: transform;
+            animation: introMarqueeAnim 35s linear infinite;
+        }
+
+        @keyframes introMarqueeAnim {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .intro-thumbs-strip {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 0.4rem 0.2rem;
+            scroll-behavior: smooth;
+        }
+
+        .intro-thumb-cell {
+            width: 72px;
+            height: 42px;
+            border-radius: 6px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            background: #000;
+        }
+
+        .intro-thumb-cell:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.04);
+        }
+
+        .intro-thumb-cell.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+            transform: scale(1.06);
+        }
+
+        .intro-thumb-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        [data-theme="light"] .intro-service-bar,
+        [data-theme="light"] .intro-preview-toolbar {
+            background: rgba(255, 255, 255, 0.7);
+        }
+        [data-theme="light"] .intro-card-url {
+            color: #475569;
+        }
+        [data-theme="light"] .intro-icon-btn {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        [data-theme="light"] .intro-icon-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
     
     </style>
     <script>
@@ -1028,6 +1561,7 @@
             <button class="tab-btn" id="tab-scripture">📖 聖經經文抓取</button>
             <button class="tab-btn" id="tab-audio">🎧 聽讀有聲聖經</button>
             <button class="tab-btn" id="tab-hymns">🎵 聖詩與啟應文</button>
+            <button class="tab-btn" id="tab-intro-bg">🖼️ 直播片頭背景</button>
         </div>
 
         <main>
@@ -1052,14 +1586,32 @@
 
                     <!-- 經文輸入面板 -->
                     <div class="tab-content" id="input-scripture">
-                        <div class="panel-title">🔍 經文抓取設定</div>
+                        <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>🔍 經文抓取設定</span>
+                            <span id="scripture-groups-counter" style="font-size:0.75rem; color:var(--accent); font-weight:600;">經文：1 / 3 組</span>
+                        </div>
                         <div class="bible-input-group">
-                            <div class="input-item">
-                                <label for="bible-qstr" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">引用經文範圍</label>
-                                <input type="text" id="bible-qstr" class="text-input" placeholder="例如: 耶利米書 36:1-8 或 耶36:1-8">
+                            <div style="font-size:0.85rem; font-weight:600; color:var(--text-sub); display:flex; justify-content:space-between; align-items:center;">
+                                <span>引用經文範圍 (起始～終點，最多 3 組)</span>
                             </div>
+
+                            <!-- 動態經文組容器 (最多 3 組) -->
+                            <div id="scripture-groups-container" style="display:flex; flex-direction:column; gap:0.6rem;">
+                                <!-- 由 JS 動態渲染卡片 -->
+                            </div>
+
+                            <!-- 新增經文組按鈕 -->
+                            <button type="button" id="btn-add-scripture-group" class="intro-pill-btn" style="width:100%; justify-content:center; padding:0.45rem; font-size:0.82rem; border-style:dashed;">
+                                ➕ 增加一組經文 (最多 3 組)
+                            </button>
+
+                            <!-- 手動模式摺疊選單 -->
+                            <details id="scripture-manual-details" style="font-size:0.78rem; color:var(--text-sub); margin-top:0.1rem;">
+                                <summary style="cursor:pointer; user-select:none; margin-bottom:0.3rem;">✏️ 或使用原始文字直接輸入 (如: 耶36:1-8.弗4:11-16)</summary>
+                                <input type="text" id="bible-qstr" class="text-input" placeholder="例如: 耶36:1-8.弗4:11-16 (多組以句號分隔)" style="font-size:0.82rem; padding:0.45rem 0.75rem;">
+                            </details>
                             
-                            <div class="input-item">
+                            <div class="input-item" id="container-bible-version">
                                 <label for="bible-version" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">譯本選擇</label>
                                 <select id="bible-version" class="select-input">
                                     <option value="parallel">中台譯本逐節對照 (和合本2010 + 台語巴克禮)</option>
@@ -1068,15 +1620,22 @@
                                 </select>
                             </div>
 
+                            <div id="hint-live-stream-versions" style="display:none; background:rgba(255,255,255,0.04); border:1px solid rgba(16,185,129,0.3); border-radius:8px; padding:0.6rem 0.75rem; font-size:0.8rem; color:var(--text-sub); margin-bottom:0.7rem;">
+                                <div style="font-weight:700; color:var(--text-main); margin-bottom:0.25rem; display:flex; align-items:center; gap:0.35rem;">
+                                    📺 直播禮拜專用模式 (C3/C4)：
+                                </div>
+                                <div style="line-height:1.45;">免選譯本，系統將直接輸出 <strong style="color:#10b981;">C3 台語 (巴克禮台漢本)</strong> 與 <strong style="color:#3b82f6;">C4 華語 (和合本2010)</strong> 兩個專用方塊，一鍵複製即可貼入試算表！</div>
+                            </div>
+
                             <div class="input-item">
                                 <label for="bible-format" style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">排版輸出格式</label>
-                                <select id="bible-format" class="select-input">
+                                <select id="bible-format" class="select-input" onchange="updateBibleFormatUI()">
                                     <option value="slide">🖥️ 簡報貼上格式 (每節獨立全稱標題 + 空行)</option>
-                                    <option value="report">📋 直播複製格式 (每行開頭簡寫，無空行)</option>
+                                    <option value="report">📋 直播複製格式 (每行開頭簡寫，自動產出 C3台語 / C4華語)</option>
                                 </select>
                             </div>
 
-                            <button class="btn-action" id="btn-fetch-bible">
+                            <button type="button" class="btn-action" id="btn-fetch-bible">
                                 <div class="spinner" id="fetch-spinner"></div>
                                 <span id="fetch-btn-text">🚀 抓取並排版經文</span>
                             </button>
@@ -1272,6 +1831,107 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 禮拜直播片頭背景圖管理面板 -->
+                    <div class="tab-content" id="input-intro-bg">
+                        <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>🖼️ 直播片頭背景與排版管理</span>
+                            <span id="intro-status-pill" style="font-size:0.75rem; padding:0.2rem 0.6rem; border-radius:12px; background:rgba(59,130,246,0.15); color:var(--accent); font-weight:600;">已就緒</span>
+                        </div>
+
+                        <div class="intro-bg-grid">
+                            <!-- 場次選擇列 -->
+                            <div class="intro-service-bar">
+                                <div class="intro-service-pills">
+                                    <button class="intro-pill-btn active" id="btn-service-mandarin" data-service="mandarin">華語禮拜 (08:30)</button>
+                                    <button class="intro-pill-btn" id="btn-service-taiwanese" data-service="taiwanese">台語禮拜 (10:30)</button>
+                                </div>
+                                <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                                    <button class="intro-pill-btn" id="btn-intro-refresh-sheet" title="從 Google 試算表抓取最新資料">🔄 重新抓取</button>
+                                    <button class="intro-pill-btn" id="btn-intro-open-live" title="在新分頁開啟實際直播片頭 HTML">🚀 實機片頭 ↗</button>
+                                    <a href="https://drive.google.com/drive/folders/1z5tqpjtNoHaCCUb7EDTOB6y9kSIzV3Ho?usp=sharing" target="_blank" class="intro-pill-btn" title="開啟存放片頭背景圖檔的專用 Google Drive 資料夾" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.25rem;">📁 圖檔雲端硬碟 ↗</a>
+                                </div>
+                            </div>
+
+                            <!-- 禮拜資訊卡片 -->
+                            <div class="intro-info-card">
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">講道題目：</span>
+                                    <span class="intro-info-val" id="intro-info-subj">載入中...</span>
+                                </div>
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">講員經文：</span>
+                                    <span class="intro-info-val" id="intro-info-speaker-poem">載入中...</span>
+                                </div>
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">禮拜日期：</span>
+                                    <span class="intro-info-val" id="intro-info-date">載入中...</span>
+                                </div>
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">背景圖數：</span>
+                                    <span class="intro-info-val" id="intro-info-count" style="color:var(--accent);">0 張</span>
+                                </div>
+                            </div>
+
+                            <!-- 上傳與新增區塊 -->
+                            <div class="intro-upload-zone" id="intro-drop-zone">
+                                <div style="font-size:1.4rem; margin-bottom:0.2rem;">📤</div>
+                                <p>拖曳圖片檔案至此，或<strong>點擊選擇檔案上傳</strong></p>
+                                <p style="font-size:0.75rem; color:var(--text-sub);">
+                                    支援 JPG、PNG、WebP，自動上傳至 <a href="https://drive.google.com/drive/folders/1z5tqpjtNoHaCCUb7EDTOB6y9kSIzV3Ho?usp=sharing" target="_blank" style="color:var(--accent); text-decoration:underline; font-weight:600;">專用 Google Drive 圖庫 ↗</a> 並生成 1920 高清直連
+                                </p>
+                                <input type="file" id="intro-file-input" accept="image/*" style="display:none;" multiple>
+                                
+                                <div style="display:flex; justify-content:center; gap:0.5rem; margin-top:0.6rem;">
+                                    <button type="button" class="intro-pill-btn" id="btn-intro-paste-clipboard" style="padding:0.35rem 0.75rem;">
+                                        📋 貼上剪貼簿圖片 (Ctrl+V)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- 網址手動新增區塊 -->
+                            <div style="display:flex; gap:0.4rem;">
+                                <input type="text" id="intro-url-input" class="text-input" placeholder="貼上任意圖片網址 (Unsplash、Wikimedia、Imgur、Google Drive...)" style="flex:1; font-size:0.82rem;">
+                                <button class="btn-action" id="btn-intro-add-url" style="width:auto; padding:0.5rem 0.9rem; margin:0; font-size:0.82rem; white-space:nowrap;">
+                                    ➕ 加入
+                                </button>
+                            </div>
+
+                            <!-- 推薦與圖庫快選 -->
+                            <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.76rem; color:var(--text-sub); flex-wrap:wrap;">
+                                <span>圖庫資源：</span>
+                                <a href="https://drive.google.com/drive/folders/1z5tqpjtNoHaCCUb7EDTOB6y9kSIzV3Ho?usp=sharing" target="_blank" style="color:var(--accent); text-decoration:underline; font-weight:700;">📁 存放圖檔專用 Google Drive ↗</a>
+                                <span>•</span>
+                                <a href="https://pixabay.com/zh/images/search/%E5%9F%BA%E7%9D%A3%E6%95%99/" target="_blank" style="color:var(--text-main); text-decoration:underline;">Pixabay 基督信仰</a>
+                                <span>•</span>
+                                <a href="https://unsplash.com/s/photos/christian-cross" target="_blank" style="color:var(--text-main); text-decoration:underline;">Unsplash 基督教</a>
+                                <span>•</span>
+                                <a href="https://commons.wikimedia.org/wiki/Special:Search?search=church+stained+glass" target="_blank" style="color:var(--text-main); text-decoration:underline;">Wikimedia 花窗教堂</a>
+                            </div>
+
+                            <!-- 圖片管理清單 -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.4rem;">
+                                <span style="font-size:0.85rem; font-weight:700; color:var(--text-main);">📸 背景圖片清單 (點擊可立即預覽)</span>
+                                <span style="font-size:0.75rem; color:var(--text-sub);" id="intro-order-tip">第 1 張為片頭首圖</span>
+                            </div>
+
+                            <div class="intro-img-list" id="intro-img-list-container">
+                                <!-- 動態渲染圖片卡片 -->
+                            </div>
+
+                            <!-- 同步與複製列 -->
+                            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.5rem; border-top:1px solid var(--panel-border); padding-top:0.8rem;">
+                                <div style="display:flex; gap:0.5rem;">
+                                    <button class="btn-action" id="btn-intro-copy-all-formulas" style="flex:1; margin:0; font-size:0.82rem;">
+                                        📋 複製全部照片網址 (G2 橫向貼上)
+                                    </button>
+                                    <button class="btn-action intro-btn-secondary" id="btn-intro-save-cache" style="flex:1; margin:0; font-size:0.82rem;">
+                                        💾 儲存並同步至片頭快取
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 右側輸出預覽區 -->
@@ -1284,7 +1944,39 @@
                     </div>
                     <!-- 歌詞與經文預覽 -->
                     <div id="wrapper-text-preview" style="display: block;">
+                        <!-- 簡報預覽方塊 -->
                         <div class="preview-area" id="preview-area"></div>
+
+                        <!-- 直播禮拜專用 (C3/C4 兩個方塊) -->
+                        <div id="live-stream-boxes-container" style="display: none; flex-direction:column; gap:0.85rem;">
+                            <!-- C3 台語方塊 -->
+                            <div style="background:var(--card-bg); border:1px solid rgba(16, 185, 129, 0.4); border-radius:12px; padding:0.85rem; display:flex; flex-direction:column; gap:0.5rem; box-shadow:0 4px 15px rgba(0,0,0,0.15);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                                    <div style="font-size:0.86rem; font-weight:700; color:#10b981; display:flex; align-items:center; gap:0.35rem;">
+                                        <span>🟩 台語聖經 (C3 格子專用)</span>
+                                        <span style="font-size:0.75rem; color:var(--text-sub); font-weight:normal;">聖經公會巴克禮台漢本</span>
+                                    </div>
+                                    <button type="button" class="btn" id="btn-copy-c3" onclick="copyLiveStreamText('c3')" style="padding:0.3rem 0.8rem; font-size:0.78rem; background:rgba(16, 185, 129, 0.18); color:#10b981; border:1px solid #10b981; border-radius:6px; cursor:pointer; font-weight:600; transition:all 0.2s;">
+                                        📋 複製 C3 台語經文
+                                    </button>
+                                </div>
+                                <textarea id="preview-c3-text" class="text-input" style="height:150px; min-height:100px; resize:vertical; font-size:0.83rem; line-height:1.5; white-space:pre-wrap; width:100%; font-family:inherit; background:rgba(0,0,0,0.25); border:1px solid var(--panel-border); border-radius:8px; color:var(--text-main); padding:0.6rem;" readonly placeholder="抓取後將自動填入台語經文..."></textarea>
+                            </div>
+
+                            <!-- C4 華語方塊 -->
+                            <div style="background:var(--card-bg); border:1px solid rgba(59, 130, 246, 0.4); border-radius:12px; padding:0.85rem; display:flex; flex-direction:column; gap:0.5rem; box-shadow:0 4px 15px rgba(0,0,0,0.15);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+                                    <div style="font-size:0.86rem; font-weight:700; color:#3b82f6; display:flex; align-items:center; gap:0.35rem;">
+                                        <span>🟦 華語聖經 (C4 格子專用)</span>
+                                        <span style="font-size:0.75rem; color:var(--text-sub); font-weight:normal;">和合本 2010</span>
+                                    </div>
+                                    <button type="button" class="btn" id="btn-copy-c4" onclick="copyLiveStreamText('c4')" style="padding:0.3rem 0.8rem; font-size:0.78rem; background:rgba(59, 130, 246, 0.18); color:#3b82f6; border:1px solid #3b82f6; border-radius:6px; cursor:pointer; font-weight:600; transition:all 0.2s;">
+                                        📋 複製 C4 華語經文
+                                    </button>
+                                </div>
+                                <textarea id="preview-c4-text" class="text-input" style="height:150px; min-height:100px; resize:vertical; font-size:0.83rem; line-height:1.5; white-space:pre-wrap; width:100%; font-family:inherit; background:rgba(0,0,0,0.25); border:1px solid var(--panel-border); border-radius:8px; color:var(--text-main); padding:0.6rem;" readonly placeholder="抓取後將自動填入華語經文..."></textarea>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- 聖詩啟應文預覽 & 播放區 -->
@@ -1395,6 +2087,76 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 禮拜直播片頭背景預覽區 -->
+                    <div id="wrapper-intro-bg-preview" style="display: none;">
+                        <div class="intro-preview-wrapper">
+                            <!-- 預覽控制工具列 -->
+                            <div class="intro-preview-toolbar">
+                                <div style="display:flex; align-items:center; gap:0.4rem;">
+                                    <button class="intro-pill-btn active" id="btn-intro-carousel-toggle">⏸️ 暫停輪播</button>
+                                    <button class="intro-icon-btn" id="btn-intro-prev-img" title="上一張">◀</button>
+                                    <button class="intro-icon-btn" id="btn-intro-next-img" title="下一張">▶</button>
+                                    <select id="intro-interval-select" class="select-input" style="font-size:0.78rem; padding:0.25rem 0.5rem; height:auto; width:auto;">
+                                        <option value="3000">3 秒輪播</option>
+                                        <option value="5000" selected>5 秒輪播</option>
+                                        <option value="10000">10 秒輪播</option>
+                                        <option value="20000">20 秒輪播 (片頭預設)</option>
+                                    </select>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:0.5rem;">
+                                    <label style="display:flex; align-items:center; gap:0.35rem; font-size:0.78rem; color:var(--text-sub); cursor:pointer;">
+                                        <input type="checkbox" id="intro-toggle-overlay" checked>
+                                        顯示文字疊加
+                                    </label>
+                                    <button class="intro-pill-btn" id="btn-intro-fullscreen" title="切換為全螢幕檢視">⛶ 全螢幕</button>
+                                </div>
+                            </div>
+
+                            <!-- 16:9 真實片頭模擬器螢幕 -->
+                            <div class="intro-screen" id="intro-screen-container">
+                                <!-- 雙層漸層背景 -->
+                                <div id="intro-bg-layer1" class="intro-bg-layer active"></div>
+                                <div id="intro-bg-layer2" class="intro-bg-layer"></div>
+
+                                <!-- 疊加層 (Header, TextBlock, Marquee) -->
+                                <div class="intro-screen-overlay" id="intro-screen-overlay">
+                                    <div class="intro-live-header">
+                                        <div class="intro-live-qr">
+                                            <div class="intro-live-qr-box" id="intro-live-qrcode"></div>
+                                            <span class="intro-live-qr-caption">教會週報</span>
+                                        </div>
+                                        <div class="intro-live-center">
+                                            <div class="intro-live-curtime" id="intro-live-curtime">10:00</div>
+                                            <div class="intro-live-church" id="intro-live-church">台北南門教會華語禮拜</div>
+                                        </div>
+                                        <div class="intro-live-date" id="intro-live-date">2026.10.18</div>
+                                    </div>
+
+                                    <div class="intro-live-body">
+                                        <div class="intro-live-card">
+                                            <div class="intro-live-subj" id="intro-live-subj">講道主題載入中</div>
+                                            <div class="intro-live-speaker" id="intro-live-speaker">講道者</div>
+                                            <div class="intro-live-poem" id="intro-live-poem">經文</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="intro-live-marquee">
+                                        <div class="intro-live-marquee-text" id="intro-live-marquee-text">南門長老教會網路直播 • 歡迎同心敬拜上帝</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 縮圖導航滑動列 -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.78rem; color:var(--text-sub);">
+                                <span>縮圖切換 (目前正在預覽第 <strong id="intro-current-index-display" style="color:var(--accent);">1</strong> 張)：</span>
+                                <span id="intro-timer-countdown" style="font-family:monospace;">5s</span>
+                            </div>
+                            <div class="intro-thumbs-strip" id="intro-thumbs-strip">
+                                <!-- 動態填充縮圖 -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1421,8 +2183,9 @@
         <p>南門教會主日專屬自動化工具 • Antigravity 2.0 Web SPA</p>
     </footer>
 
-    <!-- 載入 YouTube IFrame Player API -->
+    <!-- 載入 YouTube IFrame Player API 與 QRCode -->
     <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <script>
         // 聖經卷名對照表
@@ -1591,14 +2354,18 @@
         document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
         document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
         document.getElementById('tab-audio').addEventListener('click', () => switchTab('audio'));
+        document.getElementById('tab-intro-bg').addEventListener('click', () => switchTab('intro-bg'));
 
-                function stopAllPlayback() {
+        function stopAllPlayback() {
             if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
                 try { ytPlayer.pauseVideo(); } catch(e) {}
             }
             const audioHtmlPlayer = document.getElementById('audio-html-player');
             if (audioHtmlPlayer && !audioHtmlPlayer.paused) {
                 try { audioHtmlPlayer.pause(); } catch(e) {}
+            }
+            if (typeof introStopCarousel === 'function') {
+                introStopCarousel();
             }
         }
 
@@ -1715,6 +2482,12 @@
             }
             stopAllPlayback();
             currentTab = tab;
+            try {
+                localStorage.setItem('church_sermon_active_tab', tab);
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', '#' + tab);
+                }
+            } catch(e) {}
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
@@ -1722,6 +2495,8 @@
             document.getElementById('wrapper-text-preview').style.display = 'block';
             document.getElementById('wrapper-hymns-preview').style.display = 'none';
             document.getElementById('wrapper-audio-preview').style.display = 'none';
+            const wIntroPreview = document.getElementById('wrapper-intro-bg-preview');
+            if (wIntroPreview) wIntroPreview.style.display = 'none';
             document.getElementById('btn-group-shared').style.display = 'grid';
 
             if (tab === 'lyrics') {
@@ -1729,12 +2504,16 @@
                 document.getElementById('content-lyrics').classList.add('active');
                 document.getElementById('input-lyrics').classList.add('active');
                 document.getElementById('controls-row-lyrics').style.display = 'flex';
+                const previewEl = document.getElementById('preview-area');
+                const liveStreamEl = document.getElementById('live-stream-boxes-container');
+                if (previewEl) previewEl.style.display = 'block';
+                if (liveStreamEl) liveStreamEl.style.display = 'none';
                 updateLyricsLayout();
             } else if (tab === 'scripture') {
                 document.getElementById('tab-scripture').classList.add('active');
                 document.getElementById('input-scripture').classList.add('active');
                 document.getElementById('controls-row-lyrics').style.display = 'none';
-                previewArea.textContent = '';
+                if (typeof updateBibleFormatUI === 'function') updateBibleFormatUI();
             } else if (tab === 'devotion') {
                 const tDev = document.getElementById('tab-devotion');
                 const iDev = document.getElementById('input-devotion');
@@ -1762,8 +2541,41 @@
                 document.getElementById('wrapper-text-preview').style.display = 'none';
                 document.getElementById('wrapper-audio-preview').style.display = 'block';
                 initAudioBibleTab();
+            } else if (tab === 'intro-bg') {
+                document.getElementById('tab-intro-bg').classList.add('active');
+                document.getElementById('input-intro-bg').classList.add('active');
+                document.getElementById('controls-row-lyrics').style.display = 'none';
+                document.getElementById('btn-group-shared').style.display = 'none';
+                document.getElementById('wrapper-text-preview').style.display = 'none';
+                document.getElementById('wrapper-intro-bg-preview').style.display = 'block';
+                initIntroBgTab();
             }
         }
+
+        // 頁面初次載入或重整時，自動恢復上次使用的頁籤（支援 URL Hash 與 localStorage）
+        (function restoreActiveTabOnLoad() {
+            try {
+                const hash = window.location.hash ? window.location.hash.substring(1) : '';
+                const validTabs = ['lyrics', 'scripture', 'devotion', 'hymns', 'audio', 'intro-bg'];
+                const savedTab = localStorage.getItem('church_sermon_active_tab');
+                const targetTab = validTabs.includes(hash) ? hash : (validTabs.includes(savedTab) ? savedTab : null);
+                if (targetTab && targetTab !== 'lyrics') {
+                    setTimeout(() => {
+                        switchTab(targetTab);
+                    }, 50);
+                }
+            } catch(e) {
+                console.warn("Restore active tab error:", e);
+            }
+        })();
+
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash ? window.location.hash.substring(1) : '';
+            const validTabs = ['lyrics', 'scripture', 'devotion', 'hymns', 'audio', 'intro-bg'];
+            if (validTabs.includes(hash) && hash !== currentTab) {
+                switchTab(hash);
+            }
+        });
 
         
         const toggleInfoBlock = document.getElementById('hymns-toggle-infoblock');
@@ -2230,43 +3042,516 @@
             }
         }
 
+        // ================= 經文範圍多組選擇與計算邏輯 (最多 3 組) =================
+        const BIBLE_VERSES_PER_CHAP = {"創世記": [31, 25, 24, 26, 32, 22, 24, 22, 29, 32, 32, 20, 18, 24, 21, 16, 27, 33, 38, 18, 34, 24, 20, 67, 34, 35, 46, 22, 35, 43, 55, 32, 20, 31, 29, 43, 36, 30, 23, 23, 57, 38, 34, 34, 28, 34, 31, 22, 33, 26], "出埃及記": [22, 25, 22, 31, 23, 30, 25, 32, 35, 29, 10, 51, 22, 31, 27, 36, 16, 27, 25, 26, 36, 31, 33, 18, 40, 37, 21, 43, 46, 38, 18, 35, 23, 35, 35, 38, 29, 31, 43, 38], "利未記": [17, 16, 17, 35, 19, 30, 38, 36, 24, 20, 47, 8, 59, 57, 33, 34, 16, 30, 37, 27, 24, 33, 44, 23, 55, 46, 34], "民數記": [54, 34, 51, 49, 31, 27, 89, 26, 23, 36, 35, 16, 33, 45, 41, 50, 13, 32, 22, 29, 35, 41, 30, 25, 18, 65, 23, 31, 40, 16, 54, 42, 56, 29, 34, 13], "申命記": [46, 37, 29, 49, 33, 25, 26, 20, 29, 22, 32, 32, 18, 29, 23, 22, 20, 22, 21, 20, 23, 30, 25, 22, 19, 19, 26, 68, 29, 20, 30, 52, 29, 12], "約書亞記": [18, 24, 17, 24, 15, 27, 26, 35, 27, 43, 23, 24, 33, 15, 63, 10, 18, 28, 51, 9, 45, 34, 16, 33], "士師記": [36, 23, 31, 24, 31, 40, 25, 35, 57, 18, 40, 15, 25, 20, 20, 31, 13, 31, 30, 48, 25], "路得記": [22, 23, 18, 22], "撒母耳記上": [28, 36, 21, 22, 12, 21, 17, 22, 27, 27, 15, 25, 23, 52, 35, 23, 58, 30, 24, 42, 15, 23, 29, 22, 44, 25, 12, 25, 11, 31, 13], "撒母耳記下": [27, 32, 39, 12, 25, 23, 29, 18, 13, 19, 27, 31, 39, 33, 37, 23, 29, 33, 43, 26, 22, 51, 39, 25], "列王紀上": [53, 46, 28, 34, 18, 38, 51, 66, 28, 29, 43, 33, 34, 31, 34, 34, 24, 46, 21, 43, 29, 53], "列王紀下": [18, 25, 27, 44, 27, 33, 20, 29, 37, 36, 21, 21, 25, 29, 38, 20, 41, 37, 37, 21, 26, 20, 37, 20, 30], "歷代志上": [54, 55, 24, 43, 26, 81, 40, 40, 44, 14, 47, 40, 14, 17, 29, 43, 27, 17, 19, 8, 30, 19, 32, 31, 31, 32, 34, 21, 30], "歷代志下": [17, 18, 17, 22, 14, 42, 22, 18, 31, 19, 23, 16, 22, 15, 19, 14, 19, 34, 11, 37, 20, 12, 21, 27, 28, 23, 9, 27, 36, 27, 21, 33, 25, 33, 27, 23], "以斯拉記": [11, 70, 13, 24, 17, 22, 28, 36, 15, 44], "尼希米記": [11, 20, 32, 23, 19, 19, 73, 18, 38, 39, 36, 47, 31], "以斯帖記": [22, 23, 15, 17, 14, 14, 10, 17, 32, 3], "約伯記": [22, 13, 26, 21, 27, 30, 21, 22, 35, 22, 20, 25, 28, 22, 35, 22, 16, 21, 29, 29, 34, 30, 17, 25, 6, 14, 23, 28, 25, 31, 40, 22, 33, 37, 16, 33, 24, 41, 30, 24, 34, 17], "詩篇": [6, 12, 8, 8, 12, 10, 17, 9, 20, 18, 7, 8, 6, 7, 5, 11, 15, 50, 14, 9, 13, 31, 6, 10, 22, 12, 14, 9, 11, 12, 24, 11, 22, 22, 28, 12, 40, 22, 13, 17, 13, 11, 5, 26, 17, 11, 9, 14, 20, 23, 19, 9, 6, 7, 23, 13, 11, 11, 17, 12, 8, 12, 11, 10, 13, 20, 7, 35, 36, 5, 24, 20, 28, 23, 10, 12, 20, 72, 13, 19, 16, 8, 18, 12, 13, 17, 7, 18, 52, 17, 16, 15, 5, 23, 11, 13, 12, 9, 9, 5, 8, 28, 22, 35, 45, 48, 43, 13, 31, 7, 10, 10, 9, 8, 18, 19, 2, 29, 176, 7, 8, 9, 4, 8, 5, 6, 5, 6, 8, 8, 3, 18, 3, 3, 21, 26, 9, 8, 24, 13, 10, 7, 12, 15, 21, 10, 20, 14, 9, 6], "箴言": [33, 22, 35, 27, 23, 35, 27, 36, 18, 32, 31, 28, 25, 35, 33, 33, 28, 24, 29, 30, 31, 29, 35, 34, 28, 28, 27, 28, 27, 33, 31], "傳道書": [18, 26, 22, 16, 20, 12, 29, 17, 18, 20, 10, 14], "雅歌": [17, 17, 11, 16, 16, 13, 13, 14], "以賽亞書": [31, 22, 26, 6, 30, 13, 25, 22, 21, 34, 16, 6, 22, 32, 9, 14, 14, 7, 25, 6, 17, 25, 18, 23, 12, 21, 13, 29, 24, 33, 9, 20, 24, 17, 10, 22, 38, 22, 8, 31, 29, 25, 28, 28, 25, 13, 15, 22, 26, 11, 23, 15, 12, 17, 13, 12, 21, 14, 21, 22, 11, 12, 19, 12, 25, 24], "耶利米書": [19, 37, 25, 31, 31, 30, 34, 22, 26, 25, 23, 17, 27, 22, 21, 21, 27, 23, 15, 18, 14, 30, 40, 10, 38, 24, 22, 17, 32, 24, 40, 44, 26, 22, 19, 32, 21, 28, 18, 16, 18, 22, 13, 30, 5, 28, 7, 47, 39, 46, 64, 34], "耶利米哀歌": [22, 22, 66, 22, 22], "以西結書": [28, 10, 27, 17, 17, 14, 27, 18, 11, 22, 25, 28, 23, 23, 8, 63, 24, 32, 14, 49, 32, 31, 49, 27, 17, 21, 36, 26, 21, 26, 18, 32, 33, 31, 15, 38, 28, 23, 29, 49, 26, 20, 27, 31, 25, 24, 23, 35], "但以理書": [21, 49, 30, 37, 31, 28, 28, 27, 27, 21, 45, 13], "何西阿書": [11, 23, 5, 19, 15, 11, 16, 14, 17, 15, 12, 14, 16, 9], "約珥書": [20, 32, 21], "阿摩司書": [15, 16, 15, 13, 27, 14, 17, 14, 15], "俄巴底亞書": [21], "約拿書": [17, 10, 10, 11], "彌迦書": [16, 13, 12, 13, 15, 16, 20], "那鴻書": [15, 13, 19], "哈巴谷書": [17, 20, 19], "西番雅書": [18, 15, 20], "哈該書": [15, 23], "撒迦利亞書": [21, 13, 10, 14, 11, 15, 14, 23, 17, 12, 17, 14, 9, 21], "瑪拉基書": [14, 17, 18, 6], "馬太福音": [25, 23, 17, 25, 48, 34, 29, 34, 38, 42, 30, 50, 58, 36, 39, 28, 27, 35, 30, 34, 46, 46, 39, 51, 46, 75, 66, 20], "馬可福音": [45, 28, 35, 41, 43, 56, 37, 38, 50, 52, 33, 44, 37, 72, 47, 20], "路加福音": [80, 52, 38, 44, 39, 49, 50, 56, 62, 42, 54, 59, 35, 35, 32, 31, 37, 43, 48, 47, 38, 71, 56, 53], "約翰福音": [51, 25, 36, 54, 47, 71, 53, 59, 41, 42, 57, 50, 38, 31, 27, 33, 26, 40, 42, 31, 25], "使徒行傳": [26, 47, 26, 37, 42, 15, 60, 40, 43, 48, 30, 25, 52, 28, 41, 40, 34, 28, 41, 38, 40, 30, 35, 27, 27, 32, 44, 31], "羅馬書": [32, 29, 31, 25, 21, 23, 25, 39, 33, 21, 36, 21, 14, 23, 33, 27], "哥林多前書": [31, 16, 23, 21, 13, 20, 40, 13, 27, 33, 34, 31, 13, 40, 58, 24], "哥林多後書": [24, 17, 18, 18, 21, 18, 16, 24, 15, 18, 33, 21, 14], "加拉太書": [24, 21, 29, 31, 26, 18], "以弗所書": [23, 22, 21, 32, 33, 24], "腓立比書": [30, 30, 21, 23], "歌羅西書": [29, 23, 25, 18], "帖撒羅尼迦前書": [10, 20, 13, 18, 28], "帖撒羅尼迦後書": [12, 17, 18], "提摩太前書": [20, 15, 16, 16, 25, 21], "提摩太後書": [18, 26, 17, 22], "提多書": [16, 15, 15], "腓利門書": [25], "希伯來書": [14, 18, 19, 16, 14, 20, 28, 13, 28, 39, 40, 29, 25], "雅各書": [27, 26, 18, 17, 20], "彼得前書": [25, 25, 22, 19, 14], "彼得後書": [21, 22, 18], "約翰一書": [10, 29, 24, 21, 21], "約翰二書": [13], "約翰三書": [14], "猶大書": [25], "啟示錄": [20, 29, 22, 11, 14, 17, 17, 13, 21, 11, 19, 17, 18, 20, 8, 21, 18, 24, 21, 15, 27, 21]};
+
+        const BIBLE_66_ALL = [
+            { name: "創世記", test: "舊約", maxChap: 50 }, { name: "出埃及記", test: "舊約", maxChap: 40 }, { name: "利未記", test: "舊約", maxChap: 27 },
+            { name: "民數記", test: "舊約", maxChap: 36 }, { name: "申命記", test: "舊約", maxChap: 34 }, { name: "約書亞記", test: "舊約", maxChap: 24 },
+            { name: "士師記", test: "舊約", maxChap: 21 }, { name: "路得記", test: "舊約", maxChap: 4 }, { name: "撒母耳記上", test: "舊約", maxChap: 31 },
+            { name: "撒母耳記下", test: "舊約", maxChap: 24 }, { name: "列王紀上", test: "舊約", maxChap: 22 }, { name: "列王紀下", test: "舊約", maxChap: 25 },
+            { name: "歷代志上", test: "舊約", maxChap: 29 }, { name: "歷代志下", test: "舊約", maxChap: 36 }, { name: "以斯拉記", test: "舊約", maxChap: 10 },
+            { name: "尼希米記", test: "舊約", maxChap: 13 }, { name: "以斯帖記", test: "舊約", maxChap: 10 }, { name: "約伯記", test: "舊約", maxChap: 42 },
+            { name: "詩篇", test: "舊約", maxChap: 150 }, { name: "箴言", test: "舊約", maxChap: 31 }, { name: "傳道書", test: "舊約", maxChap: 12 },
+            { name: "雅歌", test: "舊約", maxChap: 8 }, { name: "以賽亞書", test: "舊約", maxChap: 66 }, { name: "耶利米書", test: "舊約", maxChap: 52 },
+            { name: "耶利米哀歌", test: "舊約", maxChap: 5 }, { name: "以西結書", test: "舊約", maxChap: 48 }, { name: "但以理書", test: "舊約", maxChap: 12 },
+            { name: "何西阿書", test: "舊約", maxChap: 14 }, { name: "約珥書", test: "舊約", maxChap: 3 }, { name: "阿摩司書", test: "舊約", maxChap: 9 },
+            { name: "俄巴底亞書", test: "舊約", maxChap: 1 }, { name: "約拿書", test: "舊約", maxChap: 4 }, { name: "彌迦書", test: "舊約", maxChap: 7 },
+            { name: "那鴻書", test: "舊約", maxChap: 3 }, { name: "哈巴谷書", test: "舊約", maxChap: 3 }, { name: "西番雅書", test: "舊約", maxChap: 3 },
+            { name: "哈該書", test: "舊約", maxChap: 2 }, { name: "撒迦利亞書", test: "舊約", maxChap: 14 }, { name: "瑪拉基書", test: "舊約", maxChap: 4 },
+            { name: "馬太福音", test: "新約", maxChap: 28 }, { name: "馬可福音", test: "新約", maxChap: 16 }, { name: "路加福音", test: "新約", maxChap: 24 },
+            { name: "約翰福音", test: "新約", maxChap: 21 }, { name: "使徒行傳", test: "新約", maxChap: 28 }, { name: "羅馬書", test: "新約", maxChap: 16 },
+            { name: "哥林多前書", test: "新約", maxChap: 16 }, { name: "哥林多後書", test: "新約", maxChap: 13 }, { name: "加拉太書", test: "新約", maxChap: 6 },
+            { name: "以弗所書", test: "新約", maxChap: 6 }, { name: "腓立比書", test: "新約", maxChap: 4 }, { name: "歌羅西書", test: "新約", maxChap: 4 },
+            { name: "帖撒羅尼迦前書", test: "新約", maxChap: 5 }, { name: "帖撒羅尼迦後書", test: "新約", maxChap: 3 }, { name: "提摩太前書", test: "新約", maxChap: 6 },
+            { name: "提摩太後書", test: "新約", maxChap: 4 }, { name: "提多書", test: "新約", maxChap: 3 }, { name: "腓利門書", test: "新約", maxChap: 1 },
+            { name: "希伯來書", test: "新約", maxChap: 13 }, { name: "雅各書", test: "新約", maxChap: 5 }, { name: "彼得前書", test: "新約", maxChap: 5 },
+            { name: "彼得後書", test: "新約", maxChap: 3 }, { name: "約翰一書", test: "新約", maxChap: 5 }, { name: "約翰二書", test: "新約", maxChap: 1 },
+            { name: "約翰三書", test: "新約", maxChap: 1 }, { name: "猶大書", test: "新約", maxChap: 1 }, { name: "啟示錄", test: "新約", maxChap: 22 }
+        ];
+
+        function getBibleBookMaxChap(bookName) {
+            const list = BIBLE_VERSES_PER_CHAP[bookName];
+            return list ? list.length : 50;
+        }
+
+        function getBibleMaxVerse(bookName, chapNum) {
+            const list = BIBLE_VERSES_PER_CHAP[bookName];
+            if (!list) return 50;
+            const c = parseInt(chapNum, 10) || 1;
+            const idx = Math.max(0, Math.min(c - 1, list.length - 1));
+            return list[idx] || 50;
+        }
+
+        function generateChapterOptions(maxChap, selectedChap) {
+            let html = "";
+            const sel = parseInt(selectedChap, 10) || 1;
+            for (let c = 1; c <= maxChap; c++) {
+                html += `<option value="${c}" ${c === sel ? "selected" : ""}>${c}</option>`;
+            }
+            return html;
+        }
+
+        function generateVerseOptions(maxVerse, selectedVerse) {
+            let html = "";
+            const sel = parseInt(selectedVerse, 10) || 1;
+            for (let v = 1; v <= maxVerse; v++) {
+                html += `<option value="${v}" ${v === sel ? "selected" : ""}>${v}</option>`;
+            }
+            return html;
+        }
+
+        const SCRIPTURE_STORAGE_KEY = "church_scripture_groups_v1";
+        let scriptureRangeGroups = [
+            { book: "耶利米書", startChap: 36, startVerse: 1, endChap: 36, endVerse: 8 }
+        ];
+
+        // 載入持久化快取，並嚴格校驗章節與節數上限
+        try {
+            const savedGroups = localStorage.getItem(SCRIPTURE_STORAGE_KEY);
+            if (savedGroups) {
+                const parsed = JSON.parse(savedGroups);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    scriptureRangeGroups = parsed;
+                    scriptureRangeGroups.forEach(g => {
+                        const maxChap = getBibleBookMaxChap(g.book);
+                        if (g.startChap > maxChap) g.startChap = 1;
+                        if (g.endChap > maxChap || g.endChap < g.startChap) g.endChap = g.startChap;
+
+                        const startMaxV = getBibleMaxVerse(g.book, g.startChap);
+                        const endMaxV = getBibleMaxVerse(g.book, g.endChap);
+                        if (g.startVerse > startMaxV) g.startVerse = 1;
+                        if (g.endVerse > endMaxV) g.endVerse = endMaxV;
+                        if (g.startChap === g.endChap && g.endVerse < g.startVerse) g.endVerse = g.startVerse;
+                    });
+                }
+            }
+        } catch (e) {
+            console.warn("載入經文設定快取失敗:", e);
+        }
+
+        function saveScriptureGroupsToStorage() {
+            try {
+                localStorage.setItem(SCRIPTURE_STORAGE_KEY, JSON.stringify(scriptureRangeGroups));
+            } catch (e) {
+                console.warn("儲存經文設定快取失敗:", e);
+            }
+        }
+
+        function generateBibleBookOptions(selectedBook) {
+            let otHtml = '<optgroup label="── 舊約聖經 (39卷) ──">';
+            let ntHtml = '<optgroup label="── 新約聖經 (27卷) ──">';
+            BIBLE_66_ALL.forEach(b => {
+                const isSel = (b.name === selectedBook) ? "selected" : "";
+                const opt = `<option value="${b.name}" ${isSel}>${b.name}</option>`;
+                if (b.test === "舊約") otHtml += opt;
+                else ntHtml += opt;
+            });
+            otHtml += "</optgroup>";
+            ntHtml += "</optgroup>";
+            return otHtml + ntHtml;
+        }
+
+        function calcGroupQuery(g) {
+            const sC = parseInt(g.startChap, 10) || 1;
+            const sV = parseInt(g.startVerse, 10) || 1;
+            const eC = parseInt(g.endChap, 10) || sC;
+            const eV = parseInt(g.endVerse, 10) || sV;
+            const book = g.book || "創世記";
+            if (sC === eC) {
+                if (sV === eV) return `${book} ${sC}:${sV}`;
+                return `${book} ${sC}:${sV}-${eV}`;
+            }
+            return `${book} ${sC}:${sV}-${eC}:${eV}`;
+        }
+
+        function getCombinedScriptureQuery() {
+            const manualInput = document.getElementById("bible-qstr");
+            if (manualInput && manualInput.value.trim()) {
+                return manualInput.value.trim();
+            }
+            return scriptureRangeGroups.map(g => calcGroupQuery(g)).join(".");
+        }
+
+        function renderScriptureRangeGroups() {
+            const container = document.getElementById("scripture-groups-container");
+            const counter = document.getElementById("scripture-groups-counter");
+            const btnAdd = document.getElementById("btn-add-scripture-group");
+            if (!container) return;
+            
+            if (counter) {
+                counter.textContent = `經文組數：${scriptureRangeGroups.length} / 3 組`;
+            }
+            if (btnAdd) {
+                btnAdd.style.display = (scriptureRangeGroups.length >= 3) ? "none" : "flex";
+            }
+
+            container.innerHTML = "";
+            scriptureRangeGroups.forEach((group, idx) => {
+                const maxChap = getBibleBookMaxChap(group.book);
+                if (group.startChap > maxChap) group.startChap = 1;
+                if (group.endChap > maxChap || group.endChap < group.startChap) group.endChap = group.startChap;
+
+                const startMaxV = getBibleMaxVerse(group.book, group.startChap);
+                const endMaxV = getBibleMaxVerse(group.book, group.endChap);
+                if (group.startVerse > startMaxV) group.startVerse = 1;
+                if (group.endVerse > endMaxV) group.endVerse = endMaxV;
+                if (group.startChap === group.endChap && group.endVerse < group.startVerse) group.endVerse = group.startVerse;
+
+                const unitChap = (group.book === "詩篇") ? "篇" : "章";
+                const card = document.createElement("div");
+                card.className = "scripture-range-card";
+                card.id = `scripture-card-${idx}`;
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                        <span style="font-size:0.82rem; font-weight:700; color:var(--accent);">📖 經文組 #${idx + 1}</span>
+                        ${scriptureRangeGroups.length > 1 ? `<button type="button" class="intro-icon-btn btn-danger" style="width:22px; height:22px; font-size:0.75rem;" onclick="removeScriptureGroup(${idx})" title="移除此組經文">✕</button>` : ""}
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:0.45rem;">
+                        <div style="display:flex; align-items:center; gap:0.4rem;">
+                            <span style="font-size:0.8rem; color:var(--text-sub); width:36px; flex-shrink:0;">書卷</span>
+                            <select id="group-book-${idx}" class="select-input" style="flex:1; padding:0.35rem 0.6rem; font-size:0.82rem;" onchange="onScriptureGroupChange(${idx}, 'book', this.value)">
+                                ${generateBibleBookOptions(group.book)}
+                            </select>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.35rem; font-size:0.8rem; color:var(--text-sub); flex-wrap:wrap;">
+                            <span style="width:36px; flex-shrink:0; font-weight:600; color:var(--text-main);">起始</span>
+                            <span>第</span>
+                            <select id="group-start-chap-${idx}" class="select-input" style="width:58px; padding:0.3rem 0.2rem; font-size:0.82rem; text-align:center;" onchange="onScriptureGroupChange(${idx}, 'startChap', this.value)">
+                                ${generateChapterOptions(maxChap, group.startChap)}
+                            </select>
+                            <span id="group-unit-chap1-${idx}">${unitChap}</span>
+                            <span style="margin-left:0.2rem;">第</span>
+                            <select id="group-start-verse-${idx}" class="select-input" style="width:58px; padding:0.3rem 0.2rem; font-size:0.82rem; text-align:center;" onchange="onScriptureGroupChange(${idx}, 'startVerse', this.value)">
+                                ${generateVerseOptions(startMaxV, group.startVerse)}
+                            </select>
+                            <span>節</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.35rem; font-size:0.8rem; color:var(--text-sub); flex-wrap:wrap;">
+                            <span style="width:36px; flex-shrink:0; font-weight:600; color:var(--text-main);">終點</span>
+                            <span>第</span>
+                            <select id="group-end-chap-${idx}" class="select-input" style="width:58px; padding:0.3rem 0.2rem; font-size:0.82rem; text-align:center;" onchange="onScriptureGroupChange(${idx}, 'endChap', this.value)">
+                                ${generateChapterOptions(maxChap, group.endChap)}
+                            </select>
+                            <span id="group-unit-chap2-${idx}">${unitChap}</span>
+                            <span style="margin-left:0.2rem;">第</span>
+                            <select id="group-end-verse-${idx}" class="select-input" style="width:58px; padding:0.3rem 0.2rem; font-size:0.82rem; text-align:center;" onchange="onScriptureGroupChange(${idx}, 'endVerse', this.value)">
+                                ${generateVerseOptions(endMaxV, group.endVerse)}
+                            </select>
+                            <span>節</span>
+                            <span id="group-max-chap-hint-${idx}" style="font-size:0.72rem; color:var(--text-sub); margin-left:auto;">(共 ${maxChap} ${unitChap} / 本${unitChap} ${endMaxV} 節)</span>
+                        </div>
+                        <div style="font-size:0.75rem; color:var(--text-sub); background:rgba(0,0,0,0.18); border-radius:6px; padding:0.25rem 0.5rem; display:flex; justify-content:space-between; align-items:center;">
+                            <span>即時合成：<strong id="group-preview-text-${idx}" style="color:var(--text-main); font-weight:700;">${calcGroupQuery(group)}</strong></span>
+                            <span style="font-size:0.72rem; color:var(--accent);">可跨章跨節</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.addScriptureGroup = function() {
+            if (scriptureRangeGroups.length >= 3) return;
+            const defaultNext = [
+                { book: "以弗所書", startChap: 4, startVerse: 11, endChap: 4, endVerse: 16 },
+                { book: "馬太福音", startChap: 5, startVerse: 1, endChap: 5, endVerse: 12 }
+            ];
+            const nextIdx = scriptureRangeGroups.length - 1;
+            const newGroup = defaultNext[nextIdx] || { book: "詩篇", startChap: 23, startVerse: 1, endChap: 23, endVerse: 6 };
+            scriptureRangeGroups.push(newGroup);
+            saveScriptureGroupsToStorage();
+            renderScriptureRangeGroups();
+        };
+
+        window.removeScriptureGroup = function(idx) {
+            if (scriptureRangeGroups.length <= 1) return;
+            scriptureRangeGroups.splice(idx, 1);
+            saveScriptureGroupsToStorage();
+            renderScriptureRangeGroups();
+        };
+
+        // 局部更新：精確修改記憶體與 DOM 節點，絕不重建整批卡片，保持游標焦點與流暢度
+        window.onScriptureGroupChange = function(idx, field, val) {
+            if (!scriptureRangeGroups[idx]) return;
+            const g = scriptureRangeGroups[idx];
+
+            if (field === "book") {
+                g.book = val;
+                const newMaxChap = getBibleBookMaxChap(val);
+                if (g.startChap > newMaxChap) g.startChap = 1;
+                g.endChap = g.startChap;
+
+                const startMaxV = getBibleMaxVerse(val, g.startChap);
+                const endMaxV = getBibleMaxVerse(val, g.endChap);
+                if (g.startVerse > startMaxV) g.startVerse = 1;
+                if (g.endVerse > endMaxV) g.endVerse = endMaxV;
+                if (g.startChap === g.endChap && g.endVerse < g.startVerse) g.endVerse = g.startVerse;
+
+                const curUnit = (val === "詩篇") ? "篇" : "章";
+                const u1 = document.getElementById(`group-unit-chap1-${idx}`);
+                if (u1) u1.textContent = curUnit;
+                const u2 = document.getElementById(`group-unit-chap2-${idx}`);
+                if (u2) u2.textContent = curUnit;
+
+                const startChapEl = document.getElementById(`group-start-chap-${idx}`);
+                if (startChapEl) {
+                    startChapEl.innerHTML = generateChapterOptions(newMaxChap, g.startChap);
+                    startChapEl.value = g.startChap;
+                }
+                const startVerseEl = document.getElementById(`group-start-verse-${idx}`);
+                if (startVerseEl) {
+                    startVerseEl.innerHTML = generateVerseOptions(startMaxV, g.startVerse);
+                    startVerseEl.value = g.startVerse;
+                }
+                const endChapEl = document.getElementById(`group-end-chap-${idx}`);
+                if (endChapEl) {
+                    endChapEl.innerHTML = generateChapterOptions(newMaxChap, g.endChap);
+                    endChapEl.value = g.endChap;
+                }
+                const endVerseEl = document.getElementById(`group-end-verse-${idx}`);
+                if (endVerseEl) {
+                    endVerseEl.innerHTML = generateVerseOptions(endMaxV, g.endVerse);
+                    endVerseEl.value = g.endVerse;
+                }
+                const hintEl = document.getElementById(`group-max-chap-hint-${idx}`);
+                if (hintEl) hintEl.textContent = `(共 ${newMaxChap} ${curUnit} / 本${curUnit} ${endMaxV} 節)`;
+            } else if (field === "startChap") {
+                const maxChap = getBibleBookMaxChap(g.book);
+                let num = Math.max(1, parseInt(val, 10) || 1);
+                if (num > maxChap) num = maxChap;
+                g.startChap = num;
+
+                // 起點選完章節之後，終點的章節直接同步為同一章節
+                g.endChap = num;
+                const elEndChap = document.getElementById(`group-end-chap-${idx}`);
+                if (elEndChap) elEndChap.value = num;
+
+                const startMaxV = getBibleMaxVerse(g.book, g.startChap);
+                if (g.startVerse > startMaxV) g.startVerse = 1;
+                const startVerseEl = document.getElementById(`group-start-verse-${idx}`);
+                if (startVerseEl) {
+                    startVerseEl.innerHTML = generateVerseOptions(startMaxV, g.startVerse);
+                    startVerseEl.value = g.startVerse;
+                }
+
+                const endMaxV = getBibleMaxVerse(g.book, g.endChap);
+                if (g.endVerse > endMaxV) g.endVerse = endMaxV;
+                if (g.startChap === g.endChap && g.endVerse < g.startVerse) g.endVerse = g.startVerse;
+                const endVerseEl = document.getElementById(`group-end-verse-${idx}`);
+                if (endVerseEl) {
+                    endVerseEl.innerHTML = generateVerseOptions(endMaxV, g.endVerse);
+                    endVerseEl.value = g.endVerse;
+                }
+                const curUnit = (g.book === "詩篇") ? "篇" : "章";
+                const hintEl = document.getElementById(`group-max-chap-hint-${idx}`);
+                if (hintEl) hintEl.textContent = `(共 ${maxChap} ${curUnit} / 本${curUnit} ${endMaxV} 節)`;
+            } else if (field === "endChap") {
+                const maxChap = getBibleBookMaxChap(g.book);
+                let num = Math.max(1, parseInt(val, 10) || 1);
+                if (num > maxChap) num = maxChap;
+                if (num < g.startChap) num = g.startChap;
+                g.endChap = num;
+                const elEndChap = document.getElementById(`group-end-chap-${idx}`);
+                if (elEndChap) elEndChap.value = num;
+
+                const endMaxV = getBibleMaxVerse(g.book, g.endChap);
+                if (g.endVerse > endMaxV) g.endVerse = endMaxV;
+                if (g.startChap === g.endChap && g.endVerse < g.startVerse) g.endVerse = g.startVerse;
+                const endVerseEl = document.getElementById(`group-end-verse-${idx}`);
+                if (endVerseEl) {
+                    endVerseEl.innerHTML = generateVerseOptions(endMaxV, g.endVerse);
+                    endVerseEl.value = g.endVerse;
+                }
+                const curUnit = (g.book === "詩篇") ? "篇" : "章";
+                const hintEl = document.getElementById(`group-max-chap-hint-${idx}`);
+                if (hintEl) hintEl.textContent = `(共 ${maxChap} ${curUnit} / 本${curUnit} ${endMaxV} 節)`;
+            } else if (field === "startVerse") {
+                const startMaxV = getBibleMaxVerse(g.book, g.startChap);
+                let num = Math.max(1, parseInt(val, 10) || 1);
+                if (num > startMaxV) num = startMaxV;
+                g.startVerse = num;
+
+                if (g.startChap === g.endChap && g.endVerse < num) {
+                    g.endVerse = num;
+                    const endVerseEl = document.getElementById(`group-end-verse-${idx}`);
+                    if (endVerseEl) endVerseEl.value = num;
+                }
+            } else if (field === "endVerse") {
+                const endMaxV = getBibleMaxVerse(g.book, g.endChap);
+                let num = Math.max(1, parseInt(val, 10) || 1);
+                if (num > endMaxV) num = endMaxV;
+                if (g.startChap === g.endChap && num < g.startVerse) num = g.startVerse;
+                g.endVerse = num;
+                const endVerseEl = document.getElementById(`group-end-verse-${idx}`);
+                if (endVerseEl) endVerseEl.value = num;
+            }
+
+            // 更新即時合成預覽字串
+            const previewEl = document.getElementById(`group-preview-text-${idx}`);
+            if (previewEl) {
+                previewEl.textContent = calcGroupQuery(g);
+            }
+            saveScriptureGroupsToStorage();
+        };
+
+        // 綁定經文組按鈕與初始渲染
+        const btnAddScripture = document.getElementById("btn-add-scripture-group");
+        if (btnAddScripture) {
+            btnAddScripture.addEventListener("click", addScriptureGroup);
+        }
+        renderScriptureRangeGroups();
+
+        // 直播格式專用狀態與輔助函式
+        let liveStreamC3Result = '';
+        let liveStreamC4Result = '';
+
+        function formatSingleScriptureReport(records) {
+            if (!records || records.length === 0) return "";
+            let lines = [];
+            for (let r of records) {
+                const ref = `${r.book_short}${r.chapter}:${r.verse}`;
+                lines.push(`${ref} ${r.text}`);
+            }
+            return lines.join('\n');
+        }
+
+        window.copyLiveStreamText = async function(type) {
+            const isC3 = (type === 'c3');
+            const textEl = document.getElementById(isC3 ? 'preview-c3-text' : 'preview-c4-text');
+            const btnEl = document.getElementById(isC3 ? 'btn-copy-c3' : 'btn-copy-c4');
+            const text = textEl ? textEl.value.trim() : (isC3 ? liveStreamC3Result : liveStreamC4Result);
+
+            if (!text) {
+                alert(`無 ${isC3 ? 'C3 台語' : 'C4 華語'} 經文可供複製！請先點擊「🚀 抓取並排版經文」`);
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(text);
+                if (btnEl) {
+                    const origHtml = btnEl.innerHTML;
+                    btnEl.innerHTML = `✅ 已複製 ${isC3 ? 'C3 台語' : 'C4 華語'}！`;
+                    btnEl.style.borderColor = '#10b981';
+                    btnEl.style.color = '#10b981';
+                    btnEl.style.background = 'rgba(16, 185, 129, 0.25)';
+                    setTimeout(() => {
+                        btnEl.innerHTML = origHtml;
+                        btnEl.style.borderColor = '';
+                        btnEl.style.color = '';
+                        btnEl.style.background = '';
+                    }, 2000);
+                }
+            } catch (err) {
+                if (textEl) {
+                    textEl.select();
+                    document.execCommand('copy');
+                    alert(`✅ 已複製 ${isC3 ? 'C3 台語' : 'C4 華語'} 經文！`);
+                } else {
+                    alert('複製失敗，請手動選取方塊文字複製');
+                }
+            }
+        };
+
+        window.updateBibleFormatUI = function() {
+            const formatSelect = document.getElementById('bible-format');
+            if (!formatSelect) return;
+            const formatType = formatSelect.value;
+            try {
+                localStorage.setItem('church_sermon_bible_format', formatType);
+            } catch(e) {}
+            const containerVersion = document.getElementById('container-bible-version');
+            const hintLiveStream = document.getElementById('hint-live-stream-versions');
+            const previewArea = document.getElementById('preview-area');
+            const liveStreamBoxes = document.getElementById('live-stream-boxes-container');
+
+            if (currentTab !== 'scripture') return;
+
+            if (formatType === 'report') {
+                if (containerVersion) containerVersion.style.display = 'none';
+                if (hintLiveStream) hintLiveStream.style.display = 'block';
+                if (previewArea) previewArea.style.display = 'none';
+                if (liveStreamBoxes) liveStreamBoxes.style.display = 'flex';
+            } else {
+                if (containerVersion) containerVersion.style.display = 'block';
+                if (hintLiveStream) hintLiveStream.style.display = 'none';
+                if (previewArea) previewArea.style.display = 'block';
+                if (liveStreamBoxes) liveStreamBoxes.style.display = 'none';
+            }
+        };
+
+        // 恢復上次選擇的排版格式並初始化 UI
+        try {
+            const savedFormat = localStorage.getItem('church_sermon_bible_format');
+            if (savedFormat && document.getElementById('bible-format')) {
+                document.getElementById('bible-format').value = savedFormat;
+            }
+        } catch(e) {}
+        updateBibleFormatUI();
+
         // 點擊抓取並排版經文
         const btnFetch = document.getElementById('btn-fetch-bible');
         const fetchSpinner = document.getElementById('fetch-spinner');
         const fetchBtnText = document.getElementById('fetch-btn-text');
 
         btnFetch.addEventListener('click', async () => {
-            const qstr = document.getElementById('bible-qstr').value.trim();
+            const qstr = getCombinedScriptureQuery();
             if (!qstr) {
-                alert("請輸入要查詢的經文！");
+                alert("請設定至少一組要查詢的經文！");
                 return;
             }
 
             btnFetch.disabled = true;
             fetchSpinner.style.display = 'block';
             fetchBtnText.textContent = '經文抓取中...';
-            previewArea.textContent = "正在聯絡信望愛聖經 API...";
+            previewArea.textContent = `正在聯絡信望愛聖經 API 抓取 [${qstr}]...`;
 
             const mode = document.getElementById('bible-version').value;
             const formatType = document.getElementById('bible-format').value;
 
             try {
-                let recordsZh = [];
-                let recordsTw = [];
+                if (formatType === 'report') {
+                    // 直播格式：免選譯本，直接並行抓取台語(tghg)與華語(rcuv)，輸出至 C3 / C4 兩個方塊
+                    const [recordsTw, recordsZh] = await Promise.all([
+                        fetchScripture(qstr, "tghg"),
+                        fetchScripture(qstr, "rcuv")
+                    ]);
 
-                if (mode === 'parallel' || mode === 'rcuv') {
-                    recordsZh = await fetchScripture(qstr, "rcuv");
-                }
-                if (mode === 'parallel' || mode === 'tghg') {
-                    recordsTw = await fetchScripture(qstr, "tghg");
-                }
+                    const c3Text = formatSingleScriptureReport(recordsTw); // C3 台語巴克禮
+                    const c4Text = formatSingleScriptureReport(recordsZh); // C4 華語和合本 2010
 
-                const resultText = formatScriptureOutput(recordsZh, recordsTw, mode, formatType);
-                previewArea.textContent = resultText;
-                currentFormattedResult = resultText;
+                    liveStreamC3Result = c3Text;
+                    liveStreamC4Result = c4Text;
+
+                    const c3El = document.getElementById('preview-c3-text');
+                    const c4El = document.getElementById('preview-c4-text');
+                    if (c3El) c3El.value = c3Text;
+                    if (c4El) c4El.value = c4Text;
+
+                    currentFormattedResult = `【台語聖經 (C3 格子)】\n${c3Text}\n\n【華語聖經 (C4 格子)】\n${c4Text}`;
+                    previewArea.textContent = currentFormattedResult;
+                } else {
+                    let recordsZh = [];
+                    let recordsTw = [];
+
+                    if (mode === 'parallel' || mode === 'rcuv') {
+                        recordsZh = await fetchScripture(qstr, "rcuv");
+                    }
+                    if (mode === 'parallel' || mode === 'tghg') {
+                        recordsTw = await fetchScripture(qstr, "tghg");
+                    }
+
+                    const resultText = formatScriptureOutput(recordsZh, recordsTw, mode, formatType);
+                    previewArea.textContent = resultText;
+                    currentFormattedResult = resultText;
+                }
             } catch (err) {
                 alert(`抓取失敗: ${err.message}`);
                 previewArea.textContent = `❌ 錯誤: ${err.message}`;
+                const c3El = document.getElementById('preview-c3-text');
+                const c4El = document.getElementById('preview-c4-text');
+                if (c3El) c3El.value = `抓取失敗: ${err.message}`;
+                if (c4El) c4El.value = `抓取失敗: ${err.message}`;
             } finally {
                 btnFetch.disabled = false;
                 fetchSpinner.style.display = 'none';
@@ -2307,10 +3592,9 @@
                     title = '聖歌隊歌詞_排版後';
                 }
             } else {
-                const qstrElem = document.getElementById('bible-qstr');
-                const qstr = qstrElem ? qstrElem.value.trim() : '';
+                const qstr = (typeof getCombinedScriptureQuery === 'function') ? getCombinedScriptureQuery() : (document.getElementById('bible-qstr')?.value.trim() || '');
                 if (qstr) {
-                    title = `經文_${qstr}_排版後`;
+                    title = `經文_${qstr.replace(/[\/\*:\?\"<>\|\.]/g, '_')}_排版後`;
                 } else {
                     title = '聖經經文_排版後';
                 }
@@ -4070,6 +5354,737 @@
             }
             const response = await fetch(url);
             return response.text();
+        }
+
+        /* ================= 禮拜直播片頭背景圖管理與預覽邏輯 ================= */
+        const INTRO_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing";
+        const GDRIVE_UPLOAD_API = "https://script.google.com/macros/s/AKfycbwhjTAwi2CpX4YRhMUM6IbQ2DEpjKL-m0vfRXIo4d4fjzgI6_LUJkRzCc2X3lRgXzzfrw/exec";
+        const GDRIVE_DEFAULT_FOLDER = "https://drive.google.com/drive/folders/1z5tqpjtNoHaCCUb7EDTOB6y9kSIzV3Ho?usp=sharing";
+
+        let introService = 'mandarin'; // 'mandarin' | 'taiwanese'
+        let introRawData = null;
+        let introData = {
+            subj: '',
+            speaker: '',
+            poem: '',
+            date: '',
+            qrcodeUrl: '',
+            scrollText: '',
+            church: '台北南門教會華語禮拜',
+            imageArr: []
+        };
+        let introCurrentIndex = 0;
+        let introActiveBgLayer = 1;
+        let introCarouselTimer = null;
+        let introCarouselCountdownTimer = null;
+        let introCarouselRunning = true;
+        let introCarouselIntervalMs = 5000;
+        let introCountdownSec = 5;
+        let introShowOverlay = true;
+        let introTabInitialized = false;
+
+        function introNormalizeImageUrl(url) {
+            if (!url || typeof url !== "string") return null;
+            url = url.trim();
+            const imgMatch = url.match(/=IMAGE\(["']?(https?:\/\/[^"']+)["']?\)/i);
+            if (imgMatch) url = imgMatch[1];
+            const gdriveMatch = url.match(/drive\.google\.com\/(?:file\/d\/|uc\?id=|thumbnail\?id=)([a-zA-Z0-9_-]+)/);
+            if (gdriveMatch) {
+                return `https://lh3.googleusercontent.com/d/${gdriveMatch[1]}=w1920`;
+            }
+            const lh3Match = url.match(/lh3\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/);
+            if (lh3Match) {
+                return `https://lh3.googleusercontent.com/d/${lh3Match[1]}=w1920`;
+            }
+            return (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:image/")) ? url : null;
+        }
+
+        async function fetchIntroSheetData(service, forceFetch = false) {
+            const statusPill = document.getElementById('intro-status-pill');
+            if (statusPill) {
+                statusPill.textContent = '載入中...';
+                statusPill.style.color = 'var(--text-sub)';
+            }
+            const cacheKey = (service === 'mandarin') ? 'nm_sheet_cache_mandarin' : 'nm_sheet_cache_tai';
+            const sheetTag = (service === 'mandarin') ? '華語禮拜' : '台語禮拜';
+
+            // 1. 若非強制重新抓取，優先嘗試讀取快取
+            if (!forceFetch) {
+                try {
+                    const cachedStr = localStorage.getItem(cacheKey);
+                    if (cachedStr) {
+                        const parsed = JSON.parse(cachedStr);
+                        if (parsed && Array.isArray(parsed) && parsed[1]) {
+                            parseIntroDataFromSheet(parsed, service);
+                            renderIntroBgManager();
+                            updateIntroPreview(0);
+                            if (statusPill) {
+                                statusPill.textContent = '已載入快取';
+                                statusPill.style.color = '#10b981';
+                            }
+                        }
+                    }
+                } catch(e) {
+                    console.warn("讀取本地片頭快取失敗:", e);
+                }
+            }
+
+            // 2. 從 Google Apps Script 非同步抓取最新資料
+            try {
+                const apiV7 = "https://script.google.com/macros/s/AKfycbwW8w21yItaTo5-rrhxRkkkM2Y2g95rWV9ivbOaJBprrA-7_EbHOA2Wpdu2bN_F2FPB4Q/exec";
+                const u = new URLSearchParams({ sheetUrl: INTRO_SHEET_URL, sheetTag: sheetTag }).toString();
+                const resp = await fetch(`${apiV7}?${u}`);
+                const data = await resp.json();
+                if (data && Array.isArray(data) && data[1]) {
+                    localStorage.setItem(cacheKey, JSON.stringify(data));
+                    parseIntroDataFromSheet(data, service);
+                    renderIntroBgManager();
+                    updateIntroPreview(introCurrentIndex || 0);
+                    if (statusPill) {
+                        statusPill.textContent = '雲端已同步';
+                        statusPill.style.color = '#10b981';
+                    }
+                }
+            } catch(e) {
+                console.warn("從 Google Sheet 取得片頭資料失敗:", e);
+                if (statusPill) {
+                    statusPill.textContent = '連線離線 (使用快取)';
+                    statusPill.style.color = '#f59e0b';
+                }
+            }
+        }
+
+        function parseIntroDataFromSheet(data, service) {
+            introRawData = data;
+            const row = data[1] || [];
+            introData.subj = (row[0] || "").trim();
+            if (service === 'mandarin') {
+                introData.speaker = (row[1] || "").trim();
+                introData.poem = (row[2] || "").trim();
+                introData.church = (data[4] && data[4][0]) ? data[4][0] : "台北南門教會華語禮拜";
+            } else {
+                introData.poem = (row[1] || "").trim();
+                introData.speaker = (row[2] || "").trim();
+                introData.church = (data[4] && data[4][0]) ? data[4][0] : "台北南門教會台語禮拜";
+            }
+            introData.date = (row[3] || "").trim();
+            introData.qrcodeUrl = (row[4] || "https://pctnm.tw/download_weekly.php").trim();
+            introData.scrollText = (row[5] || "").replace(/[\r\n,\n]/g, " ").trim();
+
+            const images = [];
+            for (let i = 6; i < row.length; i++) {
+                const cell = row[i];
+                if (cell && typeof cell === 'string') {
+                    const clean = introNormalizeImageUrl(cell);
+                    if (clean) images.push(clean);
+                }
+            }
+            if (images.length === 0) {
+                images.push(
+                    "https://www.pctnm.tw/images/main/3005440a520164c8b71a351d2a33b580.jpg",
+                    "https://www.pctnm.tw/images/main/94ea826b6ea9923e0ba550e1b91a6c02.jpg",
+                    "https://www.pctnm.tw/images/main/de0ee6118741dd3a94cdb1fc1042c995.jpg",
+                    "https://lh3.googleusercontent.com/d/1tpJkSdenK6ndPFqULutsghxUOHEEa3el=w1920"
+                );
+            }
+            introData.imageArr = images;
+            if (introCurrentIndex >= images.length) {
+                introCurrentIndex = 0;
+            }
+        }
+
+        function renderIntroBgManager() {
+            // 更新資訊卡片
+            const elSubj = document.getElementById('intro-info-subj');
+            const elSpeakerPoem = document.getElementById('intro-info-speaker-poem');
+            const elDate = document.getElementById('intro-info-date');
+            const elCount = document.getElementById('intro-info-count');
+
+            if (elSubj) elSubj.textContent = introData.subj || "未指定題目";
+            if (elSpeakerPoem) elSpeakerPoem.textContent = `${introData.speaker || "講員"} • ${introData.poem || "經文"}`;
+            if (elDate) elDate.textContent = introData.date || "未指定日期";
+            if (elCount) elCount.textContent = `${introData.imageArr.length} 張背景圖`;
+
+            // 更新左側圖片卡片列表
+            const container = document.getElementById('intro-img-list-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (introData.imageArr.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:1.5rem; color:var(--text-sub); font-size:0.85rem;">目前尚未加入任何背景圖片</div>`;
+            } else {
+                introData.imageArr.forEach((url, idx) => {
+                    const card = document.createElement('div');
+                    card.className = `intro-img-card ${idx === introCurrentIndex ? 'active-preview' : ''}`;
+                    card.innerHTML = `
+                        <div class="intro-card-thumb" onclick="setIntroPreviewIndex(${idx})">
+                            <img src="${url}" alt="背景圖 ${idx + 1}" onerror="this.style.opacity=0.3;">
+                            <span class="intro-card-badge ${idx === 0 ? 'first' : ''}">#${idx + 1}${idx === 0 ? ' 封面' : ''}</span>
+                        </div>
+                        <div class="intro-card-meta">
+                            <div style="font-size:0.84rem; font-weight:700; color:var(--text-main); display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                                <span>${idx === 0 ? '🌟 首頁片頭底圖' : `輪播圖 #${idx + 1}`}</span>
+                                ${idx > 0 ? `<button class="intro-pill-btn" style="padding:2px 7px; font-size:0.72rem; height:auto; line-height:1.2;" onclick="makeCoverIntroImage(${idx})" title="將此圖設為首頁封面">設為封面</button>` : ''}
+                            </div>
+                        </div>
+                        <div class="intro-card-actions">
+                            <button class="intro-icon-btn" title="立即設為預覽" onclick="setIntroPreviewIndex(${idx})">👁️</button>
+                            <button class="intro-icon-btn" title="上移排序" onclick="moveIntroImage(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>⬆️</button>
+                            <button class="intro-icon-btn" title="下移排序" onclick="moveIntroImage(${idx}, 1)" ${idx === introData.imageArr.length - 1 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>⬇️</button>
+                            <button class="intro-icon-btn" title="複製此照片網址" onclick="copySingleFormula(${idx})">📋</button>
+                            <button class="intro-icon-btn" title="另開檢視原圖" onclick="openOriginalIntroImage(${idx})">🔗</button>
+                            <button class="intro-icon-btn btn-danger" title="刪除此圖" onclick="deleteIntroImage(${idx})">🗑️</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            // 更新預覽區縮圖導航滑動列
+            const strip = document.getElementById('intro-thumbs-strip');
+            if (strip) {
+                strip.innerHTML = '';
+                introData.imageArr.forEach((url, idx) => {
+                    const cell = document.createElement('div');
+                    cell.className = `intro-thumb-cell ${idx === introCurrentIndex ? 'active' : ''}`;
+                    cell.title = `點擊預覽第 ${idx + 1} 張`;
+                    cell.onclick = () => setIntroPreviewIndex(idx);
+                    cell.innerHTML = `<img src="${url}" alt="縮圖 ${idx + 1}" onerror="this.src='https://via.placeholder.com/72x42?text=Error'">`;
+                    strip.appendChild(cell);
+                });
+            }
+
+            const curIdxDisp = document.getElementById('intro-current-index-display');
+            if (curIdxDisp) {
+                curIdxDisp.textContent = `${introCurrentIndex + 1} / ${introData.imageArr.length}`;
+            }
+        }
+
+        function setIntroPreviewIndex(idx) {
+            if (idx < 0 || idx >= introData.imageArr.length) return;
+            introCurrentIndex = idx;
+            updateIntroPreview(introCurrentIndex);
+            renderIntroBgManager();
+            resetIntroCountdown();
+        }
+
+        function moveIntroImage(index, delta) {
+            const target = index + delta;
+            if (target < 0 || target >= introData.imageArr.length) return;
+            const temp = introData.imageArr[index];
+            introData.imageArr[index] = introData.imageArr[target];
+            introData.imageArr[target] = temp;
+            if (introCurrentIndex === index) introCurrentIndex = target;
+            else if (introCurrentIndex === target) introCurrentIndex = index;
+            renderIntroBgManager();
+            updateIntroPreview(introCurrentIndex);
+        }
+
+        function deleteIntroImage(index) {
+            if (introData.imageArr.length <= 1) {
+                alert("至少需保留一張背景圖片！");
+                return;
+            }
+            if (!confirm(`確定要刪除第 ${index + 1} 張背景圖片嗎？`)) return;
+            introData.imageArr.splice(index, 1);
+            if (introCurrentIndex >= introData.imageArr.length) {
+                introCurrentIndex = introData.imageArr.length - 1;
+            }
+            renderIntroBgManager();
+            updateIntroPreview(introCurrentIndex);
+        }
+
+        function updateIntroPreview(idx) {
+            if (!introData.imageArr || introData.imageArr.length === 0) return;
+            const url = introData.imageArr[idx];
+            const l1 = document.getElementById('intro-bg-layer1');
+            const l2 = document.getElementById('intro-bg-layer2');
+            if (!l1 || !l2) return;
+
+            const nextLayer = introActiveBgLayer === 1 ? l2 : l1;
+            const curLayer = introActiveBgLayer === 1 ? l1 : l2;
+
+            const imgLoader = new Image();
+            imgLoader.onload = () => {
+                nextLayer.style.backgroundImage = `url("${url}")`;
+                nextLayer.classList.add('active');
+                curLayer.classList.remove('active');
+                introActiveBgLayer = introActiveBgLayer === 1 ? 2 : 1;
+            };
+            imgLoader.src = url;
+
+            // 更新文字疊加內容
+            const sSubj = document.getElementById('intro-live-subj');
+            const sSpeaker = document.getElementById('intro-live-speaker');
+            const sPoem = document.getElementById('intro-live-poem');
+            const sChurch = document.getElementById('intro-live-church');
+            const sDate = document.getElementById('intro-live-date');
+            const sMarquee = document.getElementById('intro-live-marquee-text');
+
+            if (sSubj) sSubj.textContent = introData.subj || "台北南門長老教會";
+            if (sSpeaker) sSpeaker.textContent = introData.speaker || "";
+            if (sPoem) sPoem.textContent = introData.poem || "";
+            if (sChurch) sChurch.textContent = introData.church || "台北南門教會";
+            if (sDate) sDate.textContent = introData.date || "";
+            if (sMarquee) sMarquee.textContent = introData.scrollText || "歡迎同心敬拜上帝";
+
+            // 產生 QR Code
+            try {
+                const qrBox = document.getElementById('intro-live-qrcode');
+                if (qrBox && typeof QRCode !== 'undefined') {
+                    qrBox.innerHTML = '';
+                    new QRCode(qrBox, {
+                        text: introData.qrcodeUrl || "https://pctnm.tw/download_weekly.php",
+                        width: 48,
+                        height: 48,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                } else if (qrBox) {
+                    qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(introData.qrcodeUrl || 'https://pctnm.tw/download_weekly.php')}&size=60x60" style="width:100%; height:100%;">`;
+                }
+            } catch(e) {}
+        }
+
+        function introNextImage() {
+            if (!introData.imageArr || introData.imageArr.length === 0) return;
+            introCurrentIndex = (introCurrentIndex + 1) % introData.imageArr.length;
+            updateIntroPreview(introCurrentIndex);
+            renderIntroBgManager();
+            resetIntroCountdown();
+        }
+
+        function introPrevImage() {
+            if (!introData.imageArr || introData.imageArr.length === 0) return;
+            introCurrentIndex = (introCurrentIndex - 1 + introData.imageArr.length) % introData.imageArr.length;
+            updateIntroPreview(introCurrentIndex);
+            renderIntroBgManager();
+            resetIntroCountdown();
+        }
+
+        function resetIntroCountdown() {
+            introCountdownSec = Math.floor(introCarouselIntervalMs / 1000);
+            const el = document.getElementById('intro-timer-countdown');
+            if (el) el.textContent = `${introCountdownSec}s`;
+        }
+
+        function introStartCarousel() {
+            introStopCarousel();
+            introCarouselRunning = true;
+            resetIntroCountdown();
+            const btn = document.getElementById('btn-intro-carousel-toggle');
+            if (btn) {
+                btn.textContent = '⏸️ 暫停輪播';
+                btn.classList.add('active');
+            }
+            introCarouselTimer = setInterval(() => {
+                introNextImage();
+            }, introCarouselIntervalMs);
+
+            introCarouselCountdownTimer = setInterval(() => {
+                if (introCountdownSec > 1) {
+                    introCountdownSec--;
+                    const el = document.getElementById('intro-timer-countdown');
+                    if (el) el.textContent = `${introCountdownSec}s`;
+                }
+            }, 1000);
+        }
+
+        function introStopCarousel() {
+            introCarouselRunning = false;
+            if (introCarouselTimer) {
+                clearInterval(introCarouselTimer);
+                introCarouselTimer = null;
+            }
+            if (introCarouselCountdownTimer) {
+                clearInterval(introCarouselCountdownTimer);
+                introCarouselCountdownTimer = null;
+            }
+            const btn = document.getElementById('btn-intro-carousel-toggle');
+            if (btn) {
+                btn.textContent = '▶️ 播放輪播';
+                btn.classList.remove('active');
+            }
+            const el = document.getElementById('intro-timer-countdown');
+            if (el) el.textContent = '已暫停';
+        }
+
+        function copySingleFormula(param) {
+            const url = (typeof param === 'number') ? introData.imageArr[param] : param;
+            if (!url) return;
+            navigator.clipboard.writeText(url).then(() => {
+                alert(`已複製照片純網址：\n${url}`);
+            }).catch(() => {
+                prompt("請複製以下網址：", url);
+            });
+        }
+
+        function makeCoverIntroImage(idx) {
+            if (idx <= 0 || idx >= introData.imageArr.length) return;
+            const item = introData.imageArr.splice(idx, 1)[0];
+            introData.imageArr.unshift(item);
+            introCurrentIndex = 0;
+            renderIntroBgManager();
+            updateIntroPreview(0);
+            resetIntroCountdown();
+        }
+
+        function openOriginalIntroImage(idx) {
+            const url = introData.imageArr[idx];
+            if (url) window.open(url, '_blank');
+        }
+
+        function copyAllIntroFormulas() {
+            if (!introData.imageArr || introData.imageArr.length === 0) {
+                alert("目前無照片可供複製！");
+                return;
+            }
+            const urls = introData.imageArr.join("\t");
+            navigator.clipboard.writeText(urls).then(() => {
+                alert(`✅ 已複製全部 ${introData.imageArr.length} 張背景照片純網址 (以 Tab 橫向排列)！\n\n可直接至 Google 試算表之「G2」儲存格按下 Ctrl+V 貼上即可整排更新！`);
+            }).catch(() => {
+                prompt("請複製以下橫向網址：", urls);
+            });
+        }
+
+        function saveIntroCache() {
+            const cacheKey = (introService === 'mandarin') ? 'nm_sheet_cache_mandarin' : 'nm_sheet_cache_tai';
+            let dataToSave = introRawData;
+            if (!dataToSave || !Array.isArray(dataToSave) || !dataToSave[1]) {
+                dataToSave = [
+                    ["講道題目(第一行--黃)","講道者(第三行--紫)","聖經(第二行-紅)","日期","週報","跑馬燈文","照片連結"],
+                    [introData.subj, introData.speaker, introData.poem, introData.date, introData.qrcodeUrl, introData.scrollText],
+                    [], [], [introData.church]
+                ];
+            }
+            // 清理舊照片欄位並重填
+            dataToSave[1] = dataToSave[1].slice(0, 6);
+            introData.imageArr.forEach(u => dataToSave[1].push(u));
+
+            try {
+                localStorage.setItem(cacheKey, JSON.stringify(dataToSave));
+                const statusPill = document.getElementById('intro-status-pill');
+                if (statusPill) {
+                    statusPill.textContent = '快取已同步儲存';
+                    statusPill.style.color = '#10b981';
+                }
+                alert(`💾 已成功將 ${introData.imageArr.length} 張背景圖儲存至本地快取 (${cacheKey})！\n\n下次開啟或 OBS 直播片頭將立即套用此設定。`);
+            } catch(e) {
+                alert("儲存至 localStorage 失敗：" + e.message);
+            }
+        }
+
+        async function compressImageForUpload(file) {
+            return new Promise((resolve) => {
+                if (file.size <= 450 * 1024) {
+                    resolve(file);
+                    return;
+                }
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const maxDim = 1920;
+                    if (width > maxDim || height > maxDim) {
+                        if (width > height) {
+                            height = Math.round((height * maxDim) / width);
+                            width = maxDim;
+                        } else {
+                            width = Math.round((width * maxDim) / height);
+                            height = maxDim;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    canvas.toBlob((blob) => {
+                        if (blob && blob.size < file.size) {
+                            const newFile = new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' });
+                            resolve(newFile);
+                        } else {
+                            resolve(file);
+                        }
+                    }, 'image/jpeg', 0.82);
+                };
+                img.onerror = () => resolve(file);
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        async function handleIntroImageUpload(file) {
+            if (!file || !file.type.startsWith('image/')) {
+                alert("請上傳圖片格式檔案 (JPG, PNG, WebP)！");
+                return;
+            }
+            const statusPill = document.getElementById('intro-status-pill');
+            if (statusPill) {
+                statusPill.textContent = '正在上傳至 Google Drive...';
+                statusPill.style.color = '#38bdf8';
+            }
+
+            try {
+                const optimizedFile = await compressImageForUpload(file);
+                const arrayBuffer = await optimizedFile.arrayBuffer();
+                const now = new Date();
+                const timeStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}`;
+                const filename = `IntroBg_${timeStr}.jpg`;
+
+                const qs = new URLSearchParams({
+                    filename: filename,
+                    mimeType: optimizedFile.type || 'image/jpeg',
+                    folderUrl: GDRIVE_DEFAULT_FOLDER
+                }).toString();
+
+                const response = await fetch(`${GDRIVE_UPLOAD_API}?${qs}`, {
+                    method: 'POST',
+                    body: JSON.stringify([...new Int8Array(arrayBuffer)])
+                });
+                const res = await response.json();
+                if (res && res.fileId) {
+                    const lh3Url = `https://lh3.googleusercontent.com/d/${res.fileId}=w1920`;
+                    introData.imageArr.push(lh3Url);
+                    introCurrentIndex = introData.imageArr.length - 1;
+                    renderIntroBgManager();
+                    updateIntroPreview(introCurrentIndex);
+                    if (statusPill) {
+                        statusPill.textContent = '✅ 上傳成功！已加入清單';
+                        statusPill.style.color = '#10b981';
+                    }
+                    try {
+                        navigator.clipboard.writeText(`=IMAGE("https://drive.google.com/uc?id=${res.fileId}")`);
+                    } catch(e) {}
+                    alert(`🎉 圖片已成功上傳至 Google Drive！\n\n高畫質網址：\n${lh3Url}\n\n已自動加入背景圖清單，並將試算表公式複製到剪貼簿。`);
+                } else {
+                    throw new Error(JSON.stringify(res));
+                }
+            } catch(e) {
+                console.error("上傳 Google Drive 失敗:", e);
+                const localUrl = URL.createObjectURL(file);
+                introData.imageArr.push(localUrl);
+                introCurrentIndex = introData.imageArr.length - 1;
+                renderIntroBgManager();
+                updateIntroPreview(introCurrentIndex);
+                if (statusPill) {
+                    statusPill.textContent = '上傳失敗 (已載入本機預覽)';
+                    statusPill.style.color = '#ef4444';
+                }
+                alert("上傳 Google Drive 異常，已先將本機圖片載入預覽清單：" + e.message);
+            }
+        }
+
+        function initIntroBgTab() {
+            if (!introTabInitialized) {
+                introTabInitialized = true;
+
+                // 綁定場次按鈕切換
+                const btnMandarin = document.getElementById('btn-service-mandarin');
+                const btnTaiwanese = document.getElementById('btn-service-taiwanese');
+                if (btnMandarin && btnTaiwanese) {
+                    btnMandarin.addEventListener('click', () => {
+                        if (introService === 'mandarin') return;
+                        introService = 'mandarin';
+                        btnMandarin.classList.add('active');
+                        btnTaiwanese.classList.remove('active');
+                        fetchIntroSheetData('mandarin', false);
+                    });
+                    btnTaiwanese.addEventListener('click', () => {
+                        if (introService === 'taiwanese') return;
+                        introService = 'taiwanese';
+                        btnTaiwanese.classList.add('active');
+                        btnMandarin.classList.remove('active');
+                        fetchIntroSheetData('taiwanese', false);
+                    });
+                }
+
+                // 綁定重新抓取與另開直播頁按鈕
+                const btnRefresh = document.getElementById('btn-intro-refresh-sheet');
+                if (btnRefresh) {
+                    btnRefresh.addEventListener('click', () => fetchIntroSheetData(introService, true));
+                }
+                const btnOpenLive = document.getElementById('btn-intro-open-live');
+                if (btnOpenLive) {
+                    btnOpenLive.addEventListener('click', () => {
+                        const targetHtml = (introService === 'mandarin') 
+                            ? '../../youtube/南門教會華語禮拜直播片頭_v2.html' 
+                            : '../../youtube/南門教會直播片頭_v2.html';
+                        window.open(targetHtml, '_blank');
+                    });
+                }
+
+                // 上傳與拖放事件
+                const dropZone = document.getElementById('intro-drop-zone');
+                const fileInput = document.getElementById('intro-file-input');
+                if (dropZone && fileInput) {
+                    dropZone.addEventListener('click', (e) => {
+                        if (e.target.id === 'btn-intro-paste-clipboard') return;
+                        fileInput.click();
+                    });
+                    fileInput.addEventListener('change', (e) => {
+                        const files = Array.from(e.target.files);
+                        files.forEach(f => handleIntroImageUpload(f));
+                        fileInput.value = '';
+                    });
+                    dropZone.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        dropZone.classList.add('dragover');
+                    });
+                    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+                    dropZone.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        dropZone.classList.remove('dragover');
+                        const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+                        files.forEach(f => handleIntroImageUpload(f));
+                    });
+                }
+
+                // 貼上剪貼簿按鈕
+                const btnPaste = document.getElementById('btn-intro-paste-clipboard');
+                if (btnPaste) {
+                    btnPaste.addEventListener('click', async () => {
+                        try {
+                            const clipboardItems = await navigator.clipboard.read();
+                            let found = false;
+                            for (const item of clipboardItems) {
+                                for (const type of item.types) {
+                                    if (type.startsWith('image/')) {
+                                        const blob = await item.getType(type);
+                                        const file = new File([blob], `Clipboard_${Date.now()}.png`, { type: blob.type });
+                                        handleIntroImageUpload(file);
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!found) {
+                                alert("剪貼簿中沒有偵測到圖片！請先複製一張圖片或螢幕截圖。");
+                            }
+                        } catch(err) {
+                            alert("請在頁面任意處直接按下 Ctrl+V (或 Cmd+V) 即可貼上剪貼簿圖片！");
+                        }
+                    });
+                }
+
+                // 全域 Paste 事件支援
+                document.addEventListener('paste', (e) => {
+                    const tabBtn = document.getElementById('tab-intro-bg');
+                    if (!tabBtn || !tabBtn.classList.contains('active')) return;
+                    if (e.clipboardData && e.clipboardData.items) {
+                        for (let i = 0; i < e.clipboardData.items.length; i++) {
+                            const item = e.clipboardData.items[i];
+                            if (item.type.indexOf('image') !== -1) {
+                                const file = item.getAsFile();
+                                handleIntroImageUpload(file);
+                                e.preventDefault();
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                // 加入 URL 按鈕
+                const btnAddUrl = document.getElementById('btn-intro-add-url');
+                const urlInput = document.getElementById('intro-url-input');
+                if (btnAddUrl && urlInput) {
+                    const addAction = () => {
+                        const val = urlInput.value.trim();
+                        if (!val) return;
+                        const clean = introNormalizeImageUrl(val);
+                        if (!clean) {
+                            alert("請輸入有效的圖片網址 (http/https 開頭)！");
+                            return;
+                        }
+                        introData.imageArr.push(clean);
+                        introCurrentIndex = introData.imageArr.length - 1;
+                        urlInput.value = '';
+                        renderIntroBgManager();
+                        updateIntroPreview(introCurrentIndex);
+                    };
+                    btnAddUrl.addEventListener('click', addAction);
+                    urlInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            addAction();
+                        }
+                    });
+                }
+
+                // 複製公式與儲存快取按鈕
+                const btnCopyAll = document.getElementById('btn-intro-copy-all-formulas');
+                if (btnCopyAll) btnCopyAll.addEventListener('click', copyAllIntroFormulas);
+                const btnSaveCache = document.getElementById('btn-intro-save-cache');
+                if (btnSaveCache) btnSaveCache.addEventListener('click', saveIntroCache);
+
+                // 預覽工具列按鈕
+                const btnCarouselToggle = document.getElementById('btn-intro-carousel-toggle');
+                if (btnCarouselToggle) {
+                    btnCarouselToggle.addEventListener('click', () => {
+                        if (introCarouselRunning) {
+                            introStopCarousel();
+                        } else {
+                            introStartCarousel();
+                        }
+                    });
+                }
+                const btnPrev = document.getElementById('btn-intro-prev-img');
+                if (btnPrev) btnPrev.addEventListener('click', introPrevImage);
+                const btnNext = document.getElementById('btn-intro-next-img');
+                if (btnNext) btnNext.addEventListener('click', introNextImage);
+
+                const selectInterval = document.getElementById('intro-interval-select');
+                if (selectInterval) {
+                    selectInterval.addEventListener('change', () => {
+                        introCarouselIntervalMs = parseInt(selectInterval.value, 10) || 5000;
+                        if (introCarouselRunning) {
+                            introStartCarousel();
+                        } else {
+                            resetIntroCountdown();
+                        }
+                    });
+                }
+
+                const chkOverlay = document.getElementById('intro-toggle-overlay');
+                const overlayBox = document.getElementById('intro-screen-overlay');
+                if (chkOverlay && overlayBox) {
+                    chkOverlay.addEventListener('change', () => {
+                        introShowOverlay = chkOverlay.checked;
+                        if (introShowOverlay) {
+                            overlayBox.classList.remove('hidden-overlay');
+                        } else {
+                            overlayBox.classList.add('hidden-overlay');
+                        }
+                    });
+                }
+
+                const btnFullscreen = document.getElementById('btn-intro-fullscreen');
+                const screenBox = document.getElementById('intro-screen-container');
+                if (btnFullscreen && screenBox) {
+                    btnFullscreen.addEventListener('click', () => {
+                        if (!document.fullscreenElement) {
+                            screenBox.requestFullscreen().catch(err => alert("全螢幕切換失敗: " + err.message));
+                        } else {
+                            document.exitFullscreen();
+                        }
+                    });
+                }
+
+                // 即時時鐘更新
+                setInterval(() => {
+                    const now = new Date();
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const mins = String(now.getMinutes()).padStart(2, '0');
+                    const elClock = document.getElementById('intro-live-curtime');
+                    if (elClock) elClock.textContent = `${hours}:${mins}`;
+                }, 1000);
+
+                // 載入預設資料
+                fetchIntroSheetData(introService, false);
+            }
+
+            // 每次切換至此 Tab 時啟動輪播
+            introStartCarousel();
         }
     </script>
 
