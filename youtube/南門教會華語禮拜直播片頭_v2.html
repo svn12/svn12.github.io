@@ -597,6 +597,11 @@
         bgm.src = bgm.src.split("?")[0] + "?t=" + new Date().getTime();
       }
       bgm.volume = 0.8;
+      bgm.loop = true;
+      bgm.addEventListener("ended", () => {
+        bgm.currentTime = 0;
+        bgm.play().catch(() => {});
+      });
 
       // 畫面 HUD 提示浮水印 (1.5 秒自動淡出)
       const hud = document.createElement("div");
@@ -719,6 +724,13 @@
           return;
         }
 
+        if (e.code === "KeyC" || e.key.toLowerCase() === "c") {
+          e.preventDefault();
+          showHud("🚀 前往主日排版助手...");
+          window.location.href = "../Gemini/sermon_ppt/index.html";
+          return;
+        }
+
         if (e.code === "KeyT" || e.key.toLowerCase() === "t") {
           e.preventDefault();
           isMouseClickUnlocked = !isMouseClickUnlocked;
@@ -747,6 +759,7 @@
               <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">M</span></td><td>靜音開關</td></tr>
               <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">F</span></td><td>全螢幕切換</td></tr>
               <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">T</span></td><td>滑鼠點選 鎖定 / 解除切換</td></tr>
+              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">C</span></td><td>直跳主日排版助手</td></tr>
             </table>
           `, 3000);
         } else if (e.code === "ArrowUp" || e.key === "ArrowUp") {

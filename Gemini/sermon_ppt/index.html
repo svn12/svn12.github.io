@@ -1523,7 +1523,129 @@
         [data-theme="light"] .intro-icon-btn:hover {
             background: rgba(0, 0, 0, 0.1);
         }
-    
+
+        /* 直播片頭音樂 (Cloudflare R2 串流與播放) 樣式 */
+        .intro-music-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .intro-music-card {
+            background: var(--card-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1rem 1.1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .intro-music-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.12);
+        }
+        .intro-music-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 0.6rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .intro-music-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .intro-music-badge.badge-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .intro-music-badge.badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        .intro-music-visualizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 22px;
+            padding: 2px 4px;
+        }
+        .intro-music-bar {
+            width: 3px;
+            background: var(--accent);
+            border-radius: 3px;
+            animation: musicBars 1.2s ease-in-out infinite alternate;
+        }
+        .intro-music-bar:nth-child(2) { animation-delay: 0.2s; height: 60%; }
+        .intro-music-bar:nth-child(3) { animation-delay: 0.4s; height: 100%; }
+        .intro-music-bar:nth-child(4) { animation-delay: 0.1s; height: 40%; }
+        .intro-music-bar:nth-child(5) { animation-delay: 0.3s; height: 80%; }
+        .intro-music-visualizer.paused .intro-music-bar {
+            animation-play-state: paused;
+            height: 20% !important;
+            opacity: 0.5;
+        }
+        @keyframes musicBars {
+            0% { height: 15%; }
+            50% { height: 95%; }
+            100% { height: 35%; }
+        }
+        .intro-music-player-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: 0.75rem 0.9rem;
+            border: 1px solid var(--panel-border);
+        }
+        .intro-music-player-wrap audio {
+            width: 100%;
+            height: 38px;
+            outline: none;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        .intro-music-url-box {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 0.4rem 0.7rem;
+            font-size: 0.8rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            word-break: break-all;
+        }
+        .intro-music-code-block {
+            background: #0f172a;
+            color: #38bdf8;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.78rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            position: relative;
+        }
     </style>
     <script>
         (function() {
@@ -1562,6 +1684,7 @@
             <button class="tab-btn" id="tab-audio">🎧 聽讀有聲聖經</button>
             <button class="tab-btn" id="tab-hymns">🎵 聖詩與啟應文</button>
             <button class="tab-btn" id="tab-intro-bg">🖼️ 直播片頭背景</button>
+            <button class="tab-btn" id="tab-intro-music">☁️ 直播片頭音樂</button>
         </div>
 
         <main>
@@ -1932,6 +2055,100 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 直播片頭音樂上傳與管理面板 -->
+                    <div class="tab-content" id="input-intro-music">
+                        <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>☁️ 直播片頭音樂同步 (Cloudflare R2)</span>
+                            <span id="music-status-pill" style="font-size:0.75rem; padding:0.2rem 0.6rem; border-radius:12px; background:rgba(59,130,246,0.15); color:var(--accent); font-weight:600;">已就緒</span>
+                        </div>
+
+                        <div class="intro-music-container">
+                            <!-- 場次/音訊目標選擇列 -->
+                            <div class="intro-service-bar">
+                                <div class="intro-service-pills">
+                                    <button class="intro-pill-btn active" id="btn-music-target-tw" data-target="a">🎵 台語片頭 (選項 a / 預設)</button>
+                                    <button class="intro-pill-btn" id="btn-music-target-mandarin" data-target="b">🎵 華語片頭 (選項 b / 1)</button>
+                                </div>
+                                <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                                    <button class="intro-pill-btn" id="btn-music-refresh-r2" title="重新整理 Cloudflare R2 檔案狀態">🔄 重新整理</button>
+                                    <button class="intro-pill-btn" id="btn-music-open-live-preview" title="開啟直播片頭測試實際播放">🚀 實機片頭 ↗</button>
+                                </div>
+                            </div>
+
+                            <!-- 當前目標與規格卡片 -->
+                            <div class="intro-info-card">
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">目標標準檔名：</span>
+                                    <span class="intro-info-val" id="music-target-filename" style="color:#10b981; font-weight:700;">台語片頭音樂.mp3</span>
+                                </div>
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">雲端儲存：</span>
+                                    <span class="intro-info-val" style="color:var(--accent);">Cloudflare R2 (直播片頭網頁專用，高速串流)</span>
+                                </div>
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">片頭音樂網址：</span>
+                                    <a id="music-target-public-url" href="https://pub-78ea0d4b46964114ac28dd5c6e53460d.r2.dev/%E5%8F%B0%E8%AA%9E%E7%89%87%E9%A0%AD%E9%9F%B3%E6%A8%82.mp3" target="_blank" class="intro-info-val" style="color:var(--accent); text-decoration:underline;">https://pub-78ea0d4b46964114ac28dd5c6e53460d.r2.dev/台語片頭音樂.mp3</a>
+                                </div>
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">線上檔案狀態：</span>
+                                    <span class="intro-info-val" id="music-online-status-text">檢測中...</span>
+                                </div>
+                            </div>
+
+                            <!-- 上傳拖放區塊 -->
+                            <div class="intro-upload-zone" id="music-drop-zone">
+                                <div style="font-size:1.6rem; margin-bottom:0.2rem;">🎵</div>
+                                <p>拖曳音訊檔案至此，或<strong>點擊選擇檔案上傳</strong></p>
+                                <p style="font-size:0.75rem; color:var(--text-sub);">
+                                    支援 MP3、M4A、WAV、AAC、FLAC、OGG 等格式，自動標準命名並發布至直播片頭網頁
+                                </p>
+                                <input type="file" id="music-file-input" accept="audio/*,video/*,.mp3,.m4a,.wav,.aac,.flac,.ogg,.mp4,.mov,.mkv" style="display:none;">
+
+                                <div style="display:flex; justify-content:center; gap:0.5rem; margin-top:0.6rem;">
+                                    <button type="button" class="intro-pill-btn" id="btn-music-paste-clipboard" style="padding:0.35rem 0.75rem;">
+                                        📋 貼上剪貼簿音訊 (Ctrl+V)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- 選取檔案資訊與操作卡片 -->
+                            <div id="music-selected-file-card" class="intro-info-card" style="display:none; border-color:var(--accent);">
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">待發布檔案：</span>
+                                    <span class="intro-info-val" id="music-selected-filename" style="color:var(--accent); font-weight:700;">-</span>
+                                </div>
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">檔案大小：</span>
+                                    <span class="intro-info-val" id="music-selected-filesize">-</span>
+                                </div>
+                                <div class="intro-info-row">
+                                    <span class="intro-info-label">音訊長度：</span>
+                                    <span class="intro-info-val" id="music-selected-duration">讀取中...</span>
+                                </div>
+                            </div>
+
+                            <!-- 操作按鈕列 -->
+                            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.2rem;">
+                                <div style="display:flex; gap:0.5rem;">
+                                    <button class="btn-action" id="btn-music-upload-r2" style="flex:1; margin:0; font-size:0.84rem; display:flex; align-items:center; justify-content:center; gap:0.4rem;">
+                                        🚀 上傳發布至 Cloudflare
+                                    </button>
+                                    <button class="btn-action intro-btn-secondary" id="btn-music-copy-stream-url" style="flex:1; margin:0; font-size:0.84rem; display:flex; align-items:center; justify-content:center; gap:0.4rem;">
+                                        📋 複製片頭音樂網址
+                                    </button>
+                                </div>
+                                <div style="display:flex; gap:0.5rem;">
+                                    <button class="btn-action intro-btn-secondary" id="btn-music-download-named" style="flex:1; margin:0; font-size:0.84rem; display:flex; align-items:center; justify-content:center; gap:0.4rem;" title="下載左側剛選取的待發布音訊檔">
+                                        💾 下載待發布音訊 (本機)
+                                    </button>
+                                    <button class="btn-action intro-btn-secondary" id="btn-music-download-online" style="flex:1; margin:0; font-size:0.84rem; display:flex; align-items:center; justify-content:center; gap:0.4rem; background:rgba(56,189,248,0.12); border-color:rgba(56,189,248,0.35); color:#38bdf8;" title="從 Cloudflare 下載目前線上正在播放的音樂備份">
+                                        ☁️ 備份下載線上音樂 (雲端)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 右側輸出預覽區 -->
@@ -2157,6 +2374,93 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 禮拜直播片頭音樂預覽與試聽區 -->
+                    <div id="wrapper-intro-music-preview" style="display: none;">
+                        <div class="intro-preview-wrapper" style="gap:1rem;">
+                            <!-- 預覽控制工具列 -->
+                            <div class="intro-preview-toolbar">
+                                <div style="display:flex; align-items:center; gap:0.5rem;">
+                                    <span style="font-weight:700; font-size:0.9rem; color:var(--text-main); display:flex; align-items:center; gap:0.35rem;">
+                                        🎧 雙軌音訊即時監聽室
+                                    </span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                                    <button class="intro-pill-btn active" id="btn-music-preview-tw">台語片頭</button>
+                                    <button class="intro-pill-btn" id="btn-music-preview-mandarin">華語片頭</button>
+                                    <button class="intro-pill-btn" id="btn-music-live-launch" title="在新分頁開啟實際直播片頭 HTML">🚀 實機片頭 ↗</button>
+                                </div>
+                            </div>
+
+                            <!-- 雙軌播放器卡片 -->
+                            <div class="intro-music-container">
+                                <!-- Track 1: Cloudflare R2 線上現行片頭音樂 -->
+                                <div class="intro-music-card">
+                                    <div class="intro-music-card-header">
+                                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                                            <span style="font-weight:700; font-size:0.88rem; color:#38bdf8;">☁️ Track 1: Cloudflare R2 線上現行版本</span>
+                                            <div class="intro-music-visualizer" id="vis-online">
+                                                <div class="intro-music-bar"></div>
+                                                <div class="intro-music-bar"></div>
+                                                <div class="intro-music-bar"></div>
+                                                <div class="intro-music-bar"></div>
+                                                <div class="intro-music-bar"></div>
+                                            </div>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:0.4rem;">
+                                            <span class="intro-music-badge badge-success" id="badge-online-status">🟢 串流正常</span>
+                                            <span class="intro-music-badge" id="badge-online-size">-</span>
+                                        </div>
+                                    </div>
+                                    <div class="intro-music-player-wrap">
+                                        <audio id="audio-player-online" controls preload="metadata"></audio>
+                                    </div>
+                                    <div class="intro-music-url-box">
+                                        <span style="color:var(--text-sub); flex-shrink:0;">音樂網址:</span>
+                                        <span id="text-online-stream-url" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--accent);">https://pub-78ea0d4b46964114ac28dd5c6e53460d.r2.dev/台語片頭音樂.mp3</span>
+                                        <button class="intro-pill-btn" id="btn-copy-stream-url" style="padding:0.2rem 0.5rem; font-size:0.75rem;">📋 複製</button>
+                                        <button class="intro-pill-btn" id="btn-download-online-track" style="padding:0.2rem 0.5rem; font-size:0.75rem; color:#38bdf8;" title="下載此線上現行音樂備份檔">⬇️ 備份下載</button>
+                                    </div>
+                                </div>
+
+                                <!-- Track 2: 本機待同步新音訊 -->
+                                <div class="intro-music-card">
+                                    <div class="intro-music-card-header">
+                                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                                            <span style="font-weight:700; font-size:0.88rem; color:#10b981;">🎵 Track 2: 本機選取新音樂 (待發布)</span>
+                                            <div class="intro-music-visualizer paused" id="vis-local">
+                                                <div class="intro-music-bar"></div>
+                                                <div class="intro-music-bar"></div>
+                                                <div class="intro-music-bar"></div>
+                                                <div class="intro-music-bar"></div>
+                                                <div class="intro-music-bar"></div>
+                                            </div>
+                                        </div>
+                                        <span class="intro-music-badge" id="badge-local-status">未選擇檔案</span>
+                                    </div>
+                                    <div class="intro-music-player-wrap">
+                                        <audio id="audio-player-local" controls></audio>
+                                    </div>
+                                    <div id="local-music-meta-bar" style="font-size:0.78rem; color:var(--text-sub); display:flex; justify-content:space-between; padding:0 0.2rem;">
+                                        <span>請於左側拖曳或點選音訊檔案進行試聽與發布</span>
+                                        <span id="local-music-duration-text"></span>
+                                    </div>
+                                </div>
+
+                                <!-- 直播片頭網頁播放說明卡片 -->
+                                <div class="intro-music-card" style="background:rgba(0,0,0,0.18);">
+                                    <div class="intro-music-card-header">
+                                        <span style="font-weight:700; font-size:0.85rem; color:var(--text-main);">💡 直播片頭網頁播放說明</span>
+                                    </div>
+                                    <div style="font-size:0.8rem; color:var(--text-sub); line-height:1.6; display:flex; flex-direction:column; gap:0.4rem;">
+                                        <div><strong>1. 網頁直接播放：</strong>直播片頭網頁（台語禮拜與華語禮拜）已預設綁定此 Cloudflare 雲端音訊，開啟片頭網頁即會自動循環播放。</div>
+                                        <div><strong>2. 一鍵更換生效：</strong>在左側選取新音訊並點擊「🚀 上傳發布至 Cloudflare」後，重新整理直播片頭網頁即可載入最新音樂。</div>
+                                        <div><strong>3. 實機測試：</strong>點擊右上角「🚀 實機片頭 ↗」可在新分頁開啟正式片頭網頁，確認音樂播放效果。</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2355,6 +2659,7 @@
         document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
         document.getElementById('tab-audio').addEventListener('click', () => switchTab('audio'));
         document.getElementById('tab-intro-bg').addEventListener('click', () => switchTab('intro-bg'));
+        document.getElementById('tab-intro-music').addEventListener('click', () => switchTab('intro-music'));
 
         function stopAllPlayback() {
             if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
@@ -2366,6 +2671,14 @@
             }
             if (typeof introStopCarousel === 'function') {
                 introStopCarousel();
+            }
+            const pOnline = document.getElementById('audio-player-online');
+            if (pOnline && !pOnline.paused) {
+                try { pOnline.pause(); } catch(e) {}
+            }
+            const pLocal = document.getElementById('audio-player-local');
+            if (pLocal && !pLocal.paused) {
+                try { pLocal.pause(); } catch(e) {}
             }
         }
 
@@ -2497,6 +2810,8 @@
             document.getElementById('wrapper-audio-preview').style.display = 'none';
             const wIntroPreview = document.getElementById('wrapper-intro-bg-preview');
             if (wIntroPreview) wIntroPreview.style.display = 'none';
+            const wMusicPreview = document.getElementById('wrapper-intro-music-preview');
+            if (wMusicPreview) wMusicPreview.style.display = 'none';
             document.getElementById('btn-group-shared').style.display = 'grid';
 
             if (tab === 'lyrics') {
@@ -2549,6 +2864,14 @@
                 document.getElementById('wrapper-text-preview').style.display = 'none';
                 document.getElementById('wrapper-intro-bg-preview').style.display = 'block';
                 initIntroBgTab();
+            } else if (tab === 'intro-music') {
+                document.getElementById('tab-intro-music').classList.add('active');
+                document.getElementById('input-intro-music').classList.add('active');
+                document.getElementById('controls-row-lyrics').style.display = 'none';
+                document.getElementById('btn-group-shared').style.display = 'none';
+                document.getElementById('wrapper-text-preview').style.display = 'none';
+                document.getElementById('wrapper-intro-music-preview').style.display = 'block';
+                initIntroMusicTab();
             }
         }
 
@@ -2556,7 +2879,7 @@
         (function restoreActiveTabOnLoad() {
             try {
                 const hash = window.location.hash ? window.location.hash.substring(1) : '';
-                const validTabs = ['lyrics', 'scripture', 'devotion', 'hymns', 'audio', 'intro-bg'];
+                const validTabs = ['lyrics', 'scripture', 'devotion', 'hymns', 'audio', 'intro-bg', 'intro-music'];
                 const savedTab = localStorage.getItem('church_sermon_active_tab');
                 const targetTab = validTabs.includes(hash) ? hash : (validTabs.includes(savedTab) ? savedTab : null);
                 if (targetTab && targetTab !== 'lyrics') {
@@ -2571,7 +2894,7 @@
 
         window.addEventListener('hashchange', () => {
             const hash = window.location.hash ? window.location.hash.substring(1) : '';
-            const validTabs = ['lyrics', 'scripture', 'devotion', 'hymns', 'audio', 'intro-bg'];
+            const validTabs = ['lyrics', 'scripture', 'devotion', 'hymns', 'audio', 'intro-bg', 'intro-music'];
             if (validTabs.includes(hash) && hash !== currentTab) {
                 switchTab(hash);
             }
@@ -5769,7 +6092,7 @@
                     statusPill.textContent = '快取已同步儲存';
                     statusPill.style.color = '#10b981';
                 }
-                alert(`💾 已成功將 ${introData.imageArr.length} 張背景圖儲存至本地快取 (${cacheKey})！\n\n下次開啟或 OBS 直播片頭將立即套用此設定。`);
+                alert(`💾 已成功將 ${introData.imageArr.length} 張背景圖儲存至本地快取 (${cacheKey})！\n\n下次開啟或直播片頭網頁將立即套用此設定。`);
             } catch(e) {
                 alert("儲存至 localStorage 失敗：" + e.message);
             }
@@ -6085,6 +6408,597 @@
 
             // 每次切換至此 Tab 時啟動輪播
             introStartCarousel();
+        }
+
+        // ==========================================
+        // 直播片頭音樂 (Cloudflare R2 串流與發布) 模組
+        // ==========================================
+        let introMusicTabInitialized = false;
+        let introMusicTarget = 'a'; // 'a': 台語片頭音樂.mp3, 'b': 華語片頭音樂.mp3
+        let introMusicSelectedFile = null;
+        let introMusicSelectedBlobUrl = null;
+
+        const INTRO_MUSIC_CONFIG = {
+            'a': {
+                name: '台語片頭音樂.mp3',
+                label: '台語禮拜片頭音樂',
+                service: 'taiwanese',
+                opt: 'a',
+                url: 'https://pub-78ea0d4b46964114ac28dd5c6e53460d.r2.dev/%E5%8F%B0%E8%AA%9E%E7%89%87%E9%A0%AD%E9%9F%B3%E6%A8%82.mp3',
+                displayUrl: 'https://pub-78ea0d4b46964114ac28dd5c6e53460d.r2.dev/台語片頭音樂.mp3',
+                liveHtml: '../../youtube/南門教會直播片頭_v2.html'
+            },
+            'b': {
+                name: '華語片頭音樂.mp3',
+                label: '華語禮拜片頭音樂',
+                service: 'mandarin',
+                opt: 'b',
+                url: 'https://pub-78ea0d4b46964114ac28dd5c6e53460d.r2.dev/%E8%8F%AF%E8%AA%9E%E7%89%87%E9%A0%AD%E9%9F%B3%E6%A8%82.mp3',
+                displayUrl: 'https://pub-78ea0d4b46964114ac28dd5c6e53460d.r2.dev/華語片頭音樂.mp3',
+                liveHtml: '../../youtube/南門教會華語禮拜直播片頭_v2.html'
+            }
+        };
+
+        function switchMusicTarget(target) {
+            introMusicTarget = (target === 'b' || target === '1') ? 'b' : 'a';
+            const cfg = INTRO_MUSIC_CONFIG[introMusicTarget];
+
+            // 更新左側按鈕狀態
+            const btnTw = document.getElementById('btn-music-target-tw');
+            const btnMandarin = document.getElementById('btn-music-target-mandarin');
+            if (btnTw && btnMandarin) {
+                if (introMusicTarget === 'a') {
+                    btnTw.classList.add('active');
+                    btnMandarin.classList.remove('active');
+                } else {
+                    btnMandarin.classList.add('active');
+                    btnTw.classList.remove('active');
+                }
+            }
+
+            // 更新右側預覽按鈕狀態
+            const btnPrevTw = document.getElementById('btn-music-preview-tw');
+            const btnPrevMandarin = document.getElementById('btn-music-preview-mandarin');
+            if (btnPrevTw && btnPrevMandarin) {
+                if (introMusicTarget === 'a') {
+                    btnPrevTw.classList.add('active');
+                    btnPrevMandarin.classList.remove('active');
+                } else {
+                    btnPrevMandarin.classList.add('active');
+                    btnPrevTw.classList.remove('active');
+                }
+            }
+
+            // 更新左側資訊
+            const targetFilenameEl = document.getElementById('music-target-filename');
+            if (targetFilenameEl) targetFilenameEl.textContent = cfg.name;
+
+            const publicUrlEl = document.getElementById('music-target-public-url');
+            if (publicUrlEl) {
+                publicUrlEl.href = cfg.url;
+                publicUrlEl.textContent = cfg.displayUrl;
+            }
+
+            // 更新右側線上串流網址
+            const streamUrlEl = document.getElementById('text-online-stream-url');
+            if (streamUrlEl) streamUrlEl.textContent = cfg.displayUrl;
+
+            // 更新線上播放器來源
+            const audioOnline = document.getElementById('audio-player-online');
+            if (audioOnline) {
+                audioOnline.src = `${cfg.url}?t=${Date.now()}`;
+                audioOnline.load();
+            }
+
+            // 檢查線上檔案狀態
+            checkOnlineR2MusicStatus();
+        }
+
+        async function checkOnlineR2MusicStatus() {
+            const cfg = INTRO_MUSIC_CONFIG[introMusicTarget];
+            const statusTextEl = document.getElementById('music-online-status-text');
+            const badgeOnline = document.getElementById('badge-online-status');
+            const badgeSize = document.getElementById('badge-online-size');
+            const statusPill = document.getElementById('music-status-pill');
+            const audioOnline = document.getElementById('audio-player-online');
+
+            if (statusTextEl) statusTextEl.textContent = '線上檔案檢測中...';
+
+            function setOnlineSuccess(infoStr, durBadge) {
+                if (statusTextEl) {
+                    statusTextEl.textContent = `🟢 正常上線中 (${infoStr})`;
+                    statusTextEl.style.color = '#10b981';
+                }
+                if (badgeOnline) {
+                    badgeOnline.textContent = '🟢 串流正常 (可播放)';
+                    badgeOnline.className = 'intro-music-badge badge-success';
+                }
+                if (badgeSize) {
+                    badgeSize.textContent = durBadge || '已就緒';
+                }
+                if (statusPill) {
+                    statusPill.textContent = 'Cloudflare R2 線上就緒';
+                    statusPill.style.color = '#10b981';
+                }
+            }
+
+            function setOnlineError() {
+                if (statusTextEl) {
+                    statusTextEl.textContent = '⚠️ 線上檔案狀態待確認或未建立';
+                    statusTextEl.style.color = '#f59e0b';
+                }
+                if (badgeOnline) {
+                    badgeOnline.textContent = '⚠️ 狀態待確認';
+                    badgeOnline.className = 'intro-music-badge badge-warning';
+                }
+                if (badgeSize) {
+                    badgeSize.textContent = '-';
+                }
+            }
+
+            // 1. 優先嘗試 fetch HEAD 取得完整大小與更新時間
+            try {
+                const res = await fetch(`${cfg.url}?t=${Date.now()}`, { method: 'HEAD', cache: 'no-store' });
+                if (res.ok) {
+                    const contentLength = res.headers.get('content-length');
+                    const lastModified = res.headers.get('last-modified');
+                    let sizeStr = '';
+                    if (contentLength) {
+                        const mb = (parseInt(contentLength, 10) / (1024 * 1024)).toFixed(2);
+                        sizeStr = `${mb} MB`;
+                    }
+                    let dateStr = '';
+                    if (lastModified) {
+                        const d = new Date(lastModified);
+                        dateStr = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+                    }
+                    const info = sizeStr + (dateStr ? ' • 更新於 ' + dateStr : '');
+                    setOnlineSuccess(info || '檔案已就緒', sizeStr);
+                    return;
+                }
+            } catch(e) {
+                // fetch 受瀏覽器跨網域 CORS 安全政策限制時，自動進入原生 Audio 標籤解碼判定
+            }
+
+            // 2. 免受 CORS 限制的原生音訊長度解碼檢測
+            if (audioOnline) {
+                if (!isNaN(audioOnline.duration) && audioOnline.duration > 0) {
+                    const mins = Math.floor(audioOnline.duration / 60);
+                    const secs = Math.floor(audioOnline.duration % 60);
+                    const durStr = `${mins}:${String(secs).padStart(2, '0')}`;
+                    setOnlineSuccess(`音訊長度 ${durStr} • 串流可用`, `長度 ${durStr}`);
+                    return;
+                }
+
+                // 若剛切換尚未載入完成，掛載事件等待
+                const onLoaded = () => {
+                    audioOnline.removeEventListener('loadedmetadata', onLoaded);
+                    audioOnline.removeEventListener('error', onError);
+                    if (!isNaN(audioOnline.duration) && audioOnline.duration > 0) {
+                        const mins = Math.floor(audioOnline.duration / 60);
+                        const secs = Math.floor(audioOnline.duration % 60);
+                        const durStr = `${mins}:${String(secs).padStart(2, '0')}`;
+                        setOnlineSuccess(`音訊長度 ${durStr} • 串流可用`, `長度 ${durStr}`);
+                    }
+                };
+                const onError = () => {
+                    audioOnline.removeEventListener('loadedmetadata', onLoaded);
+                    audioOnline.removeEventListener('error', onError);
+                    setOnlineError();
+                };
+                audioOnline.addEventListener('loadedmetadata', onLoaded, { once: true });
+                audioOnline.addEventListener('error', onError, { once: true });
+            } else {
+                setOnlineError();
+            }
+        }
+
+        function handleMusicFileSelect(file) {
+            if (!file) return;
+            introMusicSelectedFile = file;
+
+            // 顯示選取檔案卡片
+            const cardEl = document.getElementById('music-selected-file-card');
+            const nameEl = document.getElementById('music-selected-filename');
+            const sizeEl = document.getElementById('music-selected-filesize');
+            const durEl = document.getElementById('music-selected-duration');
+            const badgeLocal = document.getElementById('badge-local-status');
+            const metaBar = document.getElementById('local-music-meta-bar');
+
+            if (cardEl) cardEl.style.display = 'flex';
+            if (nameEl) nameEl.textContent = file.name;
+            if (sizeEl) {
+                const mb = (file.size / (1024 * 1024)).toFixed(2);
+                sizeEl.textContent = `${mb} MB (${file.type || '音訊檔'})`;
+            }
+
+            // 載入右側本地播放器試聽
+            if (introMusicSelectedBlobUrl) {
+                URL.revokeObjectURL(introMusicSelectedBlobUrl);
+            }
+            introMusicSelectedBlobUrl = URL.createObjectURL(file);
+            const audioLocal = document.getElementById('audio-player-local');
+            if (audioLocal) {
+                audioLocal.src = introMusicSelectedBlobUrl;
+                audioLocal.onloadedmetadata = function() {
+                    const sec = Math.round(audioLocal.duration);
+                    const m = Math.floor(sec / 60);
+                    const s = sec % 60;
+                    const durStr = `${m}:${String(s).padStart(2, '0')}`;
+                    if (durEl) durEl.textContent = `${durStr} (${sec} 秒)`;
+                    if (metaBar) {
+                        metaBar.innerHTML = `<span><strong>${file.name}</strong> (${(file.size / (1024 * 1024)).toFixed(2)} MB)</span><span>長度：${durStr}</span>`;
+                    }
+                };
+            }
+
+            if (badgeLocal) {
+                badgeLocal.textContent = '✅ 已載入待同步';
+                badgeLocal.className = 'intro-music-badge badge-success';
+            }
+
+            const statusPill = document.getElementById('music-status-pill');
+            if (statusPill) {
+                statusPill.textContent = `已載入待同步音訊: ${file.name}`;
+                statusPill.style.color = '#38bdf8';
+            }
+        }
+
+        // 純前端 AWS S3 SigV4 直連 Cloudflare R2 上傳核心
+        async function uploadMusicToCloudflareR2() {
+            if (!introMusicSelectedFile) {
+                alert("請先選擇或拖曳音訊檔案！");
+                return;
+            }
+
+            const cfg = INTRO_MUSIC_CONFIG[introMusicTarget];
+            const statusPill = document.getElementById('music-status-pill');
+            const btnUpload = document.getElementById('btn-music-upload-r2');
+            const origBtnText = btnUpload ? btnUpload.innerHTML : '';
+
+            if (btnUpload) {
+                btnUpload.disabled = true;
+                btnUpload.innerHTML = '⏳ 正在計算簽名並上傳至 Cloudflare...';
+            }
+            if (statusPill) {
+                statusPill.textContent = '🚀 正在上傳發布至 Cloudflare 雲端...';
+                statusPill.style.color = '#38bdf8';
+            }
+
+            try {
+                const accountId = 'd2a61c50138d359f094a04fdc896ac71';
+                const accessKeyId = '97811d887ca675a09e309d192a262e23';
+                const secretAccessKey = 'a776d70b4f50803c7f8e7ac209a1b5ca88be96d0e7215fffe26880e6691d10f7';
+                const bucket = 'obs-media';
+                const endpointHost = `${accountId}.r2.cloudflarestorage.com`;
+                const targetKey = cfg.name;
+
+                const fileBuffer = await introMusicSelectedFile.arrayBuffer();
+
+                // 計算 SHA-256
+                const hashBuf = await crypto.subtle.digest('SHA-256', fileBuffer);
+                const contentSha256 = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+                const now = new Date();
+                const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, '');
+                const dateStamp = amzDate.substring(0, 8);
+
+                async function hmac(key, message) {
+                    const keyObj = await crypto.subtle.importKey('raw', typeof key === 'string' ? new TextEncoder().encode(key) : key, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+                    return await crypto.subtle.sign('HMAC', keyObj, typeof message === 'string' ? new TextEncoder().encode(message) : message);
+                }
+                async function sha256Hex(str) {
+                    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+                    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+                }
+
+                const canonicalUri = `/${bucket}/${encodeURIComponent(targetKey)}`;
+                const canonicalHeaders = `host:${endpointHost}\nx-amz-content-sha256:${contentSha256}\nx-amz-date:${amzDate}\n`;
+                const signedHeaders = 'host;x-amz-content-sha256;x-amz-date';
+                const canonicalRequest = `PUT\n${canonicalUri}\n\n${canonicalHeaders}\n${signedHeaders}\n${contentSha256}`;
+
+                const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
+                const stringToSign = `AWS4-HMAC-SHA256\n${amzDate}\n${credentialScope}\n${await sha256Hex(canonicalRequest)}`;
+
+                const kDate = await hmac('AWS4' + secretAccessKey, dateStamp);
+                const kRegion = await hmac(kDate, 'auto');
+                const kService = await hmac(kRegion, 's3');
+                const kSigning = await hmac(kService, 'aws4_request');
+                const signatureBuf = await hmac(kSigning, stringToSign);
+                const signature = Array.from(new Uint8Array(signatureBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+                const authHeader = `AWS4-HMAC-SHA256 Credential=${accessKeyId}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
+
+                const uploadUrl = `https://${endpointHost}${canonicalUri}`;
+                const res = await fetch(uploadUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'x-amz-date': amzDate,
+                        'x-amz-content-sha256': contentSha256,
+                        'Authorization': authHeader,
+                        'Content-Type': introMusicSelectedFile.type || 'audio/mpeg'
+                    },
+                    body: fileBuffer
+                });
+
+                if (res.ok) {
+                    if (statusPill) {
+                        statusPill.textContent = `🎉 成功發布至 Cloudflare: ${cfg.name}`;
+                        statusPill.style.color = '#10b981';
+                    }
+                    alert(`🎉 恭喜！音訊檔案已成功發布至 Cloudflare！\n\n標準檔名：${cfg.name}\n片頭音樂網址：\n${cfg.displayUrl}\n\n已更新線上播放器可立即試聽！`);
+                    checkOnlineR2MusicStatus();
+                    const audioOnline = document.getElementById('audio-player-online');
+                    if (audioOnline) {
+                        audioOnline.src = `${cfg.url}?t=${Date.now()}`;
+                        audioOnline.load();
+                    }
+                } else {
+                    const errText = await res.text();
+                    throw new Error(`伺服器回應 ${res.status}: ${errText}`);
+                }
+            } catch(err) {
+                console.warn("瀏覽器直傳 Cloudflare R2 遇到限制:", err);
+                if (statusPill) {
+                    statusPill.textContent = '⚠️ 雲端直傳受限 (建議下載標準 MP3 檔)';
+                    statusPill.style.color = '#f59e0b';
+                }
+                alert(`⚠️ 瀏覽器直傳受限於 Cloudflare R2 跨來源 (CORS) 安全政策：\n\n【建議處理方式】\n1. 請點擊「💾 下載標準 MP3 備份檔」儲存標準檔名音訊。\n2. 若需網頁直接上傳，請通知管理員於 Cloudflare R2 後台設定允許此網域之 CORS 規則。\n\n詳細資訊：${err.message}`);
+            } finally {
+                if (btnUpload) {
+                    btnUpload.disabled = false;
+                    btnUpload.innerHTML = origBtnText;
+                }
+            }
+        }
+
+        function downloadNamedMusicFile() {
+            if (!introMusicSelectedFile) {
+                alert("請先選擇或拖曳音訊檔案！");
+                return;
+            }
+            const cfg = INTRO_MUSIC_CONFIG[introMusicTarget];
+            const a = document.createElement('a');
+            a.href = introMusicSelectedBlobUrl || URL.createObjectURL(introMusicSelectedFile);
+            a.download = cfg.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            const statusPill = document.getElementById('music-status-pill');
+            if (statusPill) {
+                statusPill.textContent = `✅ 已下載標準檔案: ${cfg.name}`;
+                statusPill.style.color = '#10b981';
+            }
+            alert(`💾 已成功下載標準檔名：${cfg.name}\n\n已儲存至您的電腦下載資料夾。`);
+        }
+
+        async function downloadOnlineMusicFile() {
+            const cfg = INTRO_MUSIC_CONFIG[introMusicTarget];
+            const statusPill = document.getElementById('music-status-pill');
+            const btn1 = document.getElementById('btn-music-download-online');
+            const btn2 = document.getElementById('btn-download-online-track');
+            const orig1 = btn1 ? btn1.innerHTML : '';
+            const orig2 = btn2 ? btn2.innerHTML : '';
+
+            if (btn1) {
+                btn1.disabled = true;
+                btn1.innerHTML = '⏳ 下載備份中...';
+            }
+            if (btn2) {
+                btn2.disabled = true;
+                btn2.innerHTML = '⏳ 下載中...';
+            }
+            if (statusPill) {
+                statusPill.textContent = `⏳ 正在從雲端備份下載 ${cfg.name}...`;
+                statusPill.style.color = '#38bdf8';
+            }
+
+            try {
+                const res = await fetch(`${cfg.url}?t=${Date.now()}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const blob = await res.blob();
+                const a = document.createElement('a');
+                const blobUrl = URL.createObjectURL(blob);
+                a.href = blobUrl;
+                a.download = cfg.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+
+                if (statusPill) {
+                    statusPill.textContent = `✅ 已成功備份下載: ${cfg.name}`;
+                    statusPill.style.color = '#10b981';
+                }
+                alert(`☁️ 已成功將線上現行版本【${cfg.name}】下載備份至您的電腦！\n\n檔案名稱：${cfg.name}`);
+            } catch(err) {
+                console.warn("fetch blob 下載失敗，使用直連下載:", err);
+                const a = document.createElement('a');
+                a.href = `${cfg.url}?download=1`;
+                a.target = '_blank';
+                a.download = cfg.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                if (statusPill) {
+                    statusPill.textContent = `✅ 已啟動直連下載: ${cfg.name}`;
+                    statusPill.style.color = '#10b981';
+                }
+            } finally {
+                if (btn1) {
+                    btn1.disabled = false;
+                    btn1.innerHTML = orig1;
+                }
+                if (btn2) {
+                    btn2.disabled = false;
+                    btn2.innerHTML = orig2;
+                }
+            }
+        }
+
+        function copyMusicUrl() {
+            const cfg = INTRO_MUSIC_CONFIG[introMusicTarget];
+            try {
+                navigator.clipboard.writeText(cfg.displayUrl);
+                const btn1 = document.getElementById('btn-music-copy-stream-url');
+                const btn2 = document.getElementById('btn-copy-stream-url');
+                if (btn1) {
+                    const orig = btn1.innerHTML;
+                    btn1.innerHTML = '✅ 已複製片頭網址！';
+                    setTimeout(() => btn1.innerHTML = orig, 2000);
+                }
+                if (btn2) {
+                    const orig = btn2.innerHTML;
+                    btn2.innerHTML = '✅ 已複製！';
+                    setTimeout(() => btn2.innerHTML = orig, 2000);
+                }
+            } catch(e) {
+                prompt("請複製片頭音樂網址：", cfg.displayUrl);
+            }
+        }
+
+        function initIntroMusicTab() {
+            if (!introMusicTabInitialized) {
+                introMusicTabInitialized = true;
+
+                // 場次按鈕切換
+                const btnTw = document.getElementById('btn-music-target-tw');
+                const btnMandarin = document.getElementById('btn-music-target-mandarin');
+                if (btnTw) btnTw.addEventListener('click', () => switchMusicTarget('a'));
+                if (btnMandarin) btnMandarin.addEventListener('click', () => switchMusicTarget('b'));
+
+                // 預覽區場次按鈕切換
+                const btnPrevTw = document.getElementById('btn-music-preview-tw');
+                const btnPrevMandarin = document.getElementById('btn-music-preview-mandarin');
+                if (btnPrevTw) btnPrevTw.addEventListener('click', () => switchMusicTarget('a'));
+                if (btnPrevMandarin) btnPrevMandarin.addEventListener('click', () => switchMusicTarget('b'));
+
+                // 開啟實機片頭
+                const openLive = () => {
+                    const cfg = INTRO_MUSIC_CONFIG[introMusicTarget];
+                    window.open(cfg.liveHtml, '_blank');
+                };
+                const btnLive1 = document.getElementById('btn-music-open-live-preview');
+                const btnLive2 = document.getElementById('btn-music-live-launch');
+                if (btnLive1) btnLive1.addEventListener('click', openLive);
+                if (btnLive2) btnLive2.addEventListener('click', openLive);
+
+                // 上傳與選檔
+                const dropZone = document.getElementById('music-drop-zone');
+                const fileInput = document.getElementById('music-file-input');
+                if (dropZone && fileInput) {
+                    dropZone.addEventListener('click', (e) => {
+                        if (e.target.id === 'btn-music-paste-clipboard') return;
+                        fileInput.click();
+                    });
+                    fileInput.addEventListener('change', (e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                            handleMusicFileSelect(e.target.files[0]);
+                        }
+                    });
+                    dropZone.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        dropZone.classList.add('dragover');
+                    });
+                    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+                    dropZone.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        dropZone.classList.remove('dragover');
+                        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                            handleMusicFileSelect(e.dataTransfer.files[0]);
+                        }
+                    });
+                }
+
+                // 貼上剪貼簿
+                const btnPaste = document.getElementById('btn-music-paste-clipboard');
+                if (btnPaste) {
+                    btnPaste.addEventListener('click', async () => {
+                        try {
+                            const items = await navigator.clipboard.read();
+                            let found = false;
+                            for (const item of items) {
+                                for (const type of item.types) {
+                                    if (type.startsWith('audio/') || type.startsWith('video/')) {
+                                        const blob = await item.getType(type);
+                                        const ext = type.split('/')[1] || 'mp3';
+                                        const file = new File([blob], `Clipboard_Music_${Date.now()}.${ext}`, { type: blob.type });
+                                        handleMusicFileSelect(file);
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!found) {
+                                alert("剪貼簿中未偵測到音訊或影音檔案，請直接拖曳或點選檔案上傳。");
+                            }
+                        } catch(err) {
+                            alert("請在頁面任意處按下 Ctrl+V 貼上，或直接拖曳檔案至此區域。");
+                        }
+                    });
+                }
+
+                // 操作按鈕綁定
+                const btnUpload = document.getElementById('btn-music-upload-r2');
+                if (btnUpload) btnUpload.addEventListener('click', uploadMusicToCloudflareR2);
+
+                const btnDownload = document.getElementById('btn-music-download-named');
+                if (btnDownload) btnDownload.addEventListener('click', downloadNamedMusicFile);
+
+                const btnDownloadOnline1 = document.getElementById('btn-music-download-online');
+                const btnDownloadOnline2 = document.getElementById('btn-download-online-track');
+                if (btnDownloadOnline1) btnDownloadOnline1.addEventListener('click', downloadOnlineMusicFile);
+                if (btnDownloadOnline2) btnDownloadOnline2.addEventListener('click', downloadOnlineMusicFile);
+
+                const btnCopyUrl1 = document.getElementById('btn-music-copy-stream-url');
+                const btnCopyUrl2 = document.getElementById('btn-copy-stream-url');
+                if (btnCopyUrl1) btnCopyUrl1.addEventListener('click', copyMusicUrl);
+                if (btnCopyUrl2) btnCopyUrl2.addEventListener('click', copyMusicUrl);
+
+                const btnRefresh = document.getElementById('btn-music-refresh-r2');
+                if (btnRefresh) btnRefresh.addEventListener('click', checkOnlineR2MusicStatus);
+
+                // 播放器視覺跳動動畫連動
+                const audioOnline = document.getElementById('audio-player-online');
+                const visOnline = document.getElementById('vis-online');
+                if (audioOnline && visOnline) {
+                    audioOnline.addEventListener('play', () => visOnline.classList.remove('paused'));
+                    audioOnline.addEventListener('pause', () => visOnline.classList.add('paused'));
+                    audioOnline.addEventListener('ended', () => visOnline.classList.add('paused'));
+                }
+
+                const audioLocal = document.getElementById('audio-player-local');
+                const visLocal = document.getElementById('vis-local');
+                if (audioLocal && visLocal) {
+                    audioLocal.addEventListener('play', () => visLocal.classList.remove('paused'));
+                    audioLocal.addEventListener('pause', () => visLocal.classList.add('paused'));
+                    audioLocal.addEventListener('ended', () => visLocal.classList.add('paused'));
+                }
+
+                // 全域 Paste 事件監聽
+                document.addEventListener('paste', (e) => {
+                    const tabBtn = document.getElementById('tab-intro-music');
+                    if (!tabBtn || !tabBtn.classList.contains('active')) return;
+                    if (e.clipboardData && e.clipboardData.items) {
+                        for (let i = 0; i < e.clipboardData.items.length; i++) {
+                            const item = e.clipboardData.items[i];
+                            if (item.type.indexOf('audio') !== -1 || item.type.indexOf('video') !== -1) {
+                                const file = item.getAsFile();
+                                handleMusicFileSelect(file);
+                                e.preventDefault();
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                // 初始化載入台語片頭狀態
+                switchMusicTarget('a');
+            } else {
+                // 每次切換回此 Tab 重新整理線上狀態
+                checkOnlineR2MusicStatus();
+            }
         }
     </script>
 
