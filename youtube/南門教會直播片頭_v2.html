@@ -625,6 +625,21 @@
         }, duration);
       }
 
+      function showHelp(duration = 3500) {
+        showHud(`
+          <div style="font-weight:bold;margin-bottom:6px;color:#fff;border-bottom:1px solid rgba(255,255,255,0.25);padding-bottom:3px;text-align:center;">⌨️ 快捷鍵說明 (Help)</div>
+          <table style="border-collapse:collapse;font-size:0.9rem;color:#f1f5f9;text-align:left;">
+            <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">Space</span></td><td>播放 / 暫停</td></tr>
+            <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">↑ / ↓</span></td><td>音量調整 (+10% / -10%)</td></tr>
+            <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">M</span></td><td>靜音開關</td></tr>
+            <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">F</span></td><td>全螢幕切換</td></tr>
+            <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">T</span></td><td>滑鼠點選 鎖定 / 解除切換</td></tr>
+            <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">H</span></td><td>快捷鍵說明 (Help)</td></tr>
+            <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">C</span></td><td>直跳主日排版助手</td></tr>
+          </table>
+        `, duration);
+      }
+
       function isFullscreen() {
         return !!(document.fullscreenElement || document.webkitFullscreenElement);
       }
@@ -690,10 +705,10 @@
 
           if (isProtectedBlock) {
             if (!isMouseClickUnlocked) {
-              // 鎖定狀態下，禁止打開外部連結與試算表，且不觸發全螢幕切換，並即時給予提示
+              // 鎖定狀態下，直接顯示 Help 快捷鍵說明，提醒大家用 Help
               e.stopImmediatePropagation();
               e.preventDefault();
-              showHud("🔒 已啟用防誤觸保護 (按鍵盤「T」可解鎖開啟試算表/連結)", 2500);
+              showHelp();
               return;
             }
             // 已解鎖狀態：放行點擊開啟連結，不觸發全螢幕切換
@@ -742,9 +757,9 @@
           isMouseClickUnlocked = !isMouseClickUnlocked;
           updateClickableCursor();
           if (isMouseClickUnlocked) {
-            showHud("🔓 滑鼠點選已全部啟用 (按 T 鎖定)");
+            showHud("🔓 滑鼠點選已全部啟用");
           } else {
-            showHud("🔒 滑鼠點選已鎖定 (僅右上角有效，按 T 解鎖)");
+            showHelp();
           }
           return;
         }
@@ -756,18 +771,7 @@
           showHud(bgm.muted ? "🔇 靜音" : `🔊 音量: ${Math.round(bgm.volume * 100)}%`);
         } else if (e.code === "KeyH" || e.key.toLowerCase() === "h") {
           e.preventDefault();
-          showHud(`
-            <div style="font-weight:bold;margin-bottom:6px;color:#fff;border-bottom:1px solid rgba(255,255,255,0.25);padding-bottom:3px;text-align:center;">⌨️ 快捷鍵說明</div>
-            <table style="border-collapse:collapse;font-size:0.9rem;color:#f1f5f9;text-align:left;">
-              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">Space</span></td><td>播放 / 暫停</td></tr>
-              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">↑ (ArrowUp)</span></td><td>音量增加 (+10%)</td></tr>
-              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">↓ (ArrowDown)</span></td><td>音量降低 (-10%)</td></tr>
-              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">M</span></td><td>靜音開關</td></tr>
-              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">F</span></td><td>全螢幕切換</td></tr>
-              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">T</span></td><td>滑鼠點選 鎖定 / 解除切換</td></tr>
-              <tr><td style="padding:2px 8px 2px 0;"><span style="background:#1e293b;border:1px solid #475569;border-radius:3px;padding:1px 5px;font-family:monospace;color:#38bdf8;">C</span></td><td>直跳主日排版助手</td></tr>
-            </table>
-          `, 3000);
+          showHelp();
         } else if (e.code === "ArrowUp" || e.key === "ArrowUp") {
           e.preventDefault();
           bgm.muted = false;
