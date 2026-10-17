@@ -234,6 +234,7 @@
         position: fixed;
         /* top: 20em; */
         bottom: 0;
+        left: 0;
         color: white;
         /* text-shadow: 5px 5px 3px black; */
         text-shadow: 2px 3px 5px black;
@@ -247,11 +248,18 @@
         margin: 0;
         white-space: nowrap;
         z-index: 10;
+        /* iPad 防凍結：禁止選取文字與長按呼叫放大鏡，並強制建立 GPU 渲染層 */
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
       }
 
       .scroll-left h2 {
         position: absolute;
         bottom: 0px;
+        left: 0;
 
         /* background: rgba(192, 130, 189, 0.8); */
         width: 100%;
@@ -260,10 +268,15 @@
         font-size: 2rem;
         /* line-height: 2rem; */
         text-align: center;
+        white-space: nowrap;
+        /* iPad 防卡頓：啟用 GPU 硬體加速與背面隱藏，防止 Safari 全螢幕切換時重繪掉幀 */
+        will-change: transform;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
         /* Starting position */
-        -moz-transform: translateX(100%);
-        -webkit-transform: translateX(100%);
-        transform: translateX(100%);
+        -moz-transform: translate3d(100%, 0, 0);
+        -webkit-transform: translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0);
         /* Apply animation to this element */
         -moz-animation: scroll-left 60s linear infinite;
         -webkit-animation: scroll-left 60s linear infinite;
@@ -394,7 +407,10 @@
         "https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing";
 
       scrollText.addEventListener("animationiteration", setImage);
-      scrollText.addEventListener("click", setImage);
+      scrollText.addEventListener("click", () => {
+        setImage();
+        refreshScrollAnimation();
+      });
 
       // 滑鼠點選鎖定狀態：Default 只有右上角 Bdate、下方 scrollText、空白處全螢幕切換有效，按 T 解鎖其餘區塊
       let isMouseClickUnlocked = false;
@@ -485,11 +501,7 @@
           bgLayer1.style.backgroundImage = `url("${imageArr[0]}")`;
         }
         scrollText.textContent = (data[1][5] || "").replace(/[\r\n,\n]/g, " ");
-        if (scrollText.clientWidth > 0) {
-          const ratio = scrollText.scrollWidth / scrollText.clientWidth;
-          setAniKeyFrame(Math.ceil(ratio * 100));
-          setAniDuration(Math.ceil(ratio * 1000 * oneFrameDuration));
-        }
+        refreshScrollAnimation();
 
         Bdate.textContent = data[1][3] || "";
 
@@ -549,44 +561,57 @@
         img.src = nextUrl;
       }
 
-      function setAniDuration(duration) {
-        const anis = scrollText.getAnimations();
-        if (anis && anis.length > 0 && anis[0]["effect"]) {
-          anis[0]["effect"].updateTiming({
-            delay: 0,
-            direction: "normal",
-            duration: duration,
-            easing: "linear",
-            endDelay: 0,
-            fill: "none",
-            iterationStart: 0,
-            iterations: Infinity,
-          });
+      function refreshScrollAnimation() {
+        if (!scrollText) return;
+        const cWidth = scrollText.clientWidth || window.innerWidth;
+        const sWidth = scrollText.scrollWidth;
+        if (cWidth > 0 && sWidth > 0) {
+          const ratio = Math.ceil((sWidth / cWidth) * 100);
+          const duration = Math.ceil((sWidth / cWidth) * 1000 * oneFrameDuration);
+
+          // 1. 動態注入原生 CSS @keyframes (iPad WebKit 唯一不凍結、硬體加速跑馬燈解法)
+          let styleEl = document.getElementById("scroll-anim-dynamic-style");
+          if (!styleEl) {
+            styleEl = document.createElement("style");
+            styleEl.id = "scroll-anim-dynamic-style";
+            document.head.appendChild(styleEl);
+          }
+          styleEl.textContent = `
+            @keyframes scroll-left {
+              0% { transform: translate3d(100%, 0, 0); -webkit-transform: translate3d(100%, 0, 0); }
+              100% { transform: translate3d(-${ratio}%, 0, 0); -webkit-transform: translate3d(-${ratio}%, 0, 0); }
+            }
+            @-webkit-keyframes scroll-left {
+              0% { -webkit-transform: translate3d(100%, 0, 0); }
+              100% { -webkit-transform: translate3d(-${ratio}%, 0, 0); }
+            }
+            .scroll-left h2 {
+              animation-duration: ${duration}ms !important;
+              -webkit-animation-duration: ${duration}ms !important;
+              animation-play-state: running !important;
+              -webkit-animation-play-state: running !important;
+            }
+          `;
+
+          // 2. 雙重保險：喚醒任何被 Safari 凍結為 paused/idle 的 WAAPI 動畫實例
+          if (scrollText.getAnimations) {
+            scrollText.getAnimations().forEach((ani) => {
+              try {
+                if (ani.playState === "paused" || ani.playState === "idle") {
+                  ani.play();
+                }
+              } catch (e) {}
+            });
+          }
         }
       }
 
-      function setAniKeyFrame(ratio) {
-        const kframe = [
-          {
-            offset: 0,
-            easing: "linear",
-            composite: "auto",
-            transform: "translateX(100%)",
-            computedOffset: 0,
-          },
-          {
-            offset: 1,
-            easing: "linear",
-            composite: "auto",
-            transform: `translateX(-${ratio}%)`,
-            computedOffset: 1,
-          },
-        ];
+      function setAniDuration(duration) {
+        refreshScrollAnimation();
+      }
 
-        const anis = scrollText.getAnimations();
-        if (anis && anis.length > 0 && anis[0]["effect"]) {
-          anis[0]["effect"].setKeyframes(kframe);
-        }
+      function setAniKeyFrame(ratio) {
+        refreshScrollAnimation();
       }
       //setInterval(setDate, 1000);
       setInterval(setDate, 2000);
@@ -681,9 +706,16 @@
           bgm.pause();
           showHud("🔇 退出全螢幕，已暫停聲音");
         }
+        // iPad 全螢幕模式切換時重新計算並喚醒跑馬燈動畫，防止 WebKit 凍結
+        setTimeout(refreshScrollAnimation, 150);
       }
       document.addEventListener("fullscreenchange", onFullscreenChange);
       document.addEventListener("webkitfullscreenchange", onFullscreenChange);
+      window.addEventListener("resize", () => setTimeout(refreshScrollAnimation, 100));
+      window.addEventListener("orientationchange", () => setTimeout(refreshScrollAnimation, 200));
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) setTimeout(refreshScrollAnimation, 100);
+      });
 
       // 滑鼠點選控制架構：
       // 1. 右上角日期時間區塊 (#Bdate)：Always 有效 (同頁切換場次，不觸發全螢幕切換)
