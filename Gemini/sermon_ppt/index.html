@@ -1681,8 +1681,6 @@
         <div class="tabs-header">
             <button class="tab-btn active" id="tab-lyrics">🎵 聖歌隊歌詞排版</button>
             <button class="tab-btn" id="tab-scripture">📖 聖經經文抓取</button>
-            <button class="tab-btn" id="tab-audio">🎧 聽讀有聲聖經</button>
-            <button class="tab-btn" id="tab-hymns">🎵 聖詩與啟應文</button>
             <button class="tab-btn" id="tab-intro-bg">🖼️ 直播片頭背景</button>
             <button class="tab-btn" id="tab-intro-music">☁️ 直播片頭音樂</button>
         </div>
@@ -2654,12 +2652,12 @@
         const btnCopy = document.getElementById('btn-copy');
         const btnDownload = document.getElementById('btn-download');
 
-        document.getElementById('tab-lyrics').addEventListener('click', () => switchTab('lyrics'));
-        document.getElementById('tab-scripture').addEventListener('click', () => switchTab('scripture'));
-        document.getElementById('tab-hymns').addEventListener('click', () => switchTab('hymns'));
-        document.getElementById('tab-audio').addEventListener('click', () => switchTab('audio'));
-        document.getElementById('tab-intro-bg').addEventListener('click', () => switchTab('intro-bg'));
-        document.getElementById('tab-intro-music').addEventListener('click', () => switchTab('intro-music'));
+        document.getElementById('tab-lyrics')?.addEventListener('click', () => switchTab('lyrics'));
+        document.getElementById('tab-scripture')?.addEventListener('click', () => switchTab('scripture'));
+        document.getElementById('tab-hymns')?.addEventListener('click', () => switchTab('hymns'));
+        document.getElementById('tab-audio')?.addEventListener('click', () => switchTab('audio'));
+        document.getElementById('tab-intro-bg')?.addEventListener('click', () => switchTab('intro-bg'));
+        document.getElementById('tab-intro-music')?.addEventListener('click', () => switchTab('intro-music'));
 
         function stopAllPlayback() {
             if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
@@ -2806,8 +2804,10 @@
             
             // 重置預覽視窗
             document.getElementById('wrapper-text-preview').style.display = 'block';
-            document.getElementById('wrapper-hymns-preview').style.display = 'none';
-            document.getElementById('wrapper-audio-preview').style.display = 'none';
+            const wHymnsPreview = document.getElementById('wrapper-hymns-preview');
+            if (wHymnsPreview) wHymnsPreview.style.display = 'none';
+            const wAudioPreview = document.getElementById('wrapper-audio-preview');
+            if (wAudioPreview) wAudioPreview.style.display = 'none';
             const wIntroPreview = document.getElementById('wrapper-intro-bg-preview');
             if (wIntroPreview) wIntroPreview.style.display = 'none';
             const wMusicPreview = document.getElementById('wrapper-intro-music-preview');
@@ -2841,21 +2841,21 @@
                 if (wDevotion) wDevotion.style.display = 'block';
                 fetchTaipeiWeather();
             } else if (tab === 'hymns') {
-                document.getElementById('tab-hymns').classList.add('active');
-                document.getElementById('input-hymns').classList.add('active');
+                document.getElementById('tab-hymns')?.classList.add('active');
+                document.getElementById('input-hymns')?.classList.add('active');
                 document.getElementById('controls-row-lyrics').style.display = 'none';
                 document.getElementById('btn-group-shared').style.display = 'none';
                 document.getElementById('wrapper-text-preview').style.display = 'none';
-                document.getElementById('wrapper-hymns-preview').style.display = 'block';
-                initHymnsTab();
+                if (wHymnsPreview) wHymnsPreview.style.display = 'block';
+                if (typeof initHymnsTab === 'function') initHymnsTab();
             } else if (tab === 'audio') {
-                document.getElementById('tab-audio').classList.add('active');
-                document.getElementById('input-audio').classList.add('active');
+                document.getElementById('tab-audio')?.classList.add('active');
+                document.getElementById('input-audio')?.classList.add('active');
                 document.getElementById('controls-row-lyrics').style.display = 'none';
                 document.getElementById('btn-group-shared').style.display = 'none';
                 document.getElementById('wrapper-text-preview').style.display = 'none';
-                document.getElementById('wrapper-audio-preview').style.display = 'block';
-                initAudioBibleTab();
+                if (wAudioPreview) wAudioPreview.style.display = 'block';
+                if (typeof initAudioBibleTab === 'function') initAudioBibleTab();
             } else if (tab === 'intro-bg') {
                 document.getElementById('tab-intro-bg').classList.add('active');
                 document.getElementById('input-intro-bg').classList.add('active');
@@ -2879,7 +2879,7 @@
         (function restoreActiveTabOnLoad() {
             try {
                 const hash = window.location.hash ? window.location.hash.substring(1) : '';
-                const validTabs = ['lyrics', 'scripture', 'devotion', 'hymns', 'audio', 'intro-bg', 'intro-music'];
+                const validTabs = ['lyrics', 'scripture', 'intro-bg', 'intro-music'];
                 const savedTab = localStorage.getItem('church_sermon_active_tab');
                 const targetTab = validTabs.includes(hash) ? hash : (validTabs.includes(savedTab) ? savedTab : null);
                 if (targetTab && targetTab !== 'lyrics') {
@@ -2894,7 +2894,7 @@
 
         window.addEventListener('hashchange', () => {
             const hash = window.location.hash ? window.location.hash.substring(1) : '';
-            const validTabs = ['lyrics', 'scripture', 'devotion', 'hymns', 'audio', 'intro-bg', 'intro-music'];
+            const validTabs = ['lyrics', 'scripture', 'intro-bg', 'intro-music'];
             if (validTabs.includes(hash) && hash !== currentTab) {
                 switchTab(hash);
             }
