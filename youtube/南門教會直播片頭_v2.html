@@ -690,9 +690,10 @@
 
           if (isProtectedBlock) {
             if (!isMouseClickUnlocked) {
-              // 鎖定狀態下，禁止打開外部連結與試算表，且不觸發全螢幕切換
+              // 鎖定狀態下，禁止打開外部連結與試算表，且不觸發全螢幕切換，並即時給予提示
               e.stopImmediatePropagation();
               e.preventDefault();
+              showHud("🔒 已啟用防誤觸保護 (按鍵盤「T」可解鎖開啟試算表/連結)", 2500);
               return;
             }
             // 已解鎖狀態：放行點擊開啟連結，不觸發全螢幕切換
@@ -707,15 +708,15 @@
 
       // 鍵盤快捷鍵：Space 播放/暫停、M 靜音切換、F 全螢幕、Up 音量+、Down 音量-、H 說明
       window.addEventListener("keydown", (e) => {
-        if (e.code === "Space") {
+        if (e.code === "Space" || e.key === " ") {
           e.preventDefault();
-          if (!isFullscreen()) {
-            toggleFullscreen();
-            return;
-          }
           if (bgm.paused) {
-            bgm.play().catch(() => {});
-            showHud("▶ 播放");
+            bgm.play().then(() => {
+              showHud(`▶ 播放中 (${Math.round(bgm.volume * 100)}%)`);
+            }).catch((err) => {
+              console.log("播放受阻:", err);
+              showHud("⚠️ 請先點擊畫面以允許瀏覽器播放音訊");
+            });
           } else {
             bgm.pause();
             showHud("⏸ 暫停");
