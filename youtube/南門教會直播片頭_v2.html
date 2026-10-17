@@ -646,13 +646,15 @@
 
       function toggleFullscreen() {
         if (!isFullscreen()) {
+          bgm.play().then(() => {
+            showHud(`▶ 全畫面播放中 (${Math.round(bgm.volume * 100)}%)`);
+          }).catch((e) => console.log("等待互動:", e));
           const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
           if (req) {
-            req.call(document.documentElement).then(() => {
-              bgm.play().catch(() => {});
-            }).catch(() => {});
+            req.call(document.documentElement).catch(() => {});
           }
         } else {
+          bgm.pause();
           const exit = document.exitFullscreen || document.webkitExitFullscreen;
           if (exit) {
             exit.call(document).catch(() => {});
@@ -670,9 +672,11 @@
       // 全螢幕切換監聽：僅全螢幕時輸出聲音，退出時自動暫停
       function onFullscreenChange() {
         if (isFullscreen()) {
-          bgm.play().then(() => {
-            showHud(`▶ 全畫面播放中 (${Math.round(bgm.volume * 100)}%)`);
-          }).catch((e) => console.log("等待互動:", e));
+          if (bgm.paused) {
+            bgm.play().then(() => {
+              showHud(`▶ 全畫面播放中 (${Math.round(bgm.volume * 100)}%)`);
+            }).catch((e) => console.log("等待互動:", e));
+          }
         } else {
           bgm.pause();
           showHud("🔇 退出全螢幕，已暫停聲音");
