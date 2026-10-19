@@ -1701,9 +1701,9 @@
     <div class="container">
         <!-- 對應 Google 試算表連結 (左上角) -->
         <div class="sheet-switcher">
-            <a id="header-sheet-link" href="https://docs.google.com/spreadsheets/d/1Sf5_-Nt0UuF6Fj86pG94MOYipmW2UD0MpREqf0A9zBk/edit?usp=sharing" target="_blank" class="theme-btn" style="text-decoration:none; color:#10b981; font-weight:700; gap:0.35rem;" title="在新分頁開啟目前分頁對應的 Google 試算表">
+            <a id="header-sheet-link" href="https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing" target="_blank" class="theme-btn" style="text-decoration:none; color:#10b981; font-weight:700; gap:0.35rem;" title="在新分頁開啟【直播禮拜片頭】Google 試算表">
                 <span>📊</span>
-                <span id="header-sheet-name">聖歌隊資料表 ↗</span>
+                <span id="header-sheet-name">直播禮拜片頭 ↗</span>
             </a>
         </div>
 
@@ -2864,32 +2864,13 @@
             if (wIntroPreview) wIntroPreview.style.display = 'none';
             const wMusicPreview = document.getElementById('wrapper-intro-music-preview');
             if (wMusicPreview) wMusicPreview.style.display = 'none';
-            // 更新左上角對應 Google 試算表連結
-            const TAB_SHEETS = {
-                'lyrics': {
-                    name: '聖歌隊資料表 ↗',
-                    url: 'https://docs.google.com/spreadsheets/d/1Sf5_-Nt0UuF6Fj86pG94MOYipmW2UD0MpREqf0A9zBk/edit?usp=sharing'
-                },
-                'scripture': {
-                    name: '聖詩聖經連結 ↗',
-                    url: 'https://docs.google.com/spreadsheets/d/1NrE6Ib8sE2z1P5-ey2EwvBVGb7KAJ-lZ0vOM4wwZ0H0/edit?usp=sharing'
-                },
-                'intro-bg': {
-                    name: '直播禮拜片頭 ↗',
-                    url: 'https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing'
-                },
-                'intro-music': {
-                    name: '直播禮拜片頭 ↗',
-                    url: 'https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing'
-                }
-            };
+            // 左上角 Google 試算表連結 (全部固定為直播禮拜片頭)
             const sheetLinkEl = document.getElementById('header-sheet-link');
             const sheetNameEl = document.getElementById('header-sheet-name');
-            const activeSheet = TAB_SHEETS[tab] || TAB_SHEETS['lyrics'];
-            if (sheetLinkEl && sheetNameEl && activeSheet) {
-                sheetLinkEl.href = activeSheet.url;
-                sheetNameEl.textContent = activeSheet.name;
-                sheetLinkEl.title = `在新分頁開啟【${activeSheet.name.replace(' ↗', '')}】Google 試算表`;
+            if (sheetLinkEl && sheetNameEl) {
+                sheetLinkEl.href = 'https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing';
+                sheetNameEl.textContent = '直播禮拜片頭 ↗';
+                sheetLinkEl.title = '在新分頁開啟【直播禮拜片頭】Google 試算表';
             }
 
             document.getElementById('btn-group-shared').style.display = 'grid';
