@@ -4053,12 +4053,19 @@
             slide1Xml = slide1Xml.replace(/(val="0070C0"[\s\S]*?<a:t>)(.*?)(<\/a:t>)/, `$1${escapeXmlAttr(title)}$3`);
             zip.file('ppt/slides/slide1.xml', slide1Xml);
 
-            // 2. 清理母版既有舊投影片 (保留封面 slide1.xml)
+            // 2. 清理母版既有舊投影片與關聯 (保留封面 slide1.xml 與 slide1.xml.rels)
             const fileNames = Object.keys(zip.files);
             for (const fname of fileNames) {
-                if (/^ppt\/slides\/slide\d+\.xml(\.rels)?$/.test(fname) && !fname.includes('slide1.xml')) {
+                if (/^ppt\/slides\/(_rels\/)?slide\d+\.xml(\.rels)?$/.test(fname) && !fname.includes('slide1.xml')) {
                     zip.remove(fname);
                 }
+            }
+
+            // 確保母片版面配置 slideLayout3.xml 絕無 accent1 紫色色塊背景
+            if (zip.file('ppt/slideLayouts/slideLayout3.xml')) {
+                let l3Xml = await zip.file('ppt/slideLayouts/slideLayout3.xml').async('text');
+                l3Xml = l3Xml.replace(/<p:bg>[\s\S]*?<\/p:bg>/, '<p:bg><p:bgRef idx="1001"><a:schemeClr val="bg1"/></p:bgRef></p:bg>');
+                zip.file('ppt/slideLayouts/slideLayout3.xml', l3Xml);
             }
 
             // 3. 依大綱每頁動態建立 slideX.xml 與 rels（套用 3_兩行字幕0329 版面配置）
@@ -4072,7 +4079,7 @@
                     `<a:p><a:pPr lvl="0"/><a:r><a:rPr lang="zh-TW" altLang="en-US" dirty="0"/><a:t>${escapeXmlAttr(l)}</a:t></a:r></a:p>`
                 ).join('');
 
-                const slideXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id="2" name="標題 1"><a:extLst><a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}"><a16:creationId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" id="{8CFFCF84-5F54-FD4E-C3B5-1A7F6C42B95C}"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="ctrTitle"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang="en-US" altLang="zh-TW"/><a:t>${escapeXmlAttr(pageHeader)}</a:t></a:r></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id="3" name="文字版面配置區 2"><a:extLst><a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}"><a16:creationId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" id="{38ED45E3-701B-B947-8D4D-001A1385F7DC}"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="body" idx="1"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/>${bodyParagraphs}</p:txBody></p:sp></p:spTree><p:extLst><p:ext uri="{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}"><p14:creationId xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="${1153944760 + slideNum}"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>`;
+                const slideXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:cSld><p:bg><p:bgRef idx="1001"><a:schemeClr val="bg1"/></p:bgRef></p:bg><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id="2" name="標題 1"><a:extLst><a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}"><a16:creationId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" id="{8CFFCF84-5F54-FD4E-C3B5-1A7F6C42B95C}"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="ctrTitle"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang="en-US" altLang="zh-TW"/><a:t>${escapeXmlAttr(pageHeader)}</a:t></a:r></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id="3" name="文字版面配置區 2"><a:extLst><a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}"><a16:creationId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" id="{38ED45E3-701B-B947-8D4D-001A1385F7DC}"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="body" idx="1"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/>${bodyParagraphs}</p:txBody></p:sp></p:spTree><p:extLst><p:ext uri="{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}"><p14:creationId xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="${1153944760 + slideNum}"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>`;
 
                 zip.file(`ppt/slides/slide${slideNum}.xml`, slideXml);
                 zip.file(`ppt/slides/_rels/slide${slideNum}.xml.rels`, slideRelsContent);
