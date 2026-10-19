@@ -2492,7 +2492,7 @@
 
             <!-- 共用操作按鈕 (歌詞與經文模式) -->
             <div class="button-group" id="btn-group-shared">
-                <button class="btn btn-copy" id="btn-copy">📋 複製排版文字</button>
+                <button class="btn btn-copy" id="btn-copy">💾 下載原始歌詞 (.txt)</button>
                 <button class="btn btn-download" id="btn-download">💾 下載排版檔案 (.txt)</button>
                 <button class="btn btn-pptx" id="btn-download-pptx">📊 輸出字幕簡報 (.pptx)</button>
             </div>
@@ -2846,6 +2846,10 @@
                 document.getElementById('input-lyrics').classList.add('active');
                 document.getElementById('controls-row-lyrics').style.display = 'flex';
                 if (btnDownloadPptx) btnDownloadPptx.style.display = 'flex';
+                if (btnCopy) {
+                    btnCopy.innerHTML = '💾 下載原始歌詞 (.txt)';
+                    btnCopy.title = '下載原始歌詞輸入框文字';
+                }
                 const previewEl = document.getElementById('preview-area');
                 const liveStreamEl = document.getElementById('live-stream-boxes-container');
                 if (previewEl) previewEl.style.display = 'block';
@@ -2855,6 +2859,10 @@
                 document.getElementById('tab-scripture').classList.add('active');
                 document.getElementById('input-scripture').classList.add('active');
                 document.getElementById('controls-row-lyrics').style.display = 'none';
+                if (btnCopy) {
+                    btnCopy.innerHTML = '📋 複製排版文字';
+                    btnCopy.title = '複製排版文字至剪貼簿';
+                }
                 if (typeof updateBibleFormatUI === 'function') updateBibleFormatUI();
             } else if (tab === 'devotion') {
                 const tDev = document.getElementById('tab-devotion');
@@ -3909,18 +3917,44 @@
             }
         });
 
-        // 複製排版文字 (共用)
+        // 複製排版文字 (經文) / 下載原始歌詞文字 (歌詞)
         btnCopy.addEventListener('click', async () => {
-            const text = currentFormattedResult;
-            if (!text) {
-                alert('無排版文字可供複製！');
-                return;
-            }
-            try {
-                await navigator.clipboard.writeText(text);
-                alert('📋 複製成功！');
-            } catch (err) {
-                alert('複製失敗，請手動全選複製');
+            if (currentTab === 'lyrics') {
+                const rawText = textarea ? textarea.value : '';
+                if (!rawText.trim()) {
+                    alert('原始歌詞輸入框尚無文字可供下載！請先貼上或輸入歌詞。');
+                    return;
+                }
+
+                // 取得第一行歌名作為檔名
+                let title = '原始歌詞';
+                const firstLine = rawText.trim().split('\n')[0].replace(/[（(].*?[）)]/g, '').trim().replace(/[\/\*:\?\"<>\|\.]/g, '_');
+                if (firstLine && firstLine.length < 40) {
+                    title = firstLine;
+                }
+
+                // 下載 UTF-8 帶 BOM 的 TXT 檔案 (全平台 Windows / Mac / iOS / Android 完美相容不亂碼)
+                const blob = new Blob(['\uFEFF' + rawText], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${title}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } else {
+                const text = currentFormattedResult;
+                if (!text) {
+                    alert('無排版文字可供複製！');
+                    return;
+                }
+                try {
+                    await navigator.clipboard.writeText(text);
+                    alert('📋 複製成功！');
+                } catch (err) {
+                    alert('複製失敗，請手動全選複製');
+                }
             }
         });
 
