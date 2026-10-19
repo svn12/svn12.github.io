@@ -711,6 +711,64 @@
         if (!document.hidden) setTimeout(refreshScrollAnimation, 100);
       });
 
+      // 手勢識別：iPad 與 Android 在空白處「向上滑動/撥動」直接跳到主日排版助手
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchStartTime = 0;
+      let isSwipeAction = false;
+      let touchStartedOnInteractive = false;
+
+      window.addEventListener(
+        "touchstart",
+        (e) => {
+          if (!e.touches || e.touches.length !== 1) return;
+          const target = e.target;
+          touchStartedOnInteractive = !!(
+            target.closest("#Bdate") ||
+            target.closest("#scrollText") ||
+            target.closest(".text-block") ||
+            target.closest("#church") ||
+            target.closest("#barcode") ||
+            target.closest("#CurTime") ||
+            target.closest("a")
+          );
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+          touchStartTime = Date.now();
+        },
+        { passive: true }
+      );
+
+      window.addEventListener(
+        "touchend",
+        (e) => {
+          if (touchStartedOnInteractive) return;
+          if (!e.changedTouches || e.changedTouches.length !== 1) return;
+          const diffX = e.changedTouches[0].clientX - touchStartX;
+          const diffY = e.changedTouches[0].clientY - touchStartY;
+          const elapsed = Date.now() - touchStartTime;
+
+          // 向上滑動：垂直向上位移超過 50px，且垂直移動幅度大於水平 1.2 倍，1 秒內完成
+          if (diffY < -50 && Math.abs(diffY) > Math.abs(diffX) * 1.2 && elapsed < 1000) {
+            isSwipeAction = true;
+            setTimeout(() => {
+              isSwipeAction = false;
+            }, 600);
+            showHud("🚀 前往主日排版助手...");
+            window.location.href = "../Gemini/sermon_ppt/index.html";
+          }
+        },
+        { passive: true }
+      );
+
+      window.addEventListener(
+        "touchcancel",
+        () => {
+          touchStartedOnInteractive = false;
+        },
+        { passive: true }
+      );
+
       // 滑鼠點選控制架構：
       // 1. 右上角日期時間區塊 (#Bdate)：Always 有效 (同頁切換場次，不觸發全螢幕切換)
       // 2. 下方跑馬燈文字 (#scrollText)：Always 有效 (切換背景底圖，不觸發全螢幕切換)
@@ -719,6 +777,13 @@
       window.addEventListener(
         "click",
         (e) => {
+          // 0. 若剛剛觸發向上撥動手勢，攔截並防止後續 click 觸發全螢幕切換
+          if (isSwipeAction) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            return;
+          }
+
           // 1. 右上角日期時間：放行原生跳轉
           if (e.target.closest("#Bdate")) return;
 
