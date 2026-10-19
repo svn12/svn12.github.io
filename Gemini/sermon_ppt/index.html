@@ -539,7 +539,7 @@
 
         .button-group {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.2rem;
         }
 
@@ -582,6 +582,23 @@
             background: var(--success-hover);
             box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
             transform: translateY(-1px);
+        }
+
+        .btn-pptx {
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.25);
+        }
+
+        .btn-pptx:hover {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-pptx:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         /* 聖詩/啟應文專用樣式 */
@@ -2477,6 +2494,7 @@
             <div class="button-group" id="btn-group-shared">
                 <button class="btn btn-copy" id="btn-copy">📋 複製排版文字</button>
                 <button class="btn btn-download" id="btn-download">💾 下載排版檔案 (.txt)</button>
+                <button class="btn btn-pptx" id="btn-download-pptx">📊 輸出字幕簡報 (.pptx)</button>
             </div>
         </main>
     </div>
@@ -2485,9 +2503,15 @@
         <p>南門教會主日專屬自動化工具 • Antigravity 2.0 Web SPA</p>
     </footer>
 
-    <!-- 載入 YouTube IFrame Player API 與 QRCode -->
+    <!-- 載入 YouTube IFrame Player API、QRCode 與 JSZip -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="./jszip.min.js"></script>
+    <script>
+        if (typeof JSZip === 'undefined') {
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"><\\/script>');
+        }
+    </script>
 
     <script>
         // 聖經卷名對照表
@@ -2651,6 +2675,7 @@
         const previewArea = document.getElementById('preview-area');
         const btnCopy = document.getElementById('btn-copy');
         const btnDownload = document.getElementById('btn-download');
+        const btnDownloadPptx = document.getElementById('btn-download-pptx');
 
         document.getElementById('tab-lyrics')?.addEventListener('click', () => switchTab('lyrics'));
         document.getElementById('tab-scripture')?.addEventListener('click', () => switchTab('scripture'));
@@ -2813,12 +2838,14 @@
             const wMusicPreview = document.getElementById('wrapper-intro-music-preview');
             if (wMusicPreview) wMusicPreview.style.display = 'none';
             document.getElementById('btn-group-shared').style.display = 'grid';
+            if (btnDownloadPptx) btnDownloadPptx.style.display = 'none';
 
             if (tab === 'lyrics') {
                 document.getElementById('tab-lyrics').classList.add('active');
                 document.getElementById('content-lyrics').classList.add('active');
                 document.getElementById('input-lyrics').classList.add('active');
                 document.getElementById('controls-row-lyrics').style.display = 'flex';
+                if (btnDownloadPptx) btnDownloadPptx.style.display = 'flex';
                 const previewEl = document.getElementById('preview-area');
                 const liveStreamEl = document.getElementById('live-stream-boxes-container');
                 if (previewEl) previewEl.style.display = 'block';
@@ -3941,6 +3968,224 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
+
+        // ==========================================
+        // 📊 聖歌隊字幕 PPTX 自動產生器 (基於 Template.pptx 與 3_兩行字幕0329 母片)
+        // ==========================================
+        let templatePptxCache = null;
+
+        function escapeXmlAttr(unsafe) {
+            if (!unsafe) return '';
+            return String(unsafe).replace(/[<>&'"]/g, c => {
+                switch (c) {
+                    case '<': return '&lt;';
+                    case '>': return '&gt;';
+                    case '&': return '&amp;';
+                    case '\'': return '&apos;';
+                    case '"': return '&quot;';
+                    default: return c;
+                }
+            });
+        }
+
+        function parseFormattedLyricsPages(text) {
+            const pages = [];
+            let currPage = null;
+            let currLines = [];
+            const lines = text.split(/\r?\n/);
+
+            for (let rawLine of lines) {
+                const line = rawLine.replace(/^\uFEFF/, '').trimRight();
+                if (!line) continue;
+                const trimmed = line.trim();
+                const m = trimmed.match(/^(P\d+(?:-\d+\/\d+|\/\d+)?)$/);
+                if (m) {
+                    if (currPage && currLines.length > 0) {
+                        pages.push({ page: currPage, lines: currLines });
+                    }
+                    currPage = m[1];
+                    currLines = [];
+                } else {
+                    if (currPage) {
+                        currLines.push(trimmed);
+                    }
+                }
+            }
+            if (currPage && currLines.length > 0) {
+                pages.push({ page: currPage, lines: currLines });
+            }
+            return pages;
+        }
+
+        function extractLyricsMetadata(text, pages, rawText) {
+            let title = '';
+            let dateStr = '';
+
+            const allText = ((text || '') + '\n' + (rawText || '')).trim();
+            const dateMatch = allText.match(/\b(20\d{2})[-/.](0?[1-9]|1[0-2])[-/.](0?[1-9]|[12]\d|3[01])\b/);
+            if (dateMatch) {
+                const y = dateMatch[1];
+                const m = dateMatch[2].padStart(2, '0');
+                const d = dateMatch[3].padStart(2, '0');
+                dateStr = `${y}-${m}-${d}`;
+            }
+
+            if (pages && pages.length > 0 && pages[0].lines && pages[0].lines.length > 0) {
+                title = pages[0].lines[0].replace(/[（(].*?[）)]/g, '').trim();
+            }
+            if (!title && rawText) {
+                title = rawText.split('\n')[0].replace(/[（(].*?[）)]/g, '').trim();
+            }
+            if (!title) title = '聖歌隊讚美詩';
+
+            return { title, dateStr };
+        }
+
+        async function buildLyricsPptxBlob(templateBuffer, pages, metadata) {
+            if (typeof JSZip === 'undefined') {
+                throw new Error('JSZip 程式庫尚未載入完成，請檢查網路連線或稍候重試！');
+            }
+            const zip = await JSZip.loadAsync(templateBuffer);
+            const { title } = metadata;
+
+            // 1. 更新封面投影片 slide1.xml 標題 (保留十字架背景與樣式，僅替換第二段落標題)
+            let slide1Xml = await zip.file('ppt/slides/slide1.xml').async('text');
+            slide1Xml = slide1Xml.replace(/(val="0070C0"[\s\S]*?<a:t>)(.*?)(<\/a:t>)/, `$1${escapeXmlAttr(title)}$3`);
+            zip.file('ppt/slides/slide1.xml', slide1Xml);
+
+            // 2. 清理母版既有舊投影片 (保留封面 slide1.xml)
+            const fileNames = Object.keys(zip.files);
+            for (const fname of fileNames) {
+                if (/^ppt\/slides\/slide\d+\.xml(\.rels)?$/.test(fname) && !fname.includes('slide1.xml')) {
+                    zip.remove(fname);
+                }
+            }
+
+            // 3. 依大綱每頁動態建立 slideX.xml 與 rels（套用 3_兩行字幕0329 版面配置）
+            const slideRelsContent = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout3.xml"/></Relationships>';
+
+            for (let idx = 0; idx < pages.length; idx++) {
+                const slideNum = idx + 2;
+                const pageHeader = pages[idx].page;
+                const lines = pages[idx].lines;
+                const bodyParagraphs = lines.map(l => 
+                    `<a:p><a:pPr lvl="0"/><a:r><a:rPr lang="zh-TW" altLang="en-US" dirty="0"/><a:t>${escapeXmlAttr(l)}</a:t></a:r></a:p>`
+                ).join('');
+
+                const slideXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id="2" name="標題 1"><a:extLst><a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}"><a16:creationId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" id="{8CFFCF84-5F54-FD4E-C3B5-1A7F6C42B95C}"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="ctrTitle"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang="en-US" altLang="zh-TW"/><a:t>${escapeXmlAttr(pageHeader)}</a:t></a:r></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id="3" name="文字版面配置區 2"><a:extLst><a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}"><a16:creationId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" id="{38ED45E3-701B-B947-8D4D-001A1385F7DC}"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="body" idx="1"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/>${bodyParagraphs}</p:txBody></p:sp></p:spTree><p:extLst><p:ext uri="{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}"><p14:creationId xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="${1153944760 + slideNum}"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>`;
+
+                zip.file(`ppt/slides/slide${slideNum}.xml`, slideXml);
+                zip.file(`ppt/slides/_rels/slide${slideNum}.xml.rels`, slideRelsContent);
+            }
+
+            const totalSlides = pages.length + 1;
+
+            // 4. 更新 presentation.xml 投影片清單
+            let presXml = await zip.file('ppt/presentation.xml').async('text');
+            let sldIdLst = '<p:sldIdLst><p:sldId id="33698" r:id="rId3"/>';
+            for (let i = 2; i <= totalSlides; i++) {
+                sldIdLst += `<p:sldId id="${254 + i}" r:id="rId${i + 2}"/>`;
+            }
+            sldIdLst += '</p:sldIdLst>';
+            presXml = presXml.replace(/<p:sldIdLst>.*?<\/p:sldIdLst>/s, sldIdLst);
+            zip.file('ppt/presentation.xml', presXml);
+
+            // 5. 更新 presentation.xml.rels
+            let relsXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+            relsXml += '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="slideMasters/slideMaster1.xml"/>';
+            relsXml += '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="slideMasters/slideMaster2.xml"/>';
+            relsXml += '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide1.xml"/>';
+            for (let i = 2; i <= totalSlides; i++) {
+                relsXml += `<Relationship Id="rId${i + 2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide${i}.xml"/>`;
+            }
+            const nextRId = totalSlides + 3;
+            relsXml += `<Relationship Id="rId${nextRId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesMaster" Target="notesMasters/notesMaster1.xml"/>`;
+            relsXml += `<Relationship Id="rId${nextRId + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/presProps" Target="presProps.xml"/>`;
+            relsXml += `<Relationship Id="rId${nextRId + 2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/viewProps" Target="viewProps.xml"/>`;
+            relsXml += `<Relationship Id="rId${nextRId + 3}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>`;
+            relsXml += `<Relationship Id="rId${nextRId + 4}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/tableStyles" Target="tableStyles.xml"/>`;
+            relsXml += '</Relationships>';
+            zip.file('ppt/_rels/presentation.xml.rels', relsXml);
+
+            // 6. 更新 [Content_Types].xml
+            let ctXml = await zip.file('[Content_Types].xml').async('text');
+            ctXml = ctXml.replace(/<Override PartName="\/ppt\/slides\/slide\d+\.xml" ContentType="[^"]*"\/>/g, '');
+            let slideOverrides = '';
+            for (let i = 1; i <= totalSlides; i++) {
+                slideOverrides += `<Override PartName="/ppt/slides/slide${i}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>`;
+            }
+            ctXml = ctXml.replace('</Types>', `${slideOverrides}</Types>`);
+            zip.file('[Content_Types].xml', ctXml);
+
+            return await zip.generateAsync({
+                type: 'blob',
+                mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                compression: 'DEFLATE'
+            });
+        }
+
+        async function downloadLyricsPptx() {
+            const rawText = textarea ? textarea.value.trim() : '';
+            const formattedText = currentFormattedResult ? currentFormattedResult.trim() : '';
+            const textToUse = formattedText || rawText;
+
+            if (!textToUse) {
+                alert('無排版文字可供輸出簡報！請先貼上或上傳歌詞文字。');
+                return;
+            }
+
+            const btn = document.getElementById('btn-download-pptx');
+            const originalHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '⏳ 正在組裝 PPTX 簡報...';
+            }
+
+            try {
+                if (!templatePptxCache) {
+                    const resp = await fetch('./template.pptx');
+                    if (!resp.ok) {
+                        throw new Error(`無法載入 template.pptx (HTTP ${resp.status})`);
+                    }
+                    templatePptxCache = await resp.arrayBuffer();
+                }
+
+                let pages = parseFormattedLyricsPages(textToUse);
+                if (pages.length === 0) {
+                    const maxLenElem = document.getElementById('max-len');
+                    const maxLen = maxLenElem ? (parseInt(maxLenElem.value, 10) || 15) : 15;
+                    pages = chunkRawLyrics(rawText, 2, maxLen);
+                }
+
+                if (pages.length === 0) {
+                    alert('無法辨識歌詞頁面，請確認輸入內容！');
+                    return;
+                }
+
+                const metadata = extractLyricsMetadata(textToUse, pages, rawText);
+                const blob = await buildLyricsPptxBlob(templatePptxCache, pages, metadata);
+
+                const filename = `${metadata.dateStr ? metadata.dateStr : ''}${metadata.title}.pptx`;
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (err) {
+                console.error('產生 PPTX 失敗:', err);
+                alert(`產生 PPTX 簡報失敗：${err.message || err}`);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            }
+        }
+
+        btnDownloadPptx?.addEventListener('click', downloadLyricsPptx);
 
         // ==========================================
         // 🎵 聖詩與啟應文功能區
