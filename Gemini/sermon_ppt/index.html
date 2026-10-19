@@ -63,7 +63,23 @@
             transition: all 0.3s ease;
         }
 
-        [data-theme="light"] .theme-switcher {
+        .sheet-switcher {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.1rem;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            border: 1px solid var(--panel-border);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .theme-switcher,
+        [data-theme="light"] .sheet-switcher {
             background: rgba(255, 255, 255, 0.8);
         }
 
@@ -93,11 +109,13 @@
         }
 
         @media (max-width: 768px) {
-            .theme-switcher {
+            .theme-switcher,
+            .sheet-switcher {
                 position: relative;
                 top: 0;
+                left: 0;
                 right: 0;
-                margin: 0.5rem auto 1rem;
+                margin: 0.5rem auto;
                 width: max-content;
             }
         }
@@ -1681,6 +1699,14 @@
     <div class="glow-blob blob-2"></div>
 
     <div class="container">
+        <!-- 對應 Google 試算表連結 (左上角) -->
+        <div class="sheet-switcher">
+            <a id="header-sheet-link" href="https://docs.google.com/spreadsheets/d/1Sf5_-Nt0UuF6Fj86pG94MOYipmW2UD0MpREqf0A9zBk/edit?usp=sharing" target="_blank" class="theme-btn" style="text-decoration:none; color:#10b981; font-weight:700; gap:0.35rem;" title="在新分頁開啟目前分頁對應的 Google 試算表">
+                <span>📊</span>
+                <span id="header-sheet-name">聖歌隊資料表 ↗</span>
+            </a>
+        </div>
+
         <!-- 主題外觀切換器 -->
         <div class="theme-switcher">
         <a href="./bible_hymns.html" class="theme-btn" style="text-decoration:none; border-right:1px solid var(--panel-border); padding-right:0.6rem; color:var(--text-main); font-weight:600;">📖 聖經與聖詩專用頁 ➔</a>
@@ -1986,6 +2012,7 @@
                                 </div>
                                 <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
                                     <button class="intro-pill-btn" id="btn-intro-refresh-sheet" title="從 Google 試算表抓取最新資料">🔄 重新抓取</button>
+                                    <a href="https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing" target="_blank" class="intro-pill-btn" title="在新分頁開啟直播禮拜片頭 Google 試算表" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.25rem; color:#10b981; font-weight:700;">📊 片頭試算表 ↗</a>
                                     <button class="intro-pill-btn" id="btn-intro-open-live" title="在新分頁開啟實際直播片頭 HTML">🚀 實機片頭 ↗</button>
                                     <a href="https://drive.google.com/drive/folders/1z5tqpjtNoHaCCUb7EDTOB6y9kSIzV3Ho?usp=sharing" target="_blank" class="intro-pill-btn" title="開啟存放片頭背景圖檔的專用 Google Drive 資料夾" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.25rem;">📁 圖檔雲端硬碟 ↗</a>
                                 </div>
@@ -2837,6 +2864,34 @@
             if (wIntroPreview) wIntroPreview.style.display = 'none';
             const wMusicPreview = document.getElementById('wrapper-intro-music-preview');
             if (wMusicPreview) wMusicPreview.style.display = 'none';
+            // 更新左上角對應 Google 試算表連結
+            const TAB_SHEETS = {
+                'lyrics': {
+                    name: '聖歌隊資料表 ↗',
+                    url: 'https://docs.google.com/spreadsheets/d/1Sf5_-Nt0UuF6Fj86pG94MOYipmW2UD0MpREqf0A9zBk/edit?usp=sharing'
+                },
+                'scripture': {
+                    name: '聖詩聖經連結 ↗',
+                    url: 'https://docs.google.com/spreadsheets/d/1NrE6Ib8sE2z1P5-ey2EwvBVGb7KAJ-lZ0vOM4wwZ0H0/edit?usp=sharing'
+                },
+                'intro-bg': {
+                    name: '直播禮拜片頭 ↗',
+                    url: 'https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing'
+                },
+                'intro-music': {
+                    name: '直播禮拜片頭 ↗',
+                    url: 'https://docs.google.com/spreadsheets/d/1-ilHZPwGq_nGIHBLerb49LHqf-RsOqYiaCWryc7hhfw/edit?usp=sharing'
+                }
+            };
+            const sheetLinkEl = document.getElementById('header-sheet-link');
+            const sheetNameEl = document.getElementById('header-sheet-name');
+            const activeSheet = TAB_SHEETS[tab] || TAB_SHEETS['lyrics'];
+            if (sheetLinkEl && sheetNameEl && activeSheet) {
+                sheetLinkEl.href = activeSheet.url;
+                sheetNameEl.textContent = activeSheet.name;
+                sheetLinkEl.title = `在新分頁開啟【${activeSheet.name.replace(' ↗', '')}】Google 試算表`;
+            }
+
             document.getElementById('btn-group-shared').style.display = 'grid';
             if (btnDownloadPptx) btnDownloadPptx.style.display = 'none';
 
