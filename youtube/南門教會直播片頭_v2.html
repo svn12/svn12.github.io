@@ -626,12 +626,26 @@
       if (bgm && bgm.src) {
         bgm.src = bgm.src.split("?")[0] + "?t=" + new Date().getTime();
       }
-      bgm.volume = 0.8;
+      let currentVolume = 0.8;
+      bgm.volume = currentVolume;
       bgm.loop = true;
       bgm.addEventListener("ended", () => {
         bgm.currentTime = 0;
         bgm.play().catch(() => {});
       });
+
+      function adjustVolume(delta) {
+        currentVolume = Math.min(1, Math.max(0, Math.round((currentVolume + delta) * 10) / 10));
+        try {
+          bgm.muted = false;
+          bgm.volume = currentVolume;
+        } catch (e) {}
+        if (currentVolume === 0) {
+          showHud("🔇 音量: 0% (無聲)");
+        } else {
+          showHud(`🔊 音量: ${Math.round(currentVolume * 100)}%`);
+        }
+      }
 
       // 畫面 HUD 提示浮水印 (1.5 秒自動淡出)
       const hud = document.createElement("div");
@@ -753,7 +767,7 @@
           const diffY = e.changedTouches[0].clientY - touchStartY;
           const elapsed = Date.now() - touchStartTime;
 
-          // 向上滑動：垂直向上位移超過 50px，且垂直移動幅度大於水平 1.2 倍，1 秒內完成
+          // 1. 向上滑動：垂直向上位移超過 50px，且垂直移動幅度大於水平 1.2 倍，1 秒內完成
           if (diffY < -50 && Math.abs(diffY) > Math.abs(diffX) * 1.2 && elapsed < 1000) {
             isSwipeAction = true;
             setTimeout(() => {
@@ -761,6 +775,19 @@
             }, 600);
             showHud("🚀 前往主日排版助手...");
             window.location.href = "../Gemini/sermon_ppt/index.html";
+            return;
+          }
+
+          // 2. 水平左右刷動：水平移動超過 40px，且水平移動幅度大於垂直 1.2 倍，1 秒內完成 (右刷增大音量、左刷降低音量)
+          if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY) * 1.2 && elapsed < 1000) {
+            isSwipeAction = true;
+            setTimeout(() => {
+              isSwipeAction = false;
+            }, 600);
+            const steps = Math.max(1, Math.round(Math.abs(diffX) / 80));
+            const delta = (diffX > 0 ? 0.1 : -0.1) * steps;
+            adjustVolume(delta);
+            return;
           }
         },
         { passive: true }
@@ -868,19 +895,16 @@
         if (e.code === "KeyM" || e.key.toLowerCase() === "m") {
           e.preventDefault();
           bgm.muted = !bgm.muted;
-          showHud(bgm.muted ? "🔇 靜音" : `🔊 音量: ${Math.round(bgm.volume * 100)}%`);
+          showHud(bgm.muted ? "🔇 靜音" : `🔊 音量: ${Math.round(currentVolume * 100)}%`);
         } else if (e.code === "KeyH" || e.key.toLowerCase() === "h") {
           e.preventDefault();
           showHelp();
         } else if (e.code === "ArrowUp" || e.key === "ArrowUp") {
           e.preventDefault();
-          bgm.muted = false;
-          bgm.volume = Math.min(1, Math.round((bgm.volume + 0.1) * 10) / 10);
-          showHud(`🔊 音量: ${Math.round(bgm.volume * 100)}%`);
+          adjustVolume(0.1);
         } else if (e.code === "ArrowDown" || e.key === "ArrowDown") {
           e.preventDefault();
-          bgm.volume = Math.max(0, Math.round((bgm.volume - 0.1) * 10) / 10);
-          showHud(bgm.volume === 0 ? "🔇 音量: 0% (無聲)" : `🔊 音量: ${Math.round(bgm.volume * 100)}%`);
+          adjustVolume(-0.1);
         }
       });
     </script>
