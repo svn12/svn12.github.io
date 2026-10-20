@@ -2667,6 +2667,8 @@
 
         let currentTab = 'lyrics'; 
         let currentFormattedResult = '';
+        let lyricsFormattedResult = '';
+        let scriptureFormattedResult = '';
         let ytPlayer = null;
         let audioYtPlayer = null;
         let rcuvYoutubeIds = [];
@@ -2899,7 +2901,15 @@
                     btnCopy.innerHTML = '📋 複製排版文字';
                     btnCopy.title = '複製排版文字至剪貼簿';
                 }
-                if (typeof updateBibleFormatUI === 'function') updateBibleFormatUI();
+                if (typeof updateBibleFormatUI === 'function') {
+                    updateBibleFormatUI();
+                } else {
+                    const previewEl = document.getElementById('preview-area');
+                    if (previewEl) {
+                        previewEl.textContent = scriptureFormattedResult || '📖 請設定經文範圍並點擊左側【🚀 抓取並排版經文】按鈕，排版結果將顯示於此。';
+                    }
+                }
+                currentFormattedResult = scriptureFormattedResult;
             } else if (tab === 'devotion') {
                 const tDev = document.getElementById('tab-devotion');
                 const iDev = document.getElementById('input-devotion');
@@ -3298,8 +3308,11 @@
         function updateLyricsLayout() {
             const rawText = textarea ? textarea.value.trim() : "";
             if (!rawText) {
-                if (previewArea) previewArea.textContent = "";
-                currentFormattedResult = "";
+                lyricsFormattedResult = "";
+                if (currentTab === 'lyrics') {
+                    if (previewArea) previewArea.textContent = "";
+                    currentFormattedResult = "";
+                }
                 return;
             }
 
@@ -3310,8 +3323,11 @@
             const lyricsPages = chunkRawLyrics(rawText, 2, maxLen);
 
             const formattedText = formatOutputText(metadata, lyricsPages, false);
-            if (previewArea) previewArea.textContent = formattedText;
-            currentFormattedResult = formattedText;
+            lyricsFormattedResult = formattedText;
+            if (currentTab === 'lyrics') {
+                if (previewArea) previewArea.textContent = formattedText;
+                currentFormattedResult = formattedText;
+            }
         }
 
         // 聖經經文抓取與對照
@@ -3866,12 +3882,20 @@
                 if (hintLiveStream) hintLiveStream.style.display = 'block';
                 if (previewArea) previewArea.style.display = 'none';
                 if (liveStreamBoxes) liveStreamBoxes.style.display = 'flex';
+                const c3El = document.getElementById('preview-c3-text');
+                const c4El = document.getElementById('preview-c4-text');
+                if (c3El && liveStreamC3Result) c3El.value = liveStreamC3Result;
+                if (c4El && liveStreamC4Result) c4El.value = liveStreamC4Result;
             } else {
                 if (containerVersion) containerVersion.style.display = 'block';
                 if (hintLiveStream) hintLiveStream.style.display = 'none';
-                if (previewArea) previewArea.style.display = 'block';
+                if (previewArea) {
+                    previewArea.style.display = 'block';
+                    previewArea.textContent = scriptureFormattedResult || '📖 請設定經文範圍並點擊左側【🚀 抓取並排版經文】按鈕，排版結果將顯示於此。';
+                }
                 if (liveStreamBoxes) liveStreamBoxes.style.display = 'none';
             }
+            currentFormattedResult = scriptureFormattedResult;
         };
 
         // 恢復上次選擇的排版格式並初始化 UI
@@ -3922,8 +3946,9 @@
                     if (c3El) c3El.value = c3Text;
                     if (c4El) c4El.value = c4Text;
 
-                    currentFormattedResult = `【台語聖經 (C3 格子)】\n${c3Text}\n\n【華語聖經 (C4 格子)】\n${c4Text}`;
-                    previewArea.textContent = currentFormattedResult;
+                    scriptureFormattedResult = `【台語聖經 (C3 格子)】\n${c3Text}\n\n【華語聖經 (C4 格子)】\n${c4Text}`;
+                    currentFormattedResult = scriptureFormattedResult;
+                    if (previewArea) previewArea.textContent = currentFormattedResult;
                 } else {
                     let recordsZh = [];
                     let recordsTw = [];
@@ -3936,8 +3961,9 @@
                     }
 
                     const resultText = formatScriptureOutput(recordsZh, recordsTw, mode, formatType);
-                    previewArea.textContent = resultText;
+                    scriptureFormattedResult = resultText;
                     currentFormattedResult = resultText;
+                    if (previewArea) previewArea.textContent = resultText;
                 }
             } catch (err) {
                 alert(`抓取失敗: ${err.message}`);
@@ -3980,9 +4006,13 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
             } else {
-                const text = currentFormattedResult;
+                const text = currentTab === 'lyrics' ? lyricsFormattedResult : scriptureFormattedResult;
                 if (!text) {
-                    alert('無排版文字可供複製！');
+                    if (currentTab === 'scripture') {
+                        alert('尚未抓取經文！請先點擊左側【🚀 抓取並排版經文】後再複製。');
+                    } else {
+                        alert('無排版文字可供複製！');
+                    }
                     return;
                 }
                 try {
@@ -3996,9 +4026,13 @@
 
         // 下載 UTF-16LE 帶 BOM 的 TXT 檔案 (共用)
         btnDownload.addEventListener('click', () => {
-            const text = currentFormattedResult;
+            const text = currentTab === 'lyrics' ? lyricsFormattedResult : scriptureFormattedResult;
             if (!text) {
-                alert('無排版文字可供下載！');
+                if (currentTab === 'scripture') {
+                    alert('尚未抓取經文！請先點擊左側【🚀 抓取並排版經文】後再下載。');
+                } else {
+                    alert('無排版文字可供下載！');
+                }
                 return;
             }
 
