@@ -678,6 +678,16 @@
         `, duration);
       }
 
+      function toggleMouseClickLock() {
+        isMouseClickUnlocked = !isMouseClickUnlocked;
+        updateClickableCursor();
+        if (isMouseClickUnlocked) {
+          showHud("🔓 點選已全部啟用 (連結已解鎖)");
+        } else {
+          showHud("🔒 點選已鎖定 (防誤觸模式)");
+        }
+      }
+
       function isFullscreen() {
         return !!(document.fullscreenElement || document.webkitFullscreenElement);
       }
@@ -778,7 +788,17 @@
             return;
           }
 
-          // 2. 水平左右刷動：水平移動超過 40px，且水平移動幅度大於垂直 1.2 倍，1 秒內完成 (右刷增大音量、左刷降低音量)
+          // 2. 向下滑動/下撥：垂直向下位移超過 50px，且垂直移動幅度大於水平 1.2 倍，1 秒內完成 (等同按 T 鍵切換點選鎖定/解鎖)
+          if (diffY > 50 && Math.abs(diffY) > Math.abs(diffX) * 1.2 && elapsed < 1000) {
+            isSwipeAction = true;
+            setTimeout(() => {
+              isSwipeAction = false;
+            }, 600);
+            toggleMouseClickLock();
+            return;
+          }
+
+          // 3. 水平左右刷動：水平移動超過 40px，且水平移動幅度大於垂直 1.2 倍，1 秒內完成 (右刷增大音量、左刷降低音量)
           if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY) * 1.2 && elapsed < 1000) {
             isSwipeAction = true;
             setTimeout(() => {
@@ -881,13 +901,7 @@
 
         if (e.code === "KeyT" || e.key.toLowerCase() === "t") {
           e.preventDefault();
-          isMouseClickUnlocked = !isMouseClickUnlocked;
-          updateClickableCursor();
-          if (isMouseClickUnlocked) {
-            showHud("🔓 滑鼠點選已全部啟用");
-          } else {
-            showHelp();
-          }
+          toggleMouseClickLock();
           return;
         }
 
