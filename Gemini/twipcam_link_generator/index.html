@@ -1262,10 +1262,9 @@
 
     // Initialize Map (Leaflet)
     map = L.map('map').setView([parseFloat(defaultLat), parseFloat(defaultLon)], 15);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 20
+    L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}', {
+      attribution: '&copy; <a href="https://maps.nlsc.gov.tw/">NLSC 內政部國土測繪中心</a>',
+      maxZoom: 19
     }).addTo(map);
 
     marker = L.marker([parseFloat(defaultLat), parseFloat(defaultLon)]).addTo(map);
