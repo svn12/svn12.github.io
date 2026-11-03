@@ -120,6 +120,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 3.3 Form 4: 3D 公仔產生器
+  const btnGenFigure = document.getElementById('btn-gen-figure');
+  if (btnGenFigure) {
+    btnGenFigure.addEventListener('click', () => {
+      const style = document.getElementById('figure-style').value;
+      const title = document.getElementById('figure-title').value;
+      const power = document.getElementById('figure-power').value;
+
+      const promptText = `現在請用我剛剛上傳的照片，還有你幫我算出來的「稱號：${title}」、「配件：${power}」，幫我做成一張像百貨公司販售的 3D 收藏公仔商品圖。風格選擇：【${style}】。要求：保留我的髮型、面部神韻與年齡特徵，整體看起來像真正精緻的玩具包裝盒，包含透明展示盒與配件陳列。`;
+      document.getElementById('preview-figure-text').innerText = promptText;
+    });
+  }
+
+  // 3.4 Form 5: 巨型名產超迷你創意照產生器
+  const btnGenTravelMini = document.getElementById('btn-gen-travel-mini');
+  if (btnGenTravelMini) {
+    btnGenTravelMini.addEventListener('click', () => {
+      const spot = document.getElementById('travel-spot').value;
+      const food = document.getElementById('travel-food').value;
+      const artStyle = document.getElementById('travel-art-style').value;
+
+      const promptText = `請從旅遊勝地【${spot}】挑選代表性名產【${food}】。請用我的照片做成 1 原因的旅遊圖片：把我變成超迷你人物，穿梭在巨大的名產、當地街道、商店和代表性景觀之間。重點要放在當地名產和地方特色。請保持我像本人，看起來自然、開心。整體請用【${artStyle}】，畫面豐富、有趣、有旅行感。`;
+      document.getElementById('preview-travel-mini-text').innerText = promptText;
+    });
+  }
+
+  // 3.5 綁定 guide 裡面的行內複製按鈕 .btn-copy-inline
+  document.querySelectorAll('.btn-copy-inline').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const textToCopy = btn.getAttribute('data-text');
+      if (textToCopy) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          const originalHTML = btn.innerHTML;
+          btn.innerHTML = `<i data-lucide="check"></i> 已複製`;
+          if (window.lucide) window.lucide.createIcons();
+          btn.classList.add('btn-success');
+          showToast('📋 已複製指令至剪貼簿！');
+
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            if (window.lucide) window.lucide.createIcons();
+            btn.classList.remove('btn-success');
+          }, 2000);
+        });
+      }
+    });
+  });
+
   /* ==========================================================================
      3.2 ExplainThis ChatGPT Prompt Database (Category Tabs)
      ========================================================================== */
@@ -807,6 +855,240 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.drawImage(img, 0, 0, w, h);
       }
     }
+    else if (style === 'figure_box_3d') {
+      try {
+        const grad = ctx.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, '#1e1b4b');
+        grad.addColorStop(1, '#0f172a');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = '#c084fc';
+        ctx.lineWidth = 6;
+        ctx.strokeRect(10, 10, w - 20, h - 20);
+
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = `bold ${Math.max(13, Math.round(w * 0.042))}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText("COLLECTOR'S LIMITED EDITION 3D FIGURE", w / 2, 34);
+
+        const winX = 24, winY = 48, winW = w - 48, winH = h * 0.60;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.fillRect(winX, winY, winW, winH);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(winX, winY, winW, winH);
+
+        ctx.drawImage(img, winX + 16, winY + 16, winW - 32, winH - 32);
+
+        const shineGrad = ctx.createLinearGradient(winX, winY, winX + winW * 0.6, winY + winH);
+        shineGrad.addColorStop(0, 'rgba(255,255,255,0.25)');
+        shineGrad.addColorStop(0.3, 'rgba(255,255,255,0.05)');
+        shineGrad.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = shineGrad;
+        ctx.fillRect(winX, winY, winW * 0.7, winH);
+
+        const tagY = winY + winH + 14;
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillRect(24, tagY, w - 48, 30);
+        ctx.fillStyle = '#0f172a';
+        ctx.font = `bold ${Math.max(13, Math.round(w * 0.042))}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText("✨ 暖心智慧守護者 · 3D 收藏公仔", w / 2, tagY + 20);
+
+        const accY = tagY + 36;
+        const accs = ['🔮 能量水晶', '🔍 智慧鏡', '🔔 守護鈴'];
+        const accW = (w - 60) / 3;
+        accs.forEach((acc, i) => {
+          const ax = 24 + i * (accW + 6);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+          ctx.fillRect(ax, accY, accW, 26);
+          ctx.strokeStyle = '#fbbf24';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(ax, accY, accW, 26);
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.fillText(acc, ax + accW / 2, accY + 17);
+        });
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("社團法人中華民國AI教育協會 認證限定發行 #001", w / 2, h - 12);
+      } catch (err) {
+        ctx.drawImage(img, 0, 0, w, h);
+      }
+    }
+    else if (style === 'capcut_ad_story') {
+      try {
+        ctx.fillStyle = '#09090b';
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.drawImage(img, 20, 45, w - 40, h - 120);
+
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, w, 40);
+        ctx.fillStyle = '#22c55e';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText("🎬 CapCut AI 5s Ad", 20, 26);
+
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(w - 70, 22, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText("REC 00:05", w - 60, 26);
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.beginPath();
+        ctx.arc(w / 2, h / 2, 28, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.moveTo(w / 2 - 8, h / 2 - 12);
+        ctx.lineTo(w / 2 + 14, h / 2);
+        ctx.lineTo(w / 2 - 8, h / 2 + 12);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("「公仔突然活過來了！拿起配件開箱亮相」", w / 2, h - 45);
+
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(20, h - 25, w - 40, 4);
+        ctx.fillStyle = '#22c55e';
+        ctx.fillRect(20, h - 25, (w - 40) * 0.75, 4);
+      } catch (err) {
+        ctx.drawImage(img, 0, 0, w, h);
+      }
+    }
+    else if (style === 'ai_travel_card') {
+      try {
+        ctx.fillStyle = '#f0f9ff';
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#0369a1';
+        ctx.font = `bold ${Math.max(16, Math.round(w * 0.05))}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText("✈️ AI 專屬旅行推薦卡", w / 2, 34);
+
+        ctx.fillStyle = '#0284c7';
+        ctx.font = '11px sans-serif';
+        ctx.fillText("放慢腳步 · 看見世界的美好", w / 2, 52);
+
+        const imgH = h * 0.44;
+        ctx.drawImage(img, 20, 65, w - 40, imgH);
+
+        const spots = [
+          { name: '🇯🇵 日本 · 京都', desc: '漫步千年古都風華' },
+          { name: '🇮🇸 冰島 · 藍湖', desc: '擁抱極光與天然溫泉' },
+          { name: '🇬🇷 希臘 · 聖托里尼', desc: '藍白小鎮夢幻夕陽' }
+        ];
+
+        const cardY = 72 + imgH;
+        const cHeight = (h - cardY - 16) / 3;
+
+        spots.forEach((sp, idx) => {
+          const cy = cardY + idx * cHeight;
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = 'rgba(0,0,0,0.06)';
+          ctx.shadowBlur = 6;
+          ctx.fillRect(20, cy, w - 40, cHeight - 6);
+          ctx.shadowBlur = 0;
+
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 12px sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText(sp.name, 32, cy + (cHeight - 6) / 2 - 2);
+
+          ctx.fillStyle = '#64748b';
+          ctx.font = '11px sans-serif';
+          ctx.fillText(sp.desc, 32, cy + (cHeight - 6) / 2 + 13);
+
+          ctx.fillStyle = '#38bdf8';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.textAlign = 'right';
+          ctx.fillText('必去 ★★★★★', w - 32, cy + (cHeight - 6) / 2 + 6);
+        });
+      } catch (err) {
+        ctx.drawImage(img, 0, 0, w, h);
+      }
+    }
+    else if (style === 'mini_food_diorama') {
+      try {
+        ctx.fillStyle = '#fefce8';
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = '#ca8a04';
+        ctx.font = `bold ${Math.max(16, Math.round(w * 0.05))}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText("🍡 巨型京都名產 · 超迷你探險隊", w / 2, 34);
+
+        const miniW = w * 0.52;
+        const miniH = h * 0.50;
+        const miniX = (w - miniW) / 2;
+        const miniY = h * 0.22;
+
+        ctx.fillStyle = '#15803d';
+        ctx.font = 'bold 20px sans-serif';
+        ctx.fillText("🍵 巨型宇治抹茶聖代", w / 2, miniY - 14);
+
+        ctx.drawImage(img, miniX, miniY, miniW, miniH);
+
+        ctx.strokeStyle = '#eab308';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(miniX, miniY, miniW, miniH);
+
+        ctx.fillStyle = '#b45309';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText("🥟 巨大生八橋", 20, miniY + miniH + 28);
+        ctx.textAlign = 'right';
+        ctx.fillText("🍜 特大碗京風拉麵", w - 20, miniY + miniH + 28);
+
+        ctx.fillStyle = '#475569';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("「把自己變成迷你人物，穿梭在巨大名產街景之間！」", w / 2, h - 18);
+      } catch (err) {
+        ctx.drawImage(img, 0, 0, w, h);
+      }
+    }
+    else if (style === 'baby_timemachine') {
+      try {
+        ctx.fillStyle = '#fffbeb';
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 6;
+        ctx.strokeRect(16, 16, w - 32, h - 32);
+
+        ctx.fillStyle = '#b45309';
+        ctx.font = `bold ${Math.max(15, Math.round(w * 0.048))}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText("👶 時光寶盒 · 嬰兒抓週紀念照", w / 2, 44);
+
+        ctx.drawImage(img, 28, 58, w - 56, h * 0.64);
+
+        ctx.fillStyle = '#d97706';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillText("🥄 含著金湯匙出生的天生福氣 · 抓週大吉", w / 2, h - 45);
+
+        ctx.fillStyle = '#92400e';
+        ctx.font = '11px sans-serif';
+        ctx.fillText("「保留原始五官神韻，重溫童年最純真可愛時光」", w / 2, h - 25);
+      } catch (err) {
+        ctx.drawImage(img, 0, 0, w, h);
+      }
+    }
     else if (style === 'popart') {
       try {
         const halfW = w / 2;
@@ -1427,6 +1709,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const styleNameMap = {
     line_sticker_16: '✨ LINE問候貼圖 16 宮格 (建立可完成)',
     travel_poster_collage: '✨ 暑假 AI 伴我遊拼貼海報 (建立可完成)',
+    figure_box_3d: '🧸 3D 收藏公仔精品展示盒 (建立可完成)',
+    capcut_ad_story: '🎬 CapCut 5秒公仔玩具短片 (建立可完成)',
+    ai_travel_card: '🗺️ AI 專屬旅行推薦卡 (建立可完成)',
+    mini_food_diorama: '🍡 巨型名產超迷你創意照 (建立可完成)',
+    baby_timemachine: '👶 時光寶盒：抓週嬰兒回憶錄 (建立可完成)',
     popart: '美式復古漫畫/普普藝術 (Pop Art)',
     artnouveau: '新藝術風格 (Art Nouveau)',
     clay: '3D 黏土/皮克斯風 (3D Clay/Pixar Style)',
@@ -2106,7 +2393,12 @@ document.addEventListener('DOMContentLoaded', () => {
      ========================================================================== */
   const completedPrompts = {
     sticker: `這張是我和媳婦孫女們三個人LINE的問候圖！請幫我畫一張包含 16 格 Q 版 LINE 問候貼圖組的相片，畫面中有三位溫馨家人（阿嬤、媳婦與孫女），包含「早安！」、「什麼啦啊？」、「蛤？」、「我在提醒你啦！」、「好想睡」、「哇！通過啦！」、「讚啦！」、「生氣氣！」、「晚安:3」等問候標語，手繪Q版貼圖質感。`,
-    travel: `請幫我設計一張「暑假 AI 伴我遊」旅遊紀念拼貼海報，包含威尼斯 (Venice) 貢多拉船、羅馬競技場 (Colosseum)、比薩斜塔 (Pisa Tower)、佛羅倫斯 (Florence) 與品酒時光 (Cheers!) 等 4 張人物旅遊相片，加上手繪底片標籤、拍立得畫框與「世界這麼大，感謝主帶我去看看」溫馨水彩字體裝飾。`
+    travel: `請幫我設計一張「暑假 AI 伴我遊」旅遊紀念拼貼海報，包含威尼斯 (Venice) 貢多拉船、羅馬競技場 (Colosseum)、比薩斜塔 (Pisa Tower)、佛羅倫斯 (Florence) 與品酒時光 (Cheers!) 等 4 張人物旅遊相片，加上手繪底片標籤、拍立得畫框與「世界這麼大，感謝主帶我去看看」溫馨水彩字體裝飾。`,
+    figure: `現在請用我剛剛上傳的照片，還有你幫我算出來的「稱號：暖心智慧守護者」、「配件：幸福能量水晶、智慧放大鏡、守護金鈴鐺」，幫我做成一張像百貨公司販售的 3D 收藏公仔商品圖。風格選擇：寫實收藏公仔 (百貨精品透明展示盒)。要求：保留我的髮型、面部神韻與年齡特徵，整體看起來像真正精緻的玩具包裝盒，包含透明展示盒與配件陳列。`,
+    capcut: `請把我上傳的公仔圖片，做成一支5秒鐘活潑、開心又有趣的玩具廣告！請依照公仔的造型、角色和配件，自動設計一個符合主題的可愛小故事。讓公仔突然活過來，拿起自己的配件，做一件有趣的事，最後開心地向鏡頭亮相！請保留公仔原本的長相和特色，動作自然流暢，畫面充滿歡樂和驚喜！`,
+    travel_card: `請看我的照片，推薦 3 個適合我的旅行地點。不要只選常見的地方，世界各地都可以。請直接做成一張「AI 旅行推薦卡」，把畫面分成 3 個旅行地點：每個地點要有代表性美景、一句吸引人的推薦理由，以及推薦我的原因。排版要乾淨、大氣、有質感。`,
+    miniature: `請從你前面推薦的當地必買名產裡，選 3 種最有代表性的名產。請用我的照片做成 1 張有趣的旅遊圖片：把我變成超迷你人物，穿梭在巨大的名產、當地街道、商店、市場和代表性景色之間。重點要放在當地名產和地方特色。請保持我像本人，看起來自然、開心。3 種名產或重要景點都要清楚出現在畫面裡，並標上正確名稱。整體請用日式手繪風，畫面豐富、有趣、有旅行感。`,
+    baby: `請把照片中這個人物變成她/他嬰兒時期的模樣。維持臉部特徵與神情，但看起來像剛出生幾個月到一歲的健康可愛嬰兒。背景在溫馨的家庭客廳中，含著金湯匙出生的抓週喜慶模樣，畫面溫馨逗趣、真實自然。`
   };
 
   const loadCompletedBtns = document.querySelectorAll('.btn-load-completed-prompt');
@@ -2142,13 +2434,41 @@ document.addEventListener('DOMContentLoaded', () => {
   quickBuildBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const type = btn.getAttribute('data-type');
-      const isSticker = type === 'sticker';
-      const uploader = isSticker ? '208徐玉蘭' : '208徐玉蘭&家族';
-      const promptText = completedPrompts[type];
-      const styleName = isSticker ? '✨ LINE問候貼圖16宮格 (建立可完成)' : '✨ 暑假AI伴我遊拼貼海報 (建立可完成)';
+      let uploader = '學員創作者';
+      let styleName = '✨ 課堂可完成作品';
+      selectedStyle = 'line_sticker_16';
 
-      // 在 Canvas 畫出並生成圖像
-      selectedStyle = isSticker ? 'line_sticker_16' : 'travel_poster_collage';
+      if (type === 'sticker') {
+        uploader = '208徐玉蘭';
+        styleName = '✨ LINE問候貼圖16宮格 (建立可完成)';
+        selectedStyle = 'line_sticker_16';
+      } else if (type === 'travel') {
+        uploader = '208徐玉蘭&家族';
+        styleName = '✨ 暑假AI伴我遊拼貼海報 (建立可完成)';
+        selectedStyle = 'travel_poster_collage';
+      } else if (type === 'figure') {
+        uploader = '103陳焜耀';
+        styleName = '🧸 3D 收藏公仔精品展示盒 (建立可完成)';
+        selectedStyle = 'figure_box_3d';
+      } else if (type === 'capcut') {
+        uploader = '黃子恬理事長';
+        styleName = '🎬 CapCut 5秒公仔玩具短片 (建立可完成)';
+        selectedStyle = 'capcut_ad_story';
+      } else if (type === 'travel_card') {
+        uploader = '黃子恬理事長';
+        styleName = '🗺️ AI 專屬旅行推薦卡 (建立可完成)';
+        selectedStyle = 'ai_travel_card';
+      } else if (type === 'miniature') {
+        uploader = '208徐玉蘭';
+        styleName = '🍡 巨型名產超迷你創意照 (建立可完成)';
+        selectedStyle = 'mini_food_diorama';
+      } else if (type === 'baby') {
+        uploader = '愛子';
+        styleName = '👶 時光寶盒：抓週嬰兒回憶錄 (建立可完成)';
+        selectedStyle = 'baby_timemachine';
+      }
+
+      const promptText = completedPrompts[type];
       applyStyleFilter(selectedStyle);
 
       setTimeout(() => {
