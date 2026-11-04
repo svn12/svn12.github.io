@@ -3,33 +3,11 @@
 <html lang="zh-TW">
 <head>
   <script>
-    // 全域最優先剪貼簿引擎（零依賴、防快取、100% 成功率）
+    // 全域最優先剪貼簿引擎（100% 成功率跨瀏覽器雙軌實作）
     window.copyToClipboardReliable = function(text, btnElement) {
       if (!text || text.trim() === '') return false;
-      let copied = false;
-      try {
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.left = "0";
-        ta.style.top = "0";
-        ta.style.opacity = "0";
-        ta.style.pointerEvents = "none";
-        ta.style.zIndex = "-1";
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        ta.setSelectionRange(0, text.length);
-        copied = document.execCommand('copy');
-        document.body.removeChild(ta);
-      } catch (e) {
-        console.warn('execCommand failed:', e);
-      }
 
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).catch(function(){});
-      }
-
+      // 1. 即時視覺反饋
       if (btnElement) {
         const origHTML = btnElement.getAttribute('data-orig-html') || btnElement.innerHTML;
         if (!btnElement.getAttribute('data-orig-html')) {
@@ -51,9 +29,44 @@
 
       const toast = document.getElementById('toast');
       if (toast) {
-        toast.innerText = '📋 已成功複製指令！可至 AI 工具中貼上使用';
+        toast.innerText = '📋 已成功複製指令！可至 Gemini / AI 工具中貼上使用';
         toast.classList.add('show');
         setTimeout(function() { toast.classList.remove('show'); }, 2500);
+      }
+
+      // 2. 優先原生 Clipboard API (手勢令牌直通)
+      let modernCopied = false;
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          navigator.clipboard.writeText(text);
+          modernCopied = true;
+        } catch (e) {
+          console.warn('Clipboard writeText failed:', e);
+        }
+      }
+
+      // 3. 同步 Fallback: 標準 textarea + execCommand (防 opacity/pointer-events 判定失敗)
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.top = "0";
+        ta.style.left = "-9999px";
+        ta.style.width = "2em";
+        ta.style.height = "2em";
+        ta.style.padding = "0";
+        ta.style.border = "none";
+        ta.style.outline = "none";
+        ta.style.background = "transparent";
+        ta.setAttribute("readonly", "");
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        ta.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch (e) {
+        console.warn('execCommand fallback failed:', e);
       }
 
       return true;
@@ -101,7 +114,7 @@
       <button class="tab-btn active" data-tab="guide"><i data-lucide="book-open"></i> 學習導覽與公式</button>
       <button class="tab-btn" data-tab="prompt"><i data-lucide="sparkles"></i> AI 指令填空器</button>
       <button class="tab-btn" data-tab="camera"><i data-lucide="camera"></i> 風格相機模擬</button>
-      <button class="tab-btn" data-tab="wall"><i data-lucide="image"></i> 班級互動照片牆</button>
+      <button class="tab-btn" data-tab="wall"><i data-lucide="image"></i> 南門教會・AI 互動照片牆</button>
       <button class="tab-btn" data-tab="devotion"><i data-lucide="heart-pulse"></i> AI 靈修伴侶</button>
       <button class="tab-btn" data-tab="search"><i data-lucide="search"></i> 多功能搜尋</button>
     </div>
@@ -1052,7 +1065,7 @@
             <h4>1. 選擇或上傳原始照片</h4>
             <div class="sample-images-grid">
               <div class="sample-img-card active" data-src="assets/hike_sample.jpg">
-                <img src="assets/hike_sample.jpg" alt="溪頭健行照">
+                <img src="assets/hike_sample.jpg?v=20261104" alt="溪頭健行照">
                 <span>溪頭健行照 (推薦)</span>
               </div>
               <div class="sample-img-card" data-src="upload">
@@ -1285,7 +1298,7 @@
             <div class="canvas-wrapper">
               <canvas id="editor-canvas"></canvas>
               <!-- Hidden Image for reference -->
-              <img id="ref-image" src="assets/hike_sample.jpg" style="display: none;">
+              <img id="ref-image" src="assets/hike_sample.jpg?v=20261104" style="display: none;">
               
               <!-- Processing Loader Overlay -->
               <div class="loader-overlay" id="loader">
@@ -1314,63 +1327,106 @@
       </div>
     </section>
 
-    <!-- Tab 4: 班級互動照片牆 -->
+    <!-- Tab 4: 南門教會・手機班＆樂活班 AI 互動照片牆 -->
     <section id="tab-wall" class="tab-content">
       
-      <!-- Upload Section -->
-      <div class="card upload-card-section">
-        <div class="card-header">
-          <i data-lucide="upload" class="card-icon"></i>
-          <h2>📤 專屬上傳區：AI 藝術作品</h2>
-        </div>
-        <form id="wall-upload-form" class="upload-form-grid">
-          <div class="form-group">
-            <label for="uploader-name">學員大名：</label>
-            <input type="text" id="uploader-name" class="form-input" placeholder="請輸入名字 (例如：美珠)" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="uploader-prompt">使用的 AI 指令 Prompt：</label>
-            <input type="text" id="uploader-prompt" class="form-input" placeholder="請貼上您複製並修改好的指令" value="請幫我畫一張波普藝術的圖片，畫面中有一位戴著墨鏡的開朗長者...">
-          </div>
-          
-          <div class="form-group file-field-group">
-            <label>選擇要上傳的藝術作品：</label>
-            <div class="custom-file-upload">
-              <label for="wall-file-input" class="file-upload-btn">
-                <i data-lucide="image"></i> 選擇檔案
-              </label>
-              <span id="file-chosen-text">尚未選擇檔案</span>
-              <input type="file" id="wall-file-input" accept="image/*" style="display:none;">
+      <!-- 照片牆頂部控制列 -->
+      <div class="card" style="margin-bottom: 18px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 10px 25px rgba(0,0,0,0.35); border-radius: 14px; padding: 18px 22px;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <span style="font-size: 1.4rem;">⛪</span>
+              <h2 style="font-size: 1.2rem; font-weight: 700; margin: 0; background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">南門教會・手機班＆樂活班 AI 互動照片牆</h2>
+              <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.72rem; padding: 2px 8px; border-radius: 999px; font-weight: 600;">● 即時雲端同步</span>
             </div>
-            <!-- Image preview thumbnail -->
-            <div class="upload-thumbnail-wrapper" id="thumb-wrapper" style="display: none;">
-              <img id="upload-thumbnail" src="" alt="預覽圖">
-            </div>
+            <p style="color: #94a3b8; font-size: 0.85rem; margin: 5px 0 0 0;">
+              彙整課堂精彩 AI 藝術創作、風格變身照與靈修圖卡，全班作品雲端即時互動！
+            </p>
           </div>
           
-          <div class="submit-btn-wrapper">
-            <button type="submit" class="btn btn-primary btn-block" id="btn-submit-work">
-              <i data-lucide="check-circle-2"></i> 確認 上傳藝術作品
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <a href="https://is.gd/shZ65c" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: linear-gradient(135deg, #2563eb, #7c3aed); border: none; font-size: 0.85rem; padding: 8px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(37,99,235,0.35); border-radius: 8px; color: white;">
+              <i data-lucide="external-link"></i> 獨立全螢幕 (is.gd/shZ65c)
+            </a>
+            <button id="btn-refresh-church-wall" class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 12px; display: inline-flex; align-items: center; gap: 6px; border-radius: 8px;">
+              <i data-lucide="refresh-cw"></i> 重新整理
+            </button>
+            <button id="btn-toggle-local-wall" class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 12px; display: inline-flex; align-items: center; gap: 6px; border-radius: 8px;">
+              <i data-lucide="folder-archive"></i> 本機作品庫 (<span id="local-wall-count">6</span>)
             </button>
           </div>
-        </form>
+        </div>
       </div>
 
-      <!-- Photos Grid -->
-      <div class="wall-header-section">
-        <div class="wall-title">
-          <i data-lucide="layout-grid"></i>
-          <h2>今日班級照片牆</h2>
-        </div>
-        <button class="btn btn-secondary btn-sm" id="btn-clear-storage">
-          <i data-lucide="trash-2"></i> 重設為預設作品
-        </button>
+      <!-- 主互動照片牆 iframe 容器 -->
+      <div id="church-wall-container" style="margin-bottom: 25px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45); background: #0f172a; position: relative;">
+        <iframe 
+          id="iframe-church-wall"
+          src="https://fun.jktai123.com/antigravity/%E7%8F%AD%E7%B4%9A%E4%BA%92%E5%8B%95%E7%85%A7%E7%89%87%E7%89%86.html" 
+          style="width: 100%; height: 86vh; min-height: 780px; border: none; display: block;" 
+          loading="lazy"
+          title="南門教會・手機班＆樂活班 AI 互動照片牆"
+          allow="clipboard-write">
+        </iframe>
       </div>
-      
-      <!-- Masonry Grid -->
-      <div class="photo-wall-grid" id="photo-wall">
-        <!-- Rendered dynamically by JavaScript -->
+
+      <!-- 本地相機作品庫區塊 (可折疊，預設收合) -->
+      <div id="local-wall-section" style="display: none;">
+        <!-- Upload Section -->
+        <div class="card upload-card-section">
+          <div class="card-header">
+            <i data-lucide="upload" class="card-icon"></i>
+            <h2>📤 本地相機模擬作品上傳區</h2>
+          </div>
+          <form id="wall-upload-form" class="upload-form-grid">
+            <div class="form-group">
+              <label for="uploader-name">學員大名：</label>
+              <input type="text" id="uploader-name" class="form-input" placeholder="請輸入名字 (例如：美珠)" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="uploader-prompt">使用的 AI 指令 Prompt：</label>
+              <input type="text" id="uploader-prompt" class="form-input" placeholder="請貼上您複製並修改好的指令" value="請幫我畫一張波普藝術的圖片，畫面中有一位戴著墨鏡的開朗長者...">
+            </div>
+            
+            <div class="form-group file-field-group">
+              <label>選擇要上傳的藝術作品：</label>
+              <div class="custom-file-upload">
+                <label for="wall-file-input" class="file-upload-btn">
+                  <i data-lucide="image"></i> 選擇檔案
+                </label>
+                <span id="file-chosen-text">尚未選擇檔案</span>
+                <input type="file" id="wall-file-input" accept="image/*" style="display:none;">
+              </div>
+              <!-- Image preview thumbnail -->
+              <div class="upload-thumbnail-wrapper" id="thumb-wrapper" style="display: none;">
+                <img id="upload-thumbnail" src="" alt="預覽圖">
+              </div>
+            </div>
+            
+            <div class="submit-btn-wrapper">
+              <button type="submit" class="btn btn-primary btn-block" id="btn-submit-work">
+                <i data-lucide="check-circle-2"></i> 確認 上傳藝術作品
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Photos Grid -->
+        <div class="wall-header-section">
+          <div class="wall-title">
+            <i data-lucide="layout-grid"></i>
+            <h2>本地相機作品展示</h2>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-clear-storage">
+            <i data-lucide="trash-2"></i> 重設為預設作品
+          </button>
+        </div>
+        
+        <!-- Masonry Grid -->
+        <div class="photo-wall-grid" id="photo-wall">
+          <!-- Rendered dynamically by JavaScript -->
+        </div>
       </div>
     </section>
 
@@ -1666,6 +1722,6 @@
   <!-- Devotion toast popup -->
   <div id="toast" class="copy-toast">指令已複製！</div>
 
-  <script src="app.js?v=20261104_03"></script>
+  <script src="app.js?v=20261104_04"></script>
 </body>
 </html>

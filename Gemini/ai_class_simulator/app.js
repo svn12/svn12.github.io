@@ -67,55 +67,24 @@ document.addEventListener('DOMContentLoaded', () => {
       toast.classList.remove('show');
     }, 2500);
   }
+  window.showClassToast = showToast;
 
-  function copyTextToClipboard(text) {
-    if (!text || text.trim() === '') return false;
-    
-    // 優先執行同步 textarea + execCommand（不依賴安全上下文與微任務令牌，100% 同步穩妥）
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.left = '-9999px';
-      ta.style.top = '-9999px';
-      ta.setAttribute('readonly', '');
-      document.body.appendChild(ta);
-      ta.select();
-      ta.setSelectionRange(0, 99999);
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-    } catch (e) {
-      console.warn('execCommand copy fallback warning:', e);
+  function copyTextToClipboard(text, btnEl) {
+    if (window.copyToClipboardReliable) {
+      return window.copyToClipboardReliable(text, btnEl);
     }
-
-    // 現代 Clipboard API 雙軌補強
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).catch(() => {});
-    }
-
-    return true;
+    return false;
   }
 
   const copyButtons = document.querySelectorAll('.btn-copy');
   copyButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
       const targetId = btn.getAttribute('data-target');
       const targetEl = document.getElementById(targetId);
       const textToCopy = targetEl ? (targetEl.innerText || targetEl.value) : '';
-
       if (textToCopy) {
-        copyTextToClipboard(textToCopy);
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = `<i data-lucide="check"></i> 已複製！`;
-        if (window.lucide) lucide.createIcons();
-        btn.classList.add('btn-success');
-        showToast('📋 已複製指令至剪貼簿！');
-
-        setTimeout(() => {
-          btn.innerHTML = originalHTML;
-          if (window.lucide) lucide.createIcons();
-          btn.classList.remove('btn-success');
-        }, 2000);
+        copyTextToClipboard(textToCopy, btn);
       }
     });
   });
@@ -126,18 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.stopPropagation();
       const textToCopy = btn.getAttribute('data-text');
       if (textToCopy) {
-        copyTextToClipboard(textToCopy);
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = `<i data-lucide="check"></i> 已複製！`;
-        if (window.lucide) lucide.createIcons();
-        btn.classList.add('btn-success');
-        showToast('📋 已複製指令至剪貼簿！');
-
-        setTimeout(() => {
-          btn.innerHTML = originalHTML;
-          if (window.lucide) lucide.createIcons();
-          btn.classList.remove('btn-success');
-        }, 2000);
+        copyTextToClipboard(textToCopy, btn);
       }
     });
   });
@@ -634,8 +592,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!canvas || !ctx) return;
     
     const img = isUploadedImage ? uploadedImageObj : refImage;
-    if (!img || !img.complete) {
-      if (img) img.onload = () => initCanvas();
+    if (!img) return;
+
+    if (!img.complete || img.naturalWidth === 0) {
+      img.onload = () => initCanvas();
+      img.onerror = () => {
+        console.warn('Image load error, retrying with direct relative path...');
+        if (!img.src.includes('hike_sample.jpg')) {
+          img.src = 'assets/hike_sample.jpg';
+        }
+      };
       return;
     }
 
@@ -1737,6 +1703,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 南門教會・AI 互動照片牆控制器
+  const btnRefreshChurchWall = document.getElementById('btn-refresh-church-wall');
+  const iframeChurchWall = document.getElementById('iframe-church-wall');
+  if (btnRefreshChurchWall && iframeChurchWall) {
+    btnRefreshChurchWall.addEventListener('click', () => {
+      const currentSrc = iframeChurchWall.src.split('?')[0];
+      iframeChurchWall.src = currentSrc + '?t=' + Date.now();
+      showToast('🔄 正在重新整理南門教會照片牆...');
+    });
+  }
+
+  const btnToggleLocalWall = document.getElementById('btn-toggle-local-wall');
+  const localWallSection = document.getElementById('local-wall-section');
+  if (btnToggleLocalWall && localWallSection) {
+    btnToggleLocalWall.addEventListener('click', () => {
+      const isHidden = localWallSection.style.display === 'none';
+      localWallSection.style.display = isHidden ? 'block' : 'none';
+      btnToggleLocalWall.classList.toggle('btn-primary', isHidden);
+      btnToggleLocalWall.classList.toggle('btn-secondary', !isHidden);
+      if (isHidden) {
+        localWallSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+
   const styleNameMap = {
     line_sticker_16: '✨ LINE問候貼圖 16 宮格 (建立可完成)',
     travel_poster_collage: '✨ 暑假 AI 伴我遊拼貼海報 (建立可完成)',
@@ -2669,37 +2660,6 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ==========================================================================
      11. 直達 Gemini AI 核心功能 (原生 <a> 導航 + 雙軌高可靠剪貼簿)
      ========================================================================== */
-  function copyTextToClipboard(text) {
-    if (!text || text.trim() === '') {
-      text = "請幫我處理這張照片，轉換為指定風格，保留人物特徵與神韻。";
-    }
-
-    // 優先使用現代非同步 Clipboard API
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).catch(() => {
-        fallbackCopyText(text);
-      });
-    } else {
-      fallbackCopyText(text);
-    }
-  }
-
-  function fallbackCopyText(text) {
-    try {
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-999999px";
-      textArea.style.top = "-999999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-    } catch (err) {
-      console.warn('Fallback copy exception:', err);
-    }
-  }
 
   function getCameraCurrentPrompt() {
     const completedStyleMap = {
