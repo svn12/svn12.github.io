@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================================
-     2. Copy to Clipboard Utility & Toast Notification
+     2. Copy to Clipboard Utility & Toast Notification (雙軌高穩定複製)
      ========================================================================== */
   const toast = document.getElementById('toast');
 
@@ -68,26 +68,77 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2500);
   }
 
+  function copyTextToClipboard(text) {
+    if (!text || text.trim() === '') return false;
+    
+    // 優先執行同步 textarea + execCommand（不依賴安全上下文與微任務令牌，100% 同步穩妥）
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '-9999px';
+      ta.setAttribute('readonly', '');
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, 99999);
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch (e) {
+      console.warn('execCommand copy fallback warning:', e);
+    }
+
+    // 現代 Clipboard API 雙軌補強
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).catch(() => {});
+    }
+
+    return true;
+  }
+
   const copyButtons = document.querySelectorAll('.btn-copy');
   copyButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const targetId = btn.getAttribute('data-target');
-      const textToCopy = document.getElementById(targetId).innerText;
+      const targetEl = document.getElementById(targetId);
+      const textToCopy = targetEl ? (targetEl.innerText || targetEl.value) : '';
 
-      navigator.clipboard.writeText(textToCopy).then(() => {
+      if (textToCopy) {
+        copyTextToClipboard(textToCopy);
         const originalHTML = btn.innerHTML;
         btn.innerHTML = `<i data-lucide="check"></i> 已複製！`;
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
         btn.classList.add('btn-success');
+        showToast('📋 已複製指令至剪貼簿！');
 
         setTimeout(() => {
           btn.innerHTML = originalHTML;
-          lucide.createIcons();
+          if (window.lucide) lucide.createIcons();
           btn.classList.remove('btn-success');
         }, 2000);
-      }).catch(err => {
-        console.error('無法複製文字: ', err);
-      });
+      }
+    });
+  });
+
+  // 綁定 guide 裡面的所有行內複製按鈕 .btn-copy-inline
+  document.querySelectorAll('.btn-copy-inline').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const textToCopy = btn.getAttribute('data-text');
+      if (textToCopy) {
+        copyTextToClipboard(textToCopy);
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = `<i data-lucide="check"></i> 已複製！`;
+        if (window.lucide) lucide.createIcons();
+        btn.classList.add('btn-success');
+        showToast('📋 已複製指令至剪貼簿！');
+
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          if (window.lucide) lucide.createIcons();
+          btn.classList.remove('btn-success');
+        }, 2000);
+      }
     });
   });
 
@@ -146,27 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3.5 綁定 guide 裡面的行內複製按鈕 .btn-copy-inline
-  document.querySelectorAll('.btn-copy-inline').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const textToCopy = btn.getAttribute('data-text');
-      if (textToCopy) {
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          const originalHTML = btn.innerHTML;
-          btn.innerHTML = `<i data-lucide="check"></i> 已複製`;
-          if (window.lucide) window.lucide.createIcons();
-          btn.classList.add('btn-success');
-          showToast('📋 已複製指令至剪貼簿！');
-
-          setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            if (window.lucide) window.lucide.createIcons();
-            btn.classList.remove('btn-success');
-          }, 2000);
-        });
-      }
-    });
-  });
+// [btn-copy-inline moved to Section 2]
 
   /* ==========================================================================
      3.2 ExplainThis ChatGPT Prompt Database (Category Tabs)
