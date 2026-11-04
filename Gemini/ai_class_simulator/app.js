@@ -2523,6 +2523,149 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  
+  /* ==========================================================================
+     12. 自訂情境下拉選單管理引擎 (常用 10 組推薦 + 使用者自訂記憶儲存)
+     ========================================================================== */
+  const customStorages = {
+    custom_people_options: 'custom_people_options',
+    custom_item_options: 'custom_item_options',
+    custom_location_options: 'custom_location_options'
+  };
+
+  function getStoredCustomOptions(storageKey) {
+    try {
+      const data = localStorage.getItem(storageKey);
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveStoredCustomOptions(storageKey, options) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(options));
+    } catch (e) {
+      console.warn('LocalStorage save failed:', e);
+    }
+  }
+
+  function renderAllCustomDropdowns() {
+    document.querySelectorAll('.custom-dropdown-helper').forEach(select => {
+      const storageKey = select.getAttribute('data-storage');
+      if (!storageKey) return;
+
+      const customGroup = select.querySelector('.user-custom-group');
+      if (!customGroup) return;
+
+      const customOpts = getStoredCustomOptions(storageKey);
+      customGroup.innerHTML = '';
+
+      if (customOpts.length > 0) {
+        customGroup.style.display = '';
+        customOpts.forEach((val, idx) => {
+          const opt = document.createElement('option');
+          opt.value = val;
+          opt.textContent = `⭐ 自訂：${val}`;
+          customGroup.appendChild(opt);
+        });
+      } else {
+        customGroup.style.display = 'none';
+      }
+    });
+  }
+
+  // 雙向同步輸入框文字
+  function syncInputValues(className, val) {
+    document.querySelectorAll('.' + className).forEach(input => {
+      if (input.value !== val) {
+        input.value = val;
+      }
+    });
+
+    // 若在 Tab 2，同時更新 Tab 2 的預覽框
+    const previewStyle = document.getElementById('preview-style-text');
+    if (previewStyle) {
+      const art = document.getElementById('style-art')?.value || '新藝術風格 (Art Nouveau)';
+      const people = document.querySelector('.sync-people')?.value || '一位戴著墨鏡的開朗長者';
+      const item = document.querySelector('.sync-item')?.value || '登山杖與相機';
+      const location = document.querySelector('.sync-location')?.value || '在復古的火車頭前';
+      previewStyle.innerText = `請幫我畫一張【${art}】的圖片，畫面中有一位【${people}】帶著【${item}】在【${location}】。`;
+    }
+  }
+
+  // 綁定輸入框即時雙向連動
+  ['sync-people', 'sync-item', 'sync-location'].forEach(cls => {
+    document.querySelectorAll('.' + cls).forEach(input => {
+      input.addEventListener('input', (e) => {
+        syncInputValues(cls, e.target.value);
+      });
+    });
+  });
+
+  // 綁定所有下拉選單挑選事件
+  document.querySelectorAll('.custom-dropdown-helper').forEach(select => {
+    select.addEventListener('change', () => {
+      const val = select.value;
+      if (!val) return;
+
+      const targetId = select.getAttribute('data-target');
+      const targetInput = document.getElementById(targetId);
+      if (targetInput) {
+        targetInput.value = val;
+        // 同步所有相同 class 的輸入框
+        if (targetInput.classList.contains('sync-people')) syncInputValues('sync-people', val);
+        if (targetInput.classList.contains('sync-item')) syncInputValues('sync-item', val);
+        if (targetInput.classList.contains('sync-location')) syncInputValues('sync-location', val);
+      }
+      select.selectedIndex = 0; // 重設為「快速挑選...」
+    });
+  });
+
+  // 綁定「＋記住」按鈕：將使用者自己打字輸入的內容，儲存為下拉選單的永久選項
+  document.querySelectorAll('.btn-save-custom-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-target');
+      const storageKey = btn.getAttribute('data-storage');
+      const targetInput = document.getElementById(targetId);
+      if (!targetInput || !storageKey) return;
+
+      const text = targetInput.value.trim();
+      if (!text) {
+        showToast('⚠️ 請先在輸入框中打字輸入您的專屬情境！');
+        targetInput.focus();
+        return;
+      }
+
+      let customOpts = getStoredCustomOptions(storageKey);
+      if (customOpts.includes(text)) {
+        showToast(`💡 「${text}」已在您的自訂清單中囉！`);
+        return;
+      }
+
+      customOpts.unshift(text); // 放在自訂最前面
+      if (customOpts.length > 20) customOpts = customOpts.slice(0, 20); // 最多保存 20 組
+      saveStoredCustomOptions(storageKey, customOpts);
+
+      // 重新渲染所有相關的下拉選單
+      renderAllCustomDropdowns();
+
+      // 按鈕特效
+      const origText = btn.innerHTML;
+      btn.innerHTML = '✓ 已記住';
+      btn.classList.add('btn-success');
+      showToast(`⭐ 成功！已將「${text}」永久記住到專屬情境下拉選單！`);
+
+      setTimeout(() => {
+        btn.innerHTML = origText;
+        btn.classList.remove('btn-success');
+      }, 2000);
+    });
+  });
+
+  // 初始化渲染自訂下拉選項
+  renderAllCustomDropdowns();
+
   /* ==========================================================================
      11. 直達 Gemini AI 核心功能 (原生 <a> 導航 + 雙軌高可靠剪貼簿)
      ========================================================================== */
@@ -2574,9 +2717,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const styleName = styleNameMap[selectedStyle] || '指定風格';
-    const people = document.getElementById('style-people') ? document.getElementById('style-people').value.trim() : '這張照片中的人物';
-    const item = document.getElementById('style-item') ? document.getElementById('style-item').value.trim() : '隨身物品';
-    const location = document.getElementById('style-location') ? document.getElementById('style-location').value.trim() : '現場場景';
+    const people = (document.getElementById('camera-people') ? document.getElementById('camera-people').value.trim() : '') ||
+                   (document.getElementById('style-people') ? document.getElementById('style-people').value.trim() : '') || '一位戴著墨鏡的開朗長者';
+    const item = (document.getElementById('camera-item') ? document.getElementById('camera-item').value.trim() : '') ||
+                 (document.getElementById('style-item') ? document.getElementById('style-item').value.trim() : '') || '登山杖與相機';
+    const location = (document.getElementById('camera-location') ? document.getElementById('camera-location').value.trim() : '') ||
+                     (document.getElementById('style-location') ? document.getElementById('style-location').value.trim() : '') || '在復古的火車頭前';
 
     if (selectedStyle === 'vintage') {
       const target = document.getElementById('formula-target') ? document.getElementById('formula-target').value.trim() : '更健康活力';

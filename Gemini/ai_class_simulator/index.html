@@ -71,7 +71,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- FontAwesome for original compatibility if needed -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="index.css?v=20261104_02">
+  <link rel="stylesheet" href="index.css?v=20261104_03">
 </head>
 <body>
 
@@ -720,61 +720,79 @@
               <option value="高級雜誌時尚插畫風 (Fashion Editorial Illustration)">40: 高級雜誌時尚插畫風 (Fashion Editorial Illustration)</option>
             </select>
           </div>
-          <div class="form-group">
+                    <div class="form-group">
             <label for="style-people">畫面中的【人物】：</label>
-            <div class="input-helper-group">
-              <input type="text" id="style-people" class="form-input" value="一位戴著墨鏡的開朗長者">
-              <select class="form-select-helper" data-target="style-people">
+            <div class="input-helper-group" style="display: flex; gap: 6px;">
+              <input type="text" id="style-people" class="form-input sync-people" value="一位戴著墨鏡的開朗長者" placeholder="自行輸入或從右側挑選..." style="flex: 1;">
+              <select class="form-select-helper custom-dropdown-helper" data-target="style-people" data-storage="custom_people_options" style="max-width: 140px;">
                 <option value="" disabled selected>快速挑選...</option>
-                <option value="一位戴著墨鏡的開朗長者">1. 一位戴著墨鏡的開朗長者</option>
-                <option value="一對牽手微笑的慈祥老夫婦">2. 一對牽手微笑的慈祥老夫婦</option>
-                <option value="一位神采奕奕、戴著草帽的農夫">3. 一位神采奕奕、戴著草帽的農夫</option>
-                <option value="一位氣質高雅、穿著旗袍的女士">4. 一位氣質高雅、穿著旗袍的女士</option>
-                <option value="一個胖嘟嘟、含著金湯匙的可愛嬰兒">5. 一個胖嘟嘟、含著金湯匙的可愛嬰兒</option>
-                <option value="一位活潑可愛、穿著雨衣的小女孩">6. 一位活潑可愛、穿著雨衣的小女孩</option>
-                <option value="一位戴著圓框眼鏡、正在看書的紳士">7. 一位戴著圓框眼鏡、正在看書的紳士</option>
-                <option value="一群開懷大笑的小學生與寵物狗">8. 一群開懷大笑的小學生與寵物狗</option>
-                <option value="一位身穿廚師服、捧著剛出爐麵包的職人">9. 一位身穿廚師服、捧著剛出爐麵包的職人</option>
-                <option value="一個身穿森林變裝斗篷的Ｑ版寶寶">10. 一個身穿森林變裝斗篷的Ｑ版寶寶</option>
+                <optgroup label="🌟 常用 10 組推薦">
+                  <option value="一位戴著墨鏡的開朗長者">1. 一位戴著墨鏡的開朗長者</option>
+                  <option value="一對牽手微笑的慈祥老夫婦">2. 一對牽手微笑的慈祥老夫婦</option>
+                  <option value="一位神采奕奕、戴著草帽的農夫">3. 一位神采奕奕、戴著草帽的農夫</option>
+                  <option value="一位氣質高雅、穿著古典旗袍的女士">4. 一位氣質高雅、穿著古典旗袍的女士</option>
+                  <option value="一個胖嘟嘟、含著金湯匙的可愛嬰兒">5. 一個胖嘟嘟、含著金湯匙的可愛嬰兒</option>
+                  <option value="一對感情深厚、開朗出遊的姐妹閨蜜">6. 一對感情深厚、開朗出遊的姐妹閨蜜</option>
+                  <option value="一位滿頭銀髮但精神矍鑠的資深學者">7. 一位滿頭銀髮但精神矍鑠的資深學者</option>
+                  <option value="祖孫三代溫馨同框的幸福家族">8. 祖孫三代溫馨同框的幸福家族</option>
+                  <option value="一位手藝精湛、笑容親切的咖啡麵包師">9. 一位手藝精湛、笑容親切的咖啡麵包師</option>
+                  <option value="一位穿著專業登山裝的陽光探險家">10. 一位穿著專業登山裝的陽光探險家</option>
+                </optgroup>
+                <optgroup label="⭐ 我的自訂選項" class="user-custom-group" style="display: none;"></optgroup>
               </select>
+              <button type="button" class="btn btn-secondary btn-sm btn-save-custom-option" data-target="style-people" data-storage="custom_people_options" title="將自己輸入的內容永久記住到下拉選單" style="padding: 0 10px; font-size: 0.8rem; white-space: nowrap;">
+                ＋記住
+              </button>
             </div>
           </div>
           <div class="form-group">
             <label for="style-item">帶著什麼【物品】：</label>
-            <div class="input-helper-group">
-              <input type="text" id="style-item" class="form-input" value="登山杖與相機">
-              <select class="form-select-helper" data-target="style-item">
+            <div class="input-helper-group" style="display: flex; gap: 6px;">
+              <input type="text" id="style-item" class="form-input sync-item" value="登山杖與相機" placeholder="自行輸入或從右側挑選..." style="flex: 1;">
+              <select class="form-select-helper custom-dropdown-helper" data-target="style-item" data-storage="custom_item_options" style="max-width: 140px;">
                 <option value="" disabled selected>快速挑選...</option>
-                <option value="登山杖與相機">1. 登山杖與相機</option>
-                <option value="復古大紅色雨傘與竹籃">2. 復古大紅色雨傘與竹籃</option>
-                <option value="精緻的手作陶瓷茶具組">3. 精緻的手作陶瓷茶具組</option>
-                <option value="一束剛摘下的向日葵花束">4. 一束剛摘下的向日葵花束</option>
-                <option value="一隻金光閃閃的抓週金湯匙">5. 一隻金光閃閃的抓週金湯匙</option>
-                <option value="一個冒著熱氣的美味剛出爐麵包">6. 一個冒著熱氣的美味剛出爐麵包</option>
-                <option value="一個裝滿彩色糖果的玻璃罐">7. 一個裝滿彩色糖果的玻璃罐</option>
-                <option value="一本厚厚的復古羊皮紙手札">8. 一本厚厚的復古羊皮紙手札</option>
-                <option value="一把裝飾精美的有機雕刻吉他">9. 一把裝飾精美的有機雕刻吉他</option>
-                <option value="一個散發微光的森林手提汽化燈">10. 一個散發微光的森林手提汽化燈</option>
+                <optgroup label="🌟 常用 10 組推薦">
+                  <option value="登山杖與相機">1. 登山杖與相機</option>
+                  <option value="復古大紅色雨傘與竹籃">2. 復古大紅色雨傘與竹籃</option>
+                  <option value="一束剛摘下燦爛盛開的向日葵">3. 一束剛摘下燦爛盛開的向日葵</option>
+                  <option value="精緻的手作陶瓷茶壺與高山茗茶組">4. 精緻的手作陶瓷茶壺與高山茗茶組</option>
+                  <option value="一隻金光閃閃的抓週金湯匙與紅包袋">5. 一隻金光閃閃的抓週金湯匙與紅包袋</option>
+                  <option value="一本厚皮手作旅行日記手札與鋼筆">6. 一本厚皮手作旅行日記手札與鋼筆</option>
+                  <option value="一個剛出爐、冒著熱氣的香濃法國麵包">7. 一個剛出爐、冒著熱氣的香濃法國麵包</option>
+                  <option value="一把做工精美的古典木吉他">8. 一把做工精美的古典木吉他</option>
+                  <option value="一個散發柔和微光的露營復古手提汽化燈">9. 一個散發柔和微光的露營復古手提汽化燈</option>
+                  <option value="一個輕巧的健行保溫水壺與野餐籃">10. 一個輕巧的健行保溫水壺與野餐籃</option>
+                </optgroup>
+                <optgroup label="⭐ 我的自訂選項" class="user-custom-group" style="display: none;"></optgroup>
               </select>
+              <button type="button" class="btn btn-secondary btn-sm btn-save-custom-option" data-target="style-item" data-storage="custom_item_options" title="將自己輸入的內容永久記住到下拉選單" style="padding: 0 10px; font-size: 0.8rem; white-space: nowrap;">
+                ＋記住
+              </button>
             </div>
           </div>
           <div class="form-group">
             <label for="style-location">在什麼【地點】：</label>
-            <div class="input-helper-group">
-              <input type="text" id="style-location" class="form-input" value="在復古的火車頭前">
-              <select class="form-select-helper" data-target="style-location">
+            <div class="input-helper-group" style="display: flex; gap: 6px;">
+              <input type="text" id="style-location" class="form-input sync-location" value="在復古的火車頭前" placeholder="自行輸入或從右側挑選..." style="flex: 1;">
+              <select class="form-select-helper custom-dropdown-helper" data-target="style-location" data-storage="custom_location_options" style="max-width: 140px;">
                 <option value="" disabled selected>快速挑選...</option>
-                <option value="在復古的火車頭前">1. 在復古的火車頭前</option>
-                <option value="在典雅的紅磚洋樓拱門下">2. 在典雅的紅磚洋樓拱門下</option>
-                <option value="在日式木造車站的月台上">3. 在日式木造車站的月台上</option>
-                <option value="在波光粼粼的碧綠湖畔旁">4. 在波光粼粼的碧綠湖畔旁</option>
-                <option value="在開滿繡球花的山坡小徑">5. 在開滿繡球花的山坡小徑</option>
-                <option value="在掛滿紅色燈籠的九份茶樓前">6. 在掛滿紅色燈籠的九份茶樓前</option>
-                <option value="在煙霧裊裊的溫泉老街溪畔">7. 在煙霧裊裊的溫泉老街溪畔</option>
-                <option value="在巨大的銀杏樹金色落葉地毯上">8. 在巨大的銀杏樹金色落葉地毯上</option>
-                <option value="在色彩繽紛的童話小木屋前">9. 在色彩繽紛的童話小木屋前</option>
-                <option value="在繁華都市的霓虹街角咖啡廳">10. 在繁華都市的霓虹街角咖啡廳</option>
+                <optgroup label="🌟 常用 10 組推薦">
+                  <option value="在復古的火車頭前">1. 在復古的火車頭前</option>
+                  <option value="在典雅的紅磚洋樓花園拱門下">2. 在典雅的紅磚洋樓花園拱門下</option>
+                  <option value="在陽光灑落林蔭的翠綠溪頭森林步道中">3. 在陽光灑落林蔭的翠綠溪頭森林步道中</option>
+                  <option value="在波光粼粼的碧綠湖畔旁">4. 在波光粼粼的碧綠湖畔旁</option>
+                  <option value="在開滿粉紫繡球花的山坡小徑上">5. 在開滿粉紫繡球花的山坡小徑上</option>
+                  <option value="在掛滿大紅燈籠的九份山城老街茶樓前">6. 在掛滿大紅燈籠的九份山城老街茶樓前</option>
+                  <option value="在金黃色銀杏落葉如地毯的日式庭園">7. 在金黃色銀杏落葉如地毯的日式庭園</option>
+                  <option value="在繁花錦簇的歐洲鄉村童話木屋前">8. 在繁花錦簇的歐洲鄉村童話木屋前</option>
+                  <option value="在能遠眺雲海的合歡山觀景平台上">9. 在能遠眺雲海的合歡山觀景平台上</option>
+                  <option value="在熱鬧喜氣的傳統年貨大街牌樓前">10. 在熱鬧喜氣的傳統年貨大街牌樓前</option>
+                </optgroup>
+                <optgroup label="⭐ 我的自訂選項" class="user-custom-group" style="display: none;"></optgroup>
               </select>
+              <button type="button" class="btn btn-secondary btn-sm btn-save-custom-option" data-target="style-location" data-storage="custom_location_options" title="將自己輸入的內容永久記住到下拉選單" style="padding: 0 10px; font-size: 0.8rem; white-space: nowrap;">
+                ＋記住
+              </button>
             </div>
           </div>
           <button class="btn btn-primary btn-block" id="btn-gen-style">
@@ -1075,13 +1093,33 @@
                 <span class="style-badge style-vin">復古</span>
                 <strong>懷舊老照片</strong>
               </button>
-              <button class="style-select-btn" data-style="line_sticker_16 text-decoration: none; cursor: pointer;">
+              <button class="style-select-btn" data-style="line_sticker_16">
                 <span class="style-badge" style="background: #10b981; color: #fff;">建立可完成</span>
                 <strong>LINE貼圖16宮格</strong>
               </button>
-              <button class="style-select-btn" data-style="travel_poster_collage text-decoration: none; cursor: pointer;">
+              <button class="style-select-btn" data-style="travel_poster_collage">
                 <span class="style-badge" style="background: #38bdf8; color: #0f172a;">建立可完成</span>
                 <strong>暑假AI伴我遊拼貼</strong>
+              </button>
+              <button class="style-select-btn" data-style="figure_box_3d">
+                <span class="style-badge" style="background: #c084fc; color: #fff;">3D公仔</span>
+                <strong>3D收藏公仔盒</strong>
+              </button>
+              <button class="style-select-btn" data-style="capcut_ad_story">
+                <span class="style-badge" style="background: #22c55e; color: #fff;">短影片</span>
+                <strong>CapCut 5秒短片</strong>
+              </button>
+              <button class="style-select-btn" data-style="ai_travel_card">
+                <span class="style-badge" style="background: #0284c7; color: #fff;">旅遊卡</span>
+                <strong>AI旅行推薦卡</strong>
+              </button>
+              <button class="style-select-btn" data-style="mini_food_diorama">
+                <span class="style-badge" style="background: #eab308; color: #0f172a;">微縮名產</span>
+                <strong>巨型名產小人國</strong>
+              </button>
+              <button class="style-select-btn" data-style="baby_timemachine">
+                <span class="style-badge" style="background: #f59e0b; color: #fff;">時光盒</span>
+                <strong>抓週嬰兒回憶錄</strong>
               </button>
             </div>
             
@@ -1132,6 +1170,97 @@
                 <option value="graffiti">39: 塗鴉街頭藝術風 (Street Graffiti)</option>
                 <option value="fashion">40: 高級雜誌時尚插畫風 (Fashion Editorial Illustration)</option>
               </select>
+            </div>
+          </div>
+
+
+          <!-- 3. 情境設定（人物 · 隨身物品 · 地點場景） -->
+          <div class="scenario-select-area" style="margin-top: 20px; padding: 16px; background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px;">
+              <h4 style="margin: 0; font-size: 0.95rem; color: #38bdf8; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="sliders-horizontal" style="width: 16px; height: 16px;"></i> 3. 畫面情境設定（可自行輸入或挑選）
+              </h4>
+            </div>
+
+            <!-- 人物 -->
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="camera-people" style="font-size: 0.85rem; color: #cbd5e1; font-weight: 600; margin-bottom: 4px; display: block;">畫面中的【人物】：</label>
+              <div class="input-helper-group" style="display: flex; gap: 6px;">
+                <input type="text" id="camera-people" class="form-input sync-people" value="一位戴著墨鏡的開朗長者" placeholder="直接打字輸入或由右側挑選..." style="flex: 1;">
+                <select class="form-select-helper custom-dropdown-helper" data-target="camera-people" data-storage="custom_people_options" style="max-width: 140px;">
+                  <option value="" disabled selected>快速挑選...</option>
+                  <optgroup label="🌟 常用 10 組推薦">
+                    <option value="一位戴著墨鏡的開朗長者">1. 一位戴著墨鏡的開朗長者</option>
+                    <option value="一對牽手微笑的慈祥老夫婦">2. 一對牽手微笑的慈祥老夫婦</option>
+                    <option value="一位神采奕奕、戴著草帽的農夫">3. 一位神采奕奕、戴著草帽的農夫</option>
+                    <option value="一位氣質高雅、穿著古典旗袍的女士">4. 一位氣質高雅、穿著古典旗袍的女士</option>
+                    <option value="一個胖嘟嘟、含著金湯匙的可愛嬰兒">5. 一個胖嘟嘟、含著金湯匙的可愛嬰兒</option>
+                    <option value="一對感情深厚、開朗出遊的姐妹閨蜜">6. 一對感情深厚、開朗出遊的姐妹閨蜜</option>
+                    <option value="一位滿頭銀髮但精神矍鑠的資深學者">7. 一位滿頭銀髮但精神矍鑠的資深學者</option>
+                    <option value="祖孫三代溫馨同框的幸福家族">8. 祖孫三代溫馨同框的幸福家族</option>
+                    <option value="一位手藝精湛、笑容親切的咖啡麵包師">9. 一位手藝精湛、笑容親切的咖啡麵包師</option>
+                    <option value="一位穿著專業登山裝的陽光探險家">10. 一位穿著專業登山裝的陽光探險家</option>
+                  </optgroup>
+                  <optgroup label="⭐ 我的自訂選項" class="user-custom-group" style="display: none;"></optgroup>
+                </select>
+                <button type="button" class="btn btn-secondary btn-sm btn-save-custom-option" data-target="camera-people" data-storage="custom_people_options" title="將自己輸入的內容永久記住到下拉選單" style="padding: 0 10px; font-size: 0.8rem; white-space: nowrap;">
+                  ＋記住
+                </button>
+              </div>
+            </div>
+
+            <!-- 物品 -->
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="camera-item" style="font-size: 0.85rem; color: #cbd5e1; font-weight: 600; margin-bottom: 4px; display: block;">帶著什麼【物品】：</label>
+              <div class="input-helper-group" style="display: flex; gap: 6px;">
+                <input type="text" id="camera-item" class="form-input sync-item" value="登山杖與相機" placeholder="直接打字輸入或由右側挑選..." style="flex: 1;">
+                <select class="form-select-helper custom-dropdown-helper" data-target="camera-item" data-storage="custom_item_options" style="max-width: 140px;">
+                  <option value="" disabled selected>快速挑選...</option>
+                  <optgroup label="🌟 常用 10 組推薦">
+                    <option value="登山杖與相機">1. 登山杖與相機</option>
+                    <option value="復古大紅色雨傘與竹籃">2. 復古大紅色雨傘與竹籃</option>
+                    <option value="一束剛摘下燦爛盛開的向日葵">3. 一束剛摘下燦爛盛開的向日葵</option>
+                    <option value="精緻的手作陶瓷茶壺與高山茗茶組">4. 精緻的手作陶瓷茶壺與高山茗茶組</option>
+                    <option value="一隻金光閃閃的抓週金湯匙與紅包袋">5. 一隻金光閃閃的抓週金湯匙與紅包袋</option>
+                    <option value="一本厚皮手作旅行日記手札與鋼筆">6. 一本厚皮手作旅行日記手札與鋼筆</option>
+                    <option value="一個剛出爐、冒著熱氣的香濃法國麵包">7. 一個剛出爐、冒著熱氣的香濃法國麵包</option>
+                    <option value="一把做工精美的古典木吉他">8. 一把做工精美的古典木吉他</option>
+                    <option value="一個散發柔和微光的露營復古手提汽化燈">9. 一個散發柔和微光的露營復古手提汽化燈</option>
+                    <option value="一個輕巧的健行保溫水壺與野餐籃">10. 一個輕巧的健行保溫水壺與野餐籃</option>
+                  </optgroup>
+                  <optgroup label="⭐ 我的自訂選項" class="user-custom-group" style="display: none;"></optgroup>
+                </select>
+                <button type="button" class="btn btn-secondary btn-sm btn-save-custom-option" data-target="camera-item" data-storage="custom_item_options" title="將自己輸入的內容永久記住到下拉選單" style="padding: 0 10px; font-size: 0.8rem; white-space: nowrap;">
+                  ＋記住
+                </button>
+              </div>
+            </div>
+
+            <!-- 地點 -->
+            <div class="form-group" style="margin-bottom: 6px;">
+              <label for="camera-location" style="font-size: 0.85rem; color: #cbd5e1; font-weight: 600; margin-bottom: 4px; display: block;">在什麼【地點】：</label>
+              <div class="input-helper-group" style="display: flex; gap: 6px;">
+                <input type="text" id="camera-location" class="form-input sync-location" value="在復古的火車頭前" placeholder="直接打字輸入或由右側挑選..." style="flex: 1;">
+                <select class="form-select-helper custom-dropdown-helper" data-target="camera-location" data-storage="custom_location_options" style="max-width: 140px;">
+                  <option value="" disabled selected>快速挑選...</option>
+                  <optgroup label="🌟 常用 10 組推薦">
+                    <option value="在復古的火車頭前">1. 在復古的火車頭前</option>
+                    <option value="在典雅的紅磚洋樓花園拱門下">2. 在典雅的紅磚洋樓花園拱門下</option>
+                    <option value="在陽光灑落林蔭的翠綠溪頭森林步道中">3. 在陽光灑落林蔭的翠綠溪頭森林步道中</option>
+                    <option value="在波光粼粼的碧綠湖畔旁">4. 在波光粼粼的碧綠湖畔旁</option>
+                    <option value="在開滿粉紫繡球花的山坡小徑上">5. 在開滿粉紫繡球花的山坡小徑上</option>
+                    <option value="在掛滿大紅燈籠的九份山城老街茶樓前">6. 在掛滿大紅燈籠的九份山城老街茶樓前</option>
+                    <option value="在金黃色銀杏落葉如地毯的日式庭園">7. 在金黃色銀杏落葉如地毯的日式庭園</option>
+                    <option value="在繁花錦簇的歐洲鄉村童話木屋前">8. 在繁花錦簇的歐洲鄉村童話木屋前</option>
+                    <option value="在能遠眺雲海的合歡山觀景平台上">9. 在能遠眺雲海的合歡山觀景平台上</option>
+                    <option value="在熱鬧喜氣的傳統年貨大街牌樓前">10. 在熱鬧喜氣的傳統年貨大街牌樓前</option>
+                  </optgroup>
+                  <optgroup label="⭐ 我的自訂選項" class="user-custom-group" style="display: none;"></optgroup>
+                </select>
+                <button type="button" class="btn btn-secondary btn-sm btn-save-custom-option" data-target="camera-location" data-storage="custom_location_options" title="將自己輸入的內容永久記住到下拉選單" style="padding: 0 10px; font-size: 0.8rem; white-space: nowrap;">
+                  ＋記住
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1537,6 +1666,6 @@
   <!-- Devotion toast popup -->
   <div id="toast" class="copy-toast">指令已複製！</div>
 
-  <script src="app.js?v=20261104_02"></script>
+  <script src="app.js?v=20261104_03"></script>
 </body>
 </html>
