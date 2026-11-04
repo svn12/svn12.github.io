@@ -2493,38 +2493,38 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================================
-     11. 直達 Gemini AI 核心功能 (Copy to Clipboard & Launch Gemini)
+     11. 直達 Gemini AI 核心功能 (原生 <a> 導航 + 雙軌高可靠剪貼簿)
      ========================================================================== */
-  function copyAndGoToGemini(promptText, btnEl) {
-    if (!promptText || promptText.trim() === '') {
-      promptText = "請幫我處理這張照片，轉換為指定風格，保留人物特徵與神韻。";
+  function copyTextToClipboard(text) {
+    if (!text || text.trim() === '') {
+      text = "請幫我處理這張照片，轉換為指定風格，保留人物特徵與神韻。";
     }
 
-    navigator.clipboard.writeText(promptText).then(() => {
-      let originalHTML = '';
-      if (btnEl) {
-        originalHTML = btnEl.innerHTML;
-        btnEl.innerHTML = `<i data-lucide="check"></i> 已複製！正在前往 Gemini...`;
-        if (window.lucide) window.lucide.createIcons();
-        btnEl.classList.add('btn-success');
-      }
+    // 優先使用現代非同步 Clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).catch(() => {
+        fallbackCopyText(text);
+      });
+    } else {
+      fallbackCopyText(text);
+    }
+  }
 
-      showToast('📋 指令已成功放入剪貼簿！即將在新分頁直達 Gemini AI（貼上即可送出）...');
-
-      setTimeout(() => {
-        window.open('https://gemini.google.com/app', '_blank');
-        if (btnEl) {
-          setTimeout(() => {
-            btnEl.innerHTML = originalHTML;
-            if (window.lucide) window.lucide.createIcons();
-            btnEl.classList.remove('btn-success');
-          }, 1500);
-        }
-      }, 550);
-    }).catch(err => {
-      console.error('複製到剪貼簿失敗: ', err);
-      window.open('https://gemini.google.com/app', '_blank');
-    });
+  function fallbackCopyText(text) {
+    try {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    } catch (err) {
+      console.warn('Fallback copy exception:', err);
+    }
   }
 
   function getCameraCurrentPrompt() {
@@ -2558,12 +2558,29 @@ document.addEventListener('DOMContentLoaded', () => {
     return `請將我上傳的這張照片轉換為【${styleName}】風格。畫面中有一位【${people}】帶著【${item}】在【${location}】。要求：嚴格保留原本人物的臉部特徵與神韻，細節清楚、光影自然、色彩調和，呈現真實生動的大師級質感。`;
   }
 
+  function handleGeminiAction(prompt, el) {
+    copyTextToClipboard(prompt);
+    showToast('📋 指令已成功放入剪貼簿！已在新分頁直達 Gemini AI，直接「貼上」即可！');
+
+    if (el) {
+      const origHTML = el.innerHTML;
+      el.innerHTML = `<i data-lucide="check"></i> 已直達 Gemini！`;
+      if (window.lucide) window.lucide.createIcons();
+      el.classList.add('btn-success');
+      setTimeout(() => {
+        el.innerHTML = origHTML;
+        if (window.lucide) window.lucide.createIcons();
+        el.classList.remove('btn-success');
+      }, 2500);
+    }
+  }
+
   // 1. 相機右側預覽區按鈕
   const btnCameraGemini = document.getElementById('btn-copy-gemini-camera');
   if (btnCameraGemini) {
     btnCameraGemini.addEventListener('click', () => {
       const prompt = getCameraCurrentPrompt();
-      copyAndGoToGemini(prompt, btnCameraGemini);
+      handleGeminiAction(prompt, btnCameraGemini);
     });
   }
 
@@ -2572,34 +2589,34 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnCameraGeminiLeft) {
     btnCameraGeminiLeft.addEventListener('click', () => {
       const prompt = getCameraCurrentPrompt();
-      copyAndGoToGemini(prompt, btnCameraGeminiLeft);
+      handleGeminiAction(prompt, btnCameraGeminiLeft);
     });
   }
 
-  // 3. 7大建立可完成卡片上的直達 Gemini 按鈕
+  // 3. 7大建立可完成卡片上的直達 Gemini 鏈接
   document.querySelectorAll('.btn-gemini-completed').forEach(btn => {
     btn.addEventListener('click', () => {
       const type = btn.getAttribute('data-type');
       const prompt = completedPrompts[type] || '';
-      copyAndGoToGemini(prompt, btn);
+      handleGeminiAction(prompt, btn);
     });
   });
 
-  // 4. 表單預覽區旁的直達 Gemini 按鈕
+  // 4. 表單預覽區旁的直達 Gemini 鏈接
   document.querySelectorAll('.btn-copy-gemini-direct').forEach(btn => {
     btn.addEventListener('click', () => {
       const targetId = btn.getAttribute('data-target');
       const targetEl = document.getElementById(targetId);
       const prompt = targetEl ? targetEl.innerText.trim() : '';
-      copyAndGoToGemini(prompt, btn);
+      handleGeminiAction(prompt, btn);
     });
   });
 
-  // 5. 導覽手冊小卡片上的直達 Gemini 按鈕
+  // 5. 導覽手冊小卡片上的直達 Gemini 鏈接
   document.querySelectorAll('.btn-gemini-inline').forEach(btn => {
     btn.addEventListener('click', () => {
       const prompt = btn.getAttribute('data-text') || '';
-      copyAndGoToGemini(prompt, btn);
+      handleGeminiAction(prompt, btn);
     });
   });
 
