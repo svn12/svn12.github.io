@@ -120,11 +120,11 @@
   .part-actions {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    align-items: center;
+    justify-content: center;
   }
   .btn-group {
-    display: flex;
-    gap: 4px;
+    display: none !important; /* 暫時 Hide HTML / TXT 簡譜按鈕 */
   }
   .btn-link {
     display: inline-block;
@@ -141,17 +141,18 @@
   .btn-b { background: #e0e7ff; color: #3730a3; }
   .btn-txt { background: #f1f5f9; color: #475569; }
   .btn-yt {
-    display: block;
+    display: inline-block;
     background: #fef2f2;
     color: #b91c1c;
     border: 1px solid #fecaca;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
     font-weight: 600;
     text-decoration: none;
     text-align: center;
     transition: all 0.15s ease;
+    white-space: nowrap;
   }
   .btn-yt:hover {
     background: #dc2626;
@@ -387,7 +388,7 @@
               <a class="btn-link btn-a" href="./5_佇曠野之牧者_A_首調簡譜.html">HTML</a>
               <a class="btn-link btn-txt" href="./5_佇曠野之牧者_A_首調簡譜.txt">TXT</a>
             </div>
-            <a class="btn-yt" href="https://www.youtube.com/watch?v=bswLGQBjH7M" target="_blank">▶ YT 練唱</a>
+            <a class="btn-yt" href="https://www.youtube.com/watch?v=NhvYj3FRIRw" target="_blank">▶ YT 練唱</a>
           </div>
         </td>
         <td>
