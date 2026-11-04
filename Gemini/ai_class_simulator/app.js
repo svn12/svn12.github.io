@@ -2493,6 +2493,117 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================================
+     11. 直達 Gemini AI 核心功能 (Copy to Clipboard & Launch Gemini)
+     ========================================================================== */
+  function copyAndGoToGemini(promptText, btnEl) {
+    if (!promptText || promptText.trim() === '') {
+      promptText = "請幫我處理這張照片，轉換為指定風格，保留人物特徵與神韻。";
+    }
+
+    navigator.clipboard.writeText(promptText).then(() => {
+      let originalHTML = '';
+      if (btnEl) {
+        originalHTML = btnEl.innerHTML;
+        btnEl.innerHTML = `<i data-lucide="check"></i> 已複製！正在前往 Gemini...`;
+        if (window.lucide) window.lucide.createIcons();
+        btnEl.classList.add('btn-success');
+      }
+
+      showToast('📋 指令已成功放入剪貼簿！即將在新分頁直達 Gemini AI（貼上即可送出）...');
+
+      setTimeout(() => {
+        window.open('https://gemini.google.com/app', '_blank');
+        if (btnEl) {
+          setTimeout(() => {
+            btnEl.innerHTML = originalHTML;
+            if (window.lucide) window.lucide.createIcons();
+            btnEl.classList.remove('btn-success');
+          }, 1500);
+        }
+      }, 550);
+    }).catch(err => {
+      console.error('複製到剪貼簿失敗: ', err);
+      window.open('https://gemini.google.com/app', '_blank');
+    });
+  }
+
+  function getCameraCurrentPrompt() {
+    const completedStyleMap = {
+      line_sticker_16: 'sticker',
+      travel_poster_collage: 'travel',
+      figure_box_3d: 'figure',
+      capcut_ad_story: 'capcut',
+      ai_travel_card: 'travel_card',
+      mini_food_diorama: 'miniature',
+      baby_timemachine: 'baby'
+    };
+
+    if (completedStyleMap[selectedStyle] && completedPrompts[completedStyleMap[selectedStyle]]) {
+      return completedPrompts[completedStyleMap[selectedStyle]];
+    }
+
+    const styleName = styleNameMap[selectedStyle] || '指定風格';
+    const people = document.getElementById('style-people') ? document.getElementById('style-people').value.trim() : '這張照片中的人物';
+    const item = document.getElementById('style-item') ? document.getElementById('style-item').value.trim() : '隨身物品';
+    const location = document.getElementById('style-location') ? document.getElementById('style-location').value.trim() : '現場場景';
+
+    if (selectedStyle === 'vintage') {
+      const target = document.getElementById('formula-target') ? document.getElementById('formula-target').value.trim() : '更健康活力';
+      const scene = document.getElementById('formula-scene') ? document.getElementById('formula-scene').value.trim() : '自然風景中';
+      const action = document.getElementById('formula-action') ? document.getElementById('formula-action').value.trim() : '開心地健行';
+      const mood = document.getElementById('formula-mood') ? document.getElementById('formula-mood').value.trim() : '溫馨、陽光、有故事感';
+      return `請把這張照片中的人物呈現【${target}】的狀態，放在【${scene}】，正在做【${action}】，整體氛圍是【${mood}】。畫面要自然、溫馨、有故事感，像真實生活照片。臉要保持原本人物的樣子。`;
+    }
+
+    return `請將我上傳的這張照片轉換為【${styleName}】風格。畫面中有一位【${people}】帶著【${item}】在【${location}】。要求：嚴格保留原本人物的臉部特徵與神韻，細節清楚、光影自然、色彩調和，呈現真實生動的大師級質感。`;
+  }
+
+  // 1. 相機右側預覽區按鈕
+  const btnCameraGemini = document.getElementById('btn-copy-gemini-camera');
+  if (btnCameraGemini) {
+    btnCameraGemini.addEventListener('click', () => {
+      const prompt = getCameraCurrentPrompt();
+      copyAndGoToGemini(prompt, btnCameraGemini);
+    });
+  }
+
+  // 2. 相機左側控制面板按鈕
+  const btnCameraGeminiLeft = document.getElementById('btn-copy-gemini-camera-left');
+  if (btnCameraGeminiLeft) {
+    btnCameraGeminiLeft.addEventListener('click', () => {
+      const prompt = getCameraCurrentPrompt();
+      copyAndGoToGemini(prompt, btnCameraGeminiLeft);
+    });
+  }
+
+  // 3. 7大建立可完成卡片上的直達 Gemini 按鈕
+  document.querySelectorAll('.btn-gemini-completed').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.getAttribute('data-type');
+      const prompt = completedPrompts[type] || '';
+      copyAndGoToGemini(prompt, btn);
+    });
+  });
+
+  // 4. 表單預覽區旁的直達 Gemini 按鈕
+  document.querySelectorAll('.btn-copy-gemini-direct').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-target');
+      const targetEl = document.getElementById(targetId);
+      const prompt = targetEl ? targetEl.innerText.trim() : '';
+      copyAndGoToGemini(prompt, btn);
+    });
+  });
+
+  // 5. 導覽手冊小卡片上的直達 Gemini 按鈕
+  document.querySelectorAll('.btn-gemini-inline').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const prompt = btn.getAttribute('data-text') || '';
+      copyAndGoToGemini(prompt, btn);
+    });
+  });
+
+  /* ==========================================================================
      9. Initialization & Load
      ========================================================================== */
   // Render Photo Wall on start
