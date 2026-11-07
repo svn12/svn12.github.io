@@ -4191,30 +4191,29 @@
 
             const totalSlides = pages.length + 1;
 
-            // 4. 更新 presentation.xml 投影片清單
+            // 4. 更新 presentation.xml (固定資源 notesMasterId 對應 rId3，投影片對應 rId8 起)
             let presXml = await zip.file('ppt/presentation.xml').async('text');
-            let sldIdLst = '<p:sldIdLst><p:sldId id="33698" r:id="rId3"/>';
+            presXml = presXml.replace(/<p:notesMasterId\s+r:id="[^"]*"\s*\/>/, '<p:notesMasterId r:id="rId3"/>');
+            let sldIdLst = '<p:sldIdLst><p:sldId id="33698" r:id="rId8"/>';
             for (let i = 2; i <= totalSlides; i++) {
-                sldIdLst += `<p:sldId id="${254 + i}" r:id="rId${i + 2}"/>`;
+                sldIdLst += `<p:sldId id="${254 + i}" r:id="rId${i + 7}"/>`;
             }
             sldIdLst += '</p:sldIdLst>';
             presXml = presXml.replace(/<p:sldIdLst>.*?<\/p:sldIdLst>/s, sldIdLst);
             zip.file('ppt/presentation.xml', presXml);
 
-            // 5. 更新 presentation.xml.rels
+            // 5. 更新 presentation.xml.rels (rId1~rId7 固定資源，rId8 起為各投影片，永不衝突飄移)
             let relsXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
             relsXml += '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="slideMasters/slideMaster1.xml"/>';
             relsXml += '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="slideMasters/slideMaster2.xml"/>';
-            relsXml += '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide1.xml"/>';
-            for (let i = 2; i <= totalSlides; i++) {
-                relsXml += `<Relationship Id="rId${i + 2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide${i}.xml"/>`;
+            relsXml += '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesMaster" Target="notesMasters/notesMaster1.xml"/>';
+            relsXml += '<Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/presProps" Target="presProps.xml"/>';
+            relsXml += '<Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/viewProps" Target="viewProps.xml"/>';
+            relsXml += '<Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>';
+            relsXml += '<Relationship Id="rId7" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/tableStyles" Target="tableStyles.xml"/>';
+            for (let i = 1; i <= totalSlides; i++) {
+                relsXml += `<Relationship Id="rId${i + 7}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide${i}.xml"/>`;
             }
-            const nextRId = totalSlides + 3;
-            relsXml += `<Relationship Id="rId${nextRId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesMaster" Target="notesMasters/notesMaster1.xml"/>`;
-            relsXml += `<Relationship Id="rId${nextRId + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/presProps" Target="presProps.xml"/>`;
-            relsXml += `<Relationship Id="rId${nextRId + 2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/viewProps" Target="viewProps.xml"/>`;
-            relsXml += `<Relationship Id="rId${nextRId + 3}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>`;
-            relsXml += `<Relationship Id="rId${nextRId + 4}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/tableStyles" Target="tableStyles.xml"/>`;
             relsXml += '</Relationships>';
             zip.file('ppt/_rels/presentation.xml.rels', relsXml);
 
